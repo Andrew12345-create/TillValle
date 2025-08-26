@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Test</title>
+</head>
+<body>
+    <h1>Login Test Page</h1>
+    <div>
+        <input type="email" id="test-email" placeholder="Email" value="test@example.com">
+        <input type="password" id="test-password" placeholder="Password" value="password123">
+        <button onclick="testLogin()">Test Login</button>
+    </div>
+    <div id="test-result" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc;"></div>
+
+    <script>
+        async function testLogin() {
+            const email = document.getElementById('test-email').value;
+            const password = document.getElementById('test-password').value;
+            const resultDiv = document.getElementById('test-result');
+            
+            resultDiv.innerHTML = 'Testing connection...';
+            resultDiv.style.color = 'blue';
+
+            try {
+                // Test if server is reachable first
+                const pingResponse = await fetch('http://localhost:3000/ping');
+                if (!pingResponse.ok) {
+                    throw new Error(`Server ping failed: ${pingResponse.status}`);
+                }
+                
+                resultDiv.innerHTML += '<br>✓ Server is reachable';
+                
+                // Test login endpoint
+                const loginResponse = await fetch('http://localhost:3000/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password }),
+                });
+
+                if (!loginResponse.ok) {
+                    throw new Error(`Login failed: ${loginResponse.status} ${loginResponse.statusText}`);
+                }
+
+                const data = await loginResponse.json();
+                resultDiv.innerHTML += `<br>✓ Login successful: ${JSON.stringify(data)}`;
+                resultDiv.style.color = 'green';
+
+            } catch (error) {
+                resultDiv.innerHTML += `<br>✗ Error: ${error.message}`;
+                resultDiv.style.color = 'red';
+                console.error('Test error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

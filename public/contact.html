@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact TilleValle</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <img src="logo.jpg" alt="TilleValle Logo" class="logo">
+    <nav class="navbar">
+      <div class="nav-left">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="shop.html" class="nav-link">Shop</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+      </div>
+      <div class="nav-right">
+        <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
+        <a href="login.html" class="nav-link" id="login-link">Login</a>
+      </div>
+    </nav>
+    <hr>
+  </header>
+
+  <section class="contact animated fadeIn">
+    <div class="contact-form-container">
+      <h2>Contact Us</h2>
+      <form id="contactForm">
+        <input type="text" name="from_name" placeholder="Your Name" required>
+        <input type="email" name="from_email" placeholder="Your Email" required>
+        <textarea name="message" placeholder="Your Message" required></textarea>
+        <button type="submit">Send</button>
+        <p id="formMessage" class="form-message"></p>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 TilleValle. All rights reserved.</p>
+  </footer>
+
+  <!-- EmailJS SDK -->
+  <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init('_pUabf9crvtbxpcgX'); // Your actual EmailJS Public Key
+    })();
+
+    const form = document.getElementById('contactForm');
+    const formMessage = document.getElementById('formMessage');
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+
+      emailjs.sendForm('service_0ths8yr', 'template_5ozpuzs', this)
+        .then(() => {
+          formMessage.textContent = "✅ Message sent successfully!";
+          formMessage.className = "form-message success";
+          form.reset();
+        }, (error) => {
+          console.error('EmailJS Error:', error);
+          formMessage.textContent = "❌ Failed to send message. Please try again or contact us directly.";
+          formMessage.className = "form-message error";
+        });
+    });
+  </script>
+</body>
+</html>

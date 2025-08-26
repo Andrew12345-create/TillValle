@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Test</title>
+</head>
+<body>
+    <h1>Cart Functionality Test</h1>
+    
+    <div>
+        <button onclick="testAddToCart()">Test Add to Cart</button>
+        <button onclick="testViewCart()">Test View Cart</button>
+        <button onclick="testCheckout()">Test Checkout</button>
+        <button onclick="clearCart()">Clear Cart</button>
+    </div>
+    
+    <div id="test-result" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc;"></div>
+
+    <script>
+        function showResult(message, isError = false) {
+            const resultDiv = document.getElementById('test-result');
+            resultDiv.innerHTML = message;
+            resultDiv.style.color = isError ? 'red' : 'green';
+            console.log(message);
+        }
+
+        function testAddToCart() {
+            // Simulate adding items to cart
+            let cart = JSON.parse(localStorage.getItem('cart') || '{}');
+            
+            // Add some test items
+            cart['Milk'] = { price: 60, quantity: 2 };
+            cart['Eggs'] = { price: 20, quantity: 1 };
+            cart['Apples'] = { price: 40, quantity: 3 };
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            showResult('✅ Added test items to cart: Milk (2), Eggs (1), Apples (3)');
+        }
+
+        function testViewCart() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '{}');
+            if (Object.keys(cart).length === 0) {
+                showResult('🛑 Cart is empty', true);
+                return;
+            }
+            
+            let cartContent = 'Cart Contents:\n';
+            let total = 0;
+            
+            Object.entries(cart).forEach(([name, item]) => {
+                cartContent += `${name}: KSh ${item.price} x ${item.quantity} = KSh ${item.price * item.quantity}\n`;
+                total += item.price * item.quantity;
+            });
+            
+            cartContent += `\nTotal: KSh ${total}`;
+            showResult(cartContent);
+        }
+
+        function testCheckout() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '{}');
+            if (Object.keys(cart).length === 0) {
+                showResult('🛑 Cannot checkout - cart is empty', true);
+                return;
+            }
+            
+            showResult('✅ Checkout successful! Cart will be cleared.');
+            
+            // Simulate checkout process
+            setTimeout(() => {
+                localStorage.removeItem('cart');
+                showResult('✅ Cart cleared after checkout');
+            }, 1000);
+        }
+
+        function clearCart() {
+            localStorage.removeItem('cart');
+            showResult('✅ Cart cleared');
+        }
+
+        // Initialize
+        showResult('Ready to test cart functionality. Click buttons to test.');
+    </script>
+</body>
+</html>

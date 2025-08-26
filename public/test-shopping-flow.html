@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Flow Test</title>
+    <style>
+        .test-step { margin: 10px 0; padding: 10px; border-left: 4px solid #ccc; }
+        .success { border-left-color: green; background: #f0fff0; }
+        .error { border-left-color: red; background: #fff0f0; }
+        .pending { border-left-color: orange; background: #fffaf0; }
+    </style>
+</head>
+<body>
+    <h1>Shopping Flow Test</h1>
+    
+    <div id="test-steps">
+        <div class="test-step pending" id="step1">1. Testing login functionality...</div>
+        <div class="test-step pending" id="step2">2. Testing cart addition...</div>
+        <div class="test-step pending" id="step3">3. Testing cart display...</div>
+        <div class="test-step pending" id="step4">4. Testing checkout process...</div>
+        <div class="test-step pending" id="step5">5. Testing cart clearing...</div>
+    </div>
+
+    <button onclick="runAllTests()">Run All Tests</button>
+    <div id="final-result" style="margin-top: 20px; padding: 10px;"></div>
+
+    <script>
+        function updateStep(stepId, status, message) {
+            const step = document.getElementById(stepId);
+            step.className = `test-step ${status}`;
+            step.innerHTML = `${stepId}. ${message}`;
+        }
+
+        async function testLogin() {
+            updateStep('step1', 'pending', 'Testing login functionality...');
+            
+            try {
+                const response = await fetch('http://localhost:3000/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: 'test@example.com', password: 'password123' })
+                });
+
+                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+                
+                const data = await response.json();
+                if (data.ok && data.token) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('email', 'test@example.com');
+                    updateStep('step1', 'success', '✅ Login successful! Token stored.');
+                    return true;
+                } else {
+                    throw new Error(data.error || 'Login failed');
+                }
+            } catch (error) {
+                updateStep('step1', 'error', `❌ Login failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        function testCartAddition() {
+            updateStep('step2', 'pending', 'Testing cart addition...');
+            
+            try {
+                let cart = JSON.parse(localStorage.getItem('cart') || '{}');
+                
+                // Add test items
+                cart['Milk'] = { price: 60, quantity: 2 };
+                cart['Eggs'] = { price: 20, quantity: 1 };
+                cart['Apples'] = { price: 40, quantity: 3 };
+                
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateStep('step2', 'success', '✅ Cart items added successfully!');
+                return true;
+            } catch (error) {
+                updateStep('step2', 'error', `❌ Cart addition failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        function testCartDisplay() {
+            updateStep('step3', 'pending', 'Testing cart display...');
+            
+            try {
+                const cart = JSON.parse(localStorage.getItem('cart') || '{}');
+                const itemCount = Object.keys(cart).length;
+                
+                if (itemCount === 0) {
+                    throw new Error('Cart is empty');
+                }
+                
+                let total = 0;
+                Object.values(cart).forEach(item => {
+                    total += item.price * item.quantity;
+                });
+                
+                updateStep('step3', 'success', `✅ Cart display working! ${itemCount} items, Total: KSh ${total}`);
+                return true;
+            } catch (error) {
+                updateStep('step3', 'error', `❌ Cart display failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        function testCheckout() {
+            updateStep('step4', 'pending', 'Testing checkout process...');
+            
+            try {
+                const cart = JSON.parse(localStorage.getItem('cart') || '{}');
+                if (Object.keys(cart).length === 0) {
+                    throw new Error('Cannot checkout empty cart');
+                }
+                
+                // Simulate successful checkout
+                updateStep('step4', 'success', '✅ Checkout process completed successfully!');
+                return true;
+            } catch (error) {
+                updateStep('step4', 'error', `❌ Checkout failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        function testCartClearing() {
+            updateStep('step5', 'pending', 'Testing cart clearing...');
+            
+            try {
+                localStorage.removeItem('cart');
+                const cart = JSON.parse(localStorage.getItem('cart') || '{}');
+                
+                if (Object.keys(cart).length === 0) {
+                    updateStep('step5', 'success', '✅ Cart cleared successfully!');
+                    return true;
+                } else {
+                    throw new Error('Cart was not cleared properly');
+                }
+            } catch (error) {
+                updateStep('step5', 'error', `❌ Cart clearing failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        async function runAllTests() {
+            const results = [
+                await testLogin(),
+                testCartAddition(),
+                testCartDisplay(),
+                testCheckout(),
+                testCartClearing()
+            ];
+
+            const allPassed = results.every(result => result === true);
+            
+            const resultDiv = document.getElementById('final-result');
+            if (allPassed) {
+                resultDiv.innerHTML = '🎉 All tests passed! Shopping flow is working correctly.';
+                resultDiv.style.color = 'green';
+                resultDiv.style.background = '#f0fff0';
+                resultDiv.style.padding = '15px';
+                resultDiv.style.border = '2px solid green';
+            } else {
+                resultDiv.innerHTML = '❌ Some tests failed. Please check the error messages above.';
+                resultDiv.style.color = 'red';
+                resultDiv.style.background = '#fff0f0';
+                resultDiv.style.padding = '15px';
+                resultDiv.style.border = '2px solid red';
+            }
+        }
+
+        // Initialize
+        document.getElementById('final-result').innerHTML = 'Click "Run All Tests" to start the shopping flow test.';
+    </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>TilleValle Shop</title>
+  <link rel="stylesheet" href="style.css" />
+  <meta property="og:title" content="Shop - TilleValle" />
+  <meta property="og:description" content="Browse and shop our range of fresh farm goods at TilleValle." />
+  <meta property="og:image" content="images/logo.png" />
+  <meta property="og:url" content="https://yourdomain.com/shop.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+</head>
+<body>
+  <header>
+    <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
+
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="nav-left">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="shop.html" class="nav-link">Shop</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+      </div>
+      <div class="nav-center">
+        <div class="search-container">
+          <input type="text" id="search-input" placeholder="Search products..." class="search-input">
+          <button id="search-btn" class="search-btn">🔍</button>
+        </div>
+      </div>
+      <div class="nav-right">
+        <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
+        <span id="user-area">
+          <a href="login.html" class="nav-link" id="login-link">Login</a>
+        </span>
+      </div>
+    </nav>
+    <hr>
+  </header>
+
+  <section class="shop">
+    <h2>Our Products</h2>
+
+    <!-- Category: Animal Farm Produce -->
+    <div class="category">
+      <h3 class="category-title">Animal Farm Produce</h3>
+      <div class="products">
+        <div class="product">
+          <h4>Milk</h4>
+          <p class="price" data-price="60">KES 60 / litre</p>
+          <button class="add-to-cart" onclick="addToCart('Milk', 60)">Add to Cart</button>
+        </div>
+        <div class="product">
+          <h4>Eggs</h4>
+          <p class="price" data-price="20">KES 20 / egg</p>
+          <button class="add-to-cart" onclick="addToCart('Eggs', 20)">Add to Cart</button>
+        </div>
+        <div class="product">
+          <h4>Eggs (Kienyeji)</h4>
+          <p class="price" data-price="30">KES 30 / egg</p>
+          <button class="add-to-cart" onclick="addToCart('Eggs (Kienyeji)', 30)">Add to Cart</button>
+        </div>
+        <div class="product">
+          <h4>Butter</h4>
+          <p class="price" data-price="700">KES 700 / 500g</p>
+          <button class="add-to-cart" onclick="addToCart('Butter', 700)">Add to Cart</button>
+        </div>
+        <div class="product">
+          <h4>Chicken</h4>
+          <p class="price" data-price="900">from KES 900</p>
+          <button class="add-to-cart" onclick="addToCart('Chicken', 900)">Add to Cart</button>
+        </div>
+        <div class="product">
+          <h4>Ghee</h4>
+          <p class="price" data-price="650">KES 650 / 250g</p>
+          <button class="add-to-cart" onclick="addToCart('Ghee', 650)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category: Fruits -->
+    <div class="category">
+      <h3 class="category-title">Fruits</h3>
+      <div class="products">
+        <div class="product"><h4>Apples</h4><p class="price" data-price="40">KES 40 / piece</p><button class="add-to-cart" onclick="addToCart('Apples', 40)">Add to Cart</button></div>
+        <div class="product"><h4>Raw Bananas</h4><p class="price" data-price="100">KES 100 / bunch</p><button class="add-to-cart" onclick="addToCart('Raw Bananas', 100)">Add to Cart</button></div>
+        <div class="product"><h4>Bananas (ripe)</h4><p class="price" data-price="10">KES 10/ piece</p><button class="add-to-cart" onclick="addToCart('Bananas', 15)">Add to Cart</button></div>
+        <div class="product"><h4>Soursop (fruit/herbs)</h4><p class="price" data-price="250">from KES 250</p><button class="add-to-cart" onclick="addToCart('Soursop', 250)">Add to Cart</button></div>
+        <div class="product"><h4>Blueberries</h4><p class="price" data-price="500">KES 500 / punnet</p><button class="add-to-cart" onclick="addToCart('Blueberries', 500)">Add to Cart</button></div>
+        <div class="product"><h4>Macadamia</h4><p class="price" data-price="300">KES 300 / 250g</p><button class="add-to-cart" onclick="addToCart('Macadamia', 300)">Add to Cart</button></div>
+        <div class="product"><h4>Dragonfruit</h4><p class="price" data-price="250">KES 250 / piece</p><button class="add-to-cart" onclick="addToCart('Dragonfruit', 250)">Add to Cart</button></div>
+        <div class="product"><h4>Mangoes</h4><p class="price" data-price="40">KES 40 / piece</p><button class="add-to-cart" onclick="addToCart('Mangoes', 40)">Add to Cart</button></div>
+        <div class="product"><h4>Lemon</h4><p class="price" data-price="20">KES 20 / piece</p><button class="add-to-cart" onclick="addToCart('Lemon', 20)">Add to Cart</button></div>
+        <div class="product"><h4>Pawpaw</h4><p class="price" data-price="120">KES 120 / piece</p><button class="add-to-cart" onclick="addToCart('Pawpaw', 120)">Add to Cart</button></div>
+        <div class="product"><h4>Pixies</h4><p class="price" data-price="35">KES 35 / piece</p><button class="add-to-cart" onclick="addToCart('Pixies', 35)">Add to Cart</button></div>
+        <div class="product"><h4>Avocadoes</h4><p class="price" data-price="30">KES 30 / piece</p><button class="add-to-cart" onclick="addToCart('Avocadoes', 30)">Add to Cart</button></div>
+        <div class="product"><h4>Yellow Passion</h4><p class="price" data-price="25">KES 25 / piece</p><button class="add-to-cart" onclick="addToCart('Yellow Passion', 25)">Add to Cart</button></div>
+        <div class="product"><h4>Kiwi</h4><p class="price" data-price="60">KES 60 / piece</p><button class="add-to-cart" onclick="addToCart('Kiwi', 60)">Add to Cart</button></div>
+      </div>
+    </div>
+
+    <!-- Category: Herbs -->
+    <div class="category">
+      <h3 class="category-title">Herbs</h3>
+      <div class="products">
+        <div class="product"><h4>Basil</h4><p class="price" data-price="50">KES 50 / bunch</p><button class="add-to-cart" onclick="addToCart('Basil', 50)">Add to Cart</button></div>
+        <div class="product"><h4>Coriander</h4><p class="price" data-price="30">KES 30 / bunch</p><button class="add-to-cart" onclick="addToCart('Coriander', 30)">Add to Cart</button></div>
+      </div>
+    </div>
+
+    <!-- Category: Vegetables & Greens -->
+    <div class="category">
+      <h3 class="category-title">Vegetables & Greens</h3>
+      <div class="products">
+        <div class="product"><h4>Kales (Sukuma Wiki)</h4><p class="price" data-price="30">KES 30 / bunch</p><button class="add-to-cart" onclick="addToCart('Kales', 30)">Add to Cart</button></div>
+        <div class="product"><h4>Lettuce</h4><p class="price" data-price="80">KES 80 / head</p><button class="add-to-cart" onclick="addToCart('Lettuce', 80)">Add to Cart</button></div>
+        <div class="product"><h4>Managu</h4><p class="price" data-price="40">KES 40 / bunch</p><button class="add-to-cart" onclick="addToCart('Managu', 40)">Add to Cart</button></div>
+        <div class="product"><h4>Terere</h4><p class="price" data-price="40">KES 40 / bunch</p><button class="add-to-cart" onclick="addToCart('Terere', 40)">Add to Cart</button></div>
+        <div class="product"><h4>Salgaa</h4><p class="price" data-price="20">KES 20 / bunch</p><button class="add-to-cart" onclick="addToCart('Salgaa', 20)">Add to Cart</button></div>
+        <div class="product"><h4>Spinach</h4><p class="price" data-price="30">KES 30 / bunch</p><button class="add-to-cart" onclick="addToCart('Spinach', 30)">Add to Cart</button></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 TilleValle. All rights reserved.</p>
+  </footer>
+
+  <!-- Toast -->
+  <div id="cart-toast"></div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

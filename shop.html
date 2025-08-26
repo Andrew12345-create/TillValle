@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TilleValle Shop</title>
+  <link rel="stylesheet" href="style.css">
+  <meta property="og:title" content="Shop - TilleValle">
+  <meta property="og:description" content="Browse and shop our range of fresh farm goods at TilleValle.">
+  <meta property="og:image" content="images/logo.png">
+  <meta property="og:url" content="https://yourdomain.com/shop.html">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+  <header>
+    <img src="logo.jpg" alt="TilleValle Logo" class="logo">
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html" class="cart-link">🛒 Cart (<span id="cart-count">0</span>)</a>
+    </nav>
+  </header>
+  
+  <section class="shop">
+    <h2>Our Products</h2>
+    <!-- Sample category -->
+    <div class="category">
+      <h3 class="category-title">Animal Farm Produce</h3>
+      <div class="products">
+        <div class="product">
+          <h4>Milk</h4>
+          <p class="price" data-price="80">KES 80 / litre</p>
+          <button class="add-to-cart" onclick="addToCart('Milk', 80)">Add to Cart</button>
+        </div>
+        <!-- ...additional product blocks... -->
+      </div>
+    </div>
+    <!-- ...additional categories... -->
+  </section>
+  
+  <footer>
+    <p>&copy; 2025 TilleValle. All rights reserved.</p>
+  </footer>
+  <script src="script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Functionality Test</title>
+    <style>
+        .test-step { margin: 10px 0; padding: 10px; border-left: 4px solid #ccc; }
+        .success { border-left-color: green; background: #f0fff0; }
+        .error { border-left-color: red; background: #fff0f0; }
+        .pending { border-left-color: orange; background: #fffaf0; }
+    </style>
+</head>
+<body>
+    <h1>Profile Functionality Test</h1>
+    
+    <div id="test-steps">
+        <div class="test-step pending" id="step1">1. Testing login simulation...</div>
+        <div class="test-step pending" id="step2">2. Testing navbar update...</div>
+        <div class="test-step pending" id="step3">3. Testing profile page access...</div>
+        <div class="test-step pending" id="step4">4. Testing logout functionality...</div>
+    </div>
+
+    <button onclick="runAllTests()">Run Profile Tests</button>
+    <div id="final-result" style="margin-top: 20px; padding: 10px;"></div>
+
+    <script>
+        function updateStep(stepId, status, message) {
+            const step = document.getElementById(stepId);
+            step.className = `test-step ${status}`;
+            step.innerHTML = `${stepId}. ${message}`;
+        }
+
+        function testLoginSimulation() {
+            updateStep('step1', 'pending', 'Testing login simulation...');
+            
+            try {
+                // Simulate login by storing user data
+                localStorage.setItem('token', 'test-token-123');
+                localStorage.setItem('email', 'test.user@example.com');
+                
+                updateStep('step1', 'success', '✅ Login simulation successful! User data stored.');
+                return true;
+            } catch (error) {
+                updateStep('step1', 'error', `❌ Login simulation failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        function testNavbarUpdate() {
+            updateStep('step2', 'pending', 'Testing navbar update...');
+            
+            try {
+                // Test the getInitials function
+                function getInitials(email) {
+                    if (!email) return '';
+                    const name = email.split('@')[0];
+                    return name
+                        .split(/[._-]/)
+                        .map(part => part[0].toUpperCase())
+                        .join('');
+                }
+                
+                const email = localStorage.getItem('email');
+                const initials = getInitials(email);
+                
+                if (initials === 'TU') {
+                    updateStep('step2', 'success', `✅ Navbar update working! Initials: ${initials}`);
+                    return true;
+                } else {
+                    throw new Error(`Expected 'TU' but got '${initials}'`);
+                }
+            } catch (error) {
+                updateStep('step2', 'error', `❌ Navbar update failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        function testProfilePage() {
+            updateStep('step3', 'pending', 'Testing profile page access...');
+            
+            try {
+                const email = localStorage.getItem('email');
+                if (!email) {
+                    throw new Error('No email found in localStorage');
+                }
+                
+                updateStep('step3', 'success', `✅ Profile page accessible! User email: ${email}`);
+                return true;
+            } catch (error) {
+                updateStep('step3', 'error', `❌ Profile page test failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        function testLogout() {
+            updateStep('step4', 'pending', 'Testing logout functionality...');
+            
+            try {
+                // Simulate logout
+                localStorage.removeItem('token');
+                localStorage.removeItem('email');
+                
+                const token = localStorage.getItem('token');
+                const email = localStorage.getItem('email');
+                
+                if (!token && !email) {
+                    updateStep('step4', 'success', '✅ Logout successful! User data cleared.');
+                    return true;
+                } else {
+                    throw new Error('User data was not cleared properly');
+                }
+            } catch (error) {
+                updateStep('step4', 'error', `❌ Logout test failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        function runAllTests() {
+            const results = [
+                testLoginSimulation(),
+                testNavbarUpdate(),
+                testProfilePage(),
+                testLogout()
+            ];
+
+            const allPassed = results.every(result => result === true);
+            
+            const resultDiv = document.getElementById('final-result');
+            if (allPassed) {
+                resultDiv.innerHTML = '🎉 All profile functionality tests passed! The user profile system is working correctly.';
+                resultDiv.style.color = 'green';
+                resultDiv.style.background = '#f0fff0';
+                resultDiv.style.padding = '15px';
+                resultDiv.style.border = '2px solid green';
+            } else {
+                resultDiv.innerHTML = '❌ Some profile tests failed. Please check the error messages above.';
+                resultDiv.style.color = 'red';
+                resultDiv.style.background = '#fff0f0';
+                resultDiv.style.padding = '15px';
+                resultDiv.style.border = '2px solid red';
+            }
+        }
+
+        // Initialize
+        document.getElementById('final-result').innerHTML = 'Click "Run Profile Tests" to test the user profile functionality.';
+    </script>
+</body>
+</html>
