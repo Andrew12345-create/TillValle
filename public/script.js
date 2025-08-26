@@ -93,3 +93,30 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCartCount();
   testContactForm(); // Call the test function
 });
+
+// ====== API Calls ======
+const loginUrl = 'https://your-render-url/login';
+const signupUrl = 'https://your-render-url/signup';
+
+// Example usage of the URLs
+async function login(email, password) {
+  const response = await fetch(loginUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, password }),
+  });
+  return response.json();
+}
+
+async function signup(email, password) {
+  const response = await fetch(signupUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, password }),
+  });
+  return response.json();
+}
