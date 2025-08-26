@@ -95,8 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ====== API Calls ======
-const loginUrl = 'https://your-render-url/login';
-const signupUrl = 'https://your-render-url/signup';
+const loginUrl = '/login';
+const signupUrl = '/signup';
 
 // Example usage of the URLs
 async function login(email, password) {
