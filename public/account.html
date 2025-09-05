@@ -1,20 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Account - TilleValle</title>
-  <link rel="stylesheet" href="style.css">
-  <script>
-    function saveProfile() {
-      const name = document.getElementById('profile-name').value;
-      const email = document.getElementById('email').value;
-      const phone = document.getElementById('phone-number').value;
-      // Save logic here (e.g., send to server or local storage)
-      alert('Profile saved!');
-    }
-  </script>
-</head>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account - TilleValle</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+      // Load user profile from localStorage
+      document.addEventListener('DOMContentLoaded', () => {
+        const savedName = localStorage.getItem('profileName') || '';
+        const savedEmail = localStorage.getItem('email') || '';
+        const savedPhone = localStorage.getItem('phoneNumber') || '';
+
+        document.getElementById('profile-name').value = savedName;
+        document.getElementById('email').value = savedEmail;
+        document.getElementById('phone-number').value = savedPhone;
+
+        if (savedName) {
+          const greeting = document.createElement('h2');
+          greeting.textContent = `Hello, ${savedName}`;
+          document.querySelector('.account-section').insertBefore(greeting, document.querySelector('.profile-field'));
+        }
+      });
+
+      function saveProfile() {
+        const name = document.getElementById('profile-name').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone-number').value;
+
+        localStorage.setItem('profileName', name);
+        localStorage.setItem('email', email);
+        localStorage.setItem('phoneNumber', phone);
+
+        alert('Profile saved!');
+
+        // After saving, redirect to shop page
+        setTimeout(() => {
+          window.location.href = 'shop.html';
+        }, 1000);
+      }
+    </script>
+  </head>
 <body>
   <header>
     <img src="logo.jpg" alt="TilleValle Logo" class="logo">
@@ -26,8 +52,8 @@
         <a href="contact.html" class="nav-link">Contact</a>
       </div>
       <div class="nav-right">
+        <span id="user-area"></span>
         <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
-        <a href="login.html" class="nav-link" id="login-link">Login</a>
       </div>
     </nav>
     <hr>

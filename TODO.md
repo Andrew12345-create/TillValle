@@ -1,30 +1,19 @@
-# Search Bar Implementation Plan
+# Fix Duplicate Login Buttons in Navbar
 
-## Steps Completed:
+## Tasks
+- [x] Edit public/index.html: Remove hardcoded login link, ensure <span id="user-area"></span> in nav-right
+- [x] Edit public/about.html: Remove hardcoded login link, add <span id="user-area"></span> in nav-right
+- [x] Edit public/cart.html: Remove hardcoded login link, ensure <span id="user-area"></span> in nav-right
+- [x] Edit public/contact.html: Remove hardcoded login link, ensure <span id="user-area"></span> in nav-right
+- [x] Edit public/faq.html: Remove hardcoded login link, ensure <span id="user-area"></span> in nav-right
+- [x] Edit public/language.html: Remove hardcoded login link, ensure <span id="user-area"></span> in nav-right
+- [x] Edit public/orderhistory.html: Remove hardcoded login link, ensure <span id="user-area"></span> in nav-right
+- [x] Edit public/profile.html: Remove hardcoded login link, ensure <span id="user-area"></span> in nav-right
+- [x] Edit public/register.html: Remove hardcoded login link, ensure <span id="user-area"></span> in nav-right
+- [x] Edit public/shop.html: Remove hardcoded login link from inside <span id="user-area"></span>
+- [x] Edit public/account.html: Remove hardcoded login link, ensure <span id="user-area"></span> in nav-right
+- [ ] Test the navbar on different pages to ensure no duplicates and proper functionality
 
-1. [x] Add search bar HTML structure to public/shop.html
-2. [x] Add search bar styling to public/style.css
-3. [x] Implement search functionality in public/script.js
-4. [x] Test the search functionality
-5. [x] Verify responsive design
-
-## Deployment Tasks Completed:
-
-1. [x] Create api directory and move server.js to api/index.js
-2. [x] Update API URLs in frontend to point to Vercel backend
-3. [x] Update login page API URL
-4. [x] Update signup page API URL
-
-## Features Implemented:
-- Real-time search as user types
-- Case-insensitive product name matching
-- Category filtering based on search results
-- Visual feedback for no results
-- Clear search functionality
-- Vercel deployment configuration
-
-## Next Steps:
-- Test the deployed application on Vercel
-- Verify all API endpoints work correctly
-- Test login and signup functionality
-- Test search functionality in production
+## Notes
+- Standardize navbar structure: nav-right should have <span id="user-area"></span> and cart link
+- JavaScript in script.js will dynamically add login or user initials to #user-area

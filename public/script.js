@@ -7,6 +7,15 @@ function showToast(message) {
   toast.innerText = message;
   toast.style.display = 'block';
   toast.style.opacity = 1;
+  toast.style.transition = 'opacity 0.3s ease';
+  toast.style.position = 'fixed';
+  toast.style.top = '20px';
+  toast.style.right = '20px';
+  toast.style.backgroundColor = '#f0c419';  // shade of yellow matching top right icon
+  toast.style.color = '#000';
+  toast.style.padding = '10px 20px';
+  toast.style.borderRadius = '5px';
+  toast.style.zIndex = 1000;
   setTimeout(() => {
     toast.style.opacity = 0;
     setTimeout(() => (toast.style.display = 'none'), 300);
@@ -62,6 +71,22 @@ function addToCart(productName, price) {
   localStorage.setItem('cart', JSON.stringify(cart));
   updateCartCount();
   showToast(`${productName} added to cart`);
+
+  // Add order to order history
+  addToOrderHistory(productName, price);
+}
+
+// Add order to order history in localStorage
+function addToOrderHistory(productName, price) {
+  let orderHistory = JSON.parse(localStorage.getItem('orderHistory') || '[]');
+  const newOrder = {
+    id: orderHistory.length + 1,
+    date: new Date().toISOString(),
+    items: [{ name: productName, quantity: 1, price }],
+    total: price
+  };
+  orderHistory.push(newOrder);
+  localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
 }
 
 function updateCartCount() {
@@ -73,18 +98,23 @@ function updateCartCount() {
 
 // ====== Contact Form Test ======
 function testContactForm() {
-  const testForm = {
-    from_name: "Test User",
-    from_email: "test@example.com",
-    message: "This is a test message."
-  };
+  // Removed emailjs call to fix ReferenceError
+  console.log("testContactForm called - emailjs call removed to fix error");
+}
 
-  emailjs.send('service_0ths8yr', 'template_5ozpuzs', testForm)
-    .then(() => {
-      console.log("Test message sent successfully!");
-    }, (error) => {
-      console.error('Test EmailJS Error:', error);
-    });
+// ====== Search Functionality ======
+function searchProducts() {
+  const input = document.getElementById("search-bar").value.toLowerCase();
+  const products = document.querySelectorAll(".product");
+
+  products.forEach(product => {
+    const productName = product.querySelector("h4").textContent.toLowerCase();
+    if (productName.includes(input)) {
+      product.style.display = "block";
+    } else {
+      product.style.display = "none";
+    }
+  });
 }
 
 // ====== Init ======
@@ -92,6 +122,12 @@ document.addEventListener('DOMContentLoaded', () => {
   updateNavbar();
   updateCartCount();
   testContactForm(); // Call the test function
+
+  // Add search event listener
+  const searchBtn = document.getElementById('search-btn');
+  if (searchBtn) {
+    searchBtn.addEventListener('click', searchProducts);
+  }
 });
 
 // ====== API Calls ======

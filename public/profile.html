@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Profile - TilleValle</title>
   <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
   <style>
     .profile-section h2 a {
       color: inherit;
@@ -26,8 +27,8 @@
         <a href="contact.html" class="nav-link">Contact</a>
       </div>
       <div class="nav-right">
+        <span id="user-area"></span>
         <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
-        <a href="login.html" class="nav-link" id="login-link">Login</a>
       </div>
     </nav>
     <hr>
@@ -51,7 +52,47 @@
     <section class="profile-section">
       <h2><a href="faq.html">FAQ</a></h2>
     </section>
+
+    <section class="profile-section">
+      <h2><button id="logout-btn" style="background: none; border: none; color: inherit; font-size: inherit; cursor: pointer; padding: 0;">Logout</button></h2>
+    </section>
   </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const logoutBtn = document.getElementById('logout-btn');
+      
+      logoutBtn.addEventListener('click', async function() {
+        try {
+          const response = await fetch('/logout', {
+            method: 'POST',
+            credentials: 'include'
+          });
+          
+          const result = await response.json();
+          
+          if (result.ok) {
+            // Clear any stored tokens or session data
+            localStorage.removeItem('token');
+            sessionStorage.removeItem('token');
+            
+            // Update navbar after logout
+            if (typeof updateNavbar === 'function') {
+              updateNavbar();
+            }
+            
+            // Redirect to login page
+            window.location.href = 'login.html';
+          } else {
+            alert('Logout failed: ' + result.error);
+          }
+        } catch (error) {
+          console.error('Logout error:', error);
+          alert('Logout failed. Please try again.');
+        }
+      });
+    });
+  </script>
 
   <footer>
     <p>&copy; 2025 TilleValle. All rights reserved.</p>

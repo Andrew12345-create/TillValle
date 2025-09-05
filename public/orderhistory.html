@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Order History - TilleValle</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <img src="logo.jpg" alt="TilleValle Logo" class="logo">
+    <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
     <nav class="navbar">
       <div class="nav-left">
         <a href="index.html" class="nav-link">Home</a>
@@ -17,24 +17,75 @@
         <a href="contact.html" class="nav-link">Contact</a>
       </div>
       <div class="nav-right">
+        <span id="user-area"></span>
         <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
-        <a href="login.html" class="nav-link" id="login-link">Login</a>
       </div>
     </nav>
-    <hr>
+    <hr />
   </header>
 
-  <main class="profile-container">
-    <h1><a href="profile.html" class="back-link">← Back to Profile</a></h1>
-    
-    <section class="order-history">
-      <h2>Order History</h2>
-      <p class="no-orders">No orders found.</p>
-    </section>
+  <main>
+    <h1>Your Order History</h1>
+    <div id="order-history-list">
+      <!-- Order history items will be dynamically inserted here -->
+    </div>
   </main>
 
   <footer>
     <p>&copy; 2025 TilleValle. All rights reserved.</p>
   </footer>
+
+  <script>
+    // Load order history from localStorage and display
+    document.addEventListener('DOMContentLoaded', () => {
+      const orderHistoryList = document.getElementById('order-history-list');
+      const orderHistory = JSON.parse(localStorage.getItem('orderHistory') || '[]');
+
+      if (orderHistory.length === 0) {
+        orderHistoryList.innerHTML = '<p>No orders found.</p>';
+        return;
+      }
+
+      // Group orders by date (same day)
+      const groupedOrders = orderHistory.reduce((groups, order) => {
+        const dateKey = new Date(order.date).toDateString();
+        if (!groups[dateKey]) {
+          groups[dateKey] = [];
+        }
+        groups[dateKey].push(order);
+        return groups;
+      }, {});
+
+      Object.entries(groupedOrders).forEach(([date, orders], index) => {
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'order-group';
+        groupDiv.innerHTML = `<h3>Orders for ${date}</h3>`;
+
+        orders.forEach(order => {
+          // Group items by name and sum quantities
+          const groupedItems = order.items.reduce((acc, item) => {
+            if (!acc[item.name]) {
+              acc[item.name] = { name: item.name, quantity: 0, price: item.price };
+            }
+            acc[item.name].quantity += item.quantity;
+            return acc;
+          }, {});
+
+          const orderDiv = document.createElement('div');
+          orderDiv.className = 'order-item';
+          orderDiv.innerHTML = `
+            <h4>Order #${order.id}</h4>
+            <ul>
+              ${Object.values(groupedItems).map(item => `<li>${item.name} x${item.quantity} - KES ${item.price * item.quantity}</li>`).join('')}
+            </ul>
+            <p>Total: KES ${order.total}</p>
+          `;
+          groupDiv.appendChild(orderDiv);
+        });
+
+        orderHistoryList.appendChild(groupDiv);
+      });
+    });
+  </script>
 </body>
 </html>

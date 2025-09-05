@@ -17,14 +17,27 @@ const BCRYPT_ROUNDS = 10;
 app.use(express.json());
 app.use(cors({
   origin: ["http://127.0.0.1:5500", "http://localhost:5500", "http://localhost:3000"],
-  credentials: true
+  credentials: true,
+  optionsSuccessStatus: 200
 }));
+
+app.set('trust proxy', 1); // trust first proxy if behind one
+
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path}`);
+  next();
+});
 
 app.use(session({
   secret: "superSecretKey", // ⚠️ change in production
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } // secure: true only if HTTPS
+  saveUninitialized: false,
+  cookie: { 
+    secure: false, // set to true if using HTTPS
+    httpOnly: true,
+    sameSite: 'lax'
+  }
 }));
 
 // Database setup
@@ -51,8 +64,10 @@ app.post('/signup', async (req, res) => {
     return res.status(400).json({ ok: false, error: 'Email and password required' });
   }
 
+  const lowerEmail = email.toLowerCase();
+
   try {
-    const existing = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
+    const existing = await pool.query('SELECT id FROM users WHERE email = $1', [lowerEmail]);
     if (existing.rowCount > 0) {
       return res.status(400).json({ ok: false, error: 'User already exists' });
     }
@@ -60,11 +75,11 @@ app.post('/signup', async (req, res) => {
     const password_hash = await bcrypt.hash(password, BCRYPT_ROUNDS);
     const insert = await pool.query(
       'INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING id',
-      [email, password_hash]
+      [lowerEmail, password_hash]
     );
 
     const newUser = insert.rows[0];
-    const token = generateToken({ id: newUser.id, email });
+    const token = generateToken({ id: newUser.id, email: lowerEmail });
     res.json({ ok: true, message: 'Signup successful', token });
   } catch (err) {
     console.error('Signup error:', err);
@@ -81,8 +96,10 @@ app.post('/login', async (req, res) => {
     return res.status(400).json({ ok: false, error: 'Email and password required' });
   }
 
+  const lowerEmail = email.toLowerCase();
+
   try {
-    const result = await pool.query('SELECT id, password_hash FROM users WHERE email = $1', [email]);
+    const result = await pool.query('SELECT id, password_hash FROM users WHERE email = $1', [lowerEmail]);
     if (result.rowCount === 0) {
       return res.status(401).json({ ok: false, error: 'User not found' });
     }
@@ -91,7 +108,7 @@ app.post('/login', async (req, res) => {
     const match = await bcrypt.compare(password, user.password_hash);
     if (!match) return res.status(401).json({ ok: false, error: 'Invalid password' });
 
-    const token = generateToken({ id: user.id, email });
+    const token = generateToken({ id: user.id, email: lowerEmail });
     res.json({ ok: true, message: 'Login successful', token });
   } catch (err) {
     console.error('Login error:', err);
@@ -100,10 +117,44 @@ app.post('/login', async (req, res) => {
 });
 
 // ==========================
+// LOGOUT
+// ==========================
+app.post('/logout', (req, res) => {
+  try {
+    console.log('Logout endpoint hit');
+    if (!req.session) {
+      console.log('No session found on request');
+      return res.status(400).json({ ok: false, error: 'No session found' });
+    }
+    // Destroy the session if using session-based auth
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Logout error:', err);
+        return res.status(500).json({ ok: false, error: 'Logout failed' });
+      }
+      res.json({ ok: true, message: 'Logout successful' });
+    });
+  } catch (err) {
+    console.error('Logout error:', err);
+    res.status(500).json({ ok: false, error: 'Server error' });
+  }
+});
+
+// ==========================
+// PING
+// ==========================
+app.get('/ping', (req, res) => {
+  res.json({ ok: true, message: 'Server is running' });
+});
+
+// ==========================
 // Catch-all (serve frontend)
 // ==========================
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', req.path === '/' ? 'index.html' : req.path));
+app.all('*', (req, res) => {
+  if (req.method !== 'GET') {
+    return res.status(404).send('Not Found');
+  }
+  res.sendFile(path.join(__dirname, '..', 'public', req.path === '/' ? 'index.html' : req.path));
 });
 
 // ==========================
