@@ -113,12 +113,8 @@
           body: JSON.stringify({ email, password }),
         });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
         const data = await response.json();
-        
+
         if (data.ok) {
           // Successful login
           localStorage.setItem('token', data.token);
@@ -139,6 +135,6 @@
         console.error('Login error:', error);
       }
     });
-  </script>
+  </script> 
 </body>
 </html>

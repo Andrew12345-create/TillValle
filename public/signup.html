@@ -131,29 +131,19 @@
           body: JSON.stringify({ email, password }),
         });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
         const data = await response.json();
-        
+
         if (data.ok) {
-          if (data.registered) {
-            // New user registered successfully
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('email', email);
-            document.getElementById('output').textContent = 'Account created successfully! Redirecting...';
-            document.getElementById('output').style.color = '#2d6a4f';
-            
-            // Redirect to shop page after successful signup
-            setTimeout(() => {
-              window.location.href = 'shop.html';
-            }, 1500);
-          } else {
-            // User already exists
-            document.getElementById('output').textContent = 'Email already registered. Please login instead.';
-            document.getElementById('output').style.color = 'red';
-          }
+          // New user registered successfully
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('email', email);
+          document.getElementById('output').textContent = 'Account created successfully! Redirecting...';
+          document.getElementById('output').style.color = '#2d6a4f';
+
+          // Redirect to shop page after successful signup
+          setTimeout(() => {
+            window.location.href = 'shop.html';
+          }, 1500);
         } else {
           document.getElementById('output').textContent = data.error || 'Signup failed. Please try again.';
           document.getElementById('output').style.color = 'red';
