@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 
 const pool = new Pool({
   connectionString: process.env.NEON_DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
 });
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';

@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 
 const pool = new Pool({
   connectionString: process.env.NEON_DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
 });
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
@@ -27,6 +26,16 @@ exports.handler = async (event, context) => {
   }
 
   try {
+    // Create table if not exists
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        password_hash VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
     const { email, password } = JSON.parse(event.body);
     if (!email || !password) {
       return {
