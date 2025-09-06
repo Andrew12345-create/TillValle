@@ -452,6 +452,390 @@ body {
   margin: 0 auto;
 }
 
+/* ========= USER PROFILE ========= */
+.profile-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.profile-container h1 {
+  color: #2d6a4f;
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.profile-section {
+  margin-bottom: 30px;
+  padding: 15px 20px;
+  background: #f0f8f5;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(45,106,79,0.1);
+  transition: background 0.3s ease;
+}
+
+.profile-section:hover {
+  background: #d1e7d3;
+}
+
+.profile-section h2 {
+  font-size: 1.8rem;
+  color: #2d6a4f;
+  font-weight: 600;
+  margin: 0;
+}
+
+.profile-section h2 a {
+  color: #2d6a4f;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.profile-section h2 a:hover {
+  color: #40916c;
+}
+
+.profile-section button {
+  background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 8px 25px rgba(45,106,79,0.3);
+}
+
+.profile-section button:hover {
+  background: linear-gradient(135deg, #40916c 0%, #52b788 100%);
+  transform: translateY(-2px);
+}
+
+/* ========= ORDER HISTORY ========= */
+.order-history-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.order-history-container h1 {
+  color: #2d6a4f;
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.order-list {
+  list-style: none;
+  padding: 0;
+}
+
+.order-list li {
+  background: #f0f8f5;
+  margin-bottom: 15px;
+  padding: 15px 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(45,106,79,0.1);
+  transition: background 0.3s ease;
+}
+
+.order-list li:hover {
+  background: #d1e7d3;
+}
+
+.order-list li strong {
+  color: #2d6a4f;
+}
+
+/* ========= CART PAGE ========= */
+.cart {
+  padding: 60px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+  text-align: center;
+}
+
+.cart h2 {
+  color: #2d6a4f;
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+}
+
+.cart-container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+#cart-items {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+#cart-items li {
+  background: #f0f8f5;
+  margin-bottom: 10px;
+  padding: 12px 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(45,106,79,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#cart-items li button {
+  background: #e63946;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+#cart-items li button:hover {
+  background: #d62828;
+}
+
+#cart-total {
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  color: #2d6a4f;
+}
+
+#checkout-btn {
+  background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 8px 25px rgba(45,106,79,0.3);
+}
+
+#checkout-btn:hover {
+  background: linear-gradient(135deg, #40916c 0%, #52b788 100%);
+  transform: translateY(-2px);
+}
+
+/* ========= ACCOUNT SETTINGS ========= */
+.account-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.account-container h1 {
+  color: #2d6a4f;
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.account-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.account-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #2d6a4f;
+}
+
+.account-form input,
+.account-form select {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  transition: border-color 0.3s ease;
+}
+
+.account-form input:focus,
+.account-form select:focus {
+  border-color: #40916c;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(64,145,108,0.2);
+}
+
+.account-form button {
+  background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 8px 25px rgba(45,106,79,0.3);
+}
+
+.account-form button:hover {
+  background: linear-gradient(135deg, #40916c 0%, #52b788 100%);
+  transform: translateY(-2px);
+}
+
+/* ========= LANGUAGE PAGE ========= */
+.language-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.language-container h1 {
+  color: #2d6a4f;
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.language-form {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.language-form select {
+  width: 60%;
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  transition: border-color 0.3s ease;
+}
+
+.language-form select:focus {
+  border-color: #40916c;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(64,145,108,0.2);
+}
+
+.language-form button {
+  margin-top: 20px;
+  background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 8px 25px rgba(45,106,79,0.3);
+}
+
+.language-form button:hover {
+  background: linear-gradient(135deg, #40916c 0%, #52b788 100%);
+  transform: translateY(-2px);
+}
+
+/* ========= FAQ PAGE ========= */
+.faq-section {
+  margin-top: 40px;
+}
+
+.faq-section h2 {
+  color: #2d6a4f;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.faq-content h3 {
+  color: #2d6a4f;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 40px 0 20px 0;
+  border-bottom: 3px solid #ffd166;
+  padding-bottom: 10px;
+}
+
+.faq-item {
+  background: #f0f8f5;
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(45,106,79,0.1);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.faq-item:hover {
+  background: #d1e7d3;
+  transform: translateY(-2px);
+}
+
+.faq-item .question {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #2d6a4f;
+  margin-bottom: 10px;
+}
+
+.faq-item .answer {
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.back-link {
+  color: #2d6a4f;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.back-link:hover {
+  color: #40916c;
+}
+
 .contact-form-container {
   background: rgba(255,255,255,0.95);
   padding: 50px;
