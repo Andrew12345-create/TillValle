@@ -204,7 +204,8 @@ function openProductModal(name, description, imageSrc, price) {
   const addToCartBtn = document.getElementById('modal-add-to-cart');
   addToCartBtn.onclick = () => {
     addToCart(name, price);
-    modal.style.display = 'none';
+    // Do not close modal on add to cart click to keep popup visible
+    // modal.style.display = 'none';
   };
 
   // Show modal
