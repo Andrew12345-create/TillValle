@@ -78,7 +78,10 @@ function addToCart(productName, price) {
 
 // Add order to order history in localStorage
 function addToOrderHistory(productName, price) {
-  let orderHistory = JSON.parse(localStorage.getItem('orderHistory') || '[]');
+  const user = getUser();
+  if (!user) return; // Should not happen since checked in addToCart
+  const key = `orderHistory_${user.email}`;
+  let orderHistory = JSON.parse(localStorage.getItem(key) || '[]');
   const newOrder = {
     id: orderHistory.length + 1,
     date: new Date().toISOString(),
@@ -86,7 +89,7 @@ function addToOrderHistory(productName, price) {
     total: price
   };
   orderHistory.push(newOrder);
-  localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
+  localStorage.setItem(key, JSON.stringify(orderHistory));
 }
 
 function updateCartCount() {

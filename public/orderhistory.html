@@ -5,6 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Order History - TilleValle</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    #clear-orders-btn {
+      margin: 10px 0;
+      padding: 8px 16px;
+      background-color: #2d6a4f;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #clear-orders-btn:hover {
+      background-color: #40916c;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -26,6 +40,7 @@
 
   <main>
     <h1>Your Order History</h1>
+    <button id="clear-orders-btn">Clear Order History</button>
     <div id="order-history-list">
       <!-- Order history items will be dynamically inserted here -->
     </div>
@@ -36,10 +51,17 @@
   </footer>
 
   <script>
-    // Load order history from localStorage and display
+    // Load order history from localStorage and display user-specific orders
     document.addEventListener('DOMContentLoaded', () => {
+      const userEmail = localStorage.getItem('email');
+      if (!userEmail) {
+        document.getElementById('order-history-list').innerHTML = '<p>Please login to view your order history.</p>';
+        return;
+      }
+
       const orderHistoryList = document.getElementById('order-history-list');
-      const orderHistory = JSON.parse(localStorage.getItem('orderHistory') || '[]');
+      const key = `orderHistory_${userEmail}`;
+      const orderHistory = JSON.parse(localStorage.getItem(key) || '[]');
 
       if (orderHistory.length === 0) {
         orderHistoryList.innerHTML = '<p>No orders found.</p>';
@@ -57,7 +79,7 @@
       }, {});
 
       const sortedEntries = Object.entries(groupedOrders).sort(([a], [b]) => new Date(b) - new Date(a));
-      sortedEntries.forEach(([date, orders], index) => {
+      sortedEntries.forEach(([date, orders]) => {
         const groupDiv = document.createElement('div');
         groupDiv.className = 'order-group';
         groupDiv.innerHTML = `<h3>Orders for ${date}</h3>`;
@@ -86,7 +108,36 @@
 
         orderHistoryList.appendChild(groupDiv);
       });
+
+      // Clear order history button
+      const clearBtn = document.getElementById('clear-orders-btn');
+      clearBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to clear your order history? This action cannot be undone.')) {
+          localStorage.removeItem(key);
+          orderHistoryList.innerHTML = '<p>No orders found.</p>';
+          showToast('Order history cleared.');
+        }
+      });
     });
+
+    // Show toast notification function (assumes showToast is defined globally)
+    function showToast(message) {
+      const toast = document.getElementById('cart-toast');
+      if (!toast) {
+        const newToast = document.createElement('div');
+        newToast.id = 'cart-toast';
+        document.body.appendChild(newToast);
+        showToast(message);
+        return;
+      }
+      toast.innerText = message;
+      toast.style.display = 'block';
+      toast.style.opacity = 1;
+      setTimeout(() => {
+        toast.style.opacity = 0;
+        setTimeout(() => (toast.style.display = 'none'), 300);
+      }, 2000);
+    }
   </script>
 </body>
 </html>
