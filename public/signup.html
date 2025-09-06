@@ -122,8 +122,12 @@
         return;
       }
 
+      // Determine signup URL based on environment
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const signupUrl = isLocal ? '/signup' : '/.netlify/functions/signup';
+
       try {
-        const response = await fetch('/.netlify/functions/signup', {
+        const response = await fetch(signupUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

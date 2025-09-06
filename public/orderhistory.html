@@ -56,7 +56,8 @@
         return groups;
       }, {});
 
-      Object.entries(groupedOrders).forEach(([date, orders], index) => {
+      const sortedEntries = Object.entries(groupedOrders).sort(([a], [b]) => new Date(b) - new Date(a));
+      sortedEntries.forEach(([date, orders], index) => {
         const groupDiv = document.createElement('div');
         groupDiv.className = 'order-group';
         groupDiv.innerHTML = `<h3>Orders for ${date}</h3>`;

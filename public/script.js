@@ -131,12 +131,19 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ====== API Calls ======
-const loginUrl = '/login';
-const signupUrl = '/signup';
+function getLoginUrl() {
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  return isLocal ? '/login' : '/.netlify/functions/login';
+}
+
+function getSignupUrl() {
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  return isLocal ? '/signup' : '/.netlify/functions/signup';
+}
 
 // Example usage of the URLs
 async function login(email, password) {
-  const response = await fetch(loginUrl, {
+  const response = await fetch(getLoginUrl(), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -147,7 +154,7 @@ async function login(email, password) {
 }
 
 async function signup(email, password) {
-  const response = await fetch(signupUrl, {
+  const response = await fetch(getSignupUrl(), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

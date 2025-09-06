@@ -8,12 +8,12 @@
     <script>
       // Load user profile from localStorage
       document.addEventListener('DOMContentLoaded', () => {
-        const savedName = localStorage.getItem('profileName') || '';
-        const savedEmail = localStorage.getItem('email') || '';
-        const savedPhone = localStorage.getItem('phoneNumber') || '';
+        const userEmail = localStorage.getItem('email') || '';
+        const savedName = localStorage.getItem(`profileName_${userEmail}`) || '';
+        const savedPhone = localStorage.getItem(`phoneNumber_${userEmail}`) || '';
 
         document.getElementById('profile-name').value = savedName;
-        document.getElementById('email').value = savedEmail;
+        document.getElementById('email').value = userEmail;
         document.getElementById('phone-number').value = savedPhone;
 
         if (savedName) {
@@ -24,13 +24,12 @@
       });
 
       function saveProfile() {
+        const userEmail = localStorage.getItem('email') || '';
         const name = document.getElementById('profile-name').value;
-        const email = document.getElementById('email').value;
         const phone = document.getElementById('phone-number').value;
 
-        localStorage.setItem('profileName', name);
-        localStorage.setItem('email', email);
-        localStorage.setItem('phoneNumber', phone);
+        localStorage.setItem(`profileName_${userEmail}`, name);
+        localStorage.setItem(`phoneNumber_${userEmail}`, phone);
 
         alert('Profile saved!');
 
