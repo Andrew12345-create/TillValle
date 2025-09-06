@@ -104,14 +104,22 @@
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
+      // Determine login URL based on environment
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const loginUrl = isLocal ? '/login' : '/.netlify/functions/login';
+
       try {
-        const response = await fetch('/.netlify/functions/login', {
+        const response = await fetch(loginUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ email, password }),
         });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
         const data = await response.json();
 

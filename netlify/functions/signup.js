@@ -1,10 +1,6 @@
-const { Pool } = require('pg');
+const { Client } = require('pg');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
-const pool = new Pool({
-  connectionString: process.env.NEON_DATABASE_URL,
-});
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
 const BCRYPT_ROUNDS = 10;
@@ -25,9 +21,15 @@ exports.handler = async (event, context) => {
     };
   }
 
+  const client = new Client({
+    connectionString: process.env.NEON_DATABASE_URL,
+  });
+
   try {
+    await client.connect();
+
     // Create table if not exists
-    await pool.query(`
+    await client.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         email VARCHAR(255) UNIQUE NOT NULL,
@@ -46,7 +48,7 @@ exports.handler = async (event, context) => {
 
     const lowerEmail = email.toLowerCase();
 
-    const existing = await pool.query('SELECT id FROM users WHERE email = $1', [lowerEmail]);
+    const existing = await client.query('SELECT id FROM users WHERE email = $1', [lowerEmail]);
     if (existing.rowCount > 0) {
       return {
         statusCode: 400,
@@ -55,7 +57,7 @@ exports.handler = async (event, context) => {
     }
 
     const password_hash = await bcrypt.hash(password, BCRYPT_ROUNDS);
-    const insert = await pool.query(
+    const insert = await client.query(
       'INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING id',
       [lowerEmail, password_hash]
     );
@@ -73,5 +75,7 @@ exports.handler = async (event, context) => {
       statusCode: 500,
       body: JSON.stringify({ ok: false, error: 'Server error' }),
     };
+  } finally {
+    await client.end();
   }
 };

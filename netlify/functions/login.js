@@ -1,10 +1,6 @@
-const { Pool } = require('pg');
+const { Client } = require('pg');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
-const pool = new Pool({
-  connectionString: process.env.NEON_DATABASE_URL,
-});
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
 
@@ -24,7 +20,13 @@ exports.handler = async (event, context) => {
     };
   }
 
+  const client = new Client({
+    connectionString: process.env.NEON_DATABASE_URL,
+  });
+
   try {
+    await client.connect();
+
     const { email, password } = JSON.parse(event.body);
     if (!email || !password) {
       return {
@@ -35,7 +37,7 @@ exports.handler = async (event, context) => {
 
     const lowerEmail = email.toLowerCase();
 
-    const result = await pool.query('SELECT id, password_hash FROM users WHERE email = $1', [lowerEmail]);
+    const result = await client.query('SELECT id, password_hash FROM users WHERE email = $1', [lowerEmail]);
     if (result.rowCount === 0) {
       return {
         statusCode: 401,
@@ -64,5 +66,7 @@ exports.handler = async (event, context) => {
       statusCode: 500,
       body: JSON.stringify({ ok: false, error: 'Server error' }),
     };
+  } finally {
+    await client.end();
   }
 };
