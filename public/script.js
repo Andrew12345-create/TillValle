@@ -240,3 +240,135 @@ async function signup(email, password) {
   });
   return response.json();
 }
+
+// Language preference application script
+
+document.addEventListener('DOMContentLoaded', () => {
+  const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
+
+  // Simple language dictionary for demonstration
+  const translations = {
+    en: {
+      home: "Home",
+      shop: "Shop",
+      about: "About",
+      contact: "Contact",
+      cart: "Cart",
+      welcome: "Welcome to TilleValle",
+      shopNow: "Shop Now",
+      aboutUs: "About Us",
+      readMore: "Read More",
+      orderHistory: "Your Order History",
+      login: "Login",
+      logout: "Logout",
+      profile: "Profile",
+      languageSettings: "Language Settings",
+      save: "Save",
+      // Add more translations as needed
+    },
+    es: {
+      home: "Inicio",
+      shop: "Tienda",
+      about: "Acerca de",
+      contact: "Contacto",
+      cart: "Carrito",
+      welcome: "Bienvenido a TilleValle",
+      shopNow: "Comprar Ahora",
+      aboutUs: "Sobre Nosotros",
+      readMore: "Leer Más",
+      orderHistory: "Tu Historial de Pedidos",
+      login: "Iniciar Sesión",
+      logout: "Cerrar Sesión",
+      profile: "Perfil",
+      languageSettings: "Configuración de Idioma",
+      save: "Guardar",
+    },
+    fr: {
+      home: "Accueil",
+      shop: "Boutique",
+      about: "À propos",
+      contact: "Contact",
+      cart: "Panier",
+      welcome: "Bienvenue à TilleValle",
+      shopNow: "Acheter Maintenant",
+      aboutUs: "À Propos de Nous",
+      readMore: "Lire la Suite",
+      orderHistory: "Votre Historique de Commandes",
+      login: "Connexion",
+      logout: "Déconnexion",
+      profile: "Profil",
+      languageSettings: "Paramètres de Langue",
+      save: "Enregistrer",
+    },
+    zh: {
+      home: "首页",
+      shop: "商店",
+      about: "关于",
+      contact: "联系",
+      cart: "购物车",
+      welcome: "欢迎来到TilleValle",
+      shopNow: "立即购买",
+      aboutUs: "关于我们",
+      readMore: "阅读更多",
+      orderHistory: "您的订单历史",
+      login: "登录",
+      logout: "登出",
+      profile: "个人资料",
+      languageSettings: "语言设置",
+      save: "保存",
+    }
+  };
+
+  // Function to translate page elements by id or class
+  function translatePage(lang) {
+    // Translate navbar links
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      const text = link.textContent.trim().toLowerCase();
+      switch(text) {
+        case 'home':
+          link.textContent = translations[lang].home;
+          break;
+        case 'shop':
+          link.textContent = translations[lang].shop;
+          break;
+        case 'about':
+          link.textContent = translations[lang].about;
+          break;
+        case 'contact':
+          link.textContent = translations[lang].contact;
+          break;
+        case 'cart':
+        case '🛒 cart (0)':
+        case '🛒 cart (0)':
+          // Handle cart link with count
+          const cartCountSpan = link.querySelector('span');
+          const count = cartCountSpan ? cartCountSpan.textContent : '0';
+          link.innerHTML = `🛒 ${translations[lang].cart} (<span id="cart-count">${count}</span>)`;
+          break;
+      }
+    });
+
+    // Translate other elements by id or class as needed
+    // Example: welcome message on home page
+    const welcomeElem = document.querySelector('.hero h1');
+    if (welcomeElem) {
+      welcomeElem.innerHTML = translations[lang].welcome.replace('TilleValle', '<span>TilleValle</span>');
+    }
+    const shopNowBtn = document.querySelector('.hero .btn');
+    if (shopNowBtn) {
+      shopNowBtn.textContent = translations[lang].shopNow;
+    }
+    const aboutUsHeader = document.querySelector('.about-preview h2');
+    if (aboutUsHeader) {
+      aboutUsHeader.textContent = translations[lang].aboutUs;
+    }
+    const readMoreBtn = document.querySelector('.about-preview .btn');
+    if (readMoreBtn) {
+      readMoreBtn.textContent = translations[lang].readMore;
+    }
+    // Add more translations for other pages and elements as needed
+  }
+
+  translatePage(preferredLanguage);
+});

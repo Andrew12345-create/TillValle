@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Language - TilleValle</title>
+  <link rel="icon" href="logo.jpg" type="image/jpeg">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -35,11 +36,34 @@
           <option value="en">English</option>
           <option value="es">Spanish</option>
           <option value="fr">French</option>
+          <option value="zh">Chinese</option>
         </select>
-        <button onclick="alert('Language preference saved!')">Save</button>
+        <button id="save-language-btn">Save</button>
       </div>
     </section>
   </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const languageSelect = document.getElementById('language-select');
+      const saveBtn = document.getElementById('save-language-btn');
+
+      // Load saved language preference
+      const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+      languageSelect.value = savedLang;
+
+      saveBtn.addEventListener('click', () => {
+        const selectedLang = languageSelect.value;
+        localStorage.setItem('preferredLanguage', selectedLang);
+        alert('Language preference saved!');
+        // Redirect to home page after saving language preference
+        window.location.href = 'index.html';
+      });
+
+      // Optional: Apply language changes immediately on this page if needed
+      // This requires additional i18n implementation which is not included here
+    });
+  </script>
+</body>
 
   <footer>
     <p>&copy; 2025 TilleValle. All rights reserved.</p>
