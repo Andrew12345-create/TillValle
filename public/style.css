@@ -2,6 +2,15 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: Arial, sans-serif; line-height: 1.6; background-color: #f9f9f9; color: #333; }
 
+/* ========= FAVICON STYLING ========= */
+link[rel="icon"] {
+  border-radius: 50%;
+  overflow: hidden;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+}
+
 /* ========= LOGO STYLING ========= */
 .logo {
   position: absolute;

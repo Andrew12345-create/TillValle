@@ -79,7 +79,7 @@
         <button onclick="saveProfile()">Save</button>
       </div>
       <div class="profile-buttons">
-        <button class="profile-btn">Edit Password</button>
+        <button class="profile-btn" id="edit-password-btn">Edit Password</button>
         <button class="profile-btn">Payment Methods</button>
         <button class="profile-btn">Privacy Settings</button>
         <button class="profile-btn">Logout</button>
@@ -87,6 +87,25 @@
       </div>
     </section>
   </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const editPasswordBtn = document.getElementById('edit-password-btn');
+      editPasswordBtn.addEventListener('click', () => {
+        const newPassword = prompt('Enter your new password:');
+        if (newPassword) {
+          if (newPassword.length < 6) {
+            alert('Password must be at least 6 characters long.');
+            return;
+          }
+          // Save new password to localStorage (for demo purposes only)
+          const userEmail = localStorage.getItem('email') || '';
+          localStorage.setItem(`password_${userEmail}`, newPassword);
+          alert('Password updated successfully!');
+        }
+      });
+    });
+  </script>
 
   <footer>
     <p>&copy; 2025 TilleValle. All rights reserved.</p>
