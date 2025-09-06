@@ -44,25 +44,25 @@
     <div class="category">
       <h3 class="category-title">Animal Farm Produce</h3>
       <div class="products">
-        <div class="product">
+        <div class="product" onclick="openProductModal('Milk', 'Fresh cow milk from our farm, rich in nutrients and perfect for daily consumption.', 'milk.png', 60)">
           <h4>Milk</h4>
           <p class="price" data-price="60">KES 60 / litre</p>
-          <button class="add-to-cart" onclick="addToCart('Milk', 60)">Add to Cart</button>
+          <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('Milk', 60)">Add to Cart</button>
         </div>
-        <div class="product">
+        <div class="product" onclick="openProductModal('Eggs', 'Fresh farm eggs, perfect for breakfast and baking.', 'eggs.png', 20)">
           <h4>Eggs</h4>
           <p class="price" data-price="20">KES 20 / egg</p>
-          <button class="add-to-cart" onclick="addToCart('Eggs', 20)">Add to Cart</button>
+          <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('Eggs', 20)">Add to Cart</button>
         </div>
-        <div class="product">
+        <div class="product" onclick="openProductModal('Eggs (Kienyeji)', 'Organic free-range eggs from indigenous chicken breeds.', 'eggs-kienyeji.png', 30)">
           <h4>Eggs (Kienyeji)</h4>
           <p class="price" data-price="30">KES 30 / egg</p>
-          <button class="add-to-cart" onclick="addToCart('Eggs (Kienyeji)', 30)">Add to Cart</button>
+          <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('Eggs (Kienyeji)', 30)">Add to Cart</button>
         </div>
-        <div class="product">
+        <div class="product" onclick="openProductModal('Butter', 'Creamy homemade butter made from fresh farm milk.', 'butter.png', 700)">
           <h4>Butter</h4>
           <p class="price" data-price="700">KES 700 / 500g</p>
-          <button class="add-to-cart" onclick="addToCart('Butter', 700)">Add to Cart</button>
+          <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('Butter', 700)">Add to Cart</button>
         </div>
         <div class="product">
           <h4>Chicken</h4>

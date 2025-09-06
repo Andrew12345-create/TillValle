@@ -72,6 +72,11 @@ function addToCart(productName, price) {
   }
   localStorage.setItem(cartKey, JSON.stringify(cart));
   updateCartCount();
+
+  // Trigger a custom event to notify other parts of the app about cart update
+  const event = new Event('cartUpdated');
+  window.dispatchEvent(event);
+
   showToast(`${productName} added to cart`);
 
   // Add order to order history
@@ -149,6 +154,62 @@ document.addEventListener('DOMContentLoaded', () => {
     searchBtn.addEventListener('click', searchProducts);
   }
 });
+
+// Function to open product modal with image and details
+function openProductModal(name, description, imageSrc, price) {
+  // Create modal elements if not already present
+  let modal = document.getElementById('product-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'product-modal';
+    modal.className = 'product-modal';
+    modal.innerHTML = `
+      <div class="product-modal-content">
+        <div class="product-modal-header">
+          <h3 id="modal-product-name"></h3>
+          <button class="close-modal" id="close-product-modal">&times;</button>
+        </div>
+        <div class="product-modal-body">
+          <img id="modal-product-image" class="product-image" src="" alt="">
+          <p id="modal-product-description" class="product-description"></p>
+          <p id="modal-product-price" class="product-price-modal"></p>
+          <button id="modal-add-to-cart" class="add-to-cart-modal">Add to Cart</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Close modal event
+    document.getElementById('close-product-modal').addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    // Close modal on outside click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  }
+
+  // Set modal content
+  document.getElementById('modal-product-name').textContent = name;
+  const img = document.getElementById('modal-product-image');
+  img.src = imageSrc;
+  img.alt = name;
+  document.getElementById('modal-product-description').textContent = description;
+  document.getElementById('modal-product-price').textContent = `KES ${price} / unit`;
+
+  // Set add to cart button action
+  const addToCartBtn = document.getElementById('modal-add-to-cart');
+  addToCartBtn.onclick = () => {
+    addToCart(name, price);
+    modal.style.display = 'none';
+  };
+
+  // Show modal
+  modal.style.display = 'block';
+}
 
 // ====== API Calls ======
 function getLoginUrl() {
