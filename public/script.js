@@ -62,18 +62,35 @@ function addToCart(productName, price) {
     return;
   }
 
-  let cart = JSON.parse(localStorage.getItem('cart') || '{}');
+  // Use user-specific cart key to avoid conflicts
+  const cartKey = `cart_${user.email}`;
+  let cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
   if (cart[productName]) {
     cart[productName].quantity += 1;
   } else {
     cart[productName] = { price, quantity: 1 };
   }
-  localStorage.setItem('cart', JSON.stringify(cart));
+  localStorage.setItem(cartKey, JSON.stringify(cart));
   updateCartCount();
   showToast(`${productName} added to cart`);
 
   // Add order to order history
   addToOrderHistory(productName, price);
+}
+
+// Update cart count to use user-specific cart key
+function updateCartCount() {
+  const user = getUser();
+  if (!user) {
+    const cartCountEl = document.getElementById('cart-count');
+    if (cartCountEl) cartCountEl.innerText = '0';
+    return;
+  }
+  const cartKey = `cart_${user.email}`;
+  const cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
+  const count = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+  const cartCountEl = document.getElementById('cart-count');
+  if (cartCountEl) cartCountEl.innerText = count;
 }
 
 // Add order to order history in localStorage
