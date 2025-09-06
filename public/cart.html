@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ion<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -9,12 +9,12 @@
 <body>
   <!-- Header -->
   <header>
-    <a href="index.html">
-      <img src="logo.jpg" alt="Farm Logo" class="logo">
-    </a>
    <!-- Navbar Start -->
 <nav class="navbar">
   <div class="nav-left">
+    <a href="index.html" class="nav-link logo-link">
+      <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
+    </a>
     <a href="index.html" class="nav-link">Home</a>
     <a href="shop.html" class="nav-link">Shop</a>
     <a href="about.html" class="nav-link">About</a>
@@ -62,9 +62,24 @@
   </footer>
 
   <script>
+    // Check if user is logged in
+    function getUser() {
+      const token = localStorage.getItem('token');
+      const email = localStorage.getItem('email');
+      return token && email ? { token, email } : null;
+    }
+
     // Load cart from localStorage
     function loadCart() {
-      let cart = JSON.parse(localStorage.getItem("cart")) || {};
+      const user = getUser();
+      if (!user) {
+        document.getElementById("cart-items").innerHTML = "<li>Please login to view your cart</li>";
+        document.getElementById("cart-total").textContent = "Total: KSh 0";
+        return;
+      }
+
+      const cartKey = `cart_${user.email}`;
+      let cart = JSON.parse(localStorage.getItem(cartKey)) || {};
       let cartItemsContainer = document.getElementById("cart-items");
       let cartTotal = document.getElementById("cart-total");
 
@@ -73,7 +88,7 @@
 
       // Convert object to array for display
       const cartArray = Object.entries(cart);
-      
+
       cartArray.forEach(([productName, item], index) => {
         let li = document.createElement("li");
         li.innerHTML = `
@@ -89,10 +104,14 @@
 
     // Remove item from cart
     function removeItem(productName) {
-      let cart = JSON.parse(localStorage.getItem("cart")) || {};
+      const user = getUser();
+      if (!user) return;
+
+      const cartKey = `cart_${user.email}`;
+      let cart = JSON.parse(localStorage.getItem(cartKey)) || {};
       if (cart[productName]) {
         delete cart[productName];
-        localStorage.setItem("cart", JSON.stringify(cart));
+        localStorage.setItem(cartKey, JSON.stringify(cart));
         loadCart();
         showToast(`${productName} removed from cart ❌`);
       }
@@ -110,7 +129,14 @@
 
     // Checkout button - show payment section instead of immediate checkout
     document.getElementById("checkout-btn").addEventListener("click", () => {
-      let cart = JSON.parse(localStorage.getItem("cart")) || {};
+      const user = getUser();
+      if (!user) {
+        showToast("🛑 Please login to checkout!");
+        return;
+      }
+
+      const cartKey = `cart_${user.email}`;
+      let cart = JSON.parse(localStorage.getItem(cartKey)) || {};
       if (Object.keys(cart).length === 0) {
         showToast("🛑 Your cart is empty!");
       } else {
@@ -125,11 +151,15 @@
 
     // Confirm Payment button event handler
     document.getElementById("confirm-payment-btn").addEventListener("click", () => {
+      const user = getUser();
+      if (!user) return;
+
       // For this demo, we assume payment is confirmed once the button is clicked
       showToast("✅ Successfully proceeded to checkout");
       // Clear the cart and reset payment form after a short delay
       setTimeout(() => {
-        localStorage.removeItem("cart");
+        const cartKey = `cart_${user.email}`;
+        localStorage.removeItem(cartKey);
         loadCart();
         // Optionally, hide the payment section and show the cart section (which will be empty)
         document.getElementById("payment-section").style.display = "none";

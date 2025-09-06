@@ -114,12 +114,7 @@ function addToOrderHistory(productName, price) {
   localStorage.setItem(key, JSON.stringify(orderHistory));
 }
 
-function updateCartCount() {
-  const cart = JSON.parse(localStorage.getItem('cart') || '{}');
-  const count = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
-  const cartCountEl = document.getElementById('cart-count');
-  if (cartCountEl) cartCountEl.innerText = count;
-}
+
 
 // ====== Contact Form Test ======
 function testContactForm() {
