@@ -6,10 +6,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>TilleValle Shop</title>
   <link rel="icon" href="logo.jpg" type="image/jpeg">
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./style-modal.css" />
+  <link rel="stylesheet" href="./quantity-controls.css" />
   <meta property="og:title" content="Shop - TilleValle" />
   <meta property="og:description" content="Browse and shop our range of fresh farm goods at TilleValle." />
-  <meta property="og:image" content="images/logo.png" />
+  <meta property="og:image" content="./images/logo.png" />
   <meta property="og:url" content="https://yourdomain.com/shop.html" />
   <meta name="twitter:card" content="summary_large_image" />
 </head>
@@ -20,7 +22,6 @@
       <div class="nav-left">
         <a href="index.html" class="nav-link logo-link">
           <img src="./logo.jpg" alt="TilleValle Logo" class="logo" />
-        </a>
         </a>
         <a href="index.html" class="nav-link">Home</a>
         <a href="shop.html" class="nav-link">Shop</a>
@@ -48,41 +49,35 @@
     <div class="category">
       <h3 class="category-title">Animal Farm Produce</h3>
       <div class="products">
-        <div class="product">
+        <div class="product" onclick="openProductModal('Milk', 'Fresh farm milk delivered daily.', 'milk.png', 60)">
           <img src="milk.png" alt="Milk" class="product-image">
           <h4>Milk</h4>
           <p class="price" data-price="60">KES 60 / litre</p>
-          <button class="add-to-cart" onclick="addToCart('Milk', 60)">Add to Cart</button>
         </div>
-        <div class="product">
+        <div class="product" onclick="openProductModal('Eggs', 'Fresh eggs from free-range chickens.', 'eggs.png', 20)">
           <img src="eggs.png" alt="Eggs" class="product-image">
           <h4>Eggs</h4>
           <p class="price" data-price="20">KES 20 / egg</p>
-          <button class="add-to-cart" onclick="addToCart('Eggs', 20)">Add to Cart</button>
         </div>
-        <div class="product">
+        <div class="product" onclick="openProductModal('Eggs (Kienyeji)', 'Organic kienyeji eggs with rich flavor.', 'eggs-kienyeji.png', 30)">
           <img src="eggs-kienyeji.png" alt="Eggs (Kienyeji)" class="product-image">
           <h4>Eggs (Kienyeji)</h4>
           <p class="price" data-price="30">KES 30 / egg</p>
-          <button class="add-to-cart" onclick="addToCart('Eggs (Kienyeji)', 30)">Add to Cart</button>
         </div>
-        <div class="product">
+        <div class="product" onclick="openProductModal('Butter', 'Creamy farm butter, 500g pack.', 'butter.png', 700)">
           <img src="butter.png" alt="Butter" class="product-image">
           <h4>Butter</h4>
           <p class="price" data-price="700">KES 700 / 500g</p>
-          <button class="add-to-cart" onclick="addToCart('Butter', 700)">Add to Cart</button>
         </div>
-        <div class="product">
+        <div class="product" onclick="openProductModal('Chicken', 'Fresh farm chicken, whole or cut.', 'chicken.png', 900)">
           <img src="chicken.png" alt="Chicken" class="product-image">
           <h4>Chicken</h4>
           <p class="price" data-price="900">from KES 900</p>
-          <button class="add-to-cart" onclick="addToCart('Chicken', 900)">Add to Cart</button>
         </div>
-        <div class="product">
+        <div class="product" onclick="openProductModal('Ghee', 'Pure farm ghee, 250g pack.', 'ghee.png', 650)">
           <img src="ghee.png" alt="Ghee" class="product-image">
           <h4>Ghee</h4>
           <p class="price" data-price="650">KES 650 / 250g</p>
-          <button class="add-to-cart" onclick="addToCart('Ghee', 650)">Add to Cart</button>
         </div>
       </div>
     </div>
@@ -91,20 +86,20 @@
     <div class="category">
       <h3 class="category-title">Fruits</h3>
       <div class="products">
-        <div class="product"><img src="apples.png" alt="Apples" class="product-image"><h4>Apples</h4><p class="price" data-price="40">KES 40 / piece</p><button class="add-to-cart" onclick="addToCart('Apples', 40)">Add to Cart</button></div>
-        <div class="product"><img src="raw-bananas.png" alt="Raw Bananas" class="product-image"><h4>Raw Bananas</h4><p class="price" data-price="100">KES 100 / bunch</p><button class="add-to-cart" onclick="addToCart('Raw Bananas', 100)">Add to Cart</button></div>
-        <div class="product"><img src="bananas-ripe.png" alt="Bananas (ripe)" class="product-image"><h4>Bananas (ripe)</h4><p class="price" data-price="10">KES 10/ piece</p><button class="add-to-cart" onclick="addToCart('Bananas', 15)">Add to Cart</button></div>
-        <div class="product"><img src="soursop.png" alt="Soursop (fruit/herbs)" class="product-image"><h4>Soursop (fruit/herbs)</h4><p class="price" data-price="250">from KES 250</p><button class="add-to-cart" onclick="addToCart('Soursop', 250)">Add to Cart</button></div>
-        <div class="product"><img src="blueberries.png" alt="Blueberries" class="product-image"><h4>Blueberries</h4><p class="price" data-price="500">KES 500 / punnet</p><button class="add-to-cart" onclick="addToCart('Blueberries', 500)">Add to Cart</button></div>
-        <div class="product"><img src="macadamia.png" alt="Macadamia" class="product-image"><h4>Macadamia</h4><p class="price" data-price="300">KES 300 / 250g</p><button class="add-to-cart" onclick="addToCart('Macadamia', 300)">Add to Cart</button></div>
-        <div class="product"><img src="dragonfruit.png" alt="Dragonfruit" class="product-image"><h4>Dragonfruit</h4><p class="price" data-price="250">KES 250 / piece</p><button class="add-to-cart" onclick="addToCart('Dragonfruit', 250)">Add to Cart</button></div>
-        <div class="product"><img src="mangoes.png" alt="Mangoes" class="product-image"><h4>Mangoes</h4><p class="price" data-price="40">KES 40 / piece</p><button class="add-to-cart" onclick="addToCart('Mangoes', 40)">Add to Cart</button></div>
-        <div class="product"><img src="lemon.png" alt="Lemon" class="product-image"><h4>Lemon</h4><p class="price" data-price="20">KES 20 / piece</p><button class="add-to-cart" onclick="addToCart('Lemon', 20)">Add to Cart</button></div>
-        <div class="product"><img src="pawpaw.png" alt="Pawpaw" class="product-image"><h4>Pawpaw</h4><p class="price" data-price="120">KES 120 / piece</p><button class="add-to-cart" onclick="addToCart('Pawpaw', 120)">Add to Cart</button></div>
-        <div class="product"><img src="pixies.png" alt="Pixies" class="product-image"><h4>Pixies</h4><p class="price" data-price="35">KES 35 / piece</p><button class="add-to-cart" onclick="addToCart('Pixies', 35)">Add to Cart</button></div>
-        <div class="product"><img src="avocadoes.png" alt="Avocadoes" class="product-image"><h4>Avocadoes</h4><p class="price" data-price="30">KES 30 / piece</p><button class="add-to-cart" onclick="addToCart('Avocadoes', 30)">Add to Cart</button></div>
-        <div class="product"><img src="yellow-passion.png" alt="Yellow Passion" class="product-image"><h4>Yellow Passion</h4><p class="price" data-price="25">KES 25 / piece</p><button class="add-to-cart" onclick="addToCart('Yellow Passion', 25)">Add to Cart</button></div>
-        <div class="product"><img src="kiwi.png" alt="Kiwi" class="product-image"><h4>Kiwi</h4><p class="price" data-price="60">KES 60 / piece</p><button class="add-to-cart" onclick="addToCart('Kiwi', 60)">Add to Cart</button></div>
+        <div class="product" onclick="openProductModal('Apples', 'Fresh, crisp apples from our farm.', 'apples.png', 40)"><img src="apples.png" alt="Apples" class="product-image"><h4>Apples</h4><p class="price" data-price="40">KES 40 / piece</p></div>
+        <div class="product" onclick="openProductModal('Raw Bananas', 'Green bananas perfect for cooking.', 'raw-bananas.png', 100)"><img src="raw-bananas.png" alt="Raw Bananas" class="product-image"><h4>Raw Bananas</h4><p class="price" data-price="100">KES 100 / bunch</p></div>
+        <div class="product" onclick="openProductModal('Bananas (ripe)', 'Sweet, ripe bananas ready to eat.', 'bananas-ripe.png', 15)"><img src="bananas-ripe.png" alt="Bananas (ripe)" class="product-image"><h4>Bananas (ripe)</h4><p class="price" data-price="10">KES 10/ piece</p></div>
+        <div class="product" onclick="openProductModal('Soursop Fruit', 'Exotic soursop fruit with unique flavor.', 'soursop.png', 250)"><img src="soursop.png" alt="Soursop Fruit" class="product-image"><h4>Soursop Fruit</h4><p class="price" data-price="250">from KES 250</p></div>
+        <div class="product" onclick="openProductModal('Blueberries', 'Fresh blueberries, packed with antioxidants.', 'blueberries.png', 500)"><img src="blueberries.png" alt="Blueberries" class="product-image"><h4>Blueberries</h4><p class="price" data-price="500">KES 500 / punnet</p></div>
+        <div class="product" onclick="openProductModal('Macadamia', 'Premium macadamia nuts, 250g pack.', 'macadamia.png', 300)"><img src="macadamia.png" alt="Macadamia" class="product-image"><h4>Macadamia</h4><p class="price" data-price="300">KES 300 / 250g</p></div>
+        <div class="product" onclick="openProductModal('Dragonfruit', 'Colorful dragonfruit with sweet taste.', 'dragonfruit.png', 250)"><img src="dragonfruit.png" alt="Dragonfruit" class="product-image"><h4>Dragonfruit</h4><p class="price" data-price="250">KES 250 / piece</p></div>
+        <div class="product" onclick="openProductModal('Mangoes', 'Juicy mangoes, perfect for summer.', 'mangoes.png', 40)"><img src="mangoes.png" alt="Mangoes" class="product-image"><h4>Mangoes</h4><p class="price" data-price="40">KES 40 / piece</p></div>
+        <div class="product" onclick="openProductModal('Lemon', 'Fresh lemons for cooking and drinks.', 'lemon.png', 20)"><img src="lemon.png" alt="Lemon" class="product-image"><h4>Lemon</h4><p class="price" data-price="20">KES 20 / piece</p></div>
+        <div class="product" onclick="openProductModal('Pawpaw', 'Sweet pawpaw fruit, rich in vitamins.', 'pawpaw.png', 120)"><img src="pawpaw.png" alt="Pawpaw" class="product-image"><h4>Pawpaw</h4><p class="price" data-price="120">KES 120 / piece</p></div>
+        <div class="product" onclick="openProductModal('Pixies', 'Mini sweet oranges, great for snacking.', 'pixies.png', 35)"><img src="pixies.png" alt="Pixies" class="product-image"><h4>Pixies</h4><p class="price" data-price="35">KES 35 / piece</p></div>
+        <div class="product" onclick="openProductModal('Avocadoes', 'Creamy avocados for healthy eating.', 'avocadoes.png', 30)"><img src="avocadoes.png" alt="Avocadoes" class="product-image"><h4>Avocadoes</h4><p class="price" data-price="30">KES 30 / piece</p></div>
+        <div class="product" onclick="openProductModal('Yellow Passion', 'Tangy passion fruit for juices.', 'yellow-passion.png', 25)"><img src="yellow-passion.png" alt="Yellow Passion" class="product-image"><h4>Yellow Passion</h4><p class="price" data-price="25">KES 25 / piece</p></div>
+        <div class="product" onclick="openProductModal('Kiwi', 'Nutritious kiwi fruit, full of vitamin C.', 'kiwi.png', 60)"><img src="kiwi.png" alt="Kiwi" class="product-image"><h4>Kiwi</h4><p class="price" data-price="60">KES 60 / piece</p></div>
       </div>
     </div>
 
@@ -112,8 +107,11 @@
     <div class="category">
       <h3 class="category-title">Herbs</h3>
       <div class="products">
-        <div class="product"><img src="basil.png" alt="Basil" class="product-image"><h4>Basil</h4><p class="price" data-price="50">KES 50 / bunch</p><button class="add-to-cart" onclick="addToCart('Basil', 50)">Add to Cart</button></div>
-        <div class="product"><img src="coriander.png" alt="Coriander" class="product-image"><h4>Coriander</h4><p class="price" data-price="30">KES 30 / bunch</p><button class="add-to-cart" onclick="addToCart('Coriander', 30)">Add to Cart</button></div>
+        <div class="product" onclick="openProductModal('Basil', 'Fresh basil leaves for cooking.', 'basil.png', 50)"><img src="basil.png" alt="Basil" class="product-image"><h4>Basil</h4><p class="price" data-price="50">KES 50 / bunch</p></div>
+        <div class="product" onclick="openProductModal('Coriander', 'Aromatic coriander leaves and seeds.', 'coriander.png', 30)"><img src="coriander.png" alt="Coriander" class="product-image"><h4>Coriander</h4><p class="price" data-price="30">KES 30 / bunch</p></div>
+        <div class="product" onclick="openProductModal('Mint', 'Fresh mint leaves for cooking and drinks.', 'mint.png', 40)"><img src="mint.png" alt="Mint" class="product-image"><h4>Mint</h4><p class="price" data-price="40">KES 40 / bunch</p></div>
+        <div class="product" onclick="openProductModal('Parsley', 'Fresh parsley leaves for cooking.', 'parsley.png', 35)"><img src="parsley.png" alt="Parsley" class="product-image"><h4>Parsley</h4><p class="price" data-price="35">KES 35 / bunch</p></div>
+        <div class="product" onclick="openProductModal('Soursop Herbs', 'Medicinal soursop herbs and leaves.', 'soursop-herbs.png', 200)"><img src="soursop-herbs.png" alt="Soursop Herbs" class="product-image"><h4>Soursop Herbs</h4><p class="price" data-price="200">from KES 200</p></div>
       </div>
     </div>
 
@@ -121,16 +119,15 @@
     <div class="category">
       <h3 class="category-title">Vegetables & Greens</h3>
       <div class="products">
-        <div class="product"><img src="kales.png" alt="Kales (Sukuma Wiki)" class="product-image"><h4>Kales (Sukuma Wiki)</h4><p class="price" data-price="30">KES 30 / bunch</p><button class="add-to-cart" onclick="addToCart('Kales', 30)">Add to Cart</button></div>
-        <div class="product"><img src="lettuce.png" alt="Lettuce" class="product-image"><h4>Lettuce</h4><p class="price" data-price="80">KES 80 / head</p><button class="add-to-cart" onclick="addToCart('Lettuce', 80)">Add to Cart</button></div>
-        <div class="product"><img src="managu.png" alt="Managu" class="product-image"><h4>Managu</h4><p class="price" data-price="40">KES 40 / bunch</p><button class="add-to-cart" onclick="addToCart('Managu', 40)">Add to Cart</button></div>
-        <div class="product"><img src="terere.png" alt="Terere" class="product-image"><h4>Terere</h4><p class="price" data-price="40">KES 40 / bunch</p><button class="add-to-cart" onclick="addToCart('Terere', 40)">Add to Cart</button></div>
-        <div class="product"><img src="salgaa.png" alt="Salgaa" class="product-image"><h4>Salgaa</h4><p class="price" data-price="20">KES 20 / bunch</p><button class="add-to-cart" onclick="addToCart('Salgaa', 20)">Add to Cart</button></div>
-        <div class="product"><img src="spinach.png" alt="Spinach" class="product-image"><h4>Spinach</h4><p class="price" data-price="30">KES 30 / bunch</p><button class="add-to-cart" onclick="addToCart('Spinach', 30)">Add to Cart</button></div>
+        <div class="product" onclick="openProductModal('Kales (Sukuma Wiki)', 'Nutritious kales, perfect for sukuma wiki.', 'kales.png', 30)"><img src="kales.png" alt="Kales (Sukuma Wiki)" class="product-image"><h4>Kales (Sukuma Wiki)</h4><p class="price" data-price="30">KES 30 / bunch</p></div>
+        <div class="product" onclick="openProductModal('Lettuce', 'Fresh, crisp lettuce for salads.', 'lettuce.png', 80)"><img src="lettuce.png" alt="Lettuce" class="product-image"><h4>Lettuce</h4><p class="price" data-price="80">KES 80 / head</p></div>
+        <div class="product" onclick="openProductModal('Managu', 'Traditional African vegetable.', 'managu.png', 40)"><img src="managu.png" alt="Managu" class="product-image"><h4>Managu</h4><p class="price" data-price="40">KES 40 / bunch</p></div>
+        <div class="product" onclick="openProductModal('Terere', 'Fresh terere leaves for cooking.', 'terere.png', 40)"><img src="terere.png" alt="Terere" class="product-image"><h4>Terere</h4><p class="price" data-price="40">KES 40 / bunch</p></div>
+        <div class="product" onclick="openProductModal('Salgaa', 'Fresh salgaa for traditional dishes.', 'salgaa.png', 20)"><img src="salgaa.png" alt="Salgaa" class="product-image"><h4>Salgaa</h4><p class="price" data-price="20">KES 20 / bunch</p></div>
+        <div class="product" onclick="openProductModal('Spinach', 'Fresh spinach leaves, rich in iron.', 'spinach.png', 30)"><img src="spinach.png" alt="Spinach" class="product-image"><h4>Spinach</h4><p class="price" data-price="30">KES 30 / bunch</p></div>
       </div>
     </div>
   </section>
-        <a href="index.html" class="nav-link logo-link">
 
   <footer>
     <p>&copy; 2025 TilleValle. All rights reserved.</p>

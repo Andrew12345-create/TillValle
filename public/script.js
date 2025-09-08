@@ -52,7 +52,7 @@ function updateNavbar() {
 }
 
 // ====== Cart Logic ======
-function addToCart(productName, price) {
+function addToCart(productName, price, quantity = 1) {
   const user = getUser();
   if (!user) {
     showToast('Please login first! Redirecting to login page...');
@@ -66,9 +66,9 @@ function addToCart(productName, price) {
   const cartKey = `cart_${user.email}`;
   let cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
   if (cart[productName]) {
-    cart[productName].quantity += 1;
+    cart[productName].quantity += quantity;
   } else {
-    cart[productName] = { price, quantity: 1 };
+    cart[productName] = { price, quantity };
   }
   localStorage.setItem(cartKey, JSON.stringify(cart));
   updateCartCount();
@@ -77,10 +77,10 @@ function addToCart(productName, price) {
   const event = new Event('cartUpdated');
   window.dispatchEvent(event);
 
-  showToast(`${productName} added to cart`);
+  showToast(`${quantity} x ${productName} added to cart`);
 
   // Add order to order history
-  addToOrderHistory(productName, price);
+  addToOrderHistory(productName, price, quantity);
 }
 
 // Update cart count to use user-specific cart key
@@ -99,7 +99,7 @@ function updateCartCount() {
 }
 
 // Add order to order history in localStorage
-function addToOrderHistory(productName, price) {
+function addToOrderHistory(productName, price, quantity = 1) {
   const user = getUser();
   if (!user) return; // Should not happen since checked in addToCart
   const key = `orderHistory_${user.email}`;
@@ -107,8 +107,8 @@ function addToOrderHistory(productName, price) {
   const newOrder = {
     id: orderHistory.length + 1,
     date: new Date().toISOString(),
-    items: [{ name: productName, quantity: 1, price }],
-    total: price
+    items: [{ name: productName, quantity, price }],
+    total: price * quantity
   };
   orderHistory.push(newOrder);
   localStorage.setItem(key, JSON.stringify(orderHistory));
@@ -168,6 +168,11 @@ function openProductModal(name, description, imageSrc, price) {
           <img id="modal-product-image" class="product-image" src="" alt="">
           <p id="modal-product-description" class="product-description"></p>
           <p id="modal-product-price" class="product-price-modal"></p>
+          <div class="quantity-controls">
+            <button id="modal-quantity-minus">-</button>
+            <input type="number" id="modal-quantity" value="1" min="1">
+            <button id="modal-quantity-plus">+</button>
+          </div>
           <button id="modal-add-to-cart" class="add-to-cart-modal">Add to Cart</button>
         </div>
       </div>
@@ -185,6 +190,15 @@ function openProductModal(name, description, imageSrc, price) {
         modal.style.display = 'none';
       }
     });
+
+    // Quantity controls
+    const minusBtn = document.getElementById('modal-quantity-minus');
+    const plusBtn = document.getElementById('modal-quantity-plus');
+    const quantityInput = document.getElementById('modal-quantity');
+
+    minusBtn.classList.add('quantity-btn', 'minus');
+    plusBtn.classList.add('quantity-btn', 'plus');
+    quantityInput.classList.add('quantity-input');
   }
 
   // Set modal content
@@ -195,10 +209,14 @@ function openProductModal(name, description, imageSrc, price) {
   document.getElementById('modal-product-description').textContent = description;
   document.getElementById('modal-product-price').textContent = `KES ${price} / unit`;
 
+  // Reset quantity to 1
+  document.getElementById('modal-quantity').value = 1;
+
   // Set add to cart button action
   const addToCartBtn = document.getElementById('modal-add-to-cart');
   addToCartBtn.onclick = () => {
-    addToCart(name, price);
+    const quantity = parseInt(document.getElementById('modal-quantity').value);
+    addToCart(name, price, quantity);
     // Do not close modal on add to cart click to keep popup visible
     // modal.style.display = 'none';
   };
@@ -246,129 +264,54 @@ async function signup(email, password) {
 document.addEventListener('DOMContentLoaded', () => {
   const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
 
-  // Simple language dictionary for demonstration
+  // Comprehensive language dictionary
   const translations = {
     en: {
+      // Navigation
       home: "Home",
       shop: "Shop",
       about: "About",
       contact: "Contact",
       cart: "Cart",
-      welcome: "Welcome to TilleValle",
-      shopNow: "Shop Now",
-      aboutUs: "About Us",
-      readMore: "Read More",
-      orderHistory: "Your Order History",
       login: "Login",
-      logout: "Logout",
-      profile: "Profile",
-      languageSettings: "Language Settings",
-      save: "Save",
       // Add more translations as needed
     },
-    es: {
-      home: "Inicio",
-      shop: "Tienda",
-      about: "Acerca de",
-      contact: "Contacto",
-      cart: "Carrito",
-      welcome: "Bienvenido a TilleValle",
-      shopNow: "Comprar Ahora",
-      aboutUs: "Sobre Nosotros",
-      readMore: "Leer Más",
-      orderHistory: "Tu Historial de Pedidos",
-      login: "Iniciar Sesión",
-      logout: "Cerrar Sesión",
-      profile: "Perfil",
-      languageSettings: "Configuración de Idioma",
-      save: "Guardar",
-    },
-    fr: {
-      home: "Accueil",
-      shop: "Boutique",
-      about: "À propos",
-      contact: "Contact",
-      cart: "Panier",
-      welcome: "Bienvenue à TilleValle",
-      shopNow: "Acheter Maintenant",
-      aboutUs: "À Propos de Nous",
-      readMore: "Lire la Suite",
-      orderHistory: "Votre Historique de Commandes",
-      login: "Connexion",
-      logout: "Déconnexion",
-      profile: "Profil",
-      languageSettings: "Paramètres de Langue",
-      save: "Enregistrer",
-    },
-    zh: {
-      home: "首页",
-      shop: "商店",
-      about: "关于",
-      contact: "联系",
-      cart: "购物车",
-      welcome: "欢迎来到TilleValle",
-      shopNow: "立即购买",
-      aboutUs: "关于我们",
-      readMore: "阅读更多",
-      orderHistory: "您的订单历史",
-      login: "登录",
-      logout: "登出",
-      profile: "个人资料",
-      languageSettings: "语言设置",
-      save: "保存",
-    }
+    // Add other languages here
   };
 
-  // Function to translate page elements by id or class
-  function translatePage(lang) {
-    // Translate navbar links
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-      const text = link.textContent.trim().toLowerCase();
-      switch(text) {
-        case 'home':
-          link.textContent = translations[lang].home;
-          break;
-        case 'shop':
-          link.textContent = translations[lang].shop;
-          break;
-        case 'about':
-          link.textContent = translations[lang].about;
-          break;
-        case 'contact':
-          link.textContent = translations[lang].contact;
-          break;
-        case 'cart':
-        case '🛒 cart (0)':
-        case '🛒 cart (0)':
-          // Handle cart link with count
-          const cartCountSpan = link.querySelector('span');
-          const count = cartCountSpan ? cartCountSpan.textContent : '0';
-          link.innerHTML = `🛒 ${translations[lang].cart} (<span id="cart-count">${count}</span>)`;
-          break;
+  // Apply translations to the page
+  function applyTranslations(lang) {
+    const elements = document.querySelectorAll('[data-translate]');
+    elements.forEach(element => {
+      const key = element.getAttribute('data-translate');
+      if (translations[lang] && translations[lang][key]) {
+        element.textContent = translations[lang][key];
       }
     });
-
-    // Translate other elements by id or class as needed
-    // Example: welcome message on home page
-    const welcomeElem = document.querySelector('.hero h1');
-    if (welcomeElem) {
-      welcomeElem.innerHTML = translations[lang].welcome.replace('TilleValle', '<span>TilleValle</span>');
-    }
-    const shopNowBtn = document.querySelector('.hero .btn');
-    if (shopNowBtn) {
-      shopNowBtn.textContent = translations[lang].shopNow;
-    }
-    const aboutUsHeader = document.querySelector('.about-preview h2');
-    if (aboutUsHeader) {
-      aboutUsHeader.textContent = translations[lang].aboutUs;
-    }
-    const readMoreBtn = document.querySelector('.about-preview .btn');
-    if (readMoreBtn) {
-      readMoreBtn.textContent = translations[lang].readMore;
-    }
-    // Add more translations for other pages and elements as needed
   }
 
-  translatePage(preferredLanguage);
+  // Apply initial translations
+  applyTranslations(preferredLanguage);
+
+  // Language selector event listener
+  const languageSelector = document.getElementById('language-selector');
+  if (languageSelector) {
+    languageSelector.addEventListener('change', (e) => {
+      const selectedLang = e.target.value;
+      localStorage.setItem('preferredLanguage', selectedLang);
+      applyTranslations(selectedLang);
+    });
+  }
+
+  // Remove inline onclick from product divs and add event listeners
+  document.querySelectorAll('.product').forEach(product => {
+    product.removeAttribute('onclick');
+    product.addEventListener('click', () => {
+      const name = product.querySelector('h4').textContent;
+      const description = 'Fresh farm product'; // Generic description
+      const price = product.querySelector('.price').getAttribute('data-price');
+      const imageSrc = name.toLowerCase().replace(/\s+/g, '-') + '.png'; // e.g., 'milk.png', 'eggs-kienyeji.png'
+      openProductModal(name, description, imageSrc, price);
+    });
+  });
 });

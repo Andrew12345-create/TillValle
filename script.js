@@ -13,8 +13,15 @@ function updateCart() {
     cart.forEach((item, index) => {
       const li = document.createElement("li");
       li.innerHTML = `
-        ${item.name} - KES ${item.price.toLocaleString()} x ${item.quantity}
-        <button onclick="removeFromCart(${index})">❌ Remove</button>
+        <div class="cart-item">
+          <span>${item.name} - KES ${item.price.toLocaleString()}</span>
+          <div class="cart-quantity-controls">
+            <button onclick="removeOneFromCart(${index})">-</button>
+            <input type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${index}, this.value)">
+            <button onclick="addOneToCart(${index})">+</button>
+            <button onclick="removeAllFromCart(${index})">❌ Remove All</button>
+          </div>
+        </div>
       `;
       cartItemsList.appendChild(li);
       total += item.price * item.quantity;
@@ -34,22 +41,45 @@ function updateCart() {
 }
 
 // Add item to cart; if item exists, update quantity, else push new
-function addToCart(name, price) {
+function addToCart(name, price, quantity = 1) {
   const existingItem = cart.find(item => item.name === name);
   if (existingItem) {
-    existingItem.quantity++;
+    existingItem.quantity += quantity;
   } else {
-    cart.push({ name, price, quantity: 1 });
+    cart.push({ name, price, quantity });
   }
   updateCart(); // update cart display and navbar count
-  showNotification(`${name} added to cart 🛒`);
+  showNotification(`${quantity} x ${name} added to cart 🛒`);
 }
 
-// Remove item from cart at specific index
-function removeFromCart(index) {
+function removeOneFromCart(index) {
+  if (cart[index].quantity > 1) {
+    cart[index].quantity--;
+  } else {
+    cart.splice(index, 1);
+  }
+  updateCart();
+  showNotification("One item removed from cart ❌");
+}
+
+function removeAllFromCart(index) {
   cart.splice(index, 1);
   updateCart();
-  showNotification("Item removed from cart ❌");
+  showNotification("All items removed from cart ❌");
+}
+
+function addOneToCart(index) {
+  cart[index].quantity++;
+  updateCart();
+  showNotification("One item added to cart 🛒");
+}
+
+function updateQuantity(index, newQuantity) {
+  const qty = parseInt(newQuantity);
+  if (qty > 0) {
+    cart[index].quantity = qty;
+    updateCart();
+  }
 }
 
 // Clear entire cart
@@ -77,7 +107,7 @@ function searchProducts() {
   const input = document.getElementById("search-bar").value.toLowerCase();
   const products = document.querySelectorAll(".product");
   products.forEach(product => {
-    const name = product.getAttribute("data-name") || product.querySelector("h3").innerText;
+    const name = product.getAttribute("data-name") || product.querySelector("h4").innerText;
     if (name.toLowerCase().includes(input)) {
       product.style.display = "block";
     } else {
@@ -94,5 +124,145 @@ function buyNow(name, price) {
   }, 500);
 }
 
-// Run updateCart on page load
-document.addEventListener("DOMContentLoaded", updateCart);
+function openProductModal(name, description, imageSrc, price) {
+  // Create modal elements if not already present
+  let modal = document.getElementById('product-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'product-modal';
+    modal.className = 'product-modal';
+    modal.innerHTML = `
+      <div class="product-modal-content">
+        <div class="product-modal-header">
+          <h3 id="modal-product-name"></h3>
+          <button class="close-modal" id="close-product-modal">&times;</button>
+        </div>
+        <div class="product-modal-body">
+          <img id="modal-product-image" class="product-image" src="" alt="">
+          <p id="modal-product-description" class="product-description"></p>
+          <p id="modal-product-price" class="product-price-modal"></p>
+          <div class="quantity-controls">
+            <button id="modal-quantity-minus">-</button>
+            <input type="number" id="modal-quantity" value="1" min="1">
+            <button id="modal-quantity-plus">+</button>
+          </div>
+          <button id="modal-add-to-cart" class="add-to-cart-modal">Add to Cart</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Close modal event
+    document.getElementById('close-product-modal').addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    // Close modal on outside click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  }
+
+  // Always set up quantity controls when modal opens
+  setTimeout(() => {
+    const minusBtn = document.getElementById('modal-quantity-minus');
+    const plusBtn = document.getElementById('modal-quantity-plus');
+    const quantityInput = document.getElementById('modal-quantity');
+
+    if (minusBtn && plusBtn && quantityInput) {
+      // Remove existing event listeners to prevent duplicates
+      minusBtn.replaceWith(minusBtn.cloneNode(true));
+      plusBtn.replaceWith(plusBtn.cloneNode(true));
+
+      // Re-get references after cloning
+      const newMinusBtn = document.getElementById('modal-quantity-minus');
+      const newPlusBtn = document.getElementById('modal-quantity-plus');
+
+      newMinusBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const current = parseInt(quantityInput.value);
+        if (current > 1) {
+          quantityInput.value = current - 1;
+        }
+      });
+
+      newPlusBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const current = parseInt(quantityInput.value);
+        quantityInput.value = current + 1;
+      });
+
+      quantityInput.addEventListener('input', () => {
+        const current = parseInt(quantityInput.value);
+        if (isNaN(current) || current < 1) {
+          quantityInput.value = 1;
+        }
+      });
+    }
+  }, 10);
+
+  // Set modal content
+  document.getElementById('modal-product-name').textContent = name;
+  const img = document.getElementById('modal-product-image');
+  img.src = imageSrc;
+  img.alt = name;
+
+  // Add error handling for image loading
+  img.onerror = function() {
+    this.src = 'placeholder.png'; // Fallback image
+    this.alt = 'Image not available';
+  };
+
+  // Ensure image loads properly
+  img.onload = function() {
+    console.log('Image loaded successfully:', imageSrc);
+  };
+
+  document.getElementById('modal-product-description').textContent = description;
+  document.getElementById('modal-product-price').textContent = `KES ${price} / unit`;
+
+  // Reset quantity to 1
+  document.getElementById('modal-quantity').value = 1;
+
+  // Set add to cart button action
+  const addToCartBtn = document.getElementById('modal-add-to-cart');
+  addToCartBtn.onclick = () => {
+    const quantity = parseInt(document.getElementById('modal-quantity').value);
+    addToCart(name, price, quantity);
+    // Do not close modal on add to cart click to keep popup visible
+    // modal.style.display = 'none';
+  };
+
+  // Show modal
+  modal.style.display = 'block';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  updateCart();
+
+  // Add click event listeners to all product divs
+  document.querySelectorAll('.product').forEach(product => {
+    product.addEventListener('click', () => {
+      const name = product.querySelector('h4').textContent;
+      const description = 'Fresh farm product'; // Generic description, can be customized per product
+      const price = product.querySelector('.price').getAttribute('data-price');
+      const imageSrc = name.toLowerCase().replace(/\s+/g, '-') + '.png'; // e.g., 'milk.png', 'eggs-kienyeji.png'
+      openProductModal(name, description, imageSrc, price);
+    });
+
+    // Fix plus button inside shop.html modal quantity controls
+    const plusBtn = product.querySelector('.modal-quantity-plus') || document.getElementById('modal-quantity-plus');
+    if (plusBtn) {
+      plusBtn.addEventListener('click', () => {
+        const quantityInput = document.getElementById('modal-quantity');
+        if (quantityInput) {
+          let current = parseInt(quantityInput.value);
+          if (isNaN(current)) current = 0;
+          quantityInput.value = current + 1;
+        }
+      });
+    }
+  });
+});

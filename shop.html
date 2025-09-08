@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <title>TilleValle Shop</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style-modal.css">
   <meta property="og:title" content="Shop - TilleValle">
   <meta property="og:description" content="Browse and shop our range of fresh farm goods at TilleValle.">
   <meta property="og:image" content="images/logo.png">
@@ -29,12 +31,52 @@
     <div class="category">
       <h3 class="category-title">Animal Farm Produce</h3>
       <div class="products">
-        <div class="product">
+        <div class="product" data-name="Milk" id="product-milk" style="cursor:pointer;">
+          <img src="milk.png" alt="Milk" class="product-image">
           <h4>Milk</h4>
           <p class="price" data-price="80">KES 80 / litre</p>
-          <button class="add-to-cart" onclick="addToCart('Milk', 80)">Add to Cart</button>
         </div>
         <!-- ...additional product blocks... -->
+      </div>
+    </div>
+    <div class="category">
+      <h3 class="category-title">Soursop Fruits</h3>
+      <div class="products">
+        <div class="product" data-name="Soursop" id="product-soursop" style="cursor:pointer;">
+          <img src="soursop.png" alt="Soursop" class="product-image">
+          <h4>Soursop</h4>
+          <p class="price" data-price="250">from KES 250</p>
+        </div>
+      </div>
+    </div>
+    <div class="category">
+      <h3 class="category-title">Herbs</h3>
+      <div class="products">
+        <div class="product" data-name="Basil">
+          <img src="basil.png" alt="Basil" class="product-image">
+          <h4>Basil</h4>
+          <p class="price" data-price="50">KES 50 / bunch</p>
+        </div>
+        <div class="product" data-name="Coriander">
+          <img src="coriander.png" alt="Coriander" class="product-image">
+          <h4>Coriander</h4>
+          <p class="price" data-price="30">KES 30 / bunch</p>
+        </div>
+        <div class="product" data-name="Mint">
+          <img src="mint.png" alt="Mint" class="product-image">
+          <h4>Mint</h4>
+          <p class="price" data-price="40">KES 40 / bunch</p>
+        </div>
+        <div class="product" data-name="Parsley">
+          <img src="parsley.png" alt="Parsley" class="product-image">
+          <h4>Parsley</h4>
+          <p class="price" data-price="35">KES 35 / bunch</p>
+        </div>
+        <div class="product" data-name="Soursop Herbs" id="product-soursop-herbs" style="cursor:pointer;">
+          <img src="soursop-herbs.png" alt="Soursop Herbs" class="product-image">
+          <h4>Soursop Herbs</h4>
+          <p class="price" data-price="200">from KES 200</p>
+        </div>
       </div>
     </div>
     <!-- ...additional categories... -->
@@ -43,6 +85,29 @@
   <footer>
     <p>&copy; 2025 TilleValle. All rights reserved.</p>
   </footer>
-  <script src="script.js" defer></script>
+
+  <!-- Product Modal -->
+  <div id="product-modal" class="product-modal">
+    <div class="product-modal-content">
+      <div class="product-modal-header">
+        <h3 id="modal-product-name"></h3>
+        <button class="close-modal" id="close-product-modal">&times;</button>
+      </div>
+      <div class="product-modal-body">
+        <img id="modal-product-image" class="product-image" src="" alt="">
+        <p id="modal-product-description" class="product-description"></p>
+        <p id="modal-product-price" class="product-price-modal"></p>
+        <div class="quantity-controls">
+          <label for="modal-quantity" class="sr-only">Quantity</label>
+          <button id="modal-quantity-minus" aria-label="Decrease quantity">-</button>
+          <input type="number" id="modal-quantity" value="1" min="1" aria-label="Product quantity">
+          <button id="modal-quantity-plus" aria-label="Increase quantity">+</button>
+        </div>
+        <button id="modal-add-to-cart" class="add-to-cart-modal">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js?v=1"></script>
 </body>
 </html>

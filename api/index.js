@@ -9,14 +9,14 @@ const session = require('express-session');
 
 // App setup
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
 const BCRYPT_ROUNDS = 10;
 
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: ["http://127.0.0.1:5500", "http://localhost:5500", "http://localhost:3000"],
+  origin: ["http://127.0.0.1:5500", "http://localhost:5500", "http://localhost:3001"],
   credentials: true,
   optionsSuccessStatus: 200
 }));
