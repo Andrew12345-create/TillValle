@@ -66,23 +66,27 @@
       
       logoutBtn.addEventListener('click', async function() {
         try {
-          const response = await fetch('/logout', {
+          // Determine logout URL based on environment
+          const isNetlify = window.location.hostname.includes('netlify') || window.location.href.includes('netlify');
+          const logoutUrl = isNetlify ? '/.netlify/functions/logout' : '/logout';
+
+          const response = await fetch(logoutUrl, {
             method: 'POST',
             credentials: 'include'
           });
-          
+
           const result = await response.json();
-          
+
           if (result.ok) {
             // Clear any stored tokens or session data
             localStorage.removeItem('token');
             sessionStorage.removeItem('token');
-            
+
             // Update navbar after logout
             if (typeof updateNavbar === 'function') {
               updateNavbar();
             }
-            
+
             // Redirect to login page
             window.location.href = 'login.html';
           } else {

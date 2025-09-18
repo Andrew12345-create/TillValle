@@ -109,11 +109,39 @@
 
           // Logout button functionality
           const logoutBtn = document.getElementById('logout-btn');
-          logoutBtn.addEventListener('click', () => {
-            localStorage.removeItem('token');
-            localStorage.removeItem('email');
-            alert('You have been logged out.');
-            window.location.href = 'login.html';
+          logoutBtn.addEventListener('click', async () => {
+            try {
+              // Determine logout URL based on environment
+              const isNetlify = window.location.hostname.includes('netlify') || window.location.href.includes('netlify');
+              const logoutUrl = isNetlify ? '/.netlify/functions/logout' : '/logout';
+
+              const response = await fetch(logoutUrl, {
+                method: 'POST',
+                credentials: 'include'
+              });
+
+              const result = await response.json();
+
+              if (result.ok) {
+                // Clear any stored tokens or session data
+                localStorage.removeItem('token');
+                localStorage.removeItem('email');
+                sessionStorage.removeItem('token');
+
+                alert('You have been logged out.');
+                window.location.href = 'login.html';
+              } else {
+                alert('Logout failed: ' + result.error);
+              }
+            } catch (error) {
+              console.error('Logout error:', error);
+              // Fallback: clear local data even if server call fails
+              localStorage.removeItem('token');
+              localStorage.removeItem('email');
+              sessionStorage.removeItem('token');
+              alert('You have been logged out.');
+              window.location.href = 'login.html';
+            }
           });
         });
       </script>
