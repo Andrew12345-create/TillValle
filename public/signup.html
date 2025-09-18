@@ -1,175 +1,43 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up - TilleValle</title>
-  <link rel="stylesheet" href="../styles.css">
-  <style>
-    .signup-container {
-      max-width: 400px;
-      margin: 60px auto;
-      background: #fff;
-      padding: 35px 30px;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      animation: fadeIn 1s ease-out;
-    }
-    .signup-container h1 {
-      text-align: center;
-      font-size: 28px;
-      color: #2d6a4f;
-      margin-bottom: 25px;
-    }
-    .signup-container input {
-      width: 100%;
-      padding: 12px 15px;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-      transition: border 0.3s ease;
-    }
-    .signup-container input:focus {
-      border-color: #2d6a4f;
-      outline: none;
-    }
-    .signup-container button {
-      width: 100%;
-      padding: 12px;
-      background: #2d6a4f;
-      color: #fff;
-      font-size: 16px;
-      font-weight: bold;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease;
-    }
-    .signup-container button:hover {
-      background: #40916c;
-      transform: scale(1.05);
-    }
-    #output {
-      margin-top: 15px;
-      text-align: center;
-      font-weight: bold;
-      color: #2d6a4f;
-    }
-    .signup-container a {
-      display: block;
-      margin-top: 15px;
-      text-align: center;
-      color: #2d6a4f;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-    .signup-container a:hover {
-      color: #40916c;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Include navbar -->
-  <div id="navbar-container"></div>
+  <div id="root"></div>
 
-  <div class="signup-container">
-    <h1>Create Account</h1>
-    <form id="signup-form">
-      <input type="email" id="email" placeholder="Email Address" required>
-      <input type="password" id="password" placeholder="Password" required>
-      <input type="password" id="confirm-password" placeholder="Confirm Password" required>
-      <button type="submit">Sign Up</button>
-    </form>
-    <div id="output"></div>
-    <a href="login.html">Already have an account? Login here</a>
-  </div>
+  <script type="module">
+    import { SignUp } from 'https://cdn.skypack.dev/@stackframe/stack';
 
-  <div id="cart-toast" style="display:none;"></div>
-  
-  <script>
-    // Load navbar
-    fetch('navbar.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('navbar-container').innerHTML = data;
-        // Initialize navbar functionality
-        const script = document.createElement('script');
-        script.src = 'script.js';
-        document.body.appendChild(script);
+    const root = document.getElementById('root');
+
+    function createSignUp() {
+      const container = document.createElement('div');
+
+      const heading = document.createElement('h1');
+      heading.textContent = 'Sign Up';
+      container.appendChild(heading);
+
+      const signUpComponent = SignUp({
+        fullPage: true,
+        automaticRedirect: true,
+        firstTab: 'password',
+        extraInfo: document.createElement('div'),
       });
 
-    // Signup form handling
-    document.getElementById('signup-form').addEventListener('submit', async (event) => {
-      event.preventDefault();
+      const extraInfo = document.createElement('div');
+      extraInfo.innerHTML = 'By signing up, you agree to our <a href="/terms">Terms</a>';
+      signUpComponent.extraInfo = extraInfo;
 
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirm-password').value;
+      container.appendChild(signUpComponent);
 
-      // Validate passwords match
-      if (password !== confirmPassword) {
-        document.getElementById('output').textContent = 'Passwords do not match!';
-        document.getElementById('output').style.color = 'red';
-        return;
-      }
-
-      // Validate password strength
-      if (password.length < 6) {
-        document.getElementById('output').textContent = 'Password must be at least 6 characters long!';
-        document.getElementById('output').style.color = 'red';
-        return;
-      }
-
-      // Determine signup URL based on environment
-      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      const signupUrl = isLocal ? '/signup' : '/.netlify/functions/signup';
-
-      try {
-        const response = await fetch(signupUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password }),
-        });
-
-        const data = await response.json();
-
-        if (data.ok) {
-          // New user registered successfully
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('email', email);
-          document.getElementById('output').textContent = 'Account created successfully! Redirecting...';
-          document.getElementById('output').style.color = '#2d6a4f';
-
-          // Redirect to shop page after successful signup
-          setTimeout(() => {
-            window.location.href = 'shop.html';
-          }, 1500);
-        } else {
-          document.getElementById('output').textContent = data.error || 'Signup failed. Please try again.';
-          document.getElementById('output').style.color = 'red';
-        }
-      } catch (error) {
-        document.getElementById('output').textContent = 'Network error. Please try again later.';
-        document.getElementById('output').style.color = 'red';
-        console.error('Signup error:', error);
-      }
-    });
-
-    // Show toast function
-    function showToast(message) {
-      const toast = document.getElementById('cart-toast');
-      toast.innerText = message;
-      toast.style.display = 'block';
-      toast.style.opacity = 1;
-      setTimeout(() => {
-        toast.style.opacity = 0;
-        setTimeout(() => (toast.style.display = 'none'), 300);
-      }, 2000);
+      return container;
     }
+
+    root.appendChild(createSignUp());
   </script>
 </body>
 </html>
