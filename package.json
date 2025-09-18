@@ -8,6 +8,7 @@
     "build": "echo 'No build step required'"
   },
   "dependencies": {
+    "@stackframe/stack": "^2.8.36",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
