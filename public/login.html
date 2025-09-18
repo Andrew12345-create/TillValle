@@ -137,6 +137,12 @@
         } else {
           document.getElementById('output').textContent = data.error || 'Login failed. Please try again.';
           document.getElementById('output').style.color = 'red';
+
+          if (data.error === 'Cannot see account, please sign up') {
+            setTimeout(() => {
+              window.location.href = 'signup.html';
+            }, 2000);
+          }
         }
       } catch (error) {
         document.getElementById('output').textContent = 'Network error. Please try again later.';
