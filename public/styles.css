@@ -1366,13 +1366,13 @@ body {
 
   /* Search adjustments for mobile */
   .search-input {
-    width: 120px;
+    width: 140px;
   }
 
   .search-container {
     padding: 4px 10px;
     border-radius: 25px;
-    width: 140px;
+    width: 180px;
     margin: 0 auto;
   }
 
