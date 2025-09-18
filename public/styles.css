@@ -225,7 +225,7 @@ body {
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.2);
-  max-width: 400px;
+  max-width: 210px;
   margin: 0 auto;
 }
 
@@ -235,7 +235,7 @@ body {
   padding: 6px 10px;
   font-size: 14px;
   background: transparent;
-  width: 200px;
+  width: 150px;
   color: var(--text-primary);
   font-family: 'Poppins', sans-serif;
 }
@@ -1163,13 +1163,15 @@ body {
   padding: 20px;
   box-sizing: border-box;
   animation: modalFadeIn 0.3s ease forwards;
+  text-align: center;
 }
 
 /* Notification toast */
 .notification {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateY(-20px);
   background: var(--accent-yellow);
   color: var(--accent-green);
   padding: 15px 25px;
@@ -1178,14 +1180,13 @@ body {
   font-size: 1rem;
   box-shadow: 0 8px 25px rgba(255,209,102,0.4);
   opacity: 0;
-  transform: translateY(-20px);
   transition: opacity 0.3s ease, transform 0.3s ease;
   z-index: 12000; /* Above modal */
 }
 
 .notification.show {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate(-50%, -50%) translateY(0);
 }
 
 .product-modal-content {
@@ -1365,13 +1366,13 @@ body {
 
   /* Search adjustments for mobile */
   .search-input {
-    width: 80px;
+    width: 120px;
   }
 
   .search-container {
     padding: 4px 10px;
     border-radius: 25px;
-    width: 100px;
+    width: 140px;
     margin: 0 auto;
   }
 

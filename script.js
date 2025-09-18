@@ -135,20 +135,13 @@ function clearCart() {
 
 // Show a styled notification/toast
 function showNotification(message) {
-  console.log('Showing notification:', message);
   const note = document.createElement("div");
-  note.className = "notification";
+  note.className = "notification show";
   note.textContent = message;
   document.body.appendChild(note);
-  console.log('Notification element created and appended');
-  setTimeout(() => {
-    note.classList.add("show");
-    console.log('Show class added');
-  }, 100);
   setTimeout(() => {
     note.classList.remove("show");
-    note.remove();
-    console.log('Notification removed');
+    setTimeout(() => note.remove(), 300);
   }, 2500);
 }
 
