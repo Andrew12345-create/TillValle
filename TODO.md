@@ -1,18 +1,26 @@
- # TODO: CSS Upgrade and Bug Fix for Shop and General UI
+# TODO: CSS and UI Bug Fixes and Upgrades
 
-## Completed:
-- [x] Fixed checkout button functionality in public/script.js - added event listeners for checkout and payment confirmation.
-- [x] Updated cart button colors to green theme in public/styles.css.
-- [x] Added comprehensive responsive design for mobile devices in public/styles.css - adjusted layouts, font sizes, and spacing for tablets and phones.
+## Completed
+- [x] Reviewed existing CSS and JS files for shop.html and related pages.
+- [x] Identified UI bugs and missing features.
+- [x] Planned comprehensive CSS fixes and UI improvements including animations.
+- [x] Ensured logout functionality support for Netlify.
 
-## Steps to Complete:
-- [ ] Fix stylesheet link in public/shop.html to avoid duplicate or incorrect CSS loading.
-- [ ] Review and fix CSS bugs in public/styles.css related to:
-  - Product card layout and price label positioning.
-  - Navbar styling and responsiveness.
-  - Modal and cart UI styling.
-- [ ] Add animations and hover effects to product cards, buttons, and modals for improved UX.
-- [ ] Fix broken image or resource paths causing 404 errors.
-- [ ] Review and improve JS in public/script.js for UI responsiveness and modal behavior.
-- [ ] Test all changes locally by running the server and verifying UI correctness on shop.html and other pages.
-- [ ] Update this TODO with progress and notes.
+## To Do
+- [ ] Fix CSS bugs and visual issues on:
+  - shop.html
+  - orderhistory.html
+  - account.html
+  - language.html
+  - faq.html
+- [ ] Ensure cart icon is always visible in navbar.
+- [ ] Add UI animations and JS improvements site-wide.
+- [ ] Test logout functionality on Netlify and localhost.
+- [ ] Perform thorough UI testing on all affected pages.
+- [ ] Fix any issues found during testing.
+
+## Notes
+- Use CSS variables and responsive design.
+- Use animations like fadeIn, slideIn, pulse.
+- Improve modal and toast notification styles.
+- Confirm all fixes work on mobile and desktop.

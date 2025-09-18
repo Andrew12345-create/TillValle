@@ -57,7 +57,7 @@ exports.handler = async (event, context) => {
     if (result.rowCount === 0) {
       return {
         statusCode: 401,
-        body: JSON.stringify({ ok: false, error: 'User not found' }),
+        body: JSON.stringify({ ok: false, error: 'Cannot see account, please sign up' }),
       };
     }
 
