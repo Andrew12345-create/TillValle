@@ -135,14 +135,20 @@ function clearCart() {
 
 // Show a styled notification/toast
 function showNotification(message) {
+  console.log('Showing notification:', message);
   const note = document.createElement("div");
   note.className = "notification";
   note.textContent = message;
   document.body.appendChild(note);
-  setTimeout(() => note.classList.add("show"), 100);
+  console.log('Notification element created and appended');
+  setTimeout(() => {
+    note.classList.add("show");
+    console.log('Show class added');
+  }, 100);
   setTimeout(() => {
     note.classList.remove("show");
     note.remove();
+    console.log('Notification removed');
   }, 2500);
 }
 
@@ -150,14 +156,17 @@ function showNotification(message) {
 function searchProducts() {
   const input = document.getElementById("search-bar").value.toLowerCase();
   const products = document.querySelectorAll(".product");
+  let foundCount = 0;
   products.forEach(product => {
     const name = product.getAttribute("data-name") || product.querySelector("h4").innerText;
     if (name.toLowerCase().includes(input)) {
       product.style.display = "block";
+      foundCount++;
     } else {
       product.style.display = "none";
     }
   });
+  showNotification(`Found ${foundCount} result${foundCount !== 1 ? 's' : ''} for "${input}"`);
 }
 
 // New function to buy immediately and go to checkout
