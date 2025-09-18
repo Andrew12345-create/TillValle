@@ -1341,39 +1341,43 @@ body {
 @media (max-width: 768px) {
   /* Global mobile adjustments */
   body {
-    font-size: 14px;
+    font-size: 15px;
   }
 
-  /* Navbar */
+  /* Navbar - Make it extremely compact */
   .navbar {
-    padding: 10px 15px;
+    padding: 5px 8px;
+    min-height: 45px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
   }
 
   .nav-left, .nav-center, .nav-right {
-    gap: 10px;
+    gap: 5px;
   }
 
   .nav-link {
-    font-size: 14px;
-    padding: 6px 12px;
+    font-size: 11px;
+    padding: 3px 6px;
+    min-width: auto;
+    border-radius: 20px;
   }
 
   #cart-count {
-    font-size: 12px;
-    padding: 1px 6px;
+    font-size: 9px;
+    padding: 1px 3px;
   }
 
-  /* Hero Section */
+  /* Hero Section - Increase sizes slightly more */
   .hero {
-    padding: 80px 20px;
+    padding: 50px 12px;
   }
 
   .hero h1 {
-    font-size: 2.5rem;
+    font-size: 3rem;
   }
 
   .hero p {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
   }
 
   /* Buttons */
