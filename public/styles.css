@@ -1380,6 +1380,19 @@ body {
     font-size: 1.3rem;
   }
 
+  /* Global font size increases for all pages */
+  h1 {
+    font-size: 3rem !important;
+  }
+
+  h2 {
+    font-size: 2.5rem !important;
+  }
+
+  p {
+    font-size: 1.3rem !important;
+  }
+
   /* Buttons */
   .btn {
     padding: 12px 25px;
