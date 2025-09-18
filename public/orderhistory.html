@@ -84,7 +84,11 @@
       sortedEntries.forEach(([date, orders]) => {
         const groupDiv = document.createElement('div');
         groupDiv.className = 'order-group';
-        groupDiv.innerHTML = `<h3>Orders for ${date}</h3>`;
+
+        // Calculate total spent for the day
+        const totalSpent = orders.reduce((sum, order) => sum + order.total, 0);
+
+        groupDiv.innerHTML = `<h3>Orders for ${date} - Total Spent: KES ${totalSpent}</h3>`;
 
         orders.forEach(order => {
           // Group items by name and sum quantities
