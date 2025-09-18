@@ -168,6 +168,10 @@ body {
   align-items: center;
 }
 
+.nav-center {
+  justify-content: center;
+}
+
 .nav-link {
   color: #fff;
   text-decoration: none;
@@ -226,10 +230,10 @@ body {
 .search-input {
   border: none;
   outline: none;
-  padding: 10px 15px;
-  font-size: 16px;
+  padding: 6px 10px;
+  font-size: 14px;
   background: transparent;
-  width: 250px;
+  width: 80px;
   color: var(--text-primary);
   font-family: 'Poppins', sans-serif;
 }
@@ -572,7 +576,7 @@ body {
 }
 
 .price {
-  color: #e63946;
+  color: var(--accent-green);
   font-weight: 700;
   font-size: 1.5rem;
   margin-bottom: 25px;
@@ -585,7 +589,7 @@ body {
   position: absolute;
   top: -10px;
   left: -20px;
-  color: #7f8c8d;
+  color: var(--accent-green-light);
 }
 
 .add-to-cart {
@@ -1349,10 +1353,24 @@ body {
     padding: 5px 8px;
     min-height: 45px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    flex-direction: column;
+    align-items: center;
   }
 
   .nav-left, .nav-center, .nav-right {
     gap: 5px;
+  }
+
+  /* Search adjustments for mobile */
+  .search-input {
+    width: 80px;
+  }
+
+  .search-container {
+    padding: 4px 10px;
+    border-radius: 25px;
+    width: 100px;
+    margin: 0 auto;
   }
 
   .nav-link {

@@ -286,6 +286,21 @@ function openProductModal(name, description, imageSrc, price) {
 document.addEventListener('DOMContentLoaded', () => {
   updateCart();
 
+  // Add event listeners for search
+  const searchBar = document.getElementById('search-bar');
+  const searchBtn = document.getElementById('search-btn');
+  if (searchBar) {
+    searchBar.addEventListener('input', searchProducts);
+    searchBar.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        searchProducts();
+      }
+    });
+  }
+  if (searchBtn) {
+    searchBtn.addEventListener('click', searchProducts);
+  }
+
   // Add click event listeners to all product divs
   document.querySelectorAll('.product').forEach(product => {
     product.addEventListener('click', () => {
