@@ -15,7 +15,7 @@ function showToast(message) {
   toast.style.color = '#000';
   toast.style.padding = '10px 20px';
   toast.style.borderRadius = '5px';
-  toast.style.zIndex = 1000;
+  toast.style.zIndex = 12000;
   setTimeout(() => {
     toast.style.opacity = 0;
     setTimeout(() => (toast.style.display = 'none'), 300);
@@ -96,6 +96,104 @@ function updateCartCount() {
   const count = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
   const cartCountEl = document.getElementById('cart-count');
   if (cartCountEl) cartCountEl.innerText = count;
+  // Also update cart items display if on cart page
+  updateCartItems();
+}
+
+// Update cart items display for cart page
+function updateCartItems() {
+  const cartItemsList = document.getElementById("cart-items");
+  const cartTotalEl = document.getElementById("cart-total");
+  if (!cartItemsList) return; // Only update if on cart page
+
+  const user = getUser();
+  if (!user) {
+    cartItemsList.innerHTML = "<li>Please log in to view your cart.</li>";
+    if (cartTotalEl) cartTotalEl.innerHTML = "<strong>Total: KSh 0</strong>";
+    return;
+  }
+
+  const cartKey = `cart_${user.email}`;
+  const cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
+  cartItemsList.innerHTML = ""; // Clear list
+  let total = 0;
+  Object.entries(cart).forEach(([name, item], index) => {
+    const li = document.createElement("li");
+    li.className = "cart-item";
+    li.innerHTML = `
+      <span>${name} - KES ${item.price.toLocaleString()}</span>
+      <div class="cart-quantity-controls">
+        <button onclick="removeOneFromCart('${name}')" aria-label="Remove one ${name}">-</button>
+        <input type="number" value="${item.quantity}" min="1" onchange="updateQuantity('${name}', this.value)" aria-label="Quantity of ${name}">
+        <button onclick="addOneToCart('${name}')" aria-label="Add one ${name}">+</button>
+        <button onclick="removeAllFromCart('${name}')" aria-label="Remove all ${name}">❌ Remove All</button>
+      </div>
+    `;
+    cartItemsList.appendChild(li);
+    total += item.price * item.quantity;
+  });
+  if (cartTotalEl) {
+    cartTotalEl.innerHTML = `<strong>Total: KES ${total.toLocaleString()}</strong>`;
+  }
+}
+
+// Cart item modification functions
+function removeOneFromCart(productName) {
+  const user = getUser();
+  if (!user) return;
+  const cartKey = `cart_${user.email}`;
+  let cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
+  if (cart[productName]) {
+    if (cart[productName].quantity > 1) {
+      cart[productName].quantity--;
+    } else {
+      delete cart[productName];
+    }
+    localStorage.setItem(cartKey, JSON.stringify(cart));
+    updateCartCount();
+    showToast("One item removed from cart");
+  }
+}
+
+function addOneToCart(productName) {
+  const user = getUser();
+  if (!user) return;
+  const cartKey = `cart_${user.email}`;
+  let cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
+  if (cart[productName]) {
+    cart[productName].quantity++;
+    localStorage.setItem(cartKey, JSON.stringify(cart));
+    updateCartCount();
+    showToast("One item added to cart");
+  }
+}
+
+function updateQuantity(productName, newQuantity) {
+  const user = getUser();
+  if (!user) return;
+  const qty = parseInt(newQuantity);
+  if (qty > 0) {
+    const cartKey = `cart_${user.email}`;
+    let cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
+    if (cart[productName]) {
+      cart[productName].quantity = qty;
+      localStorage.setItem(cartKey, JSON.stringify(cart));
+      updateCartCount();
+    }
+  }
+}
+
+function removeAllFromCart(productName) {
+  const user = getUser();
+  if (!user) return;
+  const cartKey = `cart_${user.email}`;
+  let cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
+  if (cart[productName]) {
+    delete cart[productName];
+    localStorage.setItem(cartKey, JSON.stringify(cart));
+    updateCartCount();
+    showToast("All items removed from cart");
+  }
 }
 
 // Add order to order history in localStorage
@@ -148,6 +246,43 @@ document.addEventListener('DOMContentLoaded', () => {
   if (searchBtn) {
     searchBtn.addEventListener('click', searchProducts);
   }
+
+  // Checkout button functionality
+  const checkoutBtn = document.getElementById('checkout-btn');
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener('click', () => {
+      const cartSection = document.getElementById('cart-section');
+      const paymentSection = document.getElementById('payment-section');
+      if (cartSection && paymentSection) {
+        cartSection.style.display = 'none';
+        paymentSection.style.display = 'block';
+      }
+    });
+  }
+
+  // Confirm payment button functionality
+  const confirmPaymentBtn = document.getElementById('confirm-payment-btn');
+  if (confirmPaymentBtn) {
+    confirmPaymentBtn.addEventListener('click', () => {
+      const reference = document.getElementById('payment-reference').value.trim();
+      if (!reference) {
+        showToast('Please enter a payment reference.');
+        return;
+      }
+      // Here you could send the reference to the server for verification
+      // For now, just clear the cart and show success
+      const user = getUser();
+      if (user) {
+        const cartKey = `cart_${user.email}`;
+        localStorage.removeItem(cartKey);
+        updateCartCount();
+      }
+      showToast('Payment confirmed! Order placed successfully.');
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 2000);
+    });
+  }
 });
 
 // Function to open product modal with image and details
@@ -199,6 +334,16 @@ function openProductModal(name, description, imageSrc, price) {
     minusBtn.classList.add('quantity-btn', 'minus');
     plusBtn.classList.add('quantity-btn', 'plus');
     quantityInput.classList.add('quantity-input');
+
+    minusBtn.addEventListener('click', () => {
+      let val = parseInt(quantityInput.value);
+      if (val > 1) quantityInput.value = val - 1;
+    });
+
+    plusBtn.addEventListener('click', () => {
+      let val = parseInt(quantityInput.value);
+      quantityInput.value = val + 1;
+    });
   }
 
   // Set modal content

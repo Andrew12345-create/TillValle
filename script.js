@@ -1,5 +1,34 @@
+// Helper functions
+function getUser() {
+  const token = localStorage.getItem('token');
+  const email = localStorage.getItem('email');
+  return token && email ? { token, email } : null;
+}
+
+function getInitials(email) {
+  if (!email) return '';
+  const name = email.split('@')[0];
+  return name
+    .split(/[._-]/)
+    .map(part => part[0].toUpperCase())
+    .join('');
+}
+
+// Update navbar login area
+function updateNavbar() {
+  const userArea = document.getElementById('user-area');
+  if (!userArea) return;
+  const user = getUser();
+  if (user) {
+    userArea.innerHTML = `<a href="profile.html" class="nav-link user-initials">${getInitials(user.email)}</a>`;
+  } else {
+    userArea.innerHTML = `<a href="login.html" class="nav-link" id="login-link">Login</a>`;
+  }
+}
+
 // Load cart from localStorage or start fresh
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let cart = [];
+updateCart(); // Update UI immediately after loading cart
 
 // Update cart display and save to localStorage
 function updateCart() {
@@ -12,15 +41,14 @@ function updateCart() {
     let total = 0;
     cart.forEach((item, index) => {
       const li = document.createElement("li");
+      li.className = "cart-item";
       li.innerHTML = `
-        <div class="cart-item">
-          <span>${item.name} - KES ${item.price.toLocaleString()}</span>
-          <div class="cart-quantity-controls">
-            <button onclick="removeOneFromCart(${index})">-</button>
-            <input type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${index}, this.value)">
-            <button onclick="addOneToCart(${index})">+</button>
-            <button onclick="removeAllFromCart(${index})">❌ Remove All</button>
-          </div>
+        <span>${item.name} - KES ${item.price.toLocaleString()}</span>
+        <div class="cart-quantity-controls">
+          <button onclick="removeOneFromCart(${index})" aria-label="Remove one ${item.name}">-</button>
+          <input type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${index}, this.value)" aria-label="Quantity of ${item.name}">
+          <button onclick="addOneToCart(${index})" aria-label="Add one ${item.name}">+</button>
+          <button onclick="removeAllFromCart(${index})" aria-label="Remove all ${item.name}">❌ Remove All</button>
         </div>
       `;
       cartItemsList.appendChild(li);
@@ -42,12 +70,28 @@ function updateCart() {
 
 // Add item to cart; if item exists, update quantity, else push new
 function addToCart(name, price, quantity = 1) {
-  const existingItem = cart.find(item => item.name === name);
-  if (existingItem) {
-    existingItem.quantity += quantity;
-  } else {
-    cart.push({ name, price, quantity });
+  const user = getUser();
+  if (!user) {
+    showNotification('Please login first! Redirecting to login page...');
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 1500);
+    return;
   }
+
+  // Use user-specific cart key to avoid conflicts
+  const cartKey = `cart_${user.email}`;
+  let cartObj = JSON.parse(localStorage.getItem(cartKey) || '{}');
+  if (cartObj[name]) {
+    cartObj[name].quantity += quantity;
+  } else {
+    cartObj[name] = { price, quantity };
+  }
+  localStorage.setItem(cartKey, JSON.stringify(cartObj));
+
+  // Update the global cart array for compatibility
+  cart = Object.entries(cartObj).map(([name, item]) => ({ name, price: item.price, quantity: item.quantity }));
+
   updateCart(); // update cart display and navbar count
   showNotification(`${quantity} x ${name} added to cart 🛒`);
 }

@@ -1,44 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Your Cart</title>
-  <link rel="icon" href="logo.jpg" type="image/jpeg">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Header -->
-  <header>
-   <!-- Navbar Start -->
-<nav class="navbar">
-  <div class="nav-left">
-    <a href="index.html" class="nav-link logo-link">
-      <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
-    </a>
-    <a href="index.html" class="nav-link">Home</a>
-    <a href="shop.html" class="nav-link">Shop</a>
-    <a href="about.html" class="nav-link">About</a>
-    <a href="contact.html" class="nav-link">Contact</a>
-  </div>
-  <div class="nav-right">
+  <link rel="stylesheet" href="styles.css" />
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="index.html" class="nav-link logo-link">
+        <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
+      </a>
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="shop.html" class="nav-link">Shop</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <div class="nav-right">
       <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
-    <span id="user-area"></span>
-  </div>
-</nav>
-<hr>
-<!-- Navbar End -->
+      <span id="user-area"></span>
+    </div>
+  </nav>
 
-  </header>
-
-  <!-- Cart Section -->
   <section class="cart animated fadeIn" id="cart-section">
     <h2>Your Shopping Cart</h2>
     <div class="cart-container">
       <ul id="cart-items">
         <!-- Cart items will appear here -->
       </ul>
-     <b> <p id="cart-total">Total: KSh 0</p> </b>
+      <b><p id="cart-total">Total: KSh 0</p></b>
       <button id="checkout-btn">Proceed to Checkout</button>
     </div>
   </section>
@@ -50,126 +42,17 @@
     <p>Account No: <strong>0012345678</strong></p>
     <form id="payment-form">
       <label for="payment-reference">Enter Payment Reference:</label>
-      <input type="text" id="payment-reference" placeholder="Reference Number" required>
+      <input type="text" id="payment-reference" placeholder="Reference Number" required />
       <button type="button" id="confirm-payment-btn">Confirm Payment</button>
     </form>
   </section>
 
-  <!-- Notification -->
   <div id="cart-toast"></div>
 
   <footer>
     <p>&copy; 2025 SmartFarm. All rights reserved.</p>
   </footer>
 
-  <script>
-    // Check if user is logged in
-    function getUser() {
-      const token = localStorage.getItem('token');
-      const email = localStorage.getItem('email');
-      return token && email ? { token, email } : null;
-    }
-
-    // Load cart from localStorage
-    function loadCart() {
-      const user = getUser();
-      if (!user) {
-        document.getElementById("cart-items").innerHTML = "<li>Please login to view your cart</li>";
-        document.getElementById("cart-total").textContent = "Total: KSh 0";
-        return;
-      }
-
-      const cartKey = `cart_${user.email}`;
-      let cart = JSON.parse(localStorage.getItem(cartKey)) || {};
-      let cartItemsContainer = document.getElementById("cart-items");
-      let cartTotal = document.getElementById("cart-total");
-
-      cartItemsContainer.innerHTML = "";
-      let total = 0;
-
-      // Convert object to array for display
-      const cartArray = Object.entries(cart);
-
-      cartArray.forEach(([productName, item], index) => {
-        let li = document.createElement("li");
-        li.innerHTML = `
-          ${productName} - KSh ${item.price} x ${item.quantity}
-          <button onclick="removeItem('${productName}')">Remove</button>
-        `;
-        cartItemsContainer.appendChild(li);
-        total += item.price * item.quantity;
-      });
-
-      cartTotal.textContent = "Total: KSh " + total;
-    }
-
-    // Remove item from cart
-    function removeItem(productName) {
-      const user = getUser();
-      if (!user) return;
-
-      const cartKey = `cart_${user.email}`;
-      let cart = JSON.parse(localStorage.getItem(cartKey)) || {};
-      if (cart[productName]) {
-        delete cart[productName];
-        localStorage.setItem(cartKey, JSON.stringify(cart));
-        loadCart();
-        showToast(`${productName} removed from cart ❌`);
-      }
-    }
-
-    // Toast notification
-    function showToast(message) {
-      let toast = document.getElementById("cart-toast");
-      toast.textContent = message;
-      toast.classList.add("show");
-      setTimeout(() => {
-        toast.classList.remove("show");
-      }, 2500);
-    }
-
-    // Checkout button - show payment section instead of immediate checkout
-    document.getElementById("checkout-btn").addEventListener("click", () => {
-      const user = getUser();
-      if (!user) {
-        showToast("🛑 Please login to checkout!");
-        return;
-      }
-
-      const cartKey = `cart_${user.email}`;
-      let cart = JSON.parse(localStorage.getItem(cartKey)) || {};
-      if (Object.keys(cart).length === 0) {
-        showToast("🛑 Your cart is empty!");
-      } else {
-        showToast("✅ Proceeding to checkout...");
-        setTimeout(() => {
-          // Hide cart section and display payment section
-          document.getElementById("cart-section").style.display = "none";
-          document.getElementById("payment-section").style.display = "block";
-        }, 2000);
-      }
-    });
-
-    // Confirm Payment button event handler
-    document.getElementById("confirm-payment-btn").addEventListener("click", () => {
-      const user = getUser();
-      if (!user) return;
-
-      // For this demo, we assume payment is confirmed once the button is clicked
-      showToast("✅ Successfully proceeded to checkout");
-      // Clear the cart and reset payment form after a short delay
-      setTimeout(() => {
-        const cartKey = `cart_${user.email}`;
-        localStorage.removeItem(cartKey);
-        loadCart();
-        // Optionally, hide the payment section and show the cart section (which will be empty)
-        document.getElementById("payment-section").style.display = "none";
-        document.getElementById("cart-section").style.display = "block";
-      }, 2000);
-    });
-
-    // Load cart on page load
-    loadCart();
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

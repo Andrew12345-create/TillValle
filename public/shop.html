@@ -6,9 +6,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>TilleValle Shop</title>
   <link rel="icon" href="logo.jpg" type="image/jpeg">
-  <link rel="stylesheet" href="./style.css" />
-  <link rel="stylesheet" href="./style-modal.css" />
-  <link rel="stylesheet" href="./quantity-controls.css" />
+  <link rel="stylesheet" href="styles.css" />
   <meta property="og:title" content="Shop - TilleValle" />
   <meta property="og:description" content="Browse and shop our range of fresh farm goods at TilleValle." />
   <meta property="og:image" content="./images/logo.png" />
@@ -16,31 +14,28 @@
   <meta name="twitter:card" content="summary_large_image" />
 </head>
 <body>
-  <header>
-    <!-- Navbar -->
-    <nav class="navbar">
-      <div class="nav-left">
-        <a href="index.html" class="nav-link logo-link">
-          <img src="./logo.jpg" alt="TilleValle Logo" class="logo" />
-        </a>
-        <a href="index.html" class="nav-link">Home</a>
-        <a href="shop.html" class="nav-link">Shop</a>
-        <a href="about.html" class="nav-link">About</a>
-        <a href="contact.html" class="nav-link">Contact</a>
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="index.html" class="nav-link logo-link">
+        <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
+      </a>
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="shop.html" class="nav-link">Shop</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <div class="nav-center">
+      <div class="search-container">
+        <input type="text" id="search-bar" placeholder="Search products..." class="search-input" />
+        <button id="search-btn" class="search-btn">🔍</button>
       </div>
-      <div class="nav-center">
-        <div class="search-container">
-          <input type="text" id="search-bar" placeholder="Search products..." class="search-input">
-          <button id="search-btn" class="search-btn">🔍</button>
-        </div>
-      </div>
-      <div class="nav-right">
-        <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
-        <span id="user-area"></span>
-      </div>
-    </nav>
-    <hr>
-  </header>
+    </div>
+    <div class="nav-right">
+      <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
+      <span id="user-area"></span>
+    </div>
+  </nav>
+  <hr />
 
   <section class="shop">
     <h2>Our Products</h2>
@@ -111,7 +106,7 @@
         <div class="product" onclick="openProductModal('Coriander', 'Aromatic coriander leaves and seeds.', 'coriander.png', 30)"><img src="coriander.png" alt="Coriander" class="product-image"><h4>Coriander</h4><p class="price" data-price="30">KES 30 / bunch</p></div>
         <div class="product" onclick="openProductModal('Mint', 'Fresh mint leaves for cooking and drinks.', 'mint.png', 40)"><img src="mint.png" alt="Mint" class="product-image"><h4>Mint</h4><p class="price" data-price="40">KES 40 / bunch</p></div>
         <div class="product" onclick="openProductModal('Parsley', 'Fresh parsley leaves for cooking.', 'parsley.png', 35)"><img src="parsley.png" alt="Parsley" class="product-image"><h4>Parsley</h4><p class="price" data-price="35">KES 35 / bunch</p></div>
-        <div class="product" onclick="openProductModal('Soursop Herbs', 'Medicinal soursop herbs and leaves.', 'soursop-herbs.png', 200)"><img src="soursop-herbs.png" alt="Soursop Herbs" class="product-image"><h4>Soursop Herbs</h4><p class="price" data-price="200">from KES 200</p></div>
+        <div class="product" onclick="openProductModal('Soursop Leaves', 'Medicinal soursop leaves.', 'soursop-herbs.png', 200)"><img src="soursop-herbs.png" alt="Soursop Leaves" class="product-image"><h4>Soursop Leaves</h4><p class="price" data-price="200">from KES 200</p></div>
       </div>
     </div>
 
