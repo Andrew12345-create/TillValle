@@ -1,8 +1,9 @@
-# TODO: CSS Upgrade and Bug Fix for Shop and General UI
+ # TODO: CSS Upgrade and Bug Fix for Shop and General UI
 
 ## Completed:
 - [x] Fixed checkout button functionality in public/script.js - added event listeners for checkout and payment confirmation.
 - [x] Updated cart button colors to green theme in public/styles.css.
+- [x] Added comprehensive responsive design for mobile devices in public/styles.css - adjusted layouts, font sizes, and spacing for tablets and phones.
 
 ## Steps to Complete:
 - [ ] Fix stylesheet link in public/shop.html to avoid duplicate or incorrect CSS loading.
