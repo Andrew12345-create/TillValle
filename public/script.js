@@ -453,9 +453,10 @@ document.addEventListener('DOMContentLoaded', () => {
     product.removeAttribute('onclick');
     product.addEventListener('click', () => {
       const name = product.querySelector('h4').textContent;
-      const description = 'Fresh farm product'; // Generic description
+      const description = product.querySelector('.product-description') ? product.querySelector('.product-description').textContent : 'Fresh farm product'; // Use existing description if available
       const price = product.querySelector('.price').getAttribute('data-price');
-      const imageSrc = name.toLowerCase().replace(/\s+/g, '-') + '.png'; // e.g., 'milk.png', 'eggs-kienyeji.png'
+      const imgElement = product.querySelector('img.product-image');
+      const imageSrc = imgElement ? imgElement.src : name.toLowerCase().replace(/\s+/g, '-') + '.png'; // Use actual image src if available
       openProductModal(name, description, imageSrc, price);
     });
   });

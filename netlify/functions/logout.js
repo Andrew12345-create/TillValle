@@ -1,23 +1,43 @@
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Credentials': 'true',
+};
+
 exports.handler = async (event, context) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers,
+      body: '',
+    };
+  }
+
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
+      headers,
       body: JSON.stringify({ ok: false, error: 'Method not allowed' }),
     };
   }
 
-  // For serverless functions, logout is typically handled client-side by clearing tokens
-  // Since JWT is stateless, we just return success and let client clear localStorage
-  // Added CORS headers to allow logout from Netlify domain and localhost:3001
-  return {
-    statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': event.headers.origin || '*',
-      'Access-Control-Allow-Credentials': true,
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      'Set-Cookie': 'token=; HttpOnly; Path=/; Max-Age=0', // Clear token cookie if used
-    },
-    body: JSON.stringify({ ok: true, message: 'Logged out successfully' }),
-  };
+  try {
+    // Here, session management depends on your setup.
+    // If using cookies or JWT, clear them accordingly.
+    // For example, clear cookies by setting expired Set-Cookie header.
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ ok: true, message: 'Logout successful' }),
+    };
+  } catch (err) {
+    console.error('Logout error:', err);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ ok: false, error: 'Server error' }),
+    };
+  }
 };
