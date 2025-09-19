@@ -1154,23 +1154,53 @@ body {
   }
 
   /* Payment Section */
-  #payment-section {
-    padding: 40px 10px;
-  }
+#payment-section {
+  padding: 20px 15px;
+  max-width: 500px;
+  margin: 20px auto;
+  background: var(--bg-secondary);
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 40px 10px;
+}
 
   #payment-section h2 {
     font-size: 2rem;
   }
 
-  #payment-reference {
-    padding: 12px;
-    font-size: 16px;
-  }
+#payment-reference {
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background: var(--input-bg);
+  width: 100%;
+  margin: 10px 0 20px 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-primary);
+}
 
-  #confirm-payment-btn {
-    padding: 12px 30px;
-    font-size: 16px;
-  }
+#confirm-payment-btn {
+  padding: 12px 30px;
+  font-size: 16px;
+  background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-green-light) 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(45,106,79,0.3);
+  transition: all 0.3s ease;
+}
+#confirm-payment-btn:hover {
+  background: linear-gradient(135deg, var(--accent-green-light) 0%, var(--accent-green) 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(45,106,79,0.4);
+}
 
   /* Modals */
   .product-modal {
