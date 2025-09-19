@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
+const fetch = require('node-fetch');
 
 // App setup
 const app = express();
@@ -145,6 +146,163 @@ app.post('/logout', (req, res) => {
 // ==========================
 app.get('/ping', (req, res) => {
   res.json({ ok: true, message: 'Server is running' });
+});
+
+// ==========================
+// MPESA
+// ==========================
+app.post('/mpesa', async (req, res) => {
+  const { phone, amount, accountReference } = req.body;
+
+  // Validate required fields
+  if (!phone || !amount || !accountReference) {
+    return res.status(400).json({ success: false, error: 'Missing required fields: phone, amount, accountReference' });
+  }
+
+  try {
+    // Mpesa STK Push API credentials
+    const consumerKey = process.env.MPESA_CONSUMER_KEY;
+    const consumerSecret = process.env.MPESA_CONSUMER_SECRET;
+    const shortcode = process.env.MPESA_SHORTCODE || '174379'; // Default sandbox shortcode
+    const passkey = process.env.MPESA_PASSKEY;
+
+    if (!consumerKey || !consumerSecret || !passkey) {
+      return res.status(500).json({
+        success: false,
+        error: 'Mpesa credentials not configured. Please set MPESA_CONSUMER_KEY, MPESA_CONSUMER_SECRET, and MPESA_PASSKEY environment variables.'
+      });
+    }
+
+    // Get access token
+    const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
+    const tokenResponse = await fetch('https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Basic ${auth}`,
+      },
+    });
+
+    if (!tokenResponse.ok) {
+      throw new Error('Failed to get Mpesa access token');
+    }
+
+    const tokenData = await tokenResponse.json();
+    const accessToken = tokenData.access_token;
+
+    // Generate timestamp and password
+    const timestamp = new Date().toISOString().replace(/[^0-9]/g, '').slice(0, -3);
+    const password = Buffer.from(`${shortcode}${passkey}${timestamp}`).toString('base64');
+
+    // Prepare STK push request
+    const stkPushData = {
+      BusinessShortCode: shortcode,
+      Password: password,
+      Timestamp: timestamp,
+      TransactionType: 'CustomerPayBillOnline',
+      Amount: amount,
+      PartyA: phone,
+      PartyB: shortcode,
+      PhoneNumber: phone,
+      CallBackURL: `${process.env.URL || 'http://localhost:3001'}/mpesa-callback`,
+      AccountReference: accountReference,
+      TransactionDesc: 'Payment for goods',
+    };
+
+    // Make STK push request
+    const stkResponse = await fetch('https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(stkPushData),
+    });
+
+    if (!stkResponse.ok) {
+      const errorData = await stkResponse.text();
+      throw new Error(`STK Push failed: ${errorData}`);
+    }
+
+    const stkData = await stkResponse.json();
+
+    console.log(`Mpesa STK Push initiated to ${phone} for amount ${amount}`);
+
+    res.json({
+      success: true,
+      message: 'STK Push initiated successfully',
+      data: stkData,
+    });
+
+  } catch (error) {
+    console.error('Mpesa STK Push error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
+// ==========================
+// MPESA CALLBACK
+// ==========================
+app.post('/mpesa-callback', async (req, res) => {
+  try {
+    const callbackData = req.body;
+
+    // Log the callback data for debugging
+    console.log('Mpesa Callback received:', JSON.stringify(callbackData, null, 2));
+
+    // Process the callback data
+    if (callbackData.Body && callbackData.Body.stkCallback) {
+      const stkCallback = callbackData.Body.stkCallback;
+
+      // Check the result code
+      if (stkCallback.ResultCode === 0) {
+        // Payment successful
+        console.log('Payment successful for CheckoutRequestID:', stkCallback.CheckoutRequestID);
+
+        // Here you would typically:
+        // 1. Update the order status in your database
+        // 2. Send confirmation email to customer
+        // 3. Update inventory
+        // 4. Send notifications
+
+        // For now, just log success
+        const callbackMetadata = stkCallback.CallbackMetadata;
+        if (callbackMetadata && callbackMetadata.Item) {
+          callbackMetadata.Item.forEach(item => {
+            if (item.Name === 'Amount') {
+              console.log('Amount paid:', item.Value);
+            }
+            if (item.Name === 'MpesaReceiptNumber') {
+              console.log('Mpesa Receipt Number:', item.Value);
+            }
+            if (item.Name === 'TransactionDate') {
+              console.log('Transaction Date:', item.Value);
+            }
+            if (item.Name === 'PhoneNumber') {
+              console.log('Phone Number:', item.Value);
+            }
+          });
+        }
+      } else {
+        // Payment failed
+        console.log('Payment failed for CheckoutRequestID:', stkCallback.CheckoutRequestID);
+        console.log('Result Code:', stkCallback.ResultCode);
+        console.log('Result Desc:', stkCallback.ResultDesc);
+      }
+    }
+
+    // Always return success to acknowledge receipt of callback
+    res.json({ success: true });
+
+  } catch (error) {
+    console.error('Mpesa callback processing error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
 });
 
 // ==========================

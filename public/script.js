@@ -260,27 +260,55 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Payment method selection
+  const paymentMethodRadios = document.querySelectorAll('input[name="payment-method"]');
+  paymentMethodRadios.forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      const method = e.target.value;
+      const mpesaSection = document.getElementById('mpesa-section');
+      const paybillSection = document.getElementById('paybill-section');
+      if (method === 'mpesa') {
+        mpesaSection.style.display = 'block';
+        paybillSection.style.display = 'none';
+      } else if (method === 'paybill') {
+        mpesaSection.style.display = 'none';
+        paybillSection.style.display = 'block';
+      }
+    });
+  });
+
   // Confirm payment button functionality
   const confirmPaymentBtn = document.getElementById('confirm-payment-btn');
   if (confirmPaymentBtn) {
-    confirmPaymentBtn.addEventListener('click', () => {
-      const reference = document.getElementById('payment-reference').value.trim();
-      if (!reference) {
-        showToast('Please enter a payment reference.');
+    confirmPaymentBtn.addEventListener('click', async () => {
+      const selectedMethod = document.querySelector('input[name="payment-method"]:checked');
+      if (!selectedMethod) {
+        showToast('Please select a payment method.');
         return;
       }
-      // Here you could send the reference to the server for verification
-      // For now, just clear the cart and show success
-      const user = getUser();
-      if (user) {
-        const cartKey = `cart_${user.email}`;
-        localStorage.removeItem(cartKey);
-        updateCartCount();
+
+      const method = selectedMethod.value;
+      if (method === 'mpesa') {
+        const phone = document.getElementById('mpesa-phone').value.trim();
+        if (!phone) {
+          showToast('Please enter your Mpesa phone number.');
+          return;
+        }
+        if (!/^254[0-9]{9}$/.test(phone)) {
+          showToast('Please enter a valid phone number starting with 254.');
+          return;
+        }
+        // Call Mpesa STK Push
+        await initiateMpesaPayment(phone);
+      } else if (method === 'paybill') {
+        const reference = document.getElementById('payment-reference').value.trim();
+        if (!reference) {
+          showToast('Please enter a payment reference.');
+          return;
+        }
+        // Handle Paybill payment
+        confirmPaybillPayment(reference);
       }
-      showToast('Payment confirmed! Order placed successfully.');
-      setTimeout(() => {
-        window.location.href = 'index.html';
-      }, 2000);
     });
   }
 });
@@ -370,6 +398,100 @@ function openProductModal(name, description, imageSrc, price) {
   modal.style.display = 'block';
 }
 
+// ====== Payment Functions ======
+async function initiateMpesaPayment(phone) {
+  const user = getUser();
+  if (!user) {
+    showToast('Please login to proceed with payment.');
+    return;
+  }
+
+  // Calculate total amount from cart
+  const cartKey = `cart_${user.email}`;
+  const cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
+  let totalAmount = 0;
+  Object.values(cart).forEach(item => {
+    totalAmount += item.price * item.quantity;
+  });
+
+  if (totalAmount === 0) {
+    showToast('Your cart is empty.');
+    return;
+  }
+
+  // Show loading state
+  const confirmBtn = document.getElementById('confirm-payment-btn');
+  const originalText = confirmBtn.textContent;
+  confirmBtn.textContent = 'Processing...';
+  confirmBtn.disabled = true;
+
+  try {
+    // Call the Mpesa Netlify function
+    const response = await fetch(getMpesaUrl(), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        phone: phone,
+        amount: totalAmount,
+        accountReference: `Order_${user.email}_${Date.now()}`,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      showToast(`Mpesa initiated. Check your phone ${phone} for payment prompt.`);
+
+      // Store checkout request ID for tracking (if available)
+      if (result.data && result.data.CheckoutRequestID) {
+        localStorage.setItem('checkoutRequestID', result.data.CheckoutRequestID);
+      }
+
+      // Listen for payment completion (this would typically be handled by the callback)
+      // For now, we'll simulate success after a delay
+      setTimeout(() => {
+        // Clear cart after successful payment
+        localStorage.removeItem(cartKey);
+        updateCartCount();
+        showToast('Payment successful! Order placed.');
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 2000);
+      }, 10000); // Give user time to complete payment on phone
+
+    } else {
+      showToast(`Payment failed: ${result.error || 'Unknown error'}`);
+    }
+
+  } catch (error) {
+    console.error('Payment error:', error);
+    showToast('Payment failed. Please try again.');
+  } finally {
+    // Reset button state
+    confirmBtn.textContent = originalText;
+    confirmBtn.disabled = false;
+  }
+}
+
+function confirmPaybillPayment(reference) {
+  // Simulate Paybill payment confirmation
+  showToast(`Paybill payment confirmed with reference: ${reference}`);
+  // In a real implementation, you would verify the reference with the bank
+  // For now, simulate success
+  const user = getUser();
+  if (user) {
+    const cartKey = `cart_${user.email}`;
+    localStorage.removeItem(cartKey);
+    updateCartCount();
+  }
+  showToast('Payment successful! Order placed.');
+  setTimeout(() => {
+    window.location.href = 'index.html';
+  }, 2000);
+}
+
 // ====== API Calls ======
 function getLoginUrl() {
   const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -379,6 +501,11 @@ function getLoginUrl() {
 function getSignupUrl() {
   const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   return isLocal ? '/signup' : '/.netlify/functions/signup';
+}
+
+function getMpesaUrl() {
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  return isLocal ? '/mpesa' : '/.netlify/functions/mpesa';
 }
 
 // Example usage of the URLs

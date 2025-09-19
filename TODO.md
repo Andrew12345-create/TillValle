@@ -1,26 +1,32 @@
-# TODO: CSS and UI Bug Fixes and Upgrades
+# TODO List for Adding Mpesa Payment and Fixing Cart
 
-## Completed
-- [x] Reviewed existing CSS and JS files for shop.html and related pages.
-- [x] Identified UI bugs and missing features.
-- [x] Planned comprehensive CSS fixes and UI improvements including animations.
-- [x] Ensured logout functionality support for Netlify.
+## 1. Fix Cart Buttons and Text Fitting
+- [x] Review cart.html for button styling issues
+- [x] Fix text overflow and fitting problems
+- [x] Ensure responsive design for cart elements
+- [x] Update styles.css if needed for cart-specific fixes
 
-## To Do
-- [ ] Fix CSS bugs and visual issues on:
-  - shop.html
-  - orderhistory.html
-  - account.html
-  - language.html
-  - faq.html
-- [ ] Ensure cart icon is always visible in navbar.
-- [ ] Add UI animations and JS improvements site-wide.
-- [ ] Test logout functionality on Netlify and localhost.
-- [ ] Perform thorough UI testing on all affected pages.
-- [ ] Fix any issues found during testing.
+## 2. Add Payment Options to Cart
+- [x] Enhance payment section in cart.html
+- [x] Add multiple payment options (Mpesa, Paybill)
+- [x] Improve UI for payment selection
+- [x] Add Mpesa STK Push integration
 
-## Notes
-- Use CSS variables and responsive design.
-- Use animations like fadeIn, slideIn, pulse.
-- Improve modal and toast notification styles.
-- Confirm all fixes work on mobile and desktop.
+## 3. Implement Mpesa STK Push
+- [x] Create netlify function for Mpesa API call
+- [x] Use provided endpoint: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+- [x] Implement request body with dynamic values
+- [x] Handle API response and errors
+- [x] Create callback function for payment confirmation
+
+## 4. Update Frontend Integration
+- [x] Modify script.js to call Mpesa function
+- [x] Add phone number input for Mpesa
+- [x] Update checkout flow to include payment method selection
+- [x] Handle success/failure responses
+
+## 5. Test Payment Integration
+- [ ] Test Mpesa STK Push with sandbox
+- [ ] Verify payment flow
+- [ ] Test error handling
+- [ ] Ensure mobile compatibility

@@ -38,13 +38,28 @@
   <!-- Payment Section (hidden by default) -->
   <section id="payment-section" style="display:none;" class="animated fadeIn">
     <h2>Payment Details</h2>
-    <p>Paybill: <strong>123456</strong></p>
-    <p>Account No: <strong>0012345678</strong></p>
-    <form id="payment-form">
+    <div class="payment-methods">
+      <h3>Select Payment Method</h3>
+      <label class="payment-option">
+        <input type="radio" name="payment-method" value="mpesa" checked>
+        <span>Mpesa STK Push</span>
+      </label>
+      <label class="payment-option">
+        <input type="radio" name="payment-method" value="paybill">
+        <span>Paybill</span>
+      </label>
+    </div>
+    <div id="mpesa-section">
+      <p>Enter your Mpesa phone number to receive STK Push:</p>
+      <input type="tel" id="mpesa-phone" placeholder="254XXXXXXXXX" pattern="254[0-9]{9}" required />
+    </div>
+    <div id="paybill-section" style="display:none;">
+      <p>Paybill: <strong>123456</strong></p>
+      <p>Account No: <strong>0012345678</strong></p>
       <label for="payment-reference">Enter Payment Reference:</label>
       <input type="text" id="payment-reference" placeholder="Reference Number" required />
-      <button type="button" id="confirm-payment-btn">Confirm Payment</button>
-    </form>
+    </div>
+    <button type="button" id="confirm-payment-btn">Confirm Payment</button>
   </section>
 
   <div id="cart-toast"></div>
