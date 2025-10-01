@@ -1347,10 +1347,13 @@ body {
 @media (max-width: 480px) {
   .navbar {
     padding: 8px 10px;
+    flex-direction: column;
+    align-items: flex-start;
   }
   .nav-left, .nav-right {
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
     margin-bottom: 5px;
   }
   .nav-link {

@@ -250,3 +250,36 @@ if (floatingCartBtn) {
 
 renderUserArea();
 renderCart();
+
+// Navbar fix: Remove "Home" link and ensure navbar is straight on phone with max 2 lines
+document.addEventListener('DOMContentLoaded', () => {
+  // Remove all "Home" links from navbars
+  const homeLinks = document.querySelectorAll('.nav-link');
+  homeLinks.forEach(link => {
+    if (link.textContent.trim().toLowerCase() === 'home') {
+      link.remove();
+    }
+  });
+
+  // Fix navbar layout on small screens only
+  const navbar = document.querySelector('.navbar');
+  if (navbar && window.innerWidth <= 480) {
+    // Add CSS class to navbar for responsive fix
+    navbar.classList.add('navbar-responsive-fix');
+  }
+});
+
+/* Add CSS for navbar-responsive-fix in JS for demonstration, ideally should be in CSS file */
+const style = document.createElement('style');
+style.textContent = `
+  .navbar-responsive-fix {
+    flex-wrap: wrap !important;
+    max-height: 120px; /* approx 2 lines */
+    overflow-y: auto;
+  }
+  .navbar-responsive-fix .nav-left, .navbar-responsive-fix .nav-right {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+  }
+`;
+document.head.appendChild(style);
