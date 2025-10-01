@@ -1,4 +1,4 @@
-/* ========= CONSOLIDATED STYLES - ALL CSS FILES MERGED & OPTIMIZED ========= */
+  /* ========= CONSOLIDATED STYLES - ALL CSS FILES MERGED & OPTIMIZED ========= */
 
 /* ========= GLOBAL RESET ========= */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
@@ -144,6 +144,31 @@ body {
 
 .logo:hover {
   transform: scale(1.05);
+}
+
+.logo-link {
+  position: relative;
+}
+
+.logo-cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: var(--accent-yellow);
+  color: var(--accent-green);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+  border: 2px solid white;
 }
 
 /* ========= NAVBAR ========= */
@@ -396,9 +421,6 @@ body {
 
 /* Ensure logo at top left is in navbar */
 .navbar .logo {
-  position: absolute;
-  top: -10px;
-  right: 5px;
   height: 45px;
   width: 45px;
   border-radius: 50%;
@@ -1215,6 +1237,56 @@ body {
   border: 1px solid rgba(255,255,255,0.2);
   position: relative;
   overflow: hidden;
+}
+
+#payment-section h2 {
+  text-align: center;
+  color: var(--accent-green);
+  margin-bottom: 30px;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 2px solid rgba(0,0,0,0.2);
+  background: rgba(255,255,255,0.95);
+  color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--accent-green);
+  box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
+}
+
+#payment-form .btn {
+  background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-green-light) 100%);
+  color: white;
+}
+
+#payment-form .btn:hover {
+  background: linear-gradient(135deg, var(--accent-green-light) 0%, var(--accent-green) 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(45,106,79,0.4);
 }
 
 /* Floating Cart Button */

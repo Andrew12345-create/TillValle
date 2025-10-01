@@ -44,6 +44,10 @@ function updateCartCount() {
   if (cartCountElem) {
     cartCountElem.textContent = totalQuantity;
   }
+  const logoCartCount = document.getElementById('logo-cart-count');
+  if (logoCartCount) {
+    logoCartCount.textContent = totalQuantity;
+  }
   const floatingCartCount = document.getElementById('floating-cart-count');
   if (floatingCartCount) {
     floatingCartCount.textContent = totalQuantity;
@@ -272,6 +276,23 @@ if (floatingCartBtn) {
 
 renderUserArea();
 renderCart();
+updateCartCount();
+
+// Checkout button functionality
+const checkoutBtn = document.getElementById('checkout-btn');
+if (checkoutBtn) {
+  checkoutBtn.addEventListener('click', () => {
+    if (!user || !user.email) {
+      showCartToast("Please log in to checkout");
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 2000);
+      return;
+    }
+    // Proceed to payment
+    window.location.href = 'payment.html';
+  });
+}
 
 // Navbar fix: Remove "Home" link and ensure navbar is straight on phone with max 2 lines
 document.addEventListener('DOMContentLoaded', () => {
