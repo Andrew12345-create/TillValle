@@ -281,8 +281,8 @@ const style = document.createElement('style');
 style.textContent = `
   .navbar-responsive-fix {
     flex-wrap: wrap !important;
-    max-height: 120px; /* approx 2 lines */
-    overflow-y: auto;
+    max-height: none !important; /* Remove max height to prevent scrolling */
+    overflow-y: visible !important; /* Make all content visible */
   }
   .navbar-responsive-fix .nav-left, .navbar-responsive-fix .nav-right {
     flex: 1 1 100%;

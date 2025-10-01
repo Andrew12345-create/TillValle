@@ -1290,24 +1290,22 @@ body {
 @media (max-width: 768px) {
   .navbar {
     padding: 10px 15px;
-    flex-wrap: nowrap;
-    overflow-x: auto;
+    flex-wrap: wrap;
   }
   .nav-left, .nav-right {
-    flex: 1 1 auto;
-    justify-content: flex-start;
-    margin-bottom: 0;
+    flex: 1 1 100%;
+    justify-content: center;
+    margin-bottom: 10px;
   }
-  .nav-left {
-    gap: 10px;
-  }
-  .nav-right {
-    gap: 10px;
+  .navbar .logo {
+    position: static !important;
+    margin-right: 10px;
+    height: 40px;
+    width: 40px;
   }
   .nav-link {
     padding: 6px 10px;
     font-size: 14px;
-    white-space: nowrap;
   }
   .hero {
     padding: 80px 15px;
