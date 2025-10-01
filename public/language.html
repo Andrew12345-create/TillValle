@@ -9,9 +9,11 @@
 </head>
 <body>
   <header>
-    <img src="logo.jpg" alt="TilleValle Logo" class="logo">
     <nav class="navbar">
       <div class="nav-left">
+        <a href="index.html" class="nav-link logo-link">
+          <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
+        </a>
         <a href="index.html" class="nav-link">Home</a>
         <a href="shop.html" class="nav-link">Shop</a>
         <a href="about.html" class="nav-link">About</a>
@@ -30,16 +32,18 @@
     
     <section class="language-section">
       <h2>Language Settings</h2>
-      <div class="profile-field">
-        <label for="language-select">Select Language:</label>
-        <select id="language-select" class="language-select">
-          <option value="en">English</option>
-          <option value="es">Spanish</option>
-          <option value="fr">French</option>
-          <option value="zh">Chinese</option>
-        </select>
-        <button id="save-language-btn">Save</button>
-      </div>
+      <form id="language-form">
+        <div class="profile-field">
+          <label for="language-select">Select Language:</label>
+          <select id="language-select" class="language-select">
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="zh">Chinese</option>
+          </select>
+          <button type="button" id="save-language-btn">Save</button>
+        </div>
+      </form>
     </section>
   </main>
   <script>
@@ -63,10 +67,19 @@
       // This requires additional i18n implementation which is not included here
     });
   </script>
+
+  <!-- Toast -->
+  <div id="cart-toast"></div>
+
+  <!-- Floating Cart Button -->
+  <div id="floating-cart-btn" class="floating-cart-btn">
+    <span class="cart-emoji">🛒</span>
+    <span id="floating-cart-count" class="floating-cart-count">0</span>
+  </div>
+
 </body>
 
   <footer>
     <p>&copy; 2025 TilleValle. All rights reserved.</p>
   </footer>
-</body>
 </html>

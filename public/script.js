@@ -1,590 +1,252 @@
-// ====== Helper Functions ======
+const cartItemsContainer = document.getElementById('cart-items');
+const cartTotalElem = document.getElementById('cart-total');
 
-// Show toast notification
-function showToast(message) {
-  const toast = document.getElementById('cart-toast');
-  if (!toast) return; // prevent errors if toast not on page
-  toast.innerText = message;
-  toast.style.display = 'block';
-  toast.style.opacity = 1;
-  toast.style.transition = 'opacity 0.3s ease';
-  toast.style.position = 'fixed';
-  toast.style.top = '20px';
-  toast.style.right = '20px';
-  toast.style.backgroundColor = '#f0c419';  // shade of yellow matching top right icon
-  toast.style.color = '#000';
-  toast.style.padding = '10px 20px';
-  toast.style.borderRadius = '5px';
-  toast.style.zIndex = 12000;
-  setTimeout(() => {
-    toast.style.opacity = 0;
-    setTimeout(() => (toast.style.display = 'none'), 300);
-  }, 2000);
+// Load cart from localStorage or initialize empty
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+// Load user info from localStorage or initialize empty
+let user = JSON.parse(localStorage.getItem('user')) || null;
+
+function saveCart() {
+  localStorage.setItem('cart', JSON.stringify(cart));
 }
 
-// Check if user is logged in
-function getUser() {
-  const token = localStorage.getItem('token');
-  const email = localStorage.getItem('email');
-  return token && email ? { token, email } : null;
+function saveUser() {
+  localStorage.setItem('user', JSON.stringify(user));
 }
 
-// Get initials from email
-function getInitials(email) {
-  if (!email) return '';
-  const name = email.split('@')[0];
-  return name
-    .split(/[._-]/)
-    .map(part => part[0].toUpperCase())
-    .join('');
-}
-
-// Update navbar login area
-function updateNavbar() {
+function renderUserArea() {
   const userArea = document.getElementById('user-area');
   if (!userArea) return;
-  const user = getUser();
-  if (user) {
-    userArea.innerHTML = `<a href="profile.html" class="nav-link user-initials">${getInitials(user.email)}</a>`;
+  console.log('User object from localStorage:', user);
+  if (user && user.email) {
+    const initial = user.email.charAt(0).toUpperCase();
+    userArea.innerHTML = `
+      <a href="profile.html" class="nav-link">
+        <span class="user-initial">${initial}</span>
+      </a>
+    `;
   } else {
-    userArea.innerHTML = `<a href="login.html" class="nav-link" id="login-link">Login</a>`;
+    userArea.innerHTML = `<a href="login.html" class="nav-link">Login</a>`;
   }
 }
 
-// ====== Cart Logic ======
-function addToCart(productName, price, quantity = 1) {
-  const user = getUser();
-  if (!user) {
-    showToast('Please login first! Redirecting to login page...');
-    setTimeout(() => {
-      window.location.href = 'login.html';
-    }, 1500);
-    return;
-  }
-
-  // Use user-specific cart key to avoid conflicts
-  const cartKey = `cart_${user.email}`;
-  let cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
-  if (cart[productName]) {
-    cart[productName].quantity += quantity;
-  } else {
-    cart[productName] = { price, quantity };
-  }
-  localStorage.setItem(cartKey, JSON.stringify(cart));
-  updateCartCount();
-
-  // Trigger a custom event to notify other parts of the app about cart update
-  const event = new Event('cartUpdated');
-  window.dispatchEvent(event);
-
-  showToast(`${quantity} x ${productName} added to cart`);
-
-  // Add order to order history
-  addToOrderHistory(productName, price, quantity);
-}
-
-// Update cart count to use user-specific cart key
 function updateCartCount() {
-  const user = getUser();
-  if (!user) {
-    const cartCountEl = document.getElementById('cart-count');
-    if (cartCountEl) cartCountEl.innerText = '0';
-    return;
+  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartCountElem = document.getElementById('cart-count');
+  if (cartCountElem) {
+    cartCountElem.textContent = totalQuantity;
   }
-  const cartKey = `cart_${user.email}`;
-  const cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
-  const count = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
-  const cartCountEl = document.getElementById('cart-count');
-  if (cartCountEl) cartCountEl.innerText = count;
-  // Also update cart items display if on cart page
-  updateCartItems();
-}
-
-// Update cart items display for cart page
-function updateCartItems() {
-  const cartItemsList = document.getElementById("cart-items");
-  const cartTotalEl = document.getElementById("cart-total");
-  if (!cartItemsList) return; // Only update if on cart page
-
-  const user = getUser();
-  if (!user) {
-    cartItemsList.innerHTML = "<li>Please log in to view your cart.</li>";
-    if (cartTotalEl) cartTotalEl.innerHTML = "<strong>Total: KSh 0</strong>";
-    return;
+  const floatingCartCount = document.getElementById('floating-cart-count');
+  if (floatingCartCount) {
+    floatingCartCount.textContent = totalQuantity;
   }
-
-  const cartKey = `cart_${user.email}`;
-  const cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
-  cartItemsList.innerHTML = ""; // Clear list
-  let total = 0;
-  Object.entries(cart).forEach(([name, item], index) => {
-    const li = document.createElement("li");
-    li.className = "cart-item";
-    li.innerHTML = `
-      <span>${name} - KES ${item.price.toLocaleString()}</span>
-      <div class="cart-quantity-controls">
-        <button onclick="removeOneFromCart('${name}')" aria-label="Remove one ${name}">-</button>
-        <input type="number" value="${item.quantity}" min="1" onchange="updateQuantity('${name}', this.value)" aria-label="Quantity of ${name}">
-        <button onclick="addOneToCart('${name}')" aria-label="Add one ${name}">+</button>
-        <button onclick="removeAllFromCart('${name}')" aria-label="Remove all ${name}">❌ Remove All</button>
-      </div>
-    `;
-    cartItemsList.appendChild(li);
-    total += item.price * item.quantity;
-  });
-  if (cartTotalEl) {
-    cartTotalEl.innerHTML = `<strong>Total: KES ${total.toLocaleString()}</strong>`;
+  const floatingCartBtn = document.getElementById('floating-cart-btn');
+  if (floatingCartBtn) {
+    floatingCartBtn.style.display = 'flex';
   }
 }
 
-// Cart item modification functions
-function removeOneFromCart(productName) {
-  const user = getUser();
-  if (!user) return;
-  const cartKey = `cart_${user.email}`;
-  let cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
-  if (cart[productName]) {
-    if (cart[productName].quantity > 1) {
-      cart[productName].quantity--;
-    } else {
-      delete cart[productName];
-    }
-    localStorage.setItem(cartKey, JSON.stringify(cart));
-    updateCartCount();
-    showToast("One item removed from cart");
-  }
-}
-
-function addOneToCart(productName) {
-  const user = getUser();
-  if (!user) return;
-  const cartKey = `cart_${user.email}`;
-  let cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
-  if (cart[productName]) {
-    cart[productName].quantity++;
-    localStorage.setItem(cartKey, JSON.stringify(cart));
-    updateCartCount();
-    showToast("One item added to cart");
-  }
-}
-
-function updateQuantity(productName, newQuantity) {
-  const user = getUser();
-  if (!user) return;
-  const qty = parseInt(newQuantity);
-  if (qty > 0) {
-    const cartKey = `cart_${user.email}`;
-    let cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
-    if (cart[productName]) {
-      cart[productName].quantity = qty;
-      localStorage.setItem(cartKey, JSON.stringify(cart));
-      updateCartCount();
-    }
-  }
-}
-
-function removeAllFromCart(productName) {
-  const user = getUser();
-  if (!user) return;
-  const cartKey = `cart_${user.email}`;
-  let cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
-  if (cart[productName]) {
-    delete cart[productName];
-    localStorage.setItem(cartKey, JSON.stringify(cart));
-    updateCartCount();
-    showToast("All items removed from cart");
-  }
-}
-
-// Add order to order history in localStorage
-function addToOrderHistory(productName, price, quantity = 1) {
-  const user = getUser();
-  if (!user) return; // Should not happen since checked in addToCart
-  const key = `orderHistory_${user.email}`;
-  let orderHistory = JSON.parse(localStorage.getItem(key) || '[]');
-  const newOrder = {
-    id: orderHistory.length + 1,
-    date: new Date().toISOString(),
-    items: [{ name: productName, quantity, price }],
-    total: price * quantity
-  };
-  orderHistory.push(newOrder);
-  localStorage.setItem(key, JSON.stringify(orderHistory));
-}
-
-
-
-// ====== Contact Form Test ======
-function testContactForm() {
-  // Removed emailjs call to fix ReferenceError
-  console.log("testContactForm called - emailjs call removed to fix error");
-}
-
-// ====== Search Functionality ======
-function searchProducts() {
-  const input = document.getElementById("search-bar").value.toLowerCase();
-  const products = document.querySelectorAll(".product");
-
-  products.forEach(product => {
-    const productName = product.querySelector("h4").textContent.toLowerCase();
-    if (productName.includes(input)) {
-      product.style.display = "block";
-    } else {
-      product.style.display = "none";
-    }
-  });
-}
-
-// ====== Init ======
-document.addEventListener('DOMContentLoaded', () => {
-  updateNavbar();
-  updateCartCount();
-  testContactForm(); // Call the test function
-
-  // Add search event listener
-  const searchBtn = document.getElementById('search-btn');
-  if (searchBtn) {
-    searchBtn.addEventListener('click', searchProducts);
-  }
-
-  // Checkout button functionality
-  const checkoutBtn = document.getElementById('checkout-btn');
-  if (checkoutBtn) {
-    checkoutBtn.addEventListener('click', () => {
-      const cartSection = document.getElementById('cart-section');
-      const paymentSection = document.getElementById('payment-section');
-      if (cartSection && paymentSection) {
-        cartSection.style.display = 'none';
-        paymentSection.style.display = 'block';
-      }
-    });
-  }
-
-  // Payment method selection
-  const paymentMethodRadios = document.querySelectorAll('input[name="payment-method"]');
-  paymentMethodRadios.forEach(radio => {
-    radio.addEventListener('change', (e) => {
-      const method = e.target.value;
-      const mpesaSection = document.getElementById('mpesa-section');
-      const paybillSection = document.getElementById('paybill-section');
-      if (method === 'mpesa') {
-        mpesaSection.style.display = 'block';
-        paybillSection.style.display = 'none';
-      } else if (method === 'paybill') {
-        mpesaSection.style.display = 'none';
-        paybillSection.style.display = 'block';
-      }
-    });
-  });
-
-  // Confirm payment button functionality
-  const confirmPaymentBtn = document.getElementById('confirm-payment-btn');
-  if (confirmPaymentBtn) {
-    confirmPaymentBtn.addEventListener('click', async () => {
-      const selectedMethod = document.querySelector('input[name="payment-method"]:checked');
-      if (!selectedMethod) {
-        showToast('Please select a payment method.');
-        return;
-      }
-
-      const method = selectedMethod.value;
-      if (method === 'mpesa') {
-        const phone = document.getElementById('mpesa-phone').value.trim();
-        if (!phone) {
-          showToast('Please enter your Mpesa phone number.');
-          return;
-        }
-        if (!/^254[0-9]{9}$/.test(phone)) {
-          showToast('Please enter a valid phone number starting with 254.');
-          return;
-        }
-        // Call Mpesa STK Push
-        await initiateMpesaPayment(phone);
-      } else if (method === 'paybill') {
-        const reference = document.getElementById('payment-reference').value.trim();
-        if (!reference) {
-          showToast('Please enter a payment reference.');
-          return;
-        }
-        // Handle Paybill payment
-        confirmPaybillPayment(reference);
-      }
-    });
-  }
-});
-
-// Function to open product modal with image and details
-function openProductModal(name, description, imageSrc, price) {
-  // Create modal elements if not already present
-  let modal = document.getElementById('product-modal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'product-modal';
-    modal.className = 'product-modal';
-    modal.innerHTML = `
-      <div class="product-modal-content">
-        <div class="product-modal-header">
-          <h3 id="modal-product-name"></h3>
-          <button class="close-modal" id="close-product-modal">&times;</button>
-        </div>
-        <div class="product-modal-body">
-          <img id="modal-product-image" class="product-image" src="" alt="">
-          <p id="modal-product-description" class="product-description"></p>
-          <p id="modal-product-price" class="product-price-modal"></p>
-          <div class="quantity-controls">
-            <button id="modal-quantity-minus">-</button>
-            <input type="number" id="modal-quantity" value="1" min="1">
-            <button id="modal-quantity-plus">+</button>
-          </div>
-          <button id="modal-add-to-cart" class="add-to-cart-modal">Add to Cart</button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-
-    // Close modal event
-    document.getElementById('close-product-modal').addEventListener('click', () => {
-      modal.style.display = 'none';
-    });
-
-    // Close modal on outside click
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.style.display = 'none';
-      }
-    });
-
-    // Quantity controls
-    const minusBtn = document.getElementById('modal-quantity-minus');
-    const plusBtn = document.getElementById('modal-quantity-plus');
-    const quantityInput = document.getElementById('modal-quantity');
-
-    minusBtn.classList.add('quantity-btn', 'minus');
-    plusBtn.classList.add('quantity-btn', 'plus');
-    quantityInput.classList.add('quantity-input');
-
-    minusBtn.addEventListener('click', () => {
-      let val = parseInt(quantityInput.value);
-      if (val > 1) quantityInput.value = val - 1;
-    });
-
-    plusBtn.addEventListener('click', () => {
-      let val = parseInt(quantityInput.value);
-      quantityInput.value = val + 1;
-    });
-  }
-
-  // Set modal content
-  document.getElementById('modal-product-name').textContent = name;
-  const img = document.getElementById('modal-product-image');
-  img.src = imageSrc;
-  img.alt = name;
-  document.getElementById('modal-product-description').textContent = description;
-  document.getElementById('modal-product-price').textContent = `KES ${price} / unit`;
-
-  // Reset quantity to 1
-  document.getElementById('modal-quantity').value = 1;
-
-  // Set add to cart button action
-  const addToCartBtn = document.getElementById('modal-add-to-cart');
-  addToCartBtn.onclick = () => {
-    const quantity = parseInt(document.getElementById('modal-quantity').value);
-    addToCart(name, price, quantity);
-    // Do not close modal on add to cart click to keep popup visible
-    // modal.style.display = 'none';
-  };
-
-  // Show modal
-  modal.style.display = 'block';
-}
-
-// ====== Payment Functions ======
-async function initiateMpesaPayment(phone) {
-  const user = getUser();
-  if (!user) {
-    showToast('Please login to proceed with payment.');
-    return;
-  }
-
-  // Calculate total amount from cart
-  const cartKey = `cart_${user.email}`;
-  const cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
-  let totalAmount = 0;
-  Object.values(cart).forEach(item => {
-    totalAmount += item.price * item.quantity;
-  });
-
-  if (totalAmount === 0) {
-    showToast('Your cart is empty.');
-    return;
-  }
-
-  // Show loading state
-  const confirmBtn = document.getElementById('confirm-payment-btn');
-  const originalText = confirmBtn.textContent;
-  confirmBtn.textContent = 'Processing...';
-  confirmBtn.disabled = true;
-
-  try {
-    // Call the Mpesa Netlify function
-    const response = await fetch(getMpesaUrl(), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        phone: phone,
-        amount: totalAmount,
-        accountReference: `Order_${user.email}_${Date.now()}`,
-      }),
-    });
-
-    const result = await response.json();
-
-    if (result.success) {
-      showToast(`Mpesa initiated. Check your phone ${phone} for payment prompt.`);
-
-      // Store checkout request ID for tracking (if available)
-      if (result.data && result.data.CheckoutRequestID) {
-        localStorage.setItem('checkoutRequestID', result.data.CheckoutRequestID);
-      }
-
-      // Listen for payment completion (this would typically be handled by the callback)
-      // For now, we'll simulate success after a delay
-      setTimeout(() => {
-        // Clear cart after successful payment
-        localStorage.removeItem(cartKey);
-        updateCartCount();
-        showToast('Payment successful! Order placed.');
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 2000);
-      }, 10000); // Give user time to complete payment on phone
-
-    } else {
-      showToast(`Payment failed: ${result.error || 'Unknown error'}`);
-    }
-
-  } catch (error) {
-    console.error('Payment error:', error);
-    showToast('Payment failed. Please try again.');
-  } finally {
-    // Reset button state
-    confirmBtn.textContent = originalText;
-    confirmBtn.disabled = false;
-  }
-}
-
-function confirmPaybillPayment(reference) {
-  // Simulate Paybill payment confirmation
-  showToast(`Paybill payment confirmed with reference: ${reference}`);
-  // In a real implementation, you would verify the reference with the bank
-  // For now, simulate success
-  const user = getUser();
-  if (user) {
-    const cartKey = `cart_${user.email}`;
-    localStorage.removeItem(cartKey);
-    updateCartCount();
-  }
-  showToast('Payment successful! Order placed.');
+function showCartToast(message) {
+  const cartToast = document.getElementById('cart-toast');
+  if (!cartToast) return;
+  cartToast.textContent = message;
+  cartToast.classList.add('show');
   setTimeout(() => {
-    window.location.href = 'index.html';
+    cartToast.classList.remove('show');
   }, 2000);
 }
 
-// ====== API Calls ======
-function getLoginUrl() {
-  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  return isLocal ? '/login' : '/.netlify/functions/login';
-}
+function renderCart() {
+  if (!cartItemsContainer) return;
+  cartItemsContainer.innerHTML = '';
+  let total = 0;
 
-function getSignupUrl() {
-  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  return isLocal ? '/signup' : '/.netlify/functions/signup';
-}
+  cart.forEach((item, index) => {
+    total += item.price * item.quantity;
 
-function getMpesaUrl() {
-  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  return isLocal ? '/mpesa' : '/.netlify/functions/mpesa';
-}
+    const li = document.createElement('li');
+    li.className = 'cart-item';
 
-// Example usage of the URLs
-async function login(email, password) {
-  const response = await fetch(getLoginUrl(), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ email, password }),
-  });
-  return response.json();
-}
+    const itemSpan = document.createElement('span');
+    itemSpan.textContent = `${item.name} - KES ${item.price}`;
 
-async function signup(email, password) {
-  const response = await fetch(getSignupUrl(), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ email, password }),
-  });
-  return response.json();
-}
+    const controlsDiv = document.createElement('div');
+    controlsDiv.className = 'cart-quantity-controls';
 
-// Language preference application script
-
-document.addEventListener('DOMContentLoaded', () => {
-  const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
-
-  // Comprehensive language dictionary
-  const translations = {
-    en: {
-      // Navigation
-      home: "Home",
-      shop: "Shop",
-      about: "About",
-      contact: "Contact",
-      cart: "Cart",
-      login: "Login",
-      // Add more translations as needed
-    },
-    // Add other languages here
-  };
-
-  // Apply translations to the page
-  function applyTranslations(lang) {
-    const elements = document.querySelectorAll('[data-translate]');
-    elements.forEach(element => {
-      const key = element.getAttribute('data-translate');
-      if (translations[lang] && translations[lang][key]) {
-        element.textContent = translations[lang][key];
+    const decreaseBtn = document.createElement('button');
+    decreaseBtn.className = 'decrease-qty';
+    decreaseBtn.textContent = '-';
+    decreaseBtn.addEventListener('click', () => {
+      if (item.quantity > 1) {
+        item.quantity--;
+        saveCart();
+        renderCart();
+        updateCartCount();
+        showCartToast(`Decreased quantity of ${item.name}`);
       }
     });
-  }
 
-  // Apply initial translations
-  applyTranslations(preferredLanguage);
+    const qtyInput = document.createElement('input');
+    qtyInput.type = 'text';
+    qtyInput.className = 'item-qty';
+    qtyInput.value = item.quantity;
+    qtyInput.readOnly = true;
 
-  // Language selector event listener
-  const languageSelector = document.getElementById('language-selector');
-  if (languageSelector) {
-    languageSelector.addEventListener('change', (e) => {
-      const selectedLang = e.target.value;
-      localStorage.setItem('preferredLanguage', selectedLang);
-      applyTranslations(selectedLang);
+    const increaseBtn = document.createElement('button');
+    increaseBtn.className = 'increase-qty';
+    increaseBtn.textContent = '+';
+    increaseBtn.addEventListener('click', () => {
+      item.quantity++;
+      saveCart();
+      renderCart();
+      updateCartCount();
+      showCartToast(`Increased quantity of ${item.name}`);
     });
-  }
 
-  // Remove inline onclick from product divs and add event listeners
-  document.querySelectorAll('.product').forEach(product => {
-    product.removeAttribute('onclick');
-    product.addEventListener('click', () => {
-      const name = product.querySelector('h4').textContent;
-      const description = product.querySelector('.product-description') ? product.querySelector('.product-description').textContent : 'Fresh farm product'; // Use existing description if available
-      const price = product.querySelector('.price').getAttribute('data-price');
-      const imgElement = product.querySelector('img.product-image');
-      const imageSrc = imgElement ? imgElement.src : name.toLowerCase().replace(/\s+/g, '-') + '.png'; // Use actual image src if available
-      openProductModal(name, description, imageSrc, price);
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-item';
+    removeBtn.textContent = 'Remove';
+    removeBtn.style.background = 'transparent';
+    removeBtn.style.border = 'none';
+    removeBtn.style.color = '#ef4444';
+    removeBtn.style.fontWeight = 'bold';
+    removeBtn.style.cursor = 'pointer';
+    removeBtn.addEventListener('click', () => {
+      cart.splice(index, 1);
+      saveCart();
+      renderCart();
+      updateCartCount();
+      showCartToast(`Removed ${item.name} from cart`);
     });
+
+    controlsDiv.appendChild(decreaseBtn);
+    controlsDiv.appendChild(qtyInput);
+    controlsDiv.appendChild(increaseBtn);
+    controlsDiv.appendChild(removeBtn);
+
+    li.appendChild(itemSpan);
+    li.appendChild(controlsDiv);
+
+    cartItemsContainer.appendChild(li);
   });
+
+  if (cartTotalElem) {
+    cartTotalElem.textContent = `Total: KSh ${total}`;
+  }
+}
+
+// Modal related elements
+const modal = document.createElement('div');
+modal.id = 'product-modal';
+modal.className = 'product-modal';
+modal.style.display = 'none';
+
+modal.innerHTML = `
+  <div class="product-modal-content">
+    <div class="product-modal-header">
+      <h3 id="modal-product-name"></h3>
+      <button class="close-modal" aria-label="Close modal">&times;</button>
+    </div>
+    <div class="product-modal-body">
+      <img id="modal-product-image" src="" alt="" class="product-image" />
+      <p id="modal-product-description"></p>
+      <p id="modal-product-price"></p>
+      <div class="quantity-controls">
+        <button id="modal-decrease-qty">-</button>
+        <input type="text" id="modal-quantity" value="1" readonly />
+        <button id="modal-increase-qty">+</button>
+      </div>
+      <button id="add-to-cart-modal" class="add-to-cart-modal">Add to Cart</button>
+    </div>
+  </div>
+`;
+
+document.body.appendChild(modal);
+
+const modalName = document.getElementById('modal-product-name');
+const modalDescription = document.getElementById('modal-product-description');
+const modalImage = document.getElementById('modal-product-image');
+const modalPrice = document.getElementById('modal-product-price');
+const quantityInput = document.getElementById('modal-quantity');
+const addToCartModalBtn = document.getElementById('add-to-cart-modal');
+const closeModalBtn = modal.querySelector('.close-modal');
+const decreaseQtyBtn = document.getElementById('modal-decrease-qty');
+const increaseQtyBtn = document.getElementById('modal-increase-qty');
+
+let currentProduct = null;
+
+window.openProductModal = function(name, description, imageSrc, price) {
+  currentProduct = { name, price };
+  modalName.textContent = name;
+  modalDescription.textContent = description;
+  modalImage.src = imageSrc;
+  modalImage.alt = name;
+  modalPrice.textContent = `KES ${price}`;
+  quantityInput.value = 1;
+  modal.style.display = 'block';
+};
+
+function closeProductModal() {
+  modal.style.display = 'none';
+}
+
+closeModalBtn.addEventListener('click', closeProductModal);
+
+window.addEventListener('click', (event) => {
+  if (event.target === modal) {
+    closeProductModal();
+  }
 });
+
+decreaseQtyBtn.addEventListener('click', () => {
+  let qty = parseInt(quantityInput.value);
+  if (qty > 1) {
+    quantityInput.value = qty - 1;
+  }
+});
+
+increaseQtyBtn.addEventListener('click', () => {
+  let qty = parseInt(quantityInput.value);
+  quantityInput.value = qty + 1;
+});
+
+addToCartModalBtn.addEventListener('click', () => {
+  const qty = parseInt(quantityInput.value);
+  if (currentProduct) {
+    const existingItem = cart.find(item => item.name === currentProduct.name);
+    if (existingItem) {
+      existingItem.quantity += qty;
+    } else {
+      cart.push({ name: currentProduct.name, price: currentProduct.price, quantity: qty });
+    }
+    saveCart();
+    renderCart();
+    closeProductModal();
+    showCartToast(`${currentProduct.name} added to cart`);
+  }
+});
+
+// Add product to cart from product cards without modal (fallback)
+window.addToCart = function(name, price) {
+  const existingItem = cart.find(item => item.name === name);
+  if (existingItem) {
+    existingItem.quantity++;
+  } else {
+    cart.push({ name, price, quantity: 1 });
+  }
+  saveCart();
+  renderCart();
+  showCartToast(`${name} added to cart`);
+};
+
+// Floating cart button click to open cart page
+const floatingCartBtn = document.getElementById('floating-cart-btn');
+if (floatingCartBtn) {
+  floatingCartBtn.addEventListener('click', () => {
+    window.location.href = 'cart.html';
+  });
+}
+
+renderUserArea();
+renderCart();

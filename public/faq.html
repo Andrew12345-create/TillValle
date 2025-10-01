@@ -9,9 +9,11 @@
 </head>
 <body>
   <header>
-    <img src="logo.jpg" alt="TilleValle Logo" class="logo">
     <nav class="navbar">
       <div class="nav-left">
+        <a href="index.html" class="nav-link logo-link">
+          <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
+        </a>
         <a href="index.html" class="nav-link">Home</a>
         <a href="shop.html" class="nav-link">Shop</a>
         <a href="about.html" class="nav-link">About</a>
@@ -75,5 +77,16 @@
   <footer>
     <p>&copy; 2025 TilleValle. All rights reserved.</p>
   </footer>
+
+  <!-- Toast -->
+  <div id="cart-toast"></div>
+
+  <!-- Floating Cart Button -->
+  <div id="floating-cart-btn" class="floating-cart-btn">
+    <span class="cart-emoji">🛒</span>
+    <span id="floating-cart-count" class="floating-cart-count">0</span>
+  </div>
+
+  <script src="script.js" defer></script>
 </body>
 </html>

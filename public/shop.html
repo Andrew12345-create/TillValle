@@ -42,42 +42,14 @@
     <!-- Category: Animal Farm Produce -->
     <div class="category">
       <h3 class="category-title">Animal Farm Produce</h3>
-      <div class="products">
-        <div class="product" onclick="openProductModal('Milk', 'Fresh farm milk delivered daily.', 'milk.png', 60)">
-          <img src="milk.png" alt="Milk" class="product-image">
-          <h4>Milk</h4>
-          <p class="price" data-price="60">KES 60 / litre</p>
-        </div>
-        <div class="product" onclick="openProductModal('Eggs', 'Fresh eggs from free-range chickens.', 'eggs.png', 20)">
-          <img src="eggs.png" alt="Eggs" class="product-image">
-          <h4>Eggs</h4>
-          <p class="price" data-price="20">KES 20 / egg</p>
-        </div>
-        <div class="product" onclick="openProductModal('Eggs (Kienyeji)', 'Organic kienyeji eggs with rich flavor.', 'eggs-kienyeji.png', 30)">
-          <img src="eggs-kienyeji.png" alt="Eggs (Kienyeji)" class="product-image">
-          <h4>Eggs (Kienyeji)</h4>
-          <p class="price" data-price="30">KES 30 / egg</p>
-        </div>
-        <div class="product" onclick="openProductModal('Egg Crate (30 eggs)', 'Whole crate of 30 fresh eggs.', 'eggs.png', 600)">
-          <img src="eggs.png" alt="Egg Crate" class="product-image">
-          <h4>Egg Crate (30 eggs)</h4>
-          <p class="price" data-price="600">KES 600 / crate</p>
-        </div>
-        <div class="product" onclick="openProductModal('Butter', 'Creamy farm butter, 500g pack.', 'butter.png', 700)">
-          <img src="butter.png" alt="Butter" class="product-image">
-          <h4>Butter</h4>
-          <p class="price" data-price="700">KES 700 / 500g</p>
-        </div>
-        <div class="product" onclick="openProductModal('Chicken', 'Fresh farm chicken, whole or cut.', 'chicken.png', 900)">
-          <img src="chicken.png" alt="Chicken" class="product-image">
-          <h4>Chicken</h4>
-          <p class="price" data-price="900">from KES 900</p>
-        </div>
-        <div class="product" onclick="openProductModal('Ghee', 'Pure farm ghee, 250g pack.', 'ghee.png', 650)">
-          <img src="ghee.png" alt="Ghee" class="product-image">
-          <h4>Ghee</h4>
-          <p class="price" data-price="650">KES 650 / 250g</p>
-        </div>
+      <div class="products animal-farm">
+        <div class="product" onclick="openProductModal('Milk', 'Fresh milk from our farm.', 'milk.png', 60)"><img src="milk.png" alt="Milk" class="product-image"><h4>Milk</h4><p class="price" data-price="60">KES 60 / litre</p></div>
+        <div class="product" onclick="openProductModal('Eggs', 'Fresh eggs from our farm.', 'eggs.png', 20)"><img src="eggs.png" alt="Eggs" class="product-image"><h4>Eggs</h4><p class="price" data-price="20">KES 20 / egg</p></div>
+        <div class="product" onclick="openProductModal('Eggs (Kienyeji)', 'Traditional Kienyeji eggs.', 'eggs-kienyeji.png', 30)"><img src="eggs-kienyeji.png" alt="Eggs (Kienyeji)" class="product-image"><h4>Eggs (Kienyeji)</h4><p class="price" data-price="30">KES 30 / egg</p></div>
+        <div class="product" onclick="openProductModal('Egg Crate (30 eggs)', 'Crate of 30 fresh eggs.', 'eggs.png', 600)"><img src="eggs.png" alt="Egg Crate" class="product-image"><h4>Egg Crate (30 eggs)</h4><p class="price" data-price="600">KES 600 / crate</p></div>
+        <div class="product" onclick="openProductModal('Butter', 'Fresh butter from our farm.', 'butter.png', 700)"><img src="butter.png" alt="Butter" class="product-image"><h4>Butter</h4><p class="price" data-price="700">KES 700 / 500g</p></div>
+        <div class="product" onclick="openProductModal('Chicken', 'Fresh chicken from our farm.', 'chicken.png', 900)"><img src="chicken.png" alt="Chicken" class="product-image"><h4>Chicken</h4><p class="price" data-price="900">from KES 900</p></div>
+        <div class="product" onclick="openProductModal('Ghee', 'Pure ghee from our farm.', 'ghee.png', 650)"><img src="ghee.png" alt="Ghee" class="product-image"><h4>Ghee</h4><p class="price" data-price="650">KES 650 / 250g</p></div>
       </div>
     </div>
 
@@ -135,6 +107,12 @@
   <!-- Toast -->
   <div id="cart-toast"></div>
 
-  <script src="script.js" defer></script>
+  <!-- Floating Cart Button -->
+  <div id="floating-cart-btn" class="floating-cart-btn">
+    <span class="cart-emoji">🛒</span>
+    <span id="floating-cart-count" class="floating-cart-count">0</span>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>

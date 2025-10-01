@@ -27,11 +27,24 @@
   <section class="cart animated fadeIn" id="cart-section">
     <h2>Your Shopping Cart</h2>
     <div class="cart-container">
+      <button id="remove-all-btn" style="margin-bottom: 20px; background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Remove All</button>
       <ul id="cart-items">
         <!-- Cart items will appear here -->
+        <!-- Example cart item with quantity controls -->
+        <!--
+        <li class="cart-item">
+          <span>Eggs (Kienyeji) - KES 30</span>
+          <div class="cart-quantity-controls">
+            <button class="decrease-qty">-</button>
+            <input type="text" class="item-qty" value="1" readonly />
+            <button class="increase-qty">+</button>
+            <button class="remove-item" style="background: transparent; border: none; color: #ef4444; font-weight: bold; cursor: pointer;">Remove</button>
+          </div>
+        </li>
+        -->
       </ul>
       <b><p id="cart-total">Total: KSh 0</p></b>
-      <button id="checkout-btn">Proceed to Checkout</button>
+      <button id="checkout-btn">Checkout</button>
     </div>
   </section>
 
@@ -42,7 +55,7 @@
       <h3>Select Payment Method</h3>
       <label class="payment-option">
         <input type="radio" name="payment-method" value="mpesa" checked>
-        <span>Mpesa STK Push</span>
+        <span>Mpesa Payment</span>
       </label>
       <label class="payment-option">
         <input type="radio" name="payment-method" value="paybill">
@@ -50,7 +63,7 @@
       </label>
     </div>
     <div id="mpesa-section">
-      <p>Enter your Mpesa phone number to receive STK Push:</p>
+      <p>Enter your Mpesa phone number to receive payment prompt:</p>
       <input type="tel" id="mpesa-phone" placeholder="254XXXXXXXXX" pattern="254[0-9]{9}" required />
     </div>
     <div id="paybill-section" style="display:none;">
@@ -62,10 +75,11 @@
     <button type="button" id="confirm-payment-btn">Confirm Payment</button>
   </section>
 
+  <!-- Toast -->
   <div id="cart-toast"></div>
 
   <footer>
-    <p>&copy; 2025 SmartFarm. All rights reserved.</p>
+    <p>&copy; 2025 TilleValle. All rights reserved.</p>
   </footer>
 
   <script src="script.js"></script>

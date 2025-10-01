@@ -68,6 +68,37 @@
     .signup-container a:hover {
       color: #40916c;
     }
+    .password-container {
+      position: relative;
+      margin-bottom: 15px;
+    }
+    .password-container input {
+      width: 100%;
+      padding: 12px 45px 12px 15px; /* Add padding right for button */
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      transition: border 0.3s ease;
+    }
+    .password-container input:focus {
+      border-color: #2d6a4f;
+      outline: none;
+    }
+    .password-container button {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      color: #2d6a4f;
+      padding: 0;
+    }
+    .password-container button:hover {
+      color: #40916c;
+    }
   </style>
 </head>
 <body>
@@ -78,15 +109,25 @@
     <h1>Login</h1>
     <form id="login-form">
       <input type="email" id="email" placeholder="Email Address" required>
-      <input type="password" id="password" placeholder="Password" required>
+      <div class="password-container">
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="button" id="toggle-password" aria-label="Show password">Show</button>
+      </div>
       <button type="submit">Login</button>
     </form>
     <div id="output"></div>
     <a href="signup.html">Don’t have an account? Sign up here</a>
   </div>
 
-  <div id="cart-toast" style="display:none;"></div>
-  
+  <!-- Toast -->
+  <div id="cart-toast"></div>
+
+  <!-- Floating Cart Button -->
+  <div id="floating-cart-btn" class="floating-cart-btn">
+    <span class="cart-emoji">🛒</span>
+    <span id="floating-cart-count" class="floating-cart-count">0</span>
+  </div>
+
   <script>
     // Load navbar
     fetch('navbar.html')
@@ -148,6 +189,21 @@
         document.getElementById('output').textContent = 'Network error. Please try again later.';
         document.getElementById('output').style.color = 'red';
         console.error('Login error:', error);
+      }
+    });
+
+    // Toggle password visibility
+    document.getElementById('toggle-password').addEventListener('click', function() {
+      const passwordInput = document.getElementById('password');
+      const toggleBtn = this;
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleBtn.textContent = 'Hide';
+        toggleBtn.setAttribute('aria-label', 'Hide password');
+      } else {
+        passwordInput.type = 'password';
+        toggleBtn.textContent = 'Show';
+        toggleBtn.setAttribute('aria-label', 'Show password');
       }
     });
   </script> 
