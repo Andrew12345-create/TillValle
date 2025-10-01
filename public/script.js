@@ -4,8 +4,15 @@ const cartTotalElem = document.getElementById('cart-total');
 // Load cart from localStorage or initialize empty
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-// Load user info from localStorage or initialize empty
-let user = JSON.parse(localStorage.getItem('user')) || null;
+function getUserFromLocalStorage() {
+  const email = localStorage.getItem('email');
+  if (email) {
+    return { email };
+  }
+  return null;
+}
+
+let user = getUserFromLocalStorage();
 
 function saveCart() {
   localStorage.setItem('cart', JSON.stringify(cart));
@@ -18,11 +25,11 @@ function saveUser() {
 function renderUserArea() {
   const userArea = document.getElementById('user-area');
   if (!userArea) return;
-  console.log('User object from localStorage:', user);
+  user = getUserFromLocalStorage();
   if (user && user.email) {
     const initial = user.email.charAt(0).toUpperCase();
     userArea.innerHTML = `
-      <a href="profile.html" class="nav-link">
+      <a href="profile.html" class="nav-link user-initial-link" title="${user.email}">
         <span class="user-initial">${initial}</span>
       </a>
     `;

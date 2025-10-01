@@ -159,48 +159,61 @@
       const password = document.getElementById('password').value;
 
       // Determine login URL based on environment
-      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      const loginUrl = isLocal ? '/login' : '/.netlify/functions/login';
+      const isLocal = window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
-      try {
-        const response = await fetch(loginUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password }),
-        });
+      if (isLocal) {
+        // For local testing, simulate successful login
+        localStorage.setItem('email', email);
+        renderUserArea(); // Update navbar immediately
+        document.getElementById('output').textContent = 'Login successful! Redirecting...';
+        document.getElementById('output').style.color = '#2d6a4f';
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        setTimeout(() => {
+          window.location.href = 'shop.html';
+        }, 1500);
+      } else {
+        const loginUrl = '/.netlify/functions/login';
 
-        const data = await response.json();
+        try {
+          const response = await fetch(loginUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+          });
 
-        if (data.ok) {
-          // Successful login
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('email', email);
-          document.getElementById('output').textContent = 'Login successful! Redirecting...';
-          document.getElementById('output').style.color = '#2d6a4f';
-
-          setTimeout(() => {
-            window.location.href = 'shop.html';
-          }, 1500);
-        } else {
-          document.getElementById('output').textContent = data.error || 'Login failed. Please try again.';
-          document.getElementById('output').style.color = 'red';
-
-          if (data.error === 'Cannot see account, please sign up') {
-            setTimeout(() => {
-              window.location.href = 'signup.html';
-            }, 2000);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
           }
+
+          const data = await response.json();
+
+          if (data.ok) {
+            // Successful login
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('email', email);
+            document.getElementById('output').textContent = 'Login successful! Redirecting...';
+            document.getElementById('output').style.color = '#2d6a4f';
+
+            setTimeout(() => {
+              window.location.href = 'shop.html';
+            }, 1500);
+          } else {
+            document.getElementById('output').textContent = data.error || 'Login failed. Please try again.';
+            document.getElementById('output').style.color = 'red';
+
+            if (data.error === 'Cannot see account, please sign up') {
+              setTimeout(() => {
+                window.location.href = 'signup.html';
+              }, 2000);
+            }
+          }
+        } catch (error) {
+          document.getElementById('output').textContent = 'Network error. Please try again later.';
+          document.getElementById('output').style.color = 'red';
+          console.error('Login error:', error);
         }
-      } catch (error) {
-        document.getElementById('output').textContent = 'Network error. Please try again later.';
-        document.getElementById('output').style.color = 'red';
-        console.error('Login error:', error);
       }
     });
 
