@@ -219,6 +219,14 @@ increaseQtyBtn.addEventListener('click', () => {
 });
 
 addToCartModalBtn.addEventListener('click', () => {
+  if (!user || !user.email) {
+    showCartToast("Please log in to add items to cart");
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 2000);
+    closeProductModal();
+    return;
+  }
   const qty = parseInt(quantityInput.value);
   if (currentProduct) {
     const existingItem = cart.find(item => item.name === currentProduct.name);
@@ -236,6 +244,13 @@ addToCartModalBtn.addEventListener('click', () => {
 
 // Add product to cart from product cards without modal (fallback)
 window.addToCart = function(name, price) {
+  if (!user || !user.email) {
+    showCartToast("Please log in to add items to cart");
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 2000);
+    return;
+  }
   const existingItem = cart.find(item => item.name === name);
   if (existingItem) {
     existingItem.quantity++;
