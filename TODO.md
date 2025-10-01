@@ -1,4 +1,4 @@
-# Pending Tasks
+c# Pending Tasks
 
 - [x] Move logo into navbar for public/faq.html
 - [x] Move logo into navbar for public/language.html
@@ -9,3 +9,4 @@
 - [x] Test the changes by viewing the pages to ensure consistency and usability
 - [x] Remove "Home" link from navbar on all pages (about.html, contact.html, cart.html)
 - [x] Make navbar straight on phone with max 2 lines (update CSS and JS)
+- [x] Center text in navbar on phone layout
