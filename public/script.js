@@ -468,7 +468,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Close chatbot when clicking outside
   window.addEventListener('click', (e) => {
-    if (chatbotSidebar && !chatbotSidebar.contains(e.target) && e.target !== chatbotBtn) {
+    if (chatbotSidebar && !chatbotSidebar.contains(e.target) && !e.target.closest('#floating-chatbot-btn')) {
       closeChatbot();
     }
   });
