@@ -1,2 +1,5 @@
 # Ignore vercel directory
 node_modules
+
+# Local Netlify folder
+.netlify

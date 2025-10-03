@@ -326,3 +326,150 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
+// ========= CHATBOT FUNCTIONALITY =========
+
+// Chatbot elements
+const chatbotSidebar = document.getElementById('chatbot-sidebar');
+const chatbotBtn = document.getElementById('floating-chatbot-btn');
+const chatbotClose = document.getElementById('chatbot-close');
+const chatbotMessages = document.getElementById('chatbot-messages');
+const chatbotInput = document.getElementById('chatbot-input');
+const chatbotSend = document.getElementById('chatbot-send');
+
+// Chatbot state
+let isTyping = false;
+
+// Open chatbot sidebar
+function openChatbot() {
+  console.log('Chatbot button clicked - opening sidebar');
+  if (chatbotSidebar) {
+    chatbotSidebar.classList.add('open');
+    chatbotBtn.style.display = 'none'; // Hide the button when sidebar is open
+    chatbotInput.focus();
+  } else {
+    console.warn('Chatbot sidebar element not found');
+  }
+}
+
+// Close chatbot sidebar
+function closeChatbot() {
+  console.log('Closing chatbot sidebar');
+  if (chatbotSidebar) {
+    chatbotSidebar.classList.remove('open');
+    chatbotBtn.style.display = 'flex'; // Show the button when sidebar is closed
+  } else {
+    console.warn('Chatbot sidebar element not found');
+  }
+}
+
+// Add message to chatbot
+function addMessage(message, isUser = false) {
+  if (!chatbotMessages) return;
+
+  const messageDiv = document.createElement('div');
+  messageDiv.className = `chatbot-message ${isUser ? 'user' : 'bot'}`;
+  messageDiv.textContent = message;
+  chatbotMessages.appendChild(messageDiv);
+
+  // Scroll to bottom
+  chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+}
+
+// Show typing indicator
+function showTyping() {
+  if (!chatbotMessages || isTyping) return;
+
+  isTyping = true;
+  const typingDiv = document.createElement('div');
+  typingDiv.className = 'chatbot-message bot chatbot-typing';
+  typingDiv.textContent = 'TillValle Assistant is typing...';
+  chatbotMessages.appendChild(typingDiv);
+  chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+}
+
+// Hide typing indicator
+function hideTyping() {
+  if (!isTyping) return;
+
+  const typingIndicator = chatbotMessages.querySelector('.chatbot-typing');
+  if (typingIndicator) {
+    typingIndicator.remove();
+  }
+  isTyping = false;
+}
+
+// Send message to chatbot API
+async function sendMessage(message) {
+  try {
+    const response = await fetch('/.netlify/functions/chatbot', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to get response from chatbot');
+    }
+
+    const data = await response.json();
+    return data.message;
+  } catch (error) {
+    console.error('Chatbot error:', error);
+    return 'Sorry, I encountered an error. Please try again later.';
+  }
+}
+
+// Handle sending message
+async function handleSendMessage() {
+  const message = chatbotInput.value.trim();
+  if (!message) return;
+
+  // Add user message
+  addMessage(message, true);
+  chatbotInput.value = '';
+
+  // Show typing indicator
+  showTyping();
+
+  // Get bot response
+  const botResponse = await sendMessage(message);
+
+  // Hide typing and add bot response
+  hideTyping();
+  addMessage(botResponse);
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM fully loaded and parsed - attaching chatbot event listeners');
+
+  if (chatbotBtn) {
+    chatbotBtn.addEventListener('click', openChatbot);
+  }
+
+  if (chatbotClose) {
+    chatbotClose.addEventListener('click', closeChatbot);
+  }
+
+  if (chatbotSend) {
+    chatbotSend.addEventListener('click', handleSendMessage);
+  }
+
+  if (chatbotInput) {
+    chatbotInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        handleSendMessage();
+      }
+    });
+  }
+
+  // Close chatbot when clicking outside
+  window.addEventListener('click', (e) => {
+    if (chatbotSidebar && !chatbotSidebar.contains(e.target) && e.target !== chatbotBtn) {
+      closeChatbot();
+    }
+  });
+});

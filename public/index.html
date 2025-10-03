@@ -6,7 +6,7 @@
   <meta name="description" content="Fresh farm goods including eggs, butter, greens, and herbs delivered from Nancy & Jack’s farm.">
   <link rel="icon" href="logo.jpg" type="image/jpeg">
   <title>TilleValle - Fresh Farm Goods</title>
-  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="styles.css">
   
   <!-- Open Graph meta tags -->
   <meta property="og:title" content="TilleValle - Fresh Farm Goods">
@@ -75,10 +75,28 @@
   <!-- Toast -->
   <div id="cart-toast"></div>
 
-  <!-- Floating Cart Button -->
-  <div id="floating-cart-btn" class="floating-cart-btn">
-    <span class="cart-emoji">🛒</span>
-    <span id="floating-cart-count" class="floating-cart-count">0</span>
+  <!-- Chatbot Sidebar -->
+  <div id="chatbot-sidebar" class="chatbot-sidebar">
+    <div class="chatbot-header">
+      <span>TillieBot</span>
+      <button id="chatbot-close" class="chatbot-close">&times;</button>
+    </div>
+    <div id="chatbot-messages" class="chatbot-messages">
+      <div class="chatbot-message bot">
+        Hello! I'm TillieBot, your TillValle assistant. How can I help you today? You can ask me about our fresh products, delivery, or anything else!
+      </div>
+    </div>
+    <div class="chatbot-input-area">
+      <div class="chatbot-input-container">
+        <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Type your message...">
+        <button id="chatbot-send" class="chatbot-send">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Chatbot Button -->
+  <div id="floating-chatbot-btn" class="floating-chatbot-btn">
+    <span class="chatbot-emoji">💬</span>
   </div>
 
   <script src="script.js" defer></script>
