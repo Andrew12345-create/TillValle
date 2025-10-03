@@ -101,6 +101,7 @@
     <div class="form-group">
       <label for="location-search">Search Location:</label>
       <input type="text" id="location-search" placeholder="Enter a place name">
+      <button id="current-location-btn" class="btn" style="margin-top: 10px;">Use Current Location</button>
       <div id="search-results" class="search-results"></div>
     </div>
     <div id="map" style="height: 400px; width: 100%;"></div>
@@ -108,8 +109,29 @@
       <label for="selected-location">Selected Location:</label>
       <input type="text" id="selected-location" readonly placeholder="Drag the pin or select from search">
     </div>
-    <button id="proceed-btn" class="btn">Proceed to Payment</button>
+    <div style="display: flex; gap: 10px;">
+      <button id="save-location-btn" class="btn">Save Location</button>
+      <button id="proceed-btn" class="btn">Proceed to Payment</button>
+    </div>
   </section>
+
+  <!-- Save Location Modal -->
+  <div id="save-location-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;">
+    <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
+      <h3>Save Location</h3>
+      <p>Choose a type for this location:</p>
+      <div style="margin: 20px 0;">
+        <label><input type="radio" name="location-type" value="home"> Home</label><br>
+        <label><input type="radio" name="location-type" value="office"> Office</label><br>
+        <label><input type="radio" name="location-type" value="other"> Other</label>
+        <input type="text" id="custom-type" placeholder="Enter custom type" style="margin-left: 10px; display: none;">
+      </div>
+      <div style="text-align: right;">
+        <button id="cancel-save" class="btn" style="margin-right: 10px;">Cancel</button>
+        <button id="confirm-save" class="btn">Save</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Rating Section -->
   <section id="rating-section">
@@ -121,7 +143,7 @@
       <span class="star" data-value="4">★</span>
       <span class="star" data-value="5">★</span>
     </div>
-    <button id="done-btn" class="btn" disabled>Done</button>
+    <button id="done-btn" class="btn" disabled>★★★★★ Done</button>
   </section>
 
   <!-- Toast Notification -->
@@ -212,33 +234,69 @@
       document.getElementById('selected-location').value = address;
     });
 
+    // Debounce function
+    function debounce(func, delay) {
+      let timeoutId;
+      return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => func.apply(this, args), delay);
+      };
+    }
+
     // Search input
     const searchInput = document.getElementById('location-search');
     const searchResults = document.getElementById('search-results');
 
-    searchInput.addEventListener('input', async function() {
+    const debouncedSearch = debounce(async function() {
       const query = this.value.trim();
       if (query.length < 3) {
         searchResults.innerHTML = '';
         return;
       }
-      const results = await searchPlaces(query);
-      searchResults.innerHTML = '';
-      results.forEach(result => {
-        const div = document.createElement('div');
-        div.className = 'search-result';
-        div.textContent = result.display_name;
-        div.addEventListener('click', () => {
-          const lat = parseFloat(result.lat);
-          const lng = parseFloat(result.lon);
+      try {
+        const results = await searchPlaces(query);
+        searchResults.innerHTML = '';
+        results.forEach(result => {
+          const div = document.createElement('div');
+          div.className = 'search-result';
+          div.textContent = result.display_name;
+          div.addEventListener('click', () => {
+            const lat = parseFloat(result.lat);
+            const lng = parseFloat(result.lon);
+            map.setView([lat, lng], 15);
+            marker.setLatLng([lat, lng]);
+            document.getElementById('selected-location').value = result.display_name;
+            searchResults.innerHTML = '';
+            searchInput.value = '';
+          });
+          searchResults.appendChild(div);
+        });
+      } catch (error) {
+        console.error('Search failed:', error);
+        searchResults.innerHTML = '<div class="search-result">Search failed. Please try again.</div>';
+      }
+    }, 300);
+
+    searchInput.addEventListener('input', debouncedSearch);
+
+    // Current location button
+    document.getElementById('current-location-btn').addEventListener('click', () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
           map.setView([lat, lng], 15);
           marker.setLatLng([lat, lng]);
-          document.getElementById('selected-location').value = result.display_name;
-          searchResults.innerHTML = '';
-          searchInput.value = '';
+          const address = await reverseGeocode(lat, lng);
+          document.getElementById('selected-location').value = address;
+          showCartToast('Current location set.');
+        }, (error) => {
+          console.error('Geolocation error:', error);
+          showCartToast('Unable to get current location. Please check permissions.');
         });
-        searchResults.appendChild(div);
-      });
+      } else {
+        showCartToast('Geolocation is not supported by this browser.');
+      }
     });
 
     // Rating functionality
@@ -281,6 +339,67 @@
       } else {
         showCartToast('Please select a location.');
       }
+    });
+
+    // Save location modal
+    const saveLocationBtn = document.getElementById('save-location-btn');
+    const saveModal = document.getElementById('save-location-modal');
+    const cancelSave = document.getElementById('cancel-save');
+    const confirmSave = document.getElementById('confirm-save');
+    const customType = document.getElementById('custom-type');
+    const locationTypeRadios = document.querySelectorAll('input[name="location-type"]');
+
+    saveLocationBtn.addEventListener('click', () => {
+      const location = document.getElementById('selected-location').value;
+      if (!location) {
+        showCartToast('Please select a location first.');
+        return;
+      }
+      saveModal.style.display = 'flex';
+    });
+
+    cancelSave.addEventListener('click', () => {
+      saveModal.style.display = 'none';
+      document.querySelector('input[name="location-type"]:checked').checked = false;
+      customType.style.display = 'none';
+      customType.value = '';
+    });
+
+    locationTypeRadios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        if (radio.value === 'other') {
+          customType.style.display = 'inline';
+        } else {
+          customType.style.display = 'none';
+          customType.value = '';
+        }
+      });
+    });
+
+    confirmSave.addEventListener('click', () => {
+      const selectedType = document.querySelector('input[name="location-type"]:checked');
+      if (!selectedType) {
+        showCartToast('Please select a location type.');
+        return;
+      }
+      let type = selectedType.value;
+      if (type === 'other') {
+        type = customType.value.trim();
+        if (!type) {
+          showCartToast('Please enter a custom type.');
+          return;
+        }
+      }
+      const location = document.getElementById('selected-location').value;
+      const userEmail = localStorage.getItem('email') || 'guest';
+      const savedLocations = JSON.parse(localStorage.getItem(`savedLocations_${userEmail}`) || '{}');
+      savedLocations[type] = location;
+      localStorage.setItem(`savedLocations_${userEmail}`, JSON.stringify(savedLocations));
+      saveModal.style.display = 'none';
+      document.querySelector('input[name="location-type"]:checked').checked = false;
+      customType.style.display = 'none';
+      customType.value = '';
+      showCartToast(`Location saved as ${type}.`);
     });
 
     function showCartToast(message) {

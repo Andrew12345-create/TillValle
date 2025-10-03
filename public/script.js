@@ -28,10 +28,15 @@ function renderUserArea() {
   user = getUserFromLocalStorage();
   if (user && user.email) {
     const initial = user.email.charAt(0).toUpperCase();
+    let adminLink = '';
+    if (user.email === 'andrewmunamwangi@gmail.com') {
+      adminLink = `<a href="admin.html" class="nav-link">Admin</a>`;
+    }
     userArea.innerHTML = `
       <a href="profile.html" class="nav-link user-initial-link" title="${user.email}">
         <span class="user-initial">${initial}</span>
       </a>
+      ${adminLink}
     `;
   } else {
     userArea.innerHTML = `<a href="login.html" class="nav-link">Login</a>`;
@@ -188,6 +193,46 @@ const increaseQtyBtn = document.getElementById('modal-increase-qty');
 let currentProduct = null;
 
 window.openProductModal = function(name, description, imageSrc, price) {
+  const stockStatus = JSON.parse(localStorage.getItem('productStock')) || {};
+  const productMapping = {
+    'Milk': 'milk',
+    'Eggs': 'eggs',
+    'Eggs (Kienyeji)': 'eggs-kienyeji',
+    'Egg Crate (30 eggs)': 'egg-crate',
+    'Butter': 'butter',
+    'Chicken': 'chicken',
+    'Ghee': 'ghee',
+    'Apples': 'apples',
+    'Raw Bananas': 'raw-bananas',
+    'Bananas (ripe)': 'bananas-ripe',
+    'Soursop Fruit': 'soursop-fruit',
+    'Blueberries': 'blueberries',
+    'Macadamia': 'macadamia',
+    'Dragonfruit': 'dragonfruit',
+    'Mangoes': 'mangoes',
+    'Lemon': 'lemon',
+    'Pawpaw': 'pawpaw',
+    'Pixies': 'pixies',
+    'Avocadoes': 'avocadoes',
+    'Yellow Passion': 'yellow-passion',
+    'Kiwi': 'kiwi',
+    'Basil': 'basil',
+    'Coriander': 'coriander',
+    'Mint': 'mint',
+    'Parsley': 'parsley',
+    'Soursop Leaves': 'soursop-leaves',
+    'Kales (Sukuma Wiki)': 'kales',
+    'Lettuce': 'lettuce',
+    'Managu': 'managu',
+    'Terere': 'terere',
+    'Salgaa': 'salgaa',
+    'Spinach': 'spinach'
+  };
+  const productId = productMapping[name];
+  if (productId && stockStatus[productId] === false) {
+    alert('This item is not in stock');
+    return;
+  }
   currentProduct = { name, price };
   modalName.textContent = name;
   modalDescription.textContent = description;
@@ -289,8 +334,8 @@ if (checkoutBtn) {
       }, 2000);
       return;
     }
-    // Proceed to payment
-    window.location.href = 'payment.html';
+    // Proceed to location selection before payment
+    window.location.href = 'location.html';
   });
 }
 

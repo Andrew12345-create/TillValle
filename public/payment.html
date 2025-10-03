@@ -51,9 +51,10 @@
           <option value="card">Credit/Debit Card</option>
         </select>
       </div>
+      <!-- Removed location input field as location is set on location.html -->
       <div class="form-group">
-        <label for="location">Your Location</label>
-        <input type="text" id="location" placeholder="Enter your location" required>
+        <label>Your Selected Location</label>
+        <p id="display-location" style="font-weight: bold; padding: 8px; background: #f0f0f0; border-radius: 4px;"></p>
       </div>
       <div id="mpesa-fields" class="payment-fields">
         <div class="form-group">
@@ -151,21 +152,36 @@
 
     // Payment form submission
     const paymentForm = document.getElementById('payment-form');
-    paymentForm.addEventListener('submit', (e) => {
+    paymentForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const location = document.getElementById('location').value.trim();
+      // Use location from localStorage instead of input field
+      const location = localStorage.getItem('selectedLocation');
       if (!location) {
-        showCartToast("Please enter your location.");
+        showCartToast("Location not set. Please select your location.");
+        window.location.href = 'location.html';
         return;
       }
 
       if (paymentMethod.value === 'mpesa') {
-        // Simulate M-Pesa payment processing
-        showCartToast(`M-Pesa payment successful! Thank you for your purchase from ${location}.`);
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 3000);
+        const phoneNumber = document.getElementById('phone-number').value.trim();
+        if (!phoneNumber) {
+          showCartToast("Please enter your M-Pesa phone number.");
+          return;
+        }
+        // TODO: Integrate actual M-Pesa payment API here
+        showCartToast("Initiating M-Pesa payment... Please complete the payment on your phone.");
+        try {
+          // Simulate async payment request (replace with real API call)
+          await new Promise(resolve => setTimeout(resolve, 5000));
+          showCartToast(`M-Pesa payment successful! Thank you for your purchase from ${location}.`);
+          // Redirect after payment success with delay to show message
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 3000);
+        } catch (error) {
+          showCartToast("Payment failed or was cancelled. Please try again.");
+        }
       } else if (paymentMethod.value === 'card') {
         // Simulate card payment processing
         const cardNumber = document.getElementById('card-number').value.trim();
@@ -188,6 +204,15 @@
             window.location.href = 'index.html';
           }, 3000);
         }, 2000);
+      }
+    });
+
+    // Display selected location on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      const displayLocation = document.getElementById('display-location');
+      const location = localStorage.getItem('selectedLocation');
+      if (displayLocation && location) {
+        displayLocation.textContent = location;
       }
     });
 

@@ -196,9 +196,15 @@
         document.getElementById('output').textContent = 'Login successful! Redirecting...';
         document.getElementById('output').style.color = '#2d6a4f';
 
-        setTimeout(() => {
-          window.location.href = 'shop.html';
-        }, 1500);
+        if (email === 'andrewmunamwangi@gmail.com') {
+          setTimeout(() => {
+            window.location.href = 'admin.html';
+          }, 1500);
+        } else {
+          setTimeout(() => {
+            window.location.href = 'shop.html';
+          }, 1500);
+        }
       } else {
         const loginUrl = '/.netlify/functions/login';
 

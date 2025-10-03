@@ -34,6 +34,21 @@
           greeting.textContent = `Hello, ${savedName}`;
           document.querySelector('.account-section').insertBefore(greeting, document.querySelector('.profile-field'));
         }
+
+        // Load saved locations
+        const savedLocations = JSON.parse(localStorage.getItem(`savedLocations_${userEmail}`) || '{}');
+        const savedLocationsDiv = document.getElementById('saved-locations');
+        savedLocationsDiv.innerHTML = '';
+        if (Object.keys(savedLocations).length === 0) {
+          savedLocationsDiv.innerHTML = '<p>No saved locations.</p>';
+        } else {
+          for (const [type, address] of Object.entries(savedLocations)) {
+            const div = document.createElement('div');
+            div.className = 'profile-field';
+            div.innerHTML = `<label>${type.charAt(0).toUpperCase() + type.slice(1)}:</label><span>${address}</span>`;
+            savedLocationsDiv.appendChild(div);
+          }
+        }
       });
 
       function saveProfile() {
@@ -74,7 +89,7 @@
   </header>
 
   <main class="profile-container">
-    <h1><a href="profile.html" class="back-link">← Back to Profile</a></h1>
+    <h1><a href="index.html" class="back-link">← Back to Home</a></h1>
     
     <section class="account-section">
       <h2>Account Settings</h2>
@@ -95,6 +110,11 @@
           <button type="button" onclick="saveProfile()">Save</button>
         </div>
       </form>
+      <h3>Saved Locations</h3>
+      <div id="saved-locations" class="saved-locations">
+        <!-- Saved locations will be displayed here -->
+      </div>
+
       <div class="profile-buttons">
         <button class="profile-btn" id="edit-password-btn">Edit Password</button>
         <button class="profile-btn">Payment Methods</button>
