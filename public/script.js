@@ -230,7 +230,7 @@ window.openProductModal = function(name, description, imageSrc, price) {
   };
   const productId = productMapping[name];
   if (productId && stockStatus[productId] === false) {
-    alert('This item is not in stock');
+    showCartToast('Sorry, this item is currently out of stock. We apologize for the inconvenience.');
     return;
   }
   currentProduct = { name, price };
@@ -300,6 +300,46 @@ window.addToCart = function(name, price) {
     }, 2000);
     return;
   }
+  const stockStatus = JSON.parse(localStorage.getItem('productStock')) || {};
+  const productMapping = {
+    'Milk': 'milk',
+    'Eggs': 'eggs',
+    'Eggs (Kienyeji)': 'eggs-kienyeji',
+    'Egg Crate (30 eggs)': 'egg-crate',
+    'Butter': 'butter',
+    'Chicken': 'chicken',
+    'Ghee': 'ghee',
+    'Apples': 'apples',
+    'Raw Bananas': 'raw-bananas',
+    'Bananas (ripe)': 'bananas-ripe',
+    'Soursop Fruit': 'soursop-fruit',
+    'Blueberries': 'blueberries',
+    'Macadamia': 'macadamia',
+    'Dragonfruit': 'dragonfruit',
+    'Mangoes': 'mangoes',
+    'Lemon': 'lemon',
+    'Pawpaw': 'pawpaw',
+    'Pixies': 'pixies',
+    'Avocadoes': 'avocadoes',
+    'Yellow Passion': 'yellow-passion',
+    'Kiwi': 'kiwi',
+    'Basil': 'basil',
+    'Coriander': 'coriander',
+    'Mint': 'mint',
+    'Parsley': 'parsley',
+    'Soursop Leaves': 'soursop-leaves',
+    'Kales (Sukuma Wiki)': 'kales',
+    'Lettuce': 'lettuce',
+    'Managu': 'managu',
+    'Terere': 'terere',
+    'Salgaa': 'salgaa',
+    'Spinach': 'spinach'
+  };
+  const productId = productMapping[name];
+  if (productId && stockStatus[productId] === false) {
+    showCartToast('Sorry, this item is currently out of stock. We apologize for the inconvenience.');
+    return;
+  }
   const existingItem = cart.find(item => item.name === name);
   if (existingItem) {
     existingItem.quantity++;
@@ -319,9 +359,114 @@ if (floatingCartBtn) {
   });
 }
 
+async function fetchStock() {
+  try {
+    const response = await fetch('/.netlify/functions/stock');
+    if (!response.ok) throw new Error('Failed to fetch stock');
+    const data = await response.json();
+    const stockStatus = {};
+    data.forEach(item => {
+      stockStatus[item.product_id] = item.in_stock;
+    });
+    localStorage.setItem('productStock', JSON.stringify(stockStatus));
+    updateProductOverlays(stockStatus);
+    return stockStatus;
+  } catch (error) {
+    console.error('Error fetching stock:', error);
+    const stockStatus = JSON.parse(localStorage.getItem('productStock')) || {};
+    updateProductOverlays(stockStatus);
+    return stockStatus;
+  }
+}
+
+function updateProductOverlays(stockStatus) {
+  const productMapping = {
+    'Milk': 'milk',
+    'Eggs': 'eggs',
+    'Eggs (Kienyeji)': 'eggs-kienyeji',
+    'Egg Crate (30 eggs)': 'egg-crate',
+    'Butter': 'butter',
+    'Chicken': 'chicken',
+    'Ghee': 'ghee',
+    'Apples': 'apples',
+    'Raw Bananas': 'raw-bananas',
+    'Bananas (ripe)': 'bananas-ripe',
+    'Soursop Fruit': 'soursop-fruit',
+    'Blueberries': 'blueberries',
+    'Macadamia': 'macadamia',
+    'Dragonfruit': 'dragonfruit',
+    'Mangoes': 'mangoes',
+    'Lemon': 'lemon',
+    'Pawpaw': 'pawpaw',
+    'Pixies': 'pixies',
+    'Avocadoes': 'avocadoes',
+    'Yellow Passion': 'yellow-passion',
+    'Kiwi': 'kiwi',
+    'Basil': 'basil',
+    'Coriander': 'coriander',
+    'Mint': 'mint',
+    'Parsley': 'parsley',
+    'Soursop Leaves': 'soursop-leaves',
+    'Kales (Sukuma Wiki)': 'kales',
+    'Lettuce': 'lettuce',
+    'Managu': 'managu',
+    'Terere': 'terere',
+    'Salgaa': 'salgaa',
+    'Spinach': 'spinach'
+  };
+
+  const products = document.querySelectorAll('.product');
+  products.forEach(product => {
+    const onclickAttr = product.getAttribute('onclick');
+    if (onclickAttr) {
+      const match = onclickAttr.match(/openProductModal\('([^']+)'/);
+      if (match) {
+        const productName = match[1];
+        const productId = productMapping[productName];
+        if (productId && stockStatus[productId] === false) {
+          // Add out of stock overlay
+          let overlay = product.querySelector('.out-of-stock-overlay');
+          if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.className = 'out-of-stock-overlay';
+            overlay.textContent = '😔 Sorry, Out of Stock';
+            overlay.style.position = 'absolute';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+            overlay.style.color = 'white';
+            overlay.style.display = 'flex';
+            overlay.style.alignItems = 'center';
+            overlay.style.justifyContent = 'center';
+            overlay.style.fontSize = '14px';
+            overlay.style.fontWeight = 'bold';
+            overlay.style.borderRadius = '8px';
+            overlay.style.zIndex = '10';
+            product.style.position = 'relative';
+            product.appendChild(overlay);
+          }
+        } else {
+          // Remove overlay if exists
+          const overlay = product.querySelector('.out-of-stock-overlay');
+          if (overlay) {
+            overlay.remove();
+          }
+        }
+      }
+    }
+  });
+}
+
 renderUserArea();
 renderCart();
 updateCartCount();
+
+// Fetch stock on page load
+document.addEventListener('DOMContentLoaded', async () => {
+  await fetchStock();
+});
 
 // Checkout button functionality
 const checkoutBtn = document.getElementById('checkout-btn');

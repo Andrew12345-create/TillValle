@@ -306,6 +306,39 @@ app.post('/mpesa-callback', async (req, res) => {
 });
 
 // ==========================
+// STOCK MANAGEMENT
+// ==========================
+app.get('/stock', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT product_id, product_name, in_stock FROM product_stock ORDER BY product_name');
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Stock fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch stock data' });
+  }
+});
+
+app.post('/stock', async (req, res) => {
+  const { product_id, in_stock } = req.body;
+  if (!product_id || typeof in_stock !== 'boolean') {
+    return res.status(400).json({ error: 'Invalid request body' });
+  }
+  try {
+    const result = await pool.query(
+      'UPDATE product_stock SET in_stock = $1, last_updated = CURRENT_TIMESTAMP WHERE product_id = $2 RETURNING *',
+      [in_stock, product_id]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    res.json({ message: 'Stock updated', updated: result.rows[0] });
+  } catch (error) {
+    console.error('Stock update error:', error);
+    res.status(500).json({ error: 'Failed to update stock' });
+  }
+});
+
+// ==========================
 // Catch-all (serve frontend)
 // ==========================
 app.all('*', (req, res) => {

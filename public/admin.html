@@ -1,379 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard - TilleValle</title>
-  <link rel="icon" href="logo.jpg" type="image/jpeg">
-  <link rel="stylesheet" href="styles.css">
-
-  <!-- Hotjar Tracking Code for Tillvalle -->
-  <script>
-      (function(h,o,t,j,a,r){
-          h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-          h._hjSettings={hjid:6534945,hjsv:6};
-          a=o.getElementsByTagName('head')[0];
-          r=o.createElement('script');r.async=1;
-          r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-          a.appendChild(r);
-      })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TilleValle Admin - Manage Stock</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 0.75rem;
+      text-align: left;
+    }
+    th {
+      background-color: #f1c40f;
+      color: #fff;
+    }
+    tr:nth-child(even) {
+      background-color: #fef9e7;
+    }
+    button {
+      padding: 0.4rem 0.8rem;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button.out-of-stock {
+      background-color: #c0392b;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    #status-message {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <nav class="navbar">
-      <div class="nav-left">
-        <a href="index.html" class="nav-link logo-link">
-          <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
-        </a>
-        <a href="shop.html" class="nav-link">Shop</a>
-        <a href="about.html" class="nav-link">About</a>
-        <a href="contact.html" class="nav-link">Contact</a>
-      </div>
-      <div class="nav-right">
-        <span id="user-area"></span>
-        <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
-      </div>
-    </nav>
-    <hr>
-  </header>
-
-  <main class="admin-container">
-    <h1>Admin Dashboard</h1>
-    <p>Manage product stock status below. Changes will be reflected on the shop page.</p>
-
-    <section class="stock-management">
-      <h2>Product Stock Management</h2>
-
-      <div class="category">
-        <h3>Animal Farm Produce</h3>
-        <div class="product-list">
-          <div class="product-item">
-            <span>Milk</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-milk" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Eggs</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-eggs" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Eggs (Kienyeji)</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-eggs-kienyeji" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Egg Crate (30 eggs)</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-egg-crate" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Butter</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-butter" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Chicken</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-chicken" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Ghee</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-ghee" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="category">
-        <h3>Fruits</h3>
-        <div class="product-list">
-          <div class="product-item">
-            <span>Apples</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-apples" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Raw Bananas</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-raw-bananas" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Bananas (ripe)</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-bananas-ripe" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Soursop Fruit</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-soursop-fruit" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Blueberries</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-blueberries" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Macadamia</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-macadamia" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Dragonfruit</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-dragonfruit" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Mangoes</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-mangoes" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Lemon</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-lemon" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Pawpaw</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-pawpaw" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Pixies</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-pixies" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Avocadoes</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-avocadoes" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Yellow Passion</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-yellow-passion" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Kiwi</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-kiwi" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="category">
-        <h3>Herbs</h3>
-        <div class="product-list">
-          <div class="product-item">
-            <span>Basil</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-basil" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Coriander</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-coriander" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Mint</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-mint" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Parsley</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-parsley" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Soursop Leaves</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-soursop-leaves" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="category">
-        <h3>Vegetables & Greens</h3>
-        <div class="product-list">
-          <div class="product-item">
-            <span>Kales (Sukuma Wiki)</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-kales" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Lettuce</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-lettuce" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Managu</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-managu" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Terere</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-terere" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Salgaa</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-salgaa" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="product-item">
-            <span>Spinach</span>
-            <label class="switch">
-              <input type="checkbox" id="stock-spinach" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <button id="save-stock" class="btn">Save Stock Changes</button>
-      <div id="save-message"></div>
-    </section>
-  </main>
-
-  <footer>
-    <p>&copy; 2025 TilleValle. All rights reserved.</p>
-  </footer>
-
-  <!-- Toast -->
-  <div id="cart-toast"></div>
-
-  <!-- Chatbot Sidebar -->
-  <div id="chatbot-sidebar" class="chatbot-sidebar">
-    <div class="chatbot-header">
-      <span>TillieBot</span>
-      <button id="chatbot-close" class="chatbot-close">&times;</button>
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="index.html" class="nav-link logo-link">
+        <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
+      </a>
+      <a href="shop.html" class="nav-link">Shop</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
     </div>
-    <div id="chatbot-messages" class="chatbot-messages">
-      <div class="chatbot-message bot">
-        Hello! I'm TillieBot, your TillValle assistant. How can I help you today? You can ask me about our fresh products, delivery, or anything else!
-      </div>
+    <div class="nav-right">
+      <span id="user-area"></span>
+      <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
     </div>
-    <div class="chatbot-input-area">
-      <div class="chatbot-input-container">
-        <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Type your message...">
-        <button id="chatbot-send" class="chatbot-send">➤</button>
-      </div>
-    </div>
-  </div>
+  </nav>
+  <hr />
 
-  <!-- Floating Chatbot Button -->
-  <div id="floating-chatbot-btn" class="floating-chatbot-btn">
-    <span class="chatbot-emoji">💬</span>
-  </div>
-
-  <!-- Floating Cart Button -->
-  <div id="floating-cart-btn" class="floating-cart-btn">
-    <span class="cart-emoji">🛒</span>
-    <span id="floating-cart-count" class="floating-cart-count">0</span>
-  </div>
-
-  <script src="script.js" defer></script>
+  <h1>Manage Product Stock</h1>
+  <table id="stock-table">
+    <thead>
+      <tr>
+        <th>Product ID</th>
+        <th>Product Name</th>
+        <th>In Stock</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Rows will be populated by JavaScript -->
+    </tbody>
+  </table>
+  <div id="status-message"></div>
 
   <script>
-    // Check if admin
-    const userEmail = localStorage.getItem('email');
-    if (userEmail !== 'andrewmunamwangi@gmail.com') {
-      window.location.href = 'index.html';
+    const apiBaseUrl = '/.netlify/functions'; // Adjust if your API endpoint differs
+
+    async function fetchStock() {
+      try {
+        const response = await fetch(apiBaseUrl + '/stock');
+        if (!response.ok) throw new Error('Failed to fetch stock data');
+        const data = await response.json();
+        populateTable(data);
+      } catch (error) {
+        document.getElementById('status-message').textContent = 'Error loading stock data: ' + error.message;
+      }
     }
 
-    // Load current stock status
-    const stockStatus = JSON.parse(localStorage.getItem('productStock')) || {};
-
-    // Set checkboxes based on saved status
-    Object.keys(stockStatus).forEach(productId => {
-      const checkbox = document.getElementById(`stock-${productId}`);
-      if (checkbox) {
-        checkbox.checked = stockStatus[productId];
-      }
-    });
-
-    // Save stock changes
-    document.getElementById('save-stock').addEventListener('click', () => {
-      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-      const newStockStatus = {};
-
-      checkboxes.forEach(checkbox => {
-        const productId = checkbox.id.replace('stock-', '');
-        newStockStatus[productId] = checkbox.checked;
+    function populateTable(stockData) {
+      const tbody = document.querySelector('#stock-table tbody');
+      tbody.innerHTML = '';
+      stockData.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.product_id}</td>
+          <td>${item.product_name}</td>
+          <td>${item.in_stock ? 'Yes' : 'No'}</td>
+          <td>
+            <button class="${item.in_stock ? '' : 'out-of-stock'}" onclick="toggleStock('${item.product_id}', ${item.in_stock})">
+              Mark as ${item.in_stock ? 'Out of Stock' : 'In Stock'}
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
       });
+    }
 
-      localStorage.setItem('productStock', JSON.stringify(newStockStatus));
+    async function toggleStock(productId, currentStatus) {
+      try {
+        const response = await fetch(apiBaseUrl + '/stock', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product_id: productId, in_stock: !currentStatus })
+        });
+        if (!response.ok) throw new Error('Failed to update stock');
+        document.getElementById('status-message').textContent = 'Stock updated successfully.';
+        fetchStock();
+      } catch (error) {
+        document.getElementById('status-message').textContent = 'Error updating stock: ' + error.message;
+      }
+    }
 
-      const message = document.getElementById('save-message');
-      message.textContent = 'Stock status updated successfully!';
-      message.style.color = '#2d6a4f';
-      setTimeout(() => {
-        message.textContent = '';
-      }, 3000);
-    });
+    // Initial load
+    fetchStock();
   </script>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
