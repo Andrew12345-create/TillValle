@@ -41,6 +41,8 @@ app.use(session({
   }
 }));
 
+const apiKey = 'napi_aa19lsyo2ekw2lgwkph6nor6vepupxx24kq0jkt0y79lfqd9zyu608n7nh7x6te9';
+
 // Database setup
 const pool = new Pool({
   connectionString: process.env.NEON_DATABASE_URL,

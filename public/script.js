@@ -361,7 +361,7 @@ if (floatingCartBtn) {
 
 async function fetchStock() {
   try {
-    const response = await fetch('/.netlify/functions/stock');
+    const response = await fetch('http://localhost:3002/stock');
     if (!response.ok) throw new Error('Failed to fetch stock');
     const data = await response.json();
     const stockStatus = {};
