@@ -1,48 +1,34 @@
-const fetch = require('node-fetch');
+const { Pool } = require('pg');
 
-const apiBaseUrl = 'https://ep-billowing-mode-adkbmnzk.neon.tech/rest/v1/neondb';
-const apiKey = 'napi_aa19lsyo2ekw2lgwkph6nor6vepupxx24kq0jkt0y79lfqd9zyu608n7nh7x6te9';
+const pool = new Pool({
+  connectionString: process.env.NEON_DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
+});
 
 exports.handler = async function(event, context) {
   try {
     if (event.httpMethod === 'GET') {
-      // Fetch all product stock from Neon REST API
-      const res = await fetch(`${apiBaseUrl}/product_stock?select=product_id,product_name,in_stock&apikey=${apiKey}`, {
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      if (!res.ok) {
-        return { statusCode: res.status, body: 'Failed to fetch stock data' };
-      }
-      const data = await res.json();
+      const result = await pool.query('SELECT product_id, product_name, in_stock FROM product_stock ORDER BY product_name');
       return {
         statusCode: 200,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify(result.rows),
       };
     } else if (event.httpMethod === 'POST') {
-      // Update stock status via Neon REST API
       const { product_id, in_stock } = JSON.parse(event.body);
       if (!product_id || typeof in_stock !== 'boolean') {
         return { statusCode: 400, body: 'Invalid request body' };
       }
-      const res = await fetch(`${apiBaseUrl}/product_stock?product_id=eq.${product_id}&apikey=${apiKey}`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ in_stock, last_updated: new Date().toISOString() })
-      });
-      if (!res.ok) {
-        return { statusCode: res.status, body: 'Failed to update stock' };
+      const result = await pool.query(
+        'UPDATE product_stock SET in_stock = $1, last_updated = CURRENT_TIMESTAMP WHERE product_id = $2 RETURNING *',
+        [in_stock, product_id]
+      );
+      if (result.rowCount === 0) {
+        return { statusCode: 404, body: 'Product not found' };
       }
-      const updated = await res.json();
       return {
         statusCode: 200,
-        body: JSON.stringify({ message: 'Stock updated', updated })
+        body: JSON.stringify({ message: 'Stock updated', updated: result.rows[0] }),
       };
     } else {
       return { statusCode: 405, body: 'Method Not Allowed' };
@@ -51,7 +37,7 @@ exports.handler = async function(event, context) {
     console.error('API error:', error);
     return {
       statusCode: 500,
-      body: 'Internal Server Error'
+      body: 'Internal Server Error',
     };
   }
 };
