@@ -152,51 +152,28 @@
     const apiBaseUrl = 'http://localhost:3002'; // Use server on port 3002
 
     // Password protection
+    // Removed duplicate login form event listeners and fetchStock call
+
     const loginForm = document.getElementById('login-form');
     const loginSection = document.getElementById('login-section');
     const adminContent = document.getElementById('admin-content');
 
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const password = document.getElementById('admin-password').value;
       if (password === 'Auth123') {
         loginSection.style.display = 'none';
         adminContent.style.display = 'block';
-        fetchStock(); // Load stock data after login
+        try {
+          const stockData = await window.fetchStock();
+          window.populateAdminStockTable(stockData);
+        } catch (error) {
+          document.getElementById('status-message').textContent = 'Error loading stock data: ' + error.message;
+        }
       } else {
         alert('Incorrect password');
       }
     });
-
-    async function fetchStock() {
-      try {
-        const response = await fetch(apiBaseUrl + '/stock');
-        if (!response.ok) throw new Error('Failed to fetch stock data');
-        const data = await response.json();
-        populateTable(data);
-      } catch (error) {
-        document.getElementById('status-message').textContent = 'Error loading stock data: ' + error.message;
-      }
-    }
-
-    function populateTable(stockData) {
-      const tbody = document.querySelector('#stock-table tbody');
-      tbody.innerHTML = '';
-      stockData.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${item.product_id}</td>
-          <td>${item.product_name}</td>
-          <td>${item.in_stock ? 'Yes' : 'No'}</td>
-          <td>
-            <button class="${item.in_stock ? '' : 'out-of-stock'}" onclick="toggleStock('${item.product_id}', ${item.in_stock})">
-              Mark as ${item.in_stock ? 'Out of Stock' : 'In Stock'}
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
 
     async function toggleStock(productId, currentStatus) {
       showStockToast('WAITING...');
