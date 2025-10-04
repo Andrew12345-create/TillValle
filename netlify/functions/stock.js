@@ -34,10 +34,9 @@ exports.handler = async function(event, context) {
         headers: {
           'apikey': apiKey,
           'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=representation'
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ in_stock })
+        body: JSON.stringify({ in_stock, last_updated: new Date().toISOString() })
       });
       if (!res.ok) {
         return { statusCode: res.status, body: 'Failed to update stock' };

@@ -361,7 +361,10 @@ if (floatingCartBtn) {
 
 async function fetchStock() {
   try {
-    const response = await fetch('http://localhost:3002/stock');
+    // Use Netlify function URL for production, localhost for development
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const stockUrl = isLocal ? 'http://localhost:3002/stock' : '/.netlify/functions/stock';
+    const response = await fetch(stockUrl);
     if (!response.ok) throw new Error('Failed to fetch stock');
     const data = await response.json();
     const stockStatus = {};
@@ -499,7 +502,10 @@ window.toggleStock = async function(productId, currentStatus) {
 
   showStockToast('WAITING...');
   try {
-    const response = await fetch('http://localhost:3002/stock', {
+    // Use Netlify function URL for production, localhost for development
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const stockUrl = isLocal ? 'http://localhost:3002/stock' : '/.netlify/functions/stock';
+    const response = await fetch(stockUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ product_id: productId, in_stock: !currentStatus })
