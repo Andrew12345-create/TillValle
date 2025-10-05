@@ -229,16 +229,35 @@ window.openProductModal = function(name, description, imageSrc, price) {
     'Spinach': 'spinach'
   };
   const productId = productMapping[name];
-  if (productId && stockStatus[productId] === false) {
-    showCartToast('Sorry, this item is currently out of stock. We apologize for the inconvenience.');
-    return;
-  }
+  const stockQty = productId ? stockStatus[productId] : undefined;
+
   currentProduct = { name, price };
   modalName.textContent = name;
   modalDescription.textContent = description;
   modalImage.src = imageSrc;
   modalImage.alt = name;
   modalPrice.textContent = `KES ${price}`;
+
+  // Show stock quantity in modal
+  let stockInfoElem = document.getElementById('modal-stock-info');
+  if (!stockInfoElem) {
+    stockInfoElem = document.createElement('p');
+    stockInfoElem.id = 'modal-stock-info';
+    stockInfoElem.style.fontWeight = 'bold';
+    stockInfoElem.style.marginTop = '0.5rem';
+    modalPrice.parentNode.insertBefore(stockInfoElem, quantityInput.parentNode);
+  }
+  if (stockQty === undefined) {
+    stockInfoElem.textContent = 'Stock information not available';
+    addToCartModalBtn.disabled = false;
+  } else if (stockQty <= 0) {
+    stockInfoElem.textContent = 'Out of stock';
+    addToCartModalBtn.disabled = true;
+  } else {
+    stockInfoElem.textContent = `In stock: ${stockQty}`;
+    addToCartModalBtn.disabled = false;
+  }
+
   quantityInput.value = 1;
   modal.style.display = 'block';
 };
@@ -336,7 +355,7 @@ window.addToCart = function(name, price) {
     'Spinach': 'spinach'
   };
   const productId = productMapping[name];
-  if (productId && stockStatus[productId] === false) {
+  if (productId && stockStatus[productId] <= 0) {
     showCartToast('Sorry, this item is currently out of stock. We apologize for the inconvenience.');
     return;
   }
@@ -369,7 +388,7 @@ async function fetchStock() {
     const data = await response.json();
     const stockStatus = {};
     data.forEach(item => {
-      stockStatus[item.product_id] = item.in_stock;
+      stockStatus[item.product_id] = item.stock_quantity;
     });
     localStorage.setItem('productStock', JSON.stringify(stockStatus));
     updateProductOverlays(stockStatus);
@@ -426,7 +445,7 @@ function updateProductOverlays(stockStatus) {
       if (match) {
         const productName = match[1];
         const productId = productMapping[productName];
-        if (productId && stockStatus[productId] === false) {
+        if (productId && stockStatus[productId] <= 0) {
           // Add out of stock overlay
           let overlay = product.querySelector('.out-of-stock-overlay');
           if (!overlay) {
@@ -472,10 +491,10 @@ function populateAdminStockTable(stockData) {
     tr.innerHTML = `
       <td>${item.product_id}</td>
       <td>${item.product_name}</td>
-      <td>${item.in_stock ? 'Yes' : 'No'}</td>
+      <td>${item.stock_quantity}</td>
       <td>
-        <button class="${item.in_stock ? '' : 'out-of-stock'}" onclick="toggleStock('${item.product_id}', ${item.in_stock})">
-          Mark as ${item.in_stock ? 'Out of Stock' : 'In Stock'}
+        <button onclick="toggleStock('${item.product_id}', ${item.stock_quantity})">
+          Update Quantity
         </button>
       </td>
     `;
@@ -489,7 +508,7 @@ window.populateAdminStockTable = populateAdminStockTable;
 // Expose fetchStock globally for admin.html
 window.fetchStock = fetchStock;
 
-window.toggleStock = async function(productId, currentStatus) {
+window.toggleStock = async function(productId, currentQuantity) {
   const stockToast = document.getElementById('stock-toast');
   function showStockToast(message) {
     if (!stockToast) return;
@@ -500,6 +519,14 @@ window.toggleStock = async function(productId, currentStatus) {
     }, 3000);
   }
 
+  const newQuantity = prompt(`Enter new quantity for ${productId}:`, currentQuantity);
+  if (newQuantity === null) return; // User cancelled
+  const quantity = parseInt(newQuantity);
+  if (isNaN(quantity) || quantity < 0) {
+    showStockToast('Invalid quantity. Please enter a non-negative number.');
+    return;
+  }
+
   showStockToast('WAITING...');
   try {
     // Use Netlify function URL for production, localhost for development
@@ -508,11 +535,10 @@ window.toggleStock = async function(productId, currentStatus) {
     const response = await fetch(stockUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ product_id: productId, in_stock: !currentStatus })
+      body: JSON.stringify({ product_id: productId, stock_quantity: quantity })
     });
     if (!response.ok) throw new Error('Failed to update stock');
-    const newStatus = !currentStatus;
-    showStockToast(`${productId} marked as ${newStatus ? 'In Stock' : 'Out of Stock'}`);
+    showStockToast(`${productId} quantity updated to ${quantity}`);
     const stockData = await window.fetchStock();
     window.populateAdminStockTable(stockData);
   } catch (error) {
@@ -585,7 +611,7 @@ if (adminSearchBar && adminSearchBtn) {
   });
 }
 
-// Event listener for "Toggle All Stock Status" button
+// Event listener for "Update All Stock Quantities" button
 const toggleAllStockBtn = document.getElementById('toggle-all-stock-btn');
 if (toggleAllStockBtn) {
   toggleAllStockBtn.addEventListener('click', async () => {
@@ -599,11 +625,17 @@ if (toggleAllStockBtn) {
       }, 3000);
     }
 
-    showStockToast('Toggling all stock status...');
+    const newQuantity = prompt('Enter new quantity for all products:');
+    if (newQuantity === null) return; // User cancelled
+    const quantity = parseInt(newQuantity);
+    if (isNaN(quantity) || quantity < 0) {
+      showStockToast('Invalid quantity. Please enter a non-negative number.');
+      return;
+    }
+
+    showStockToast('Updating all stock quantities...');
     try {
       const stockData = await window.fetchStock();
-      const allInStock = stockData.every(item => item.in_stock);
-      const newStatus = !allInStock; // If all are in stock, make them out; otherwise, make them in stock
 
       const updatePromises = stockData.map(item => {
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -611,12 +643,12 @@ if (toggleAllStockBtn) {
         return fetch(stockUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ product_id: item.product_id, in_stock: newStatus })
+          body: JSON.stringify({ product_id: item.product_id, stock_quantity: quantity })
         });
       });
 
       await Promise.all(updatePromises);
-      showStockToast(`All products marked as ${newStatus ? 'In Stock' : 'Out of Stock'}`);
+      showStockToast(`All products quantity updated to ${quantity}`);
       const updatedStockData = await window.fetchStock();
       window.populateAdminStockTable(updatedStockData);
     } catch (error) {

@@ -130,7 +130,7 @@
 
     <h1>Manage Product Stock</h1>
     <button id="toggle-all-stock-btn" style="margin-bottom: 1rem; padding: 0.5rem 1rem; background-color: #c0392b; color: white; border: none; border-radius: 4px; cursor: pointer;">
-      Toggle All Stock Status
+      Update All Stock Quantities
     </button>
     <div class="search-container">
       <input type="text" id="admin-search-bar" placeholder="Search products..." class="search-input" />
@@ -141,7 +141,7 @@
         <tr>
           <th>Product ID</th>
           <th>Product Name</th>
-          <th>In Stock</th>
+          <th>Stock Quantity</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -156,8 +156,6 @@
   </div>
 
   <script>
-    const apiBaseUrl = 'http://localhost:3002'; // Use server on port 3002
-
     // Password protection
     // Removed duplicate login form event listeners and fetchStock call
 
@@ -181,32 +179,6 @@
         alert('Incorrect password');
       }
     });
-
-    async function toggleStock(productId, currentStatus) {
-      showStockToast('WAITING...');
-      try {
-        const response = await fetch(apiBaseUrl + '/stock', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ product_id: productId, in_stock: !currentStatus })
-        });
-        if (!response.ok) throw new Error('Failed to update stock');
-        const newStatus = !currentStatus;
-        showStockToast(`${productId} marked as ${newStatus ? 'In Stock' : 'Out of Stock'}`);
-        fetchStock();
-      } catch (error) {
-        showStockToast('Error updating stock: ' + error.message);
-      }
-    }
-
-    function showStockToast(message) {
-      const toast = document.getElementById('stock-toast');
-      toast.textContent = message;
-      toast.classList.add('show');
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
-    }
   </script>
 
   <script src="script.js" defer></script>

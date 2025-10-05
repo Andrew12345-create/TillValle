@@ -307,38 +307,38 @@ app.post('/mpesa-callback', async (req, res) => {
   }
 });
 
-// ==========================
-// STOCK MANAGEMENT
-// ==========================
-app.get('/stock', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT product_id, product_name, in_stock FROM product_stock ORDER BY product_name');
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Stock fetch error:', error);
-    res.status(500).json({ error: 'Failed to fetch stock data' });
-  }
-});
-
-app.post('/stock', async (req, res) => {
-  const { product_id, in_stock } = req.body;
-  if (!product_id || typeof in_stock !== 'boolean') {
-    return res.status(400).json({ error: 'Invalid request body' });
-  }
-  try {
-    const result = await pool.query(
-      'UPDATE product_stock SET in_stock = $1, last_updated = CURRENT_TIMESTAMP WHERE product_id = $2 RETURNING *',
-      [in_stock, product_id]
-    );
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: 'Product not found' });
+  // ==========================
+  // STOCK MANAGEMENT
+  // ==========================
+  app.get('/stock', async (req, res) => {
+    try {
+      const result = await pool.query('SELECT product_id, product_name, stock_quantity FROM product_stock ORDER BY product_name');
+      res.json(result.rows);
+    } catch (error) {
+      console.error('Stock fetch error:', error);
+      res.status(500).json({ error: 'Failed to fetch stock data' });
     }
-    res.json({ message: 'Stock updated', updated: result.rows[0] });
-  } catch (error) {
-    console.error('Stock update error:', error);
-    res.status(500).json({ error: 'Failed to update stock' });
-  }
-});
+  });
+
+  app.post('/stock', async (req, res) => {
+    const { product_id, stock_quantity } = req.body;
+    if (!product_id || typeof stock_quantity !== 'number' || stock_quantity < 0) {
+      return res.status(400).json({ error: 'Invalid request body' });
+    }
+    try {
+      const result = await pool.query(
+        'UPDATE product_stock SET stock_quantity = $1, last_updated = CURRENT_TIMESTAMP WHERE product_id = $2 RETURNING *',
+        [stock_quantity, product_id]
+      );
+      if (result.rowCount === 0) {
+        return res.status(404).json({ error: 'Product not found' });
+      }
+      res.json({ message: 'Stock updated', updated: result.rows[0] });
+    } catch (error) {
+      console.error('Stock update error:', error);
+      res.status(500).json({ error: 'Failed to update stock' });
+    }
+  });
 
 // ==========================
 // CHATBOT
@@ -354,24 +354,20 @@ app.post('/chatbot', async (req, res) => {
   let response = 'I\'m here to help with your questions about TillValle!';
 
   if (lowerMessage.includes('stock') || lowerMessage.includes('in stock') || lowerMessage.includes('available')) {
-    if (isAdmin) {
-      try {
-        const result = await pool.query('SELECT product_id, product_name, in_stock FROM product_stock ORDER BY product_name');
-        const stockData = result.rows;
-        const inStockItems = stockData.filter(item => item.in_stock).map(item => item.product_name);
-        const outOfStockItems = stockData.filter(item => !item.in_stock).map(item => item.product_name);
+    try {
+      const result = await pool.query('SELECT product_id, product_name, stock_quantity FROM product_stock ORDER BY product_name');
+      const stockData = result.rows;
+      const inStockItems = stockData.filter(item => item.stock_quantity > 0).map(item => `${item.product_name} (${item.stock_quantity})`);
+      const outOfStockItems = stockData.filter(item => item.stock_quantity === 0).map(item => item.product_name);
         response = 'Current stock status:\n';
         if (inStockItems.length > 0) {
-          response += `In stock: ${inStockItems.join(', ')}\n`;
+          response += `In stock:\n- ${inStockItems.join('\n- ')}\n\n`;
         }
         if (outOfStockItems.length > 0) {
-          response += `Out of stock: ${outOfStockItems.join(', ')}`;
+          response += `Out of stock:\n- ${outOfStockItems.join('\n- ')}`;
         }
-      } catch (error) {
-        response = 'Sorry, I couldn\'t fetch the stock information right now.';
-      }
-    } else {
-      response = 'For current stock information, please visit our shop page or contact support. As a regular user, detailed stock checks are limited.';
+    } catch (error) {
+      response = 'Sorry, I couldn\'t fetch the stock information right now.';
     }
   }
 

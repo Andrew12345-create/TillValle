@@ -1165,6 +1165,48 @@ body {
   margin-bottom: 15px;
 }
 
+/* Specific smaller sizes for requested images */
+.product img[src="milk.png"],
+.product img[src="chicken.png"],
+.product img[src="ghee.png"],
+.product img[src="dragonfruit.png"],
+.product img[src="soursop.png"],
+.product img[src="lemon.png"],
+.product img[src="pawpaw.png"],
+.product img[src="pixies.png"],
+.product img[src="avocadoes.png"],
+.product img[src="yellow-passion.png"],
+.product img[src="coriander.png"],
+.product img[src="mint.png"],
+.product img[src="soursop-herbs.png"] {
+  width: 150px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Specific smaller sizes for requested images in product modal */
+.product-modal-body img[src="milk.png"],
+.product-modal-body img[src="chicken.png"],
+.product-modal-body img[src="ghee.png"],
+.product-modal-body img[src="dragonfruit.png"],
+.product-modal-body img[src="soursop.png"],
+.product-modal-body img[src="lemon.png"],
+.product-modal-body img[src="pawpaw.png"],
+.product-modal-body img[src="pixies.png"],
+.product-modal-body img[src="avocadoes.png"],
+.product-modal-body img[src="yellow-passion.png"],
+.product-modal-body img[src="coriander.png"],
+.product-modal-body img[src="mint.png"],
+.product-modal-body img[src="soursop-herbs.png"] {
+  width: 150px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
 /* ========= PRODUCT MODAL ========= */
 .product-modal {
   display: none;
@@ -1596,8 +1638,8 @@ body {
 .chatbot-sidebar {
   position: fixed;
   top: 20px;
-  right: -400px;
-  width: 380px;
+  right: -450px;
+  width: 450px;
   height: calc(100vh - 40px);
   background: linear-gradient(180deg, var(--bg-secondary) 0%, rgba(255,255,255,0.98) 100%);
   border-left: 2px solid var(--accent-green-light);
@@ -1829,8 +1871,8 @@ body {
 /* Medium devices (tablets, 768px and down) */
 @media (max-width: 768px) {
   .chatbot-sidebar {
-    width: 300px;
-    right: -320px;
+    width: 400px;
+    right: -400px;
   }
 }
 

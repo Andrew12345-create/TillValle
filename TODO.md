@@ -1,16 +1,19 @@
-# TODO: Fix Chatbot Stock Query Issue
+# TODO: Implement Quantity-Based Stock Control
 
-## Problem
-When asking the AI "What products do we have in stock?", it responds with "Sorry, I couldn't fetch the stock information right now."
+## Database Changes
+- [x] Update db/init_stock.sql to use stock_quantity INTEGER instead of in_stock BOOLEAN
+- [x] Provide ALTER TABLE SQL for existing Neon database
 
-## Root Cause
-The Netlify chatbot function tries to fetch stock data from another Netlify function, but the fetch fails due to incorrect database URL or URL construction.
+## API Functions
+- [x] Update netlify/functions/stock.js to handle stock_quantity
+- [x] Update api/index.js to handle stock_quantity
+- [x] Update netlify/functions/chatbot.js to report stock quantities
 
-## Solution
-- Update stock.js to use NEON_DATABASE_URL instead of STOCK_DB_URL for consistency.
-- Modify chatbot.js to query the database directly instead of fetching from the stock function.
+## Frontend Changes
+- [x] Update public/admin.html to display and edit stock quantities
+- [x] Update public/script.js to display stock quantities instead of in/out
 
-## Steps
-- [x] Update netlify/functions/stock.js to use process.env.NEON_DATABASE_URL
-- [x] Update netlify/functions/chatbot.js to include database query for stock
-- [ ] Test the chatbot stock query
+## Testing
+- [ ] Test admin page stock updates
+- [ ] Test shop page displays quantities
+- [ ] Test chatbot reports quantities
