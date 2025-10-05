@@ -14,6 +14,6 @@
 - [x] Update public/script.js to display stock quantities instead of in/out
 
 ## Testing
-- [ ] Test admin page stock updates
-- [ ] Test shop page displays quantities
-- [ ] Test chatbot reports quantities
+- [x] Test admin page stock updates
+- [x] Test shop page displays quantities
+- [x] Test chatbot reports quantities

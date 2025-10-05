@@ -413,7 +413,7 @@ async function fetchStock() {
   try {
     // Use Netlify function URL for production, localhost for development
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const stockUrl = isLocal ? 'http://localhost:3002/stock' : '/.netlify/functions/stock';
+    const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
     const response = await fetch(stockUrl);
     if (!response.ok) throw new Error('Failed to fetch stock');
     const data = await response.json();
@@ -562,7 +562,7 @@ window.toggleStock = async function(productId, currentQuantity) {
   try {
     // Use Netlify function URL for production, localhost for development
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const stockUrl = isLocal ? 'http://localhost:3002/stock' : '/.netlify/functions/stock';
+    const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
     const response = await fetch(stockUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -670,7 +670,7 @@ if (toggleAllStockBtn) {
 
       const updatePromises = stockData.map(item => {
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const stockUrl = isLocal ? 'http://localhost:3002/stock' : '/.netlify/functions/stock';
+        const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
         return fetch(stockUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -730,7 +730,7 @@ async function sendChatbotMessage() {
 
   try {
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const chatbotUrl = isLocal ? 'http://localhost:3002/chatbot' : '/.netlify/functions/chatbot';
+    const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/.netlify/functions/chatbot';
     const user = getUserFromLocalStorage();
     const isAdmin = user && user.email === 'andrewmunamwangi@gmail.com';
     const response = await fetch(chatbotUrl, {

@@ -40,6 +40,13 @@
     </div>
   </nav>
 
+  <!-- Order Summary Section -->
+  <section id="order-summary">
+    <h3>Order Summary</h3>
+    <ul id="order-items"></ul>
+    <p id="order-total" style="font-weight: bold; font-size: 1.2em;"></p>
+  </section>
+
   <!-- Payment Section -->
   <section id="payment-section">
     <h2>Payment Details</h2>
@@ -169,18 +176,59 @@
           showCartToast("Please enter your M-Pesa phone number.");
           return;
         }
-        // TODO: Integrate actual M-Pesa payment API here
+
+        // Get cart from localStorage
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        if (total === 0) {
+          showCartToast("Your cart is empty.");
+          return;
+        }
+
+        // Convert phone to international format if needed
+        let formattedPhone = phoneNumber;
+        if (formattedPhone.startsWith('0')) {
+          formattedPhone = '254' + formattedPhone.slice(1);
+        }
+
+        // Get user email for account reference
+        const user = JSON.parse(localStorage.getItem('user')) || {};
+        const accountReference = user.email ? `${user.email}_${Date.now()}` : `guest_${Date.now()}`;
+
         showCartToast("Initiating M-Pesa payment... Please complete the payment on your phone.");
+
         try {
-          // Simulate async payment request (replace with real API call)
-          await new Promise(resolve => setTimeout(resolve, 5000));
-          showCartToast(`M-Pesa payment successful! Thank you for your purchase from ${location}.`);
-          // Redirect after payment success with delay to show message
-          setTimeout(() => {
-            window.location.href = 'index.html';
-          }, 3000);
+          const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+          const mpesaUrl = isLocal ? 'http://localhost:3001/mpesa' : '/.netlify/functions/mpesa-stkpush';
+
+          const response = await fetch(mpesaUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              phone: formattedPhone,
+              amount: total,
+              accountReference: accountReference,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            showCartToast("M-Pesa STK Push sent! Please check your phone and complete the payment.");
+            // Clear cart on successful initiation
+            localStorage.removeItem('cart');
+            // Redirect after delay
+            setTimeout(() => {
+              window.location.href = 'index.html';
+            }, 10000); // Longer delay for user to complete payment
+          } else {
+            showCartToast(`Payment initiation failed: ${data.error}`);
+          }
         } catch (error) {
-          showCartToast("Payment failed or was cancelled. Please try again.");
+          console.error('Mpesa payment error:', error);
+          showCartToast("Payment failed. Please try again.");
         }
       } else if (paymentMethod.value === 'card') {
         // Simulate card payment processing
@@ -207,13 +255,53 @@
       }
     });
 
-    // Display selected location on page load
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const cartCountElem = document.getElementById('cart-count');
+      if (cartCountElem) {
+        cartCountElem.textContent = totalQuantity;
+      }
+      const logoCartCount = document.getElementById('logo-cart-count');
+      if (logoCartCount) {
+        logoCartCount.textContent = totalQuantity;
+      }
+      const floatingCartCount = document.getElementById('floating-cart-count');
+      if (floatingCartCount) {
+        floatingCartCount.textContent = totalQuantity;
+      }
+      const floatingCartBtn = document.getElementById('floating-cart-btn');
+      if (floatingCartBtn) {
+        floatingCartBtn.style.display = 'flex';
+      }
+    }
+
+    // Display selected location and order summary on page load
     document.addEventListener('DOMContentLoaded', () => {
       const displayLocation = document.getElementById('display-location');
       const location = localStorage.getItem('selectedLocation');
       if (displayLocation && location) {
         displayLocation.textContent = location;
       }
+
+      // Load and display order summary
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const orderItems = document.getElementById('order-items');
+      const orderTotal = document.getElementById('order-total');
+      orderItems.innerHTML = '';
+      let total = 0;
+
+      cart.forEach(item => {
+        total += item.price * item.quantity;
+        const li = document.createElement('li');
+        li.textContent = `${item.name} x${item.quantity} - KES ${item.price * item.quantity}`;
+        orderItems.appendChild(li);
+      });
+
+      orderTotal.textContent = `Total: KES ${total}`;
+
+      // Update cart count
+      updateCartCount();
     });
 
     function showCartToast(message) {
