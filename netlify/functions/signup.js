@@ -47,10 +47,10 @@ exports.handler = async (event, context) => {
     // Create table if not exists
     await client.query(`
       CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        email VARCHAR(255) UNIQUE NOT NULL,
-        password_hash VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        email TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        name TEXT
       )
     `);
 

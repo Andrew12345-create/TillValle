@@ -81,12 +81,8 @@
           if (result.ok) {
             // Clear any stored tokens or session data
             localStorage.removeItem('token');
+            localStorage.removeItem('email');
             sessionStorage.removeItem('token');
-
-            // Update navbar after logout
-            if (typeof updateNavbar === 'function') {
-              updateNavbar();
-            }
 
             // Redirect to login page
             window.location.href = 'login.html';

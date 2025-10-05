@@ -614,6 +614,52 @@ body {
   line-height: 30px;
   font-weight: bold;
   font-size: 14px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.3s ease;
+}
+
+.user-initial:hover {
+  background: var(--accent-green-light);
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  min-width: 120px;
+  z-index: 1200;
+  display: none;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.user-dropdown.show {
+  display: block;
+}
+
+.user-dropdown a {
+  display: block;
+  padding: 10px 15px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.user-dropdown a:hover {
+  background: var(--hover-bg);
+}
+
+.user-dropdown .logout-btn {
+  color: #ef4444;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.user-dropdown .logout-btn:hover {
+  background: rgba(239,68,68,0.1);
 }
 
 /* Search Container */
@@ -1178,7 +1224,14 @@ body {
 .product img[src="yellow-passion.png"],
 .product img[src="coriander.png"],
 .product img[src="mint.png"],
-.product img[src="soursop-herbs.png"] {
+.product img[src="soursop-herbs.png"],
+.product img[src="lettuce.png"],
+.product img[src="managu.png"],
+.product img[src="terere.png"],
+.product img[src="salgaa.png"],
+.product img[src="spinach.png"],
+.product img[src="apples.png"],
+.product img[src="raw-bananas.png"] {
   width: 150px;
   height: auto;
   object-fit: contain;

@@ -341,6 +341,118 @@ app.post('/mpesa-callback', async (req, res) => {
   });
 
 // ==========================
+// OTP and Password Reset
+// ==========================
+
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+
+// In-memory OTP store: { email: { otp: '123456', expiresAt: Date } }
+const otpStore = {};
+
+// Configure nodemailer transporter (using Gmail SMTP)
+const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+// Helper to send OTP email
+async function sendOtpEmail(email, otp) {
+  const mailOptions = {
+    from: '"TillValle Support" <' + process.env.EMAIL_USER + '>',
+    to: email,
+    subject: 'Your OTP for Password Reset',
+    text: `Your OTP for password reset is: ${otp}. It is valid for 10 minutes.`,
+  };
+  await transporter.sendMail(mailOptions);
+}
+
+// POST /request-otp
+app.post('/request-otp', async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ error: 'Email is required' });
+  }
+  try {
+    // Check if user exists
+    const userResult = await pool.query('SELECT id FROM users WHERE email = $1', [email.toLowerCase()]);
+    if (userResult.rowCount === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Generate 6-digit OTP
+    const otp = crypto.randomInt(100000, 999999).toString();
+
+    // Store OTP with expiry 10 minutes
+    otpStore[email.toLowerCase()] = {
+      otp,
+      expiresAt: Date.now() + 10 * 60 * 1000,
+      verified: false
+    };
+
+    // Send OTP email
+    await sendOtpEmail(email, otp);
+
+    res.json({ message: 'OTP sent to email' });
+  } catch (error) {
+    console.error('Request OTP error:', error);
+    res.status(500).json({ error: 'Failed to send OTP' });
+  }
+});
+
+// POST /verify-otp
+app.post('/verify-otp', (req, res) => {
+  const { email, otp } = req.body;
+  if (!email || !otp) {
+    return res.status(400).json({ error: 'Email and OTP are required' });
+  }
+  const record = otpStore[email.toLowerCase()];
+  if (!record) {
+    return res.status(400).json({ error: 'No OTP requested for this email' });
+  }
+  if (Date.now() > record.expiresAt) {
+    delete otpStore[email.toLowerCase()];
+    return res.status(400).json({ error: 'OTP expired' });
+  }
+  if (record.otp !== otp) {
+    return res.status(400).json({ error: 'Invalid OTP' });
+  }
+  // OTP verified, mark as verified
+  record.verified = true;
+  res.json({ message: 'OTP verified' });
+});
+
+// POST /reset-password
+app.post('/reset-password', async (req, res) => {
+  const { email, newPassword } = req.body;
+  if (!email || !newPassword) {
+    return res.status(400).json({ error: 'Email and new password are required' });
+  }
+  try {
+    // Hash new password
+    const password_hash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
+
+    // Update password in DB
+    const result = await pool.query(
+      'UPDATE users SET password_hash = $1 WHERE email = $2 RETURNING id',
+      [password_hash, email.toLowerCase()]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json({ message: 'Password reset successful' });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({ error: 'Failed to reset password' });
+  }
+});
+
+// ==========================
 // CHATBOT
 // ==========================
 app.post('/chatbot', async (req, res) => {

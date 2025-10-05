@@ -33,15 +33,46 @@ function renderUserArea() {
       adminLink = `<a href="admin.html" class="nav-link">Admin</a>`;
     }
     userArea.innerHTML = `
-      <a href="profile.html" class="nav-link user-initial-link" title="${user.email}">
-        <span class="user-initial">${initial}</span>
-      </a>
+      <div class="user-dropdown-container">
+        <span class="user-initial" onclick="toggleUserDropdown()" title="${user.email}">${initial}</span>
+        <div class="user-dropdown" id="user-dropdown">
+          <a href="profile.html">Profile</a>
+          <a href="#" class="logout-btn" onclick="logout()">Logout</a>
+        </div>
+      </div>
       ${adminLink}
     `;
   } else {
     userArea.innerHTML = `<a href="login.html" class="nav-link">Login</a>`;
   }
 }
+
+function toggleUserDropdown() {
+  const dropdown = document.getElementById('user-dropdown');
+  if (dropdown) {
+    dropdown.classList.toggle('show');
+  }
+}
+
+function logout() {
+  localStorage.removeItem('email');
+  localStorage.removeItem('user');
+  user = null;
+  renderUserArea();
+  showCartToast('Logged out successfully');
+  setTimeout(() => {
+    window.location.href = 'index.html';
+  }, 2000);
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (event) => {
+  const dropdown = document.getElementById('user-dropdown');
+  const container = document.querySelector('.user-dropdown-container');
+  if (dropdown && container && !container.contains(event.target)) {
+    dropdown.classList.remove('show');
+  }
+});
 
 function updateCartCount() {
   const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
