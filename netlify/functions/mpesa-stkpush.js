@@ -35,7 +35,19 @@ exports.handler = async (event, context) => {
 
     // Get access token
     const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
-    const tokenResponse = await fetch('https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials', {
+
+    // Use sandbox or production URLs based on environment variable
+    const isProduction = process.env.MPESA_ENV === 'production';
+
+    const oauthUrl = isProduction
+      ? 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
+      : 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
+
+    const stkPushUrl = isProduction
+      ? 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest'
+      : 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
+
+    const tokenResponse = await fetch(oauthUrl, {
       method: 'GET',
       headers: {
         'Authorization': `Basic ${auth}`,
@@ -71,7 +83,7 @@ exports.handler = async (event, context) => {
     };
 
     // Make STK push request
-    const stkResponse = await fetch('https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest', {
+    const stkResponse = await fetch(stkPushUrl, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${accessToken}`,
