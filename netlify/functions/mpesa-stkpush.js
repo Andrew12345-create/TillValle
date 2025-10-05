@@ -102,8 +102,31 @@ exports.handler = async (event, context) => {
     });
 
     if (!stkResponse.ok) {
-      const errorData = await stkResponse.text();
-      throw new Error(`STK Push failed: ${errorData}`);
+      let errorCode = null;
+      let errorMessage = null;
+      try {
+        const errorJson = await stkResponse.json();
+        errorCode = errorJson.errorCode || null;
+        errorMessage = errorJson.errorMessage || null;
+      } catch (parseError) {
+        // fallback to text if json parsing fails
+        const errorText = await stkResponse.text();
+        errorMessage = errorText;
+      }
+      console.error(`STK Push failed with errorCode: ${errorCode}, errorMessage: ${errorMessage}`);
+      return {
+        statusCode: 400,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        },
+        body: JSON.stringify({
+          success: false,
+          errorCode: errorCode,
+          errorMessage: errorMessage || 'STK Push failed',
+        }),
+      };
     }
 
     const stkData = await stkResponse.json();
