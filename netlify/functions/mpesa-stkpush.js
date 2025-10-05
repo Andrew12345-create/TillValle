@@ -64,7 +64,16 @@ exports.handler = async (event, context) => {
     const accessToken = tokenData.access_token;
 
     // Generate timestamp and password
-    const timestamp = new Date().toISOString().replace(/[^0-9]/g, '').slice(0, -3);
+    // Correct timestamp format: YYYYMMDDHHMMSS
+    const now = new Date();
+    const pad = (n) => n.toString().padStart(2, '0');
+    const timestamp = 
+      now.getFullYear().toString() +
+      pad(now.getMonth() + 1) +
+      pad(now.getDate()) +
+      pad(now.getHours()) +
+      pad(now.getMinutes()) +
+      pad(now.getSeconds());
     const password = Buffer.from(`${shortcode}${passkey}${timestamp}`).toString('base64');
 
     // Prepare STK push request
