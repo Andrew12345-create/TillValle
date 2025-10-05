@@ -6,38 +6,133 @@
   <title>Sign Up - TilleValle</title>
   <link rel="icon" href="logo.jpg" type="image/jpeg" />
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    .signup-container {
+      max-width: 400px;
+      margin: 60px auto;
+      background: #fff;
+      padding: 35px 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      animation: fadeIn 1s ease-out;
+    }
+    .signup-container h1 {
+      text-align: center;
+      font-size: 28px;
+      color: #2d6a4f;
+      margin-bottom: 25px;
+    }
+    .signup-container input {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      transition: border 0.3s ease;
+    }
+    .signup-container input:focus {
+      border-color: #2d6a4f;
+      outline: none;
+    }
+    .signup-container button {
+      width: 100%;
+      padding: 12px;
+      background: #2d6a4f;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .signup-container button:hover {
+      background: #40916c;
+      transform: scale(1.05);
+    }
+    #output {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+      color: #2d6a4f;
+    }
+    .signup-container a {
+      display: block;
+      margin-top: 15px;
+      text-align: center;
+      color: #2d6a4f;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .signup-container a:hover {
+      color: #40916c;
+    }
+  </style>
 </head>
 <body>
-  <div id="root"></div>
+  <!-- Include navbar -->
+  <div id="navbar-container"></div>
 
-  <script type="module">
-    import { SignUp } from 'https://cdn.skypack.dev/@stackframe/stack';
+  <div class="signup-container">
+    <h1>Sign Up</h1>
+    <form id="signup-form">
+      <input type="email" id="email" placeholder="Email Address" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Sign Up</button>
+    </form>
+    <div id="output"></div>
+    <a href="login.html">Already have an account? Login here</a>
+  </div>
 
-    const root = document.getElementById('root');
-
-    function createSignUp() {
-      const container = document.createElement('div');
-
-      const heading = document.createElement('h1');
-      heading.textContent = 'Sign Up';
-      container.appendChild(heading);
-
-      const signUpComponent = SignUp({
-        fullPage: true,
-        automaticRedirect: true,
-        firstTab: 'password',
+  <script>
+    // Load navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('navbar-container').innerHTML = data;
+        const script = document.createElement('script');
+        script.src = 'script.js';
+        document.body.appendChild(script);
       });
 
-      const extraInfo = document.createElement('div');
-      extraInfo.innerHTML = 'By signing up, you agree to our <a href="/terms">Terms</a>';
-      signUpComponent.extraInfo = extraInfo;
+    // Signup form handling
+    document.getElementById('signup-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
 
-      container.appendChild(signUpComponent);
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
 
-      return container;
-    }
+      const signupUrl = '/.netlify/functions/signup';
 
-    root.appendChild(createSignUp());
+      try {
+        const response = await fetch(signupUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.ok) {
+          document.getElementById('output').textContent = 'Signup successful! Redirecting to login...';
+          document.getElementById('output').style.color = '#2d6a4f';
+
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 1500);
+        } else {
+          document.getElementById('output').textContent = data.error || 'Signup failed. Please try again.';
+          document.getElementById('output').style.color = 'red';
+        }
+      } catch (error) {
+        document.getElementById('output').textContent = 'Network error. Please try again later.';
+        document.getElementById('output').style.color = 'red';
+        console.error('Signup error:', error);
+      }
+    });
   </script>
 </body>
 </html>
