@@ -77,10 +77,11 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({ ok: true, message: 'Login successful', token }),
     };
   } catch (err) {
-    console.error('Login error:', err);
+    console.error('Login error:', err.message);
+    console.error('Stack:', err.stack);
     return {
       statusCode: 500,
-      body: JSON.stringify({ ok: false, error: 'Server error' }),
+      body: JSON.stringify({ ok: false, error: `Server error: ${err.message}` }),
     };
   } finally {
     await client.end();
