@@ -43,7 +43,9 @@ exports.handler = async (event, context) => {
     });
 
     if (!tokenResponse.ok) {
-      throw new Error('Failed to get access token');
+      const errorText = await tokenResponse.text();
+      console.error('Failed to get access token:', tokenResponse.status, errorText);
+      throw new Error(`Failed to get access token: ${tokenResponse.status} ${errorText}`);
     }
 
     const tokenData = await tokenResponse.json();
