@@ -529,4 +529,184 @@ document.addEventListener('DOMContentLoaded', async () => {
   await fetchStock();
 });
 
+// Search functionality for shop.html
+function filterProducts(searchTerm) {
+  const products = document.querySelectorAll('.product');
+  const lowerSearchTerm = searchTerm.toLowerCase();
+  products.forEach(product => {
+    const productName = product.querySelector('h4').textContent.toLowerCase();
+    if (productName.includes(lowerSearchTerm)) {
+      product.style.display = 'block';
+    } else {
+      product.style.display = 'none';
+    }
+  });
+}
+
+// Search functionality for admin.html
+function filterAdminStock(searchTerm) {
+  const rows = document.querySelectorAll('#stock-table tbody tr');
+  const lowerSearchTerm = searchTerm.toLowerCase();
+  rows.forEach(row => {
+    const productName = row.cells[1].textContent.toLowerCase();
+    if (productName.includes(lowerSearchTerm)) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+
+// Event listeners for search on shop.html
+const searchBar = document.getElementById('search-bar');
+const searchBtn = document.getElementById('search-btn');
+if (searchBar && searchBtn) {
+  searchBtn.addEventListener('click', () => {
+    filterProducts(searchBar.value);
+  });
+  searchBar.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      filterProducts(searchBar.value);
+    }
+  });
+}
+
+// Event listeners for search on admin.html
+const adminSearchBar = document.getElementById('admin-search-bar');
+const adminSearchBtn = document.getElementById('admin-search-btn');
+if (adminSearchBar && adminSearchBtn) {
+  adminSearchBtn.addEventListener('click', () => {
+    filterAdminStock(adminSearchBar.value);
+  });
+  adminSearchBar.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      filterAdminStock(adminSearchBar.value);
+    }
+  });
+}
+
+// Event listener for "Toggle All Stock Status" button
+const toggleAllStockBtn = document.getElementById('toggle-all-stock-btn');
+if (toggleAllStockBtn) {
+  toggleAllStockBtn.addEventListener('click', async () => {
+    const stockToast = document.getElementById('stock-toast');
+    function showStockToast(message) {
+      if (!stockToast) return;
+      stockToast.textContent = message;
+      stockToast.classList.add('show');
+      setTimeout(() => {
+        stockToast.classList.remove('show');
+      }, 3000);
+    }
+
+    showStockToast('Toggling all stock status...');
+    try {
+      const stockData = await window.fetchStock();
+      const allInStock = stockData.every(item => item.in_stock);
+      const newStatus = !allInStock; // If all are in stock, make them out; otherwise, make them in stock
+
+      const updatePromises = stockData.map(item => {
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const stockUrl = isLocal ? 'http://localhost:3002/stock' : '/.netlify/functions/stock';
+        return fetch(stockUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product_id: item.product_id, in_stock: newStatus })
+        });
+      });
+
+      await Promise.all(updatePromises);
+      showStockToast(`All products marked as ${newStatus ? 'In Stock' : 'Out of Stock'}`);
+      const updatedStockData = await window.fetchStock();
+      window.populateAdminStockTable(updatedStockData);
+    } catch (error) {
+      showStockToast('Error updating stock: ' + error.message);
+    }
+  });
+}
+
+// Chatbot functionality
+const floatingChatbotBtn = document.getElementById('floating-chatbot-btn');
+const chatbotSidebar = document.getElementById('chatbot-sidebar');
+const chatbotClose = document.getElementById('chatbot-close');
+const chatbotInput = document.getElementById('chatbot-input');
+const chatbotSend = document.getElementById('chatbot-send');
+const chatbotMessages = document.getElementById('chatbot-messages');
+
+function showChatbotSidebar() {
+  if (chatbotSidebar) {
+    chatbotSidebar.classList.add('open');
+  }
+}
+
+function hideChatbotSidebar() {
+  if (chatbotSidebar) {
+    chatbotSidebar.classList.remove('open');
+  }
+}
+
+function appendMessage(message, isBot = false) {
+  if (!chatbotMessages) return;
+  const messageDiv = document.createElement('div');
+  messageDiv.className = `chatbot-message ${isBot ? 'bot' : 'user'}`;
+  messageDiv.textContent = message;
+  chatbotMessages.appendChild(messageDiv);
+  chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+}
+
+async function sendChatbotMessage() {
+  const message = chatbotInput.value.trim();
+  if (!message) return;
+
+  appendMessage(message, false);
+  chatbotInput.value = '';
+
+  // Show loading
+  appendMessage('Thinking...', true);
+  const loadingMessage = chatbotMessages.lastElementChild;
+
+  try {
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const chatbotUrl = isLocal ? 'http://localhost:3002/chatbot' : '/.netlify/functions/chatbot';
+    const user = getUserFromLocalStorage();
+    const isAdmin = user && user.email === 'andrewmunamwangi@gmail.com';
+    const response = await fetch(chatbotUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, isAdmin })
+    });
+
+    if (!response.ok) throw new Error('Failed to get response');
+
+    const data = await response.json();
+    // Remove loading
+    if (loadingMessage) loadingMessage.remove();
+    appendMessage(data.message, true);
+  } catch (error) {
+    console.error('Chatbot error:', error);
+    if (loadingMessage) loadingMessage.remove();
+    appendMessage('Sorry, I encountered an error. Please try again.', true);
+  }
+}
+
+if (floatingChatbotBtn) {
+  floatingChatbotBtn.addEventListener('click', showChatbotSidebar);
+}
+
+if (chatbotClose) {
+  chatbotClose.addEventListener('click', hideChatbotSidebar);
+}
+
+if (chatbotSend) {
+  chatbotSend.addEventListener('click', sendChatbotMessage);
+}
+
+if (chatbotInput) {
+  chatbotInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      sendChatbotMessage();
+    }
+  });
+}
+
 // Other existing code unchanged...

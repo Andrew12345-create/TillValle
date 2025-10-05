@@ -1,10 +1,16 @@
-# Fix Stock Function 500 Error
+# TODO: Fix Chatbot Stock Query Issue
 
-## Tasks
-- [x] Update netlify/functions/stock.js to use database connection instead of external API
-- [ ] Test the updated function locally or deploy and verify fix
+## Problem
+When asking the AI "What products do we have in stock?", it responds with "Sorry, I couldn't fetch the stock information right now."
 
-## Details
-The current stock.js function fetches data from an unreachable external API (ep-billowing-mode-adkbmnzk.neon.tech), causing 500 errors. Update it to connect directly to the Neon database using the NEON_DATABASE_URL environment variable, similar to api/index.js.
+## Root Cause
+The Netlify chatbot function tries to fetch stock data from another Netlify function, but the fetch fails due to incorrect database URL or URL construction.
 
-The function has been updated, but the NEON_DATABASE_URL environment variable needs to be set in Netlify for the function to connect to the database.
+## Solution
+- Update stock.js to use NEON_DATABASE_URL instead of STOCK_DB_URL for consistency.
+- Modify chatbot.js to query the database directly instead of fetching from the stock function.
+
+## Steps
+- [x] Update netlify/functions/stock.js to use process.env.NEON_DATABASE_URL
+- [x] Update netlify/functions/chatbot.js to include database query for stock
+- [ ] Test the chatbot stock query

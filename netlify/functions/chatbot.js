@@ -51,8 +51,33 @@ const responses = {
   ]
 };
 
-function getResponse(message) {
+async function getResponse(message, isAdmin = false) {
   const lowerMessage = message.toLowerCase();
+
+  // Check for stock inquiries
+  if (lowerMessage.includes('stock') || lowerMessage.includes('in stock') || lowerMessage.includes('available')) {
+    if (isAdmin) {
+      try {
+        const result = await pool.query('SELECT product_id, product_name, in_stock FROM product_stock ORDER BY product_name');
+        const stockData = result.rows;
+        const inStockItems = stockData.filter(item => item.in_stock).map(item => item.product_name);
+        const outOfStockItems = stockData.filter(item => !item.in_stock).map(item => item.product_name);
+        let response = 'Current stock status:\n';
+        if (inStockItems.length > 0) {
+          response += `In stock: ${inStockItems.join(', ')}\n`;
+        }
+        if (outOfStockItems.length > 0) {
+          response += `Out of stock: ${outOfStockItems.join(', ')}`;
+        }
+        return response;
+      } catch (error) {
+        console.error('Error fetching stock:', error);
+        return 'Sorry, there was an error checking stock.';
+      }
+    } else {
+      return 'For current stock information, please visit our shop page or contact support. As a regular user, detailed stock checks are limited.';
+    }
+  }
 
   // Check for keywords and return appropriate response
   if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
@@ -102,7 +127,7 @@ exports.handler = async (event, context) => {
     const parsedBody = JSON.parse(event.body);
     console.log('Parsed request body:', parsedBody);
 
-    const { message } = parsedBody;
+    const { message, isAdmin } = parsedBody;
 
     if (!message) {
       return {
@@ -112,7 +137,7 @@ exports.handler = async (event, context) => {
     }
 
     // Get response based on message content
-    const botMessage = getResponse(message);
+    const botMessage = await getResponse(message, isAdmin || false);
     console.log('Bot response:', botMessage);
 
     return {

@@ -341,6 +341,44 @@ app.post('/stock', async (req, res) => {
 });
 
 // ==========================
+// CHATBOT
+// ==========================
+app.post('/chatbot', async (req, res) => {
+  const { message, isAdmin } = req.body;
+  if (!message) {
+    return res.status(400).json({ error: 'Message is required' });
+  }
+
+  // Simple responses for local testing
+  const lowerMessage = message.toLowerCase();
+  let response = 'I\'m here to help with your questions about TillValle!';
+
+  if (lowerMessage.includes('stock') || lowerMessage.includes('in stock') || lowerMessage.includes('available')) {
+    if (isAdmin) {
+      try {
+        const result = await pool.query('SELECT product_id, product_name, in_stock FROM product_stock ORDER BY product_name');
+        const stockData = result.rows;
+        const inStockItems = stockData.filter(item => item.in_stock).map(item => item.product_name);
+        const outOfStockItems = stockData.filter(item => !item.in_stock).map(item => item.product_name);
+        response = 'Current stock status:\n';
+        if (inStockItems.length > 0) {
+          response += `In stock: ${inStockItems.join(', ')}\n`;
+        }
+        if (outOfStockItems.length > 0) {
+          response += `Out of stock: ${outOfStockItems.join(', ')}`;
+        }
+      } catch (error) {
+        response = 'Sorry, I couldn\'t fetch the stock information right now.';
+      }
+    } else {
+      response = 'For current stock information, please visit our shop page or contact support. As a regular user, detailed stock checks are limited.';
+    }
+  }
+
+  res.json({ message: response });
+});
+
+// ==========================
 // Catch-all (serve frontend)
 // ==========================
 app.all('*', (req, res) => {
