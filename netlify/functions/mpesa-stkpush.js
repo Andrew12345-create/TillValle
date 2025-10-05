@@ -47,6 +47,14 @@ exports.handler = async (event, context) => {
       ? 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest'
       : 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
 
+    console.log('Using Mpesa credentials:', {
+      consumerKeySet: !!consumerKey,
+      consumerSecretSet: !!consumerSecret,
+      passkeySet: !!passkey,
+      shortcode,
+      mpesaEnv: process.env.MPESA_ENV,
+    });
+
     const tokenResponse = await fetch(oauthUrl, {
       method: 'GET',
       headers: {
