@@ -86,7 +86,7 @@ exports.handler = async (event, context) => {
       PartyA: phone,
       PartyB: shortcode,
       PhoneNumber: phone,
-      CallBackURL: `${process.env.URL}/.netlify/functions/mpesa-callback`,
+      CallBackURL: `${process.env.SITE_URL}/.netlify/functions/mpesa-callback`,
       AccountReference: accountReference,
       TransactionDesc: 'Payment for goods',
     };
