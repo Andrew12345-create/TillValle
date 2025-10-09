@@ -515,25 +515,44 @@ app.post('/chatbot', async (req, res) => {
     response = "Hello! Welcome to TillValle! How can I help you with fresh produce delivery today?";
   } else if (lowerMessage.includes('stock') || lowerMessage.includes('in stock') || lowerMessage.includes('available')) {
     try {
-      const result = await stockPool.query('SELECT * FROM product_stock ORDER BY product_name');
-      const inStockItems = result.rows.filter(item => item.stock_quantity > 0);
-      const outOfStockItems = result.rows.filter(item => item.stock_quantity <= 0);
+      // Check for specific item queries
+      const products = ['milk', 'eggs', 'butter', 'apples', 'mangoes', 'kales', 'spinach', 'basil', 'mint', 'bananas', 'avocados', 'chicken', 'ghee', 'coriander', 'parsley', 'lettuce', 'managu', 'terere', 'salgaa'];
+      const mentionedProduct = products.find(product => lowerMessage.includes(product));
       
-      response = 'Current stock levels:\n\n';
-      
-      if (inStockItems.length > 0) {
-        response += '✅ In Stock:\n';
-        inStockItems.forEach(item => {
-          response += `• ${item.product_name}: ${item.stock_quantity} available\n`;
-        });
-        response += '\n';
-      }
-      
-      if (outOfStockItems.length > 0) {
-        response += '❌ Out of Stock:\n';
-        outOfStockItems.forEach(item => {
-          response += `• ${item.product_name}\n`;
-        });
+      if (mentionedProduct) {
+        // Query for specific item
+        const result = await stockPool.query('SELECT * FROM product_stock WHERE LOWER(product_name) LIKE $1', [`%${mentionedProduct}%`]);
+        
+        if (result.rows.length > 0) {
+          const item = result.rows[0];
+          response = item.stock_quantity > 0 
+            ? `✅ ${item.product_name}: ${item.stock_quantity} available in stock!`
+            : `❌ ${item.product_name} is currently out of stock. We'll restock soon!`;
+        } else {
+          response = `I couldn't find ${mentionedProduct} in our inventory. Please check our shop page for available items.`;
+        }
+      } else {
+        // General stock query - show all items
+        const result = await stockPool.query('SELECT * FROM product_stock ORDER BY product_name');
+        const inStockItems = result.rows.filter(item => item.stock_quantity > 0);
+        const outOfStockItems = result.rows.filter(item => item.stock_quantity <= 0);
+        
+        response = 'Current stock levels:\n\n';
+        
+        if (inStockItems.length > 0) {
+          response += '✅ In Stock:\n';
+          inStockItems.forEach(item => {
+            response += `• ${item.product_name}: ${item.stock_quantity} available\n`;
+          });
+          response += '\n';
+        }
+        
+        if (outOfStockItems.length > 0) {
+          response += '❌ Out of Stock:\n';
+          outOfStockItems.forEach(item => {
+            response += `• ${item.product_name}\n`;
+          });
+        }
       }
     } catch (error) {
       console.error('Stock query error:', error);
