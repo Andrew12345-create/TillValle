@@ -196,13 +196,48 @@
                 const stockData = await response.json();
                 populateStockTable(stockData);
               } else {
-                document.getElementById('status-message').textContent = 'Stock data unavailable';
+                const errorData = await response.json();
+                document.getElementById('status-message').textContent = 'Error: ' + (errorData.details || errorData.error || 'Stock data unavailable');
+                // Show sample data as fallback
+                populateStockTable([
+                  {product_id: 'milk', product_name: 'Milk', stock_quantity: 10},
+                  {product_id: 'eggs', product_name: 'Eggs', stock_quantity: 5},
+                  {product_id: 'kales', product_name: 'Kales', stock_quantity: 0}
+                ]);
               }
             }
           } catch (error) {
             document.getElementById('status-message').textContent = 'Error loading stock data: ' + error.message;
           }
         }, 500);
+        
+        // Update stock function
+        window.updateStock = async function(productId, currentQuantity) {
+          const newQuantity = prompt(`Enter new quantity for ${productId}:`, currentQuantity);
+          if (newQuantity === null) return;
+          const quantity = parseInt(newQuantity);
+          if (isNaN(quantity) || quantity < 0) {
+            alert('Invalid quantity');
+            return;
+          }
+          try {
+            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
+            const response = await fetch(stockUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ product_id: productId, stock_quantity: quantity })
+            });
+            if (response.ok) {
+              alert('Stock updated successfully');
+              location.reload();
+            } else {
+              alert('Failed to update stock');
+            }
+          } catch (error) {
+            alert('Error: ' + error.message);
+          }
+        };
         
         // Local function to populate table
         function populateStockTable(stockData) {
@@ -211,13 +246,14 @@
           tbody.innerHTML = '';
           stockData.forEach(item => {
             const tr = document.createElement('tr');
+            const stockStatus = item.stock_quantity > 0 ? `${item.stock_quantity} in stock` : 'Out of stock';
             tr.innerHTML = `
               <td>${item.product_id}</td>
               <td>${item.product_name}</td>
-              <td>${item.in_stock ? 'In Stock' : 'Out of Stock'}</td>
+              <td>${stockStatus}</td>
               <td>
-                <button onclick="alert('Stock management requires server connection')">
-                  View Status
+                <button onclick="updateStock('${item.product_id}', ${item.stock_quantity || 0})">
+                  Update
                 </button>
               </td>
             `;
