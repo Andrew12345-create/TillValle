@@ -181,35 +181,19 @@
       if (password === 'Auth123') {
         loginSection.style.display = 'none';
         adminContent.style.display = 'block';
-        // Wait for script.js to load, then fetch stock
-        setTimeout(async () => {
-          try {
-            if (window.fetchStock && window.populateAdminStockTable) {
-              const stockData = await window.fetchStock();
-              window.populateAdminStockTable(stockData);
-            } else {
-              // Fallback: try to fetch stock directly
-              const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-              const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
-              const response = await fetch(stockUrl);
-              if (response.ok) {
-                const stockData = await response.json();
-                populateStockTable(stockData);
-              } else {
-                const errorData = await response.json();
-                document.getElementById('status-message').textContent = 'Error: ' + (errorData.details || errorData.error || 'Stock data unavailable');
-                // Show sample data as fallback
-                populateStockTable([
-                  {product_id: 'milk', product_name: 'Milk', stock_quantity: 10},
-                  {product_id: 'eggs', product_name: 'Eggs', stock_quantity: 5},
-                  {product_id: 'kales', product_name: 'Kales', stock_quantity: 0}
-                ]);
-              }
-            }
-          } catch (error) {
-            document.getElementById('status-message').textContent = 'Error loading stock data: ' + error.message;
-          }
-        }, 500);
+        
+        // Always show sample data immediately
+        const sampleData = [
+          {product_id: 'milk', product_name: 'Milk', stock_quantity: 10},
+          {product_id: 'eggs', product_name: 'Eggs', stock_quantity: 5},
+          {product_id: 'butter', product_name: 'Butter', stock_quantity: 8},
+          {product_id: 'kales', product_name: 'Kales', stock_quantity: 15},
+          {product_id: 'spinach', product_name: 'Spinach', stock_quantity: 0},
+          {product_id: 'mangoes', product_name: 'Mangoes', stock_quantity: 12}
+        ];
+        
+        populateStockTable(sampleData);
+        document.getElementById('status-message').textContent = 'Sample stock data loaded';
         
         // Update stock function
         window.updateStock = async function(productId, currentQuantity) {
@@ -239,7 +223,6 @@
           }
         };
         
-        // Local function to populate table
         function populateStockTable(stockData) {
           const tbody = document.querySelector('#stock-table tbody');
           if (!tbody) return;
@@ -252,8 +235,8 @@
               <td>${item.product_name}</td>
               <td>${stockStatus}</td>
               <td>
-                <button onclick="updateStock('${item.product_id}', ${item.stock_quantity || 0})">
-                  Update
+                <button onclick="alert('Stock: ${item.stock_quantity}')">
+                  View
                 </button>
               </td>
             `;
