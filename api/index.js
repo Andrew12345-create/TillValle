@@ -182,6 +182,19 @@ app.get('/stock-test', async (req, res) => {
 });
 
 // ==========================
+// TABLE STRUCTURE TEST
+// ==========================
+app.get('/table-info', async (req, res) => {
+  try {
+    const result = await stockPool.query("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'product_stock'");
+    res.json({ columns: result.rows });
+  } catch (error) {
+    console.error('Table info error:', error);
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// ==========================
 // MPESA
 // ==========================
 app.post('/mpesa', async (req, res) => {

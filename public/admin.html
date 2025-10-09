@@ -193,7 +193,26 @@
         ];
         
         populateStockTable(sampleData);
-        document.getElementById('status-message').textContent = 'Sample stock data loaded';
+        document.getElementById('status-message').textContent = 'Sample stock data loaded - trying to fetch real data...';
+        
+        // Try to fetch real data immediately
+        setTimeout(async () => {
+          try {
+            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
+            const response = await fetch(stockUrl);
+            const data = await response.json();
+            
+            if (response.ok && data.length > 0) {
+              populateStockTable(data);
+              document.getElementById('status-message').textContent = `Real stock data loaded (${data.length} items)`;
+            } else {
+              document.getElementById('status-message').textContent = 'Error: ' + (data.details || data.error || 'No data');
+            }
+          } catch (error) {
+            document.getElementById('status-message').textContent = 'Fetch error: ' + error.message;
+          }
+        }, 1000);
         
         // Update stock function
         window.updateStock = async function(productId, currentQuantity) {
