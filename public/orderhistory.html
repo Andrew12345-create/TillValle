@@ -6,17 +6,50 @@
   <title>Order History - TilleValle</title>
   <link rel="stylesheet" href="../styles.css" />
   <style>
+    .order-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    
+    .order-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .order-header h1 {
+      color: var(--accent-green);
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+    
     #clear-orders-btn {
-      margin: 10px 0;
-      padding: 8px 16px;
-      background-color: #2d6a4f;
+      background: #ef4444;
       color: white;
       border: none;
-      border-radius: 5px;
+      padding: 10px 20px;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
     }
+    
     #clear-orders-btn:hover {
-      background-color: #40916c;
+      background: #dc2626;
+      transform: translateY(-1px);
+    }
+    
+    #order-history-list {
+      min-height: 200px;
+    }
+    
+    .no-orders {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      margin-top: 50px;
     }
   </style>
 </head>
@@ -27,7 +60,6 @@
         <a href="index.html" class="nav-link logo-link">
           <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
         </a>
-        <a href="index.html" class="nav-link">Home</a>
         <a href="shop.html" class="nav-link">Shop</a>
         <a href="about.html" class="nav-link">About</a>
         <a href="contact.html" class="nav-link">Contact</a>
@@ -40,9 +72,11 @@
     <hr />
   </header>
 
-  <main>
-    <h1>Your Order History</h1>
-    <button id="clear-orders-btn">Clear Order History</button>
+  <main class="order-container">
+    <div class="order-header">
+      <h1>Your Order History</h1>
+      <button id="clear-orders-btn">Clear Order History</button>
+    </div>
     <div id="order-history-list">
       <!-- Order history items will be dynamically inserted here -->
     </div>
@@ -66,7 +100,7 @@
       const orderHistory = JSON.parse(localStorage.getItem(key) || '[]');
 
       if (orderHistory.length === 0) {
-        orderHistoryList.innerHTML = '<p>No orders found.</p>';
+        orderHistoryList.innerHTML = '<div class="no-orders"><p>📦 No orders found.</p><p>Start shopping to see your order history here!</p></div>';
         return;
       }
 

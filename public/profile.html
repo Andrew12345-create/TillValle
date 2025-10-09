@@ -36,7 +36,6 @@
         <a href="index.html" class="nav-link logo-link">
           <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
         </a>
-        <a href="index.html" class="nav-link">Home</a>
         <a href="shop.html" class="nav-link">Shop</a>
         <a href="about.html" class="nav-link">About</a>
         <a href="contact.html" class="nav-link">Contact</a>
@@ -50,36 +49,104 @@
   </header>
 
   <main class="profile-container">
-    <h1>User Profile</h1>
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <span id="user-initial">U</span>
+      </div>
+      <h1 id="profile-title">My Profile</h1>
+      <p id="user-email">Welcome back!</p>
+    </div>
     
-    <section class="profile-section">
-      <h2><a href="orderhistory.html">Order History</a></h2>
-    </section>
+    <div class="profile-grid">
+      <div class="profile-card" onclick="window.location.href='account.html'">
+        <div class="card-icon">👤</div>
+        <h3>Account Settings</h3>
+        <p>Manage your personal information and preferences</p>
+        <div class="card-arrow">→</div>
+      </div>
 
-    <section class="profile-section">
-      <h2><a href="account.html">Account</a></h2>
-    </section>
+      <div class="profile-card" onclick="window.location.href='orderhistory.html'">
+        <div class="card-icon">📦</div>
+        <h3>Order History</h3>
+        <p>View your past orders and track deliveries</p>
+        <div class="card-arrow">→</div>
+      </div>
 
-    <section class="profile-section">
-      <h2><a href="language.html">Language</a></h2>
-    </section>
+      <div class="profile-card" onclick="window.location.href='faq.html'">
+        <div class="card-icon">❓</div>
+        <h3>Help & FAQ</h3>
+        <p>Get answers to frequently asked questions</p>
+        <div class="card-arrow">→</div>
+      </div>
 
-    <section class="profile-section">
-      <h2><a href="faq.html">FAQ</a></h2>
-    </section>
+      <div class="profile-card" id="language-card">
+        <div class="card-icon">🌐</div>
+        <h3>Language</h3>
+        <p>Choose your preferred language</p>
+        <div class="card-arrow">→</div>
+      </div>
 
-    <section class="profile-section">
-      <h2><button id="logout-btn" style="background: none; border: none; color: inherit; font-size: inherit; cursor: pointer; padding: 0;">Logout</button></h2>
-    </section>
+      <div class="profile-card logout-card" id="logout-card">
+        <div class="card-icon">🚪</div>
+        <h3>Logout</h3>
+        <p>Sign out of your account</p>
+        <div class="card-arrow">→</div>
+      </div>
+    </div>
   </main>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const logoutBtn = document.getElementById('logout-btn');
+      // Set user info
+      const userEmail = localStorage.getItem('email');
+      const userName = localStorage.getItem(`profileName_${userEmail}`) || 'User';
       
-      logoutBtn.addEventListener('click', async function() {
+      if (userEmail) {
+        document.getElementById('user-initial').textContent = userName.charAt(0).toUpperCase();
+        document.getElementById('profile-title').textContent = `Hello, ${userName}`;
+        document.getElementById('user-email').textContent = userEmail;
+      }
+      
+      // Language selection functionality
+      const languageCard = document.getElementById('language-card');
+      
+      languageCard.addEventListener('click', function() {
+        const languages = [
+          { code: 'en', name: 'English' },
+          { code: 'sw', name: 'Kiswahili' },
+          { code: 'fr', name: 'Français' }
+        ];
+        
+        const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+        const languageOptions = languages.map(lang => 
+          `${lang.code === currentLang ? '✓ ' : ''}${lang.name}`
+        ).join('\n');
+        
+        const selection = prompt(`Select Language:\n\n${languageOptions}\n\nEnter: en, sw, or fr`);
+        
+        if (selection && ['en', 'sw', 'fr'].includes(selection.toLowerCase())) {
+          localStorage.setItem('selectedLanguage', selection.toLowerCase());
+          const selectedLang = languages.find(lang => lang.code === selection.toLowerCase());
+          
+          // Show toast notification
+          const toast = document.getElementById('cart-toast') || document.createElement('div');
+          if (!document.getElementById('cart-toast')) {
+            toast.id = 'cart-toast';
+            document.body.appendChild(toast);
+          }
+          toast.textContent = `Language changed to ${selectedLang.name}`;
+          toast.classList.add('show');
+          setTimeout(() => {
+            toast.classList.remove('show');
+          }, 3000);
+        }
+      });
+      
+      // Logout functionality
+      const logoutCard = document.getElementById('logout-card');
+      
+      logoutCard.addEventListener('click', async function() {
         try {
-          // Determine logout URL based on environment
           const isNetlify = window.location.hostname.includes('netlify') || window.location.href.includes('netlify');
           const logoutUrl = isNetlify ? '/.netlify/functions/logout' : '/logout';
 
@@ -91,19 +158,22 @@
           const result = await response.json();
 
           if (result.ok) {
-            // Clear any stored tokens or session data
             localStorage.removeItem('token');
             localStorage.removeItem('email');
             sessionStorage.removeItem('token');
-
-            // Redirect to login page
             window.location.href = 'login.html';
           } else {
-            alert('Logout failed: ' + result.error);
+            localStorage.removeItem('token');
+            localStorage.removeItem('email');
+            sessionStorage.removeItem('token');
+            window.location.href = 'login.html';
           }
         } catch (error) {
           console.error('Logout error:', error);
-          alert('Logout failed. Please try again.');
+          localStorage.removeItem('token');
+          localStorage.removeItem('email');
+          sessionStorage.removeItem('token');
+          window.location.href = 'login.html';
         }
       });
     });

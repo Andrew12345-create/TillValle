@@ -30,24 +30,7 @@
         document.getElementById('phone-number').value = savedPhone;
 
         if (savedName) {
-          const greeting = document.createElement('h2');
-          greeting.textContent = `Hello, ${savedName}`;
-          document.querySelector('.account-section').insertBefore(greeting, document.querySelector('.profile-field'));
-        }
-
-        // Load saved locations
-        const savedLocations = JSON.parse(localStorage.getItem(`savedLocations_${userEmail}`) || '{}');
-        const savedLocationsDiv = document.getElementById('saved-locations');
-        savedLocationsDiv.innerHTML = '';
-        if (Object.keys(savedLocations).length === 0) {
-          savedLocationsDiv.innerHTML = '<p>No saved locations.</p>';
-        } else {
-          for (const [type, address] of Object.entries(savedLocations)) {
-            const div = document.createElement('div');
-            div.className = 'profile-field';
-            div.innerHTML = `<label>${type.charAt(0).toUpperCase() + type.slice(1)}:</label><span>${address}</span>`;
-            savedLocationsDiv.appendChild(div);
-          }
+          document.querySelector('.account-header h1').textContent = `Hello, ${savedName}`;
         }
       });
 
@@ -59,12 +42,13 @@
         localStorage.setItem(`profileName_${userEmail}`, name);
         localStorage.setItem(`phoneNumber_${userEmail}`, phone);
 
-        alert('Profile saved!');
-
-        // After saving, redirect to shop page
+        // Show success message
+        const toast = document.getElementById('cart-toast');
+        toast.textContent = 'Profile saved successfully!';
+        toast.classList.add('show');
         setTimeout(() => {
-          window.location.href = 'shop.html';
-        }, 1000);
+          toast.classList.remove('show');
+        }, 3000);
       }
     </script>
   </head>
@@ -75,7 +59,6 @@
         <a href="index.html" class="nav-link logo-link">
           <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
         </a>
-        <a href="index.html" class="nav-link">Home</a>
         <a href="shop.html" class="nav-link">Shop</a>
         <a href="about.html" class="nav-link">About</a>
         <a href="contact.html" class="nav-link">Contact</a>
@@ -88,39 +71,38 @@
     <hr>
   </header>
 
-  <main class="profile-container">
-    <h1><a href="index.html" class="back-link">← Back to Home</a></h1>
+  <main class="account-container">
+    <div class="account-header">
+      <h1>Account Settings</h1>
+      <p>Manage your profile and preferences</p>
+    </div>
     
     <section class="account-section">
-      <h2>Account Settings</h2>
-      <form id="account-form">
+      <div class="profile-info">
+        <h3>Profile Information</h3>
         <div class="profile-field">
-          <label for="profile-name">Profile Name:</label>
-          <input type="text" id="profile-name" value="John Doe">
-          <button type="button" onclick="saveProfile()">Save</button>
+          <label for="profile-name">Full Name</label>
+          <input type="text" id="profile-name" placeholder="Enter your full name">
         </div>
         <div class="profile-field">
-          <label for="email">Email:</label>
-          <input type="email" id="email" value="john.doe@example.com">
-          <button type="button" onclick="saveProfile()">Save</button>
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="Enter your email" readonly>
         </div>
         <div class="profile-field">
-          <label for="phone-number">Phone Number:</label>
-          <input type="text" id="phone-number" value="123-456-7890">
-          <button type="button" onclick="saveProfile()">Save</button>
+          <label for="phone-number">Phone Number</label>
+          <input type="tel" id="phone-number" placeholder="Enter your phone number">
         </div>
-      </form>
-      <h3>Saved Locations</h3>
-      <div id="saved-locations" class="saved-locations">
-        <!-- Saved locations will be displayed here -->
+        <button class="save-btn" onclick="saveProfile()">Save Changes</button>
       </div>
 
-      <div class="profile-buttons">
-        <button class="profile-btn" id="edit-password-btn">Edit Password</button>
-        <button class="profile-btn">Payment Methods</button>
-        <button class="profile-btn">Privacy Settings</button>
-        <button class="profile-btn" id="logout-btn">Logout</button>
-        <button class="profile-btn danger">Delete Account</button>
+      <div class="account-actions">
+        <h3>Account Actions</h3>
+        <button class="action-btn" id="edit-password-btn">
+          <span>🔒</span> Change Password
+        </button>
+        <button class="action-btn logout-btn" id="logout-btn">
+          <span>🚪</span> Logout
+        </button>
       </div>
     </section>
   </main>

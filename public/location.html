@@ -22,8 +22,54 @@
   </script>
 
   <style>
+    #location-section {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 30px;
+      background: var(--bg-secondary);
+      border-radius: 15px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    #location-section h2 {
+      text-align: center;
+      color: var(--accent-green);
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    #location-section p {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 25px;
+    }
+
     .form-group {
       position: relative;
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid rgba(45,106,79,0.2);
+      border-radius: 8px;
+      font-size: 1rem;
+      background: white;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent-green);
     }
 
     .search-results {
@@ -32,44 +78,48 @@
       left: 0;
       right: 0;
       background: white;
-      border: 1px solid #ccc;
+      border: 2px solid var(--accent-green);
       border-top: none;
+      border-radius: 0 0 8px 8px;
       max-height: 200px;
       overflow-y: auto;
       z-index: 1000;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     .search-result {
-      padding: 10px;
+      padding: 12px 15px;
       cursor: pointer;
       border-bottom: 1px solid #eee;
+      transition: background-color 0.2s ease;
     }
 
     .search-result:hover {
-      background: #f0f0f0;
+      background: var(--hover-bg);
     }
 
     .search-result:last-child {
       border-bottom: none;
     }
 
-    .rating {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
+    #map {
+      border-radius: 10px;
+      border: 2px solid rgba(45,106,79,0.2);
       margin: 20px 0;
     }
 
-    .star {
-      font-size: 2rem;
-      color: #ddd;
-      cursor: pointer;
-      transition: color 0.3s;
+    #current-location-btn {
+      background: var(--accent-green-light);
+      margin-top: 10px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
     }
 
-    .star.selected {
-      color: #ffd700;
+    #proceed-btn {
+      background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-green-light) 100%);
+      padding: 15px;
+      font-size: 1.1rem;
+      font-weight: 600;
     }
   </style>
 </head>
@@ -109,42 +159,10 @@
       <label for="selected-location">Selected Location:</label>
       <input type="text" id="selected-location" readonly placeholder="Drag the pin or select from search">
     </div>
-    <div style="display: flex; gap: 10px;">
-      <button id="save-location-btn" class="btn">Save Location</button>
-      <button id="proceed-btn" class="btn">Proceed to Payment</button>
-    </div>
+    <button id="proceed-btn" class="btn" style="width: 100%; margin-top: 20px;">Proceed to Payment</button>
   </section>
 
-  <!-- Save Location Modal -->
-  <div id="save-location-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;">
-    <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
-      <h3>Save Location</h3>
-      <p>Choose a type for this location:</p>
-      <div style="margin: 20px 0;">
-        <label><input type="radio" name="location-type" value="home"> Home</label><br>
-        <label><input type="radio" name="location-type" value="office"> Office</label><br>
-        <label><input type="radio" name="location-type" value="other"> Other</label>
-        <input type="text" id="custom-type" placeholder="Enter custom type" style="margin-left: 10px; display: none;">
-      </div>
-      <div style="text-align: right;">
-        <button id="cancel-save" class="btn" style="margin-right: 10px;">Cancel</button>
-        <button id="confirm-save" class="btn">Save</button>
-      </div>
-    </div>
-  </div>
 
-  <!-- Rating Section -->
-  <section id="rating-section">
-    <h3>Rate Your Experience</h3>
-    <div class="rating">
-      <span class="star" data-value="1">★</span>
-      <span class="star" data-value="2">★</span>
-      <span class="star" data-value="3">★</span>
-      <span class="star" data-value="4">★</span>
-      <span class="star" data-value="5">★</span>
-    </div>
-    <button id="done-btn" class="btn" disabled>★★★★★ Done</button>
-  </section>
 
   <!-- Toast Notification -->
   <div id="cart-toast"></div>
@@ -299,25 +317,6 @@
       }
     });
 
-    // Rating functionality
-    let selectedRating = 0;
-    const stars = document.querySelectorAll('.star');
-    const doneBtn = document.getElementById('done-btn');
-
-    stars.forEach(star => {
-      star.addEventListener('click', () => {
-        selectedRating = parseInt(star.dataset.value);
-        stars.forEach(s => {
-          if (parseInt(s.dataset.value) <= selectedRating) {
-            s.classList.add('selected');
-          } else {
-            s.classList.remove('selected');
-          }
-        });
-        doneBtn.disabled = false;
-      });
-    });
-
     // Proceed button
     document.getElementById('proceed-btn').addEventListener('click', () => {
       const location = document.getElementById('selected-location').value;
@@ -327,79 +326,6 @@
       } else {
         showCartToast('Please select a location.');
       }
-    });
-
-    // Done button
-    doneBtn.addEventListener('click', () => {
-      const location = document.getElementById('selected-location').value;
-      if (location) {
-        localStorage.setItem('selectedLocation', location);
-        localStorage.setItem('rating', selectedRating);
-        window.location.href = 'payment.html';
-      } else {
-        showCartToast('Please select a location.');
-      }
-    });
-
-    // Save location modal
-    const saveLocationBtn = document.getElementById('save-location-btn');
-    const saveModal = document.getElementById('save-location-modal');
-    const cancelSave = document.getElementById('cancel-save');
-    const confirmSave = document.getElementById('confirm-save');
-    const customType = document.getElementById('custom-type');
-    const locationTypeRadios = document.querySelectorAll('input[name="location-type"]');
-
-    saveLocationBtn.addEventListener('click', () => {
-      const location = document.getElementById('selected-location').value;
-      if (!location) {
-        showCartToast('Please select a location first.');
-        return;
-      }
-      saveModal.style.display = 'flex';
-    });
-
-    cancelSave.addEventListener('click', () => {
-      saveModal.style.display = 'none';
-      document.querySelector('input[name="location-type"]:checked').checked = false;
-      customType.style.display = 'none';
-      customType.value = '';
-    });
-
-    locationTypeRadios.forEach(radio => {
-      radio.addEventListener('change', () => {
-        if (radio.value === 'other') {
-          customType.style.display = 'inline';
-        } else {
-          customType.style.display = 'none';
-          customType.value = '';
-        }
-      });
-    });
-
-    confirmSave.addEventListener('click', () => {
-      const selectedType = document.querySelector('input[name="location-type"]:checked');
-      if (!selectedType) {
-        showCartToast('Please select a location type.');
-        return;
-      }
-      let type = selectedType.value;
-      if (type === 'other') {
-        type = customType.value.trim();
-        if (!type) {
-          showCartToast('Please enter a custom type.');
-          return;
-        }
-      }
-      const location = document.getElementById('selected-location').value;
-      const userEmail = localStorage.getItem('email') || 'guest';
-      const savedLocations = JSON.parse(localStorage.getItem(`savedLocations_${userEmail}`) || '{}');
-      savedLocations[type] = location;
-      localStorage.setItem(`savedLocations_${userEmail}`, JSON.stringify(savedLocations));
-      saveModal.style.display = 'none';
-      document.querySelector('input[name="location-type"]:checked').checked = false;
-      customType.style.display = 'none';
-      customType.value = '';
-      showCartToast(`Location saved as ${type}.`);
     });
 
     function showCartToast(message) {
