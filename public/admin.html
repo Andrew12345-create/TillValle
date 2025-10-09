@@ -50,12 +50,31 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .edit-btn {
+      background-color: #3498db;
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+    }
+    .edit-btn:hover {
+      background-color: #2980b9;
+      transform: translateY(-1px);
     }
     button.out-of-stock {
       background-color: #c0392b;
     }
     button:hover {
       opacity: 0.9;
+    }
+    #admin-content {
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
     }
     #status-message {
       margin-top: 1rem;
@@ -242,6 +261,41 @@
           }
         };
         
+        // Edit stock function
+        window.editStock = async function(productId, currentQuantity) {
+          const newQuantity = prompt(`Enter new stock quantity for ${productId}:`, currentQuantity);
+          if (newQuantity === null) return;
+          
+          const quantity = parseInt(newQuantity);
+          if (isNaN(quantity) || quantity < 0) {
+            alert('Please enter a valid number (0 or greater)');
+            return;
+          }
+          
+          try {
+            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
+            
+            const response = await fetch(stockUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ product_id: productId, stock_quantity: quantity })
+            });
+            
+            if (response.ok) {
+              const stockCell = document.getElementById(`stock-${productId}`);
+              const stockStatus = quantity > 0 ? `${quantity} in stock` : 'Out of stock';
+              stockCell.textContent = stockStatus;
+              stockCell.style.color = quantity > 0 ? '#27ae60' : '#c0392b';
+              document.getElementById('status-message').textContent = `Updated ${productId} to ${quantity}`;
+            } else {
+              alert('Failed to update stock');
+            }
+          } catch (error) {
+            alert('Error: ' + error.message);
+          }
+        };
+        
         function populateStockTable(stockData) {
           const tbody = document.querySelector('#stock-table tbody');
           if (!tbody) return;
@@ -252,10 +306,10 @@
             tr.innerHTML = `
               <td>${item.product_id}</td>
               <td>${item.product_name}</td>
-              <td>${stockStatus}</td>
+              <td id="stock-${item.product_id}">${stockStatus}</td>
               <td>
-                <button onclick="alert('Stock: ${item.stock_quantity}')">
-                  View
+                <button class="edit-btn" onclick="editStock('${item.product_id}', ${item.stock_quantity || 0})">
+                  Edit
                 </button>
               </td>
             `;
