@@ -508,14 +508,37 @@ app.post('/chatbot', async (req, res) => {
     return res.status(400).json({ error: 'Message is required' });
   }
 
-  // Simple responses for local testing
   const lowerMessage = message.toLowerCase();
   let response = "I'm here to help with your questions about TillValle!";
 
   if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
     response = "Hello! Welcome to TillValle! How can I help you with fresh produce delivery today?";
   } else if (lowerMessage.includes('stock') || lowerMessage.includes('in stock') || lowerMessage.includes('available')) {
-    response = "We have fresh produce available including: Milk, Eggs, Butter, Apples, Mangoes, Kales, Spinach, Basil, Mint, and many more! Visit our shop page to see all available items.";
+    try {
+      const result = await stockPool.query('SELECT * FROM product_stock ORDER BY product_name');
+      const inStockItems = result.rows.filter(item => item.stock_quantity > 0);
+      const outOfStockItems = result.rows.filter(item => item.stock_quantity <= 0);
+      
+      response = 'Current stock levels:\n\n';
+      
+      if (inStockItems.length > 0) {
+        response += '✅ In Stock:\n';
+        inStockItems.forEach(item => {
+          response += `• ${item.product_name}: ${item.stock_quantity} available\n`;
+        });
+        response += '\n';
+      }
+      
+      if (outOfStockItems.length > 0) {
+        response += '❌ Out of Stock:\n';
+        outOfStockItems.forEach(item => {
+          response += `• ${item.product_name}\n`;
+        });
+      }
+    } catch (error) {
+      console.error('Stock query error:', error);
+      response = "We have fresh produce available! Visit our shop page to see current stock levels.";
+    }
   }
 
   res.json({ message: response });
