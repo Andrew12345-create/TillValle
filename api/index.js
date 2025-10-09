@@ -345,7 +345,7 @@ app.get('/stock', async (req, res) => {
   console.log('Stock endpoint hit');
   try {
     console.log('Attempting stock database query...');
-    const result = await stockPool.query('SELECT product_id, product_name, in_stock FROM product_stock ORDER BY product_name');
+    const result = await stockPool.query('SELECT * FROM product_stock ORDER BY product_name');
     console.log('Query successful, rows:', result.rows.length);
     res.json(result.rows);
   } catch (error) {
@@ -360,10 +360,9 @@ app.post('/stock', async (req, res) => {
     return res.status(400).json({ error: 'Invalid request body' });
   }
   try {
-    const in_stock = stock_quantity > 0;
     const result = await stockPool.query(
-      'UPDATE product_stock SET in_stock = $1, last_updated = CURRENT_TIMESTAMP WHERE product_id = $2 RETURNING *',
-      [in_stock, product_id]
+      'UPDATE product_stock SET stock_quantity = $1 WHERE product_id = $2 RETURNING *',
+      [stock_quantity, product_id]
     );
     if (result.rowCount === 0) {
       return res.status(404).json({ error: 'Product not found' });
