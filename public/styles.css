@@ -1988,21 +1988,28 @@ body {
   }
 
   .chatbot-input-area {
-    padding: 15px;
+    padding: 12px;
+  }
+
+  .chatbot-input-container {
+    gap: 8px;
   }
 
   .chatbot-input {
     font-size: 16px; /* Prevents zoom on iOS */
-    padding: 12px 18px;
+    padding: 10px 15px;
     -webkit-appearance: none;
-    border-radius: 25px;
+    border-radius: 20px;
+    flex: 1;
+    max-width: calc(100% - 55px); /* Reserve space for button */
   }
 
   .chatbot-send {
-    width: 45px;
-    height: 45px;
-    font-size: 1.1rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    flex-shrink: 0;
   }
 }
