@@ -26,9 +26,8 @@ function updateNavbar() {
   }
 }
 
-// Load cart from localStorage or start fresh
-let cart = [];
-updateCart(); // Update UI immediately after loading cart
+// Load cart from localStorage
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 // Update cart display and save to localStorage
 function updateCart() {

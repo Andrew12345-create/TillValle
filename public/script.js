@@ -1,7 +1,7 @@
 const cartItemsContainer = document.getElementById('cart-items');
 const cartTotalElem = document.getElementById('cart-total');
 
-// Load cart from localStorage or initialize empty
+// Cart loaded from main script.js
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 function getUserFromLocalStorage() {
@@ -411,21 +411,20 @@ if (floatingCartBtn) {
 
 async function fetchStock() {
   try {
-    // Use Netlify function URL for production, localhost for development
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
     const response = await fetch(stockUrl);
-    if (!response.ok) throw new Error('Failed to fetch stock');
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
     const stockStatus = {};
     data.forEach(item => {
-      stockStatus[item.product_id] = item.stock_quantity;
+      stockStatus[item.product_id] = item.stock_quantity || (item.in_stock ? 100 : 0);
     });
     localStorage.setItem('productStock', JSON.stringify(stockStatus));
     updateProductOverlays(stockStatus);
     return data;
   } catch (error) {
-    console.error('Error fetching stock:', error);
+    console.warn('Stock API unavailable:', error.message);
     const stockStatus = JSON.parse(localStorage.getItem('productStock')) || {};
     updateProductOverlays(stockStatus);
     return [];
@@ -742,13 +741,23 @@ async function sendChatbotMessage() {
     if (!response.ok) throw new Error('Failed to get response');
 
     const data = await response.json();
-    // Remove loading
     if (loadingMessage) loadingMessage.remove();
     appendMessage(data.message, true);
   } catch (error) {
     console.error('Chatbot error:', error);
     if (loadingMessage) loadingMessage.remove();
-    appendMessage('Sorry, I encountered an error. Please try again.', true);
+    
+    // Local fallback responses
+    const lowerMessage = message.toLowerCase();
+    let fallbackResponse = "I'm here to help! For full functionality, please start the API server with 'npm start'.";
+    
+    if (lowerMessage.includes('stock')) {
+      fallbackResponse = "Stock information is available when the API server is running. Please start with 'npm start'.";
+    } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+      fallbackResponse = "Hello! Welcome to TillValle! I'm running in offline mode.";
+    }
+    
+    appendMessage(fallbackResponse, true);
   }
 }
 
@@ -767,8 +776,14 @@ if (chatbotSend) {
 if (chatbotInput) {
   chatbotInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
+      e.preventDefault();
       sendChatbotMessage();
     }
+  });
+  
+  // Prevent zoom on iOS
+  chatbotInput.addEventListener('touchstart', () => {
+    chatbotInput.style.fontSize = '16px';
   });
 }
 

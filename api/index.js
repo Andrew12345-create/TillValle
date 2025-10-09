@@ -17,7 +17,9 @@ const BCRYPT_ROUNDS = 10;
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: ["http://127.0.0.1:5500", "http://localhost:5500", "http://localhost:3001"],
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://tillvalle.netlify.app']
+    : ["http://127.0.0.1:5500", "http://localhost:5500", "http://localhost:3001", "http://localhost:8888"],
   credentials: true,
   optionsSuccessStatus: 200
 }));
@@ -31,21 +33,24 @@ app.use((req, res, next) => {
 });
 
 app.use(session({
-  secret: "superSecretKey", // ⚠️ change in production
+  secret: process.env.SESSION_SECRET || "superSecretKey",
   resave: false,
   saveUninitialized: false,
   cookie: { 
-    secure: false, // set to true if using HTTPS
+    secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
     sameSite: 'lax'
   }
 }));
 
-const apiKey = 'napi_aa19lsyo2ekw2lgwkph6nor6vepupxx24kq0jkt0y79lfqd9zyu608n7nh7x6te9';
-
 // Database setup
 const pool = new Pool({
   connectionString: process.env.NEON_DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
+});
+
+const stockPool = new Pool({
+  connectionString: process.env.STOCK_DB_URL,
   ssl: { rejectUnauthorized: false },
 });
 
@@ -151,6 +156,32 @@ app.get('/ping', (req, res) => {
 });
 
 // ==========================
+// DATABASE TEST
+// ==========================
+app.get('/db-test', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT NOW()');
+    res.json({ ok: true, message: 'Database connected', time: result.rows[0].now });
+  } catch (error) {
+    console.error('Database test error:', error);
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// ==========================
+// STOCK TEST
+// ==========================
+app.get('/stock-test', async (req, res) => {
+  try {
+    const result = await stockPool.query('SELECT NOW()');
+    res.json({ ok: true, message: 'Stock database connected', time: result.rows[0].now });
+  } catch (error) {
+    console.error('Stock database test error:', error);
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// ==========================
 // MPESA
 // ==========================
 app.post('/mpesa', async (req, res) => {
@@ -205,7 +236,7 @@ app.post('/mpesa', async (req, res) => {
       PartyA: phone,
       PartyB: shortcode,
       PhoneNumber: phone,
-      CallBackURL: `${process.env.URL || 'http://localhost:3001'}/mpesa-callback`,
+      CallBackURL: `${process.env.SITE_URL || 'http://localhost:3001'}/mpesa-callback`,
       AccountReference: accountReference,
       TransactionDesc: 'Payment for goods',
     };
@@ -307,38 +338,42 @@ app.post('/mpesa-callback', async (req, res) => {
   }
 });
 
-  // ==========================
-  // STOCK MANAGEMENT
-  // ==========================
-  app.get('/stock', async (req, res) => {
-    try {
-      const result = await pool.query('SELECT product_id, product_name, stock_quantity FROM product_stock ORDER BY product_name');
-      res.json(result.rows);
-    } catch (error) {
-      console.error('Stock fetch error:', error);
-      res.status(500).json({ error: 'Failed to fetch stock data' });
-    }
-  });
+// ==========================
+// STOCK MANAGEMENT
+// ==========================
+app.get('/stock', async (req, res) => {
+  console.log('Stock endpoint hit');
+  try {
+    console.log('Attempting stock database query...');
+    const result = await stockPool.query('SELECT product_id, product_name, in_stock FROM product_stock ORDER BY product_name');
+    console.log('Query successful, rows:', result.rows.length);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Stock fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch stock data', details: error.message });
+  }
+});
 
-  app.post('/stock', async (req, res) => {
-    const { product_id, stock_quantity } = req.body;
-    if (!product_id || typeof stock_quantity !== 'number' || stock_quantity < 0) {
-      return res.status(400).json({ error: 'Invalid request body' });
+app.post('/stock', async (req, res) => {
+  const { product_id, stock_quantity } = req.body;
+  if (!product_id || typeof stock_quantity !== 'number' || stock_quantity < 0) {
+    return res.status(400).json({ error: 'Invalid request body' });
+  }
+  try {
+    const in_stock = stock_quantity > 0;
+    const result = await stockPool.query(
+      'UPDATE product_stock SET in_stock = $1, last_updated = CURRENT_TIMESTAMP WHERE product_id = $2 RETURNING *',
+      [in_stock, product_id]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Product not found' });
     }
-    try {
-      const result = await pool.query(
-        'UPDATE product_stock SET stock_quantity = $1, last_updated = CURRENT_TIMESTAMP WHERE product_id = $2 RETURNING *',
-        [stock_quantity, product_id]
-      );
-      if (result.rowCount === 0) {
-        return res.status(404).json({ error: 'Product not found' });
-      }
-      res.json({ message: 'Stock updated', updated: result.rows[0] });
-    } catch (error) {
-      console.error('Stock update error:', error);
-      res.status(500).json({ error: 'Failed to update stock' });
-    }
-  });
+    res.json({ message: 'Stock updated', updated: result.rows[0] });
+  } catch (error) {
+    console.error('Stock update error:', error);
+    res.status(500).json({ error: 'Failed to update stock', details: error.message });
+  }
+});
 
 // ==========================
 // OTP and Password Reset
@@ -463,31 +498,22 @@ app.post('/chatbot', async (req, res) => {
 
   // Simple responses for local testing
   const lowerMessage = message.toLowerCase();
-  let response = 'I\'m here to help with your questions about TillValle!';
+  let response = "I'm here to help with your questions about TillValle!";
 
-  if (lowerMessage.includes('stock') || lowerMessage.includes('in stock') || lowerMessage.includes('available')) {
-    try {
-      const result = await pool.query('SELECT product_id, product_name, stock_quantity FROM product_stock ORDER BY product_name');
-      const stockData = result.rows;
-      const inStockItems = stockData.filter(item => item.stock_quantity > 0).map(item => `${item.product_name} (${item.stock_quantity})`);
-      const outOfStockItems = stockData.filter(item => item.stock_quantity === 0).map(item => item.product_name);
-        response = 'Current stock status:\n';
-        if (inStockItems.length > 0) {
-          response += `In stock:\n- ${inStockItems.join('\n- ')}\n\n`;
-        }
-        if (outOfStockItems.length > 0) {
-          response += `Out of stock:\n- ${outOfStockItems.join('\n- ')}`;
-        }
-    } catch (error) {
-      response = 'Sorry, I couldn\'t fetch the stock information right now.';
-    }
+  if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+    response = "Hello! Welcome to TillValle! How can I help you with fresh produce delivery today?";
+  } else if (lowerMessage.includes('stock') || lowerMessage.includes('in stock') || lowerMessage.includes('available')) {
+    response = "We have fresh produce available including: Milk, Eggs, Butter, Apples, Mangoes, Kales, Spinach, Basil, Mint, and many more! Visit our shop page to see all available items.";
   }
 
   res.json({ message: response });
 });
 
 // ==========================
-// Catch-all (serve frontend)
+// Start server
+// ==========================
+// ==========================
+// Catch-all (serve frontend) - MUST BE LAST
 // ==========================
 app.all('*', (req, res) => {
   if (req.method !== 'GET') {
@@ -496,9 +522,6 @@ app.all('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', req.path === '/' ? 'index.html' : req.path));
 });
 
-// ==========================
-// Start server
-// ==========================
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
 });

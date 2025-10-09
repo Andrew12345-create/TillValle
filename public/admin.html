@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TilleValle Admin - Manage Stock</title>
   <link rel="stylesheet" href="styles.css" />
+  
+  <!-- Hotjar Tracking Code for Tillvalle -->
+  <script>
+      (function(h,o,t,j,a,r){
+          h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+          h._hjSettings={hjid:6534945,hjsv:6};
+          a=o.getElementsByTagName('head')[0];
+          r=o.createElement('script');r.async=1;
+          r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+          a.appendChild(r);
+      })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  </script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -169,12 +181,19 @@
       if (password === 'Auth123') {
         loginSection.style.display = 'none';
         adminContent.style.display = 'block';
-        try {
-          const stockData = await window.fetchStock();
-          window.populateAdminStockTable(stockData);
-        } catch (error) {
-          document.getElementById('status-message').textContent = 'Error loading stock data: ' + error.message;
-        }
+        // Wait for script.js to load, then fetch stock
+        setTimeout(async () => {
+          try {
+            if (window.fetchStock && window.populateAdminStockTable) {
+              const stockData = await window.fetchStock();
+              window.populateAdminStockTable(stockData);
+            } else {
+              document.getElementById('status-message').textContent = 'Loading stock functions...';
+            }
+          } catch (error) {
+            document.getElementById('status-message').textContent = 'Error loading stock data: ' + error.message;
+          }
+        }, 100);
       } else {
         alert('Incorrect password');
       }

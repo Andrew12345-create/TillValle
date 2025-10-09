@@ -1,6 +1,15 @@
 // Simple rule-based chatbot for TillValle
 // This provides responses based on keywords without requiring external APIs
 
+const { Pool } = require('pg');
+
+const pool = new Pool({
+  connectionString: process.env.NEON_DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
+  max: 2,
+  idleTimeoutMillis: 30000,
+});
+
 const responses = {
   greeting: [
     "Hello! Welcome to TillValle! How can I help you with fresh produce delivery today?",
@@ -57,10 +66,12 @@ async function getResponse(message, isAdmin = false) {
   // Check for stock inquiries
   if (lowerMessage.includes('stock') || lowerMessage.includes('in stock') || lowerMessage.includes('available')) {
     try {
-      const result = await pool.query('SELECT product_id, product_name, in_stock FROM product_stock ORDER BY product_name');
-      const stockData = result.rows;
-      const inStockItems = stockData.filter(item => item.in_stock).map(item => item.product_name);
-      const outOfStockItems = stockData.filter(item => !item.in_stock).map(item => item.product_name);
+      // Fetch stock data from the stock function
+      const stockResponse = await fetch(`${process.env.SITE_URL || 'http://localhost:8888'}/.netlify/functions/stock`);
+      if (!stockResponse.ok) throw new Error('Failed to fetch stock');
+      const stockData = await stockResponse.json();
+      const inStockItems = stockData.filter(item => item.stock_quantity > 0).map(item => item.product_name);
+      const outOfStockItems = stockData.filter(item => item.stock_quantity <= 0).map(item => item.product_name);
       let response = 'Current stock status:\n';
       if (inStockItems.length > 0) {
         response += `In stock:\n- ${inStockItems.join('\n- ')}\n\n`;
@@ -71,7 +82,7 @@ async function getResponse(message, isAdmin = false) {
       return response;
     } catch (error) {
       console.error('Error fetching stock:', error);
-      return 'Sorry, there was an error checking stock.';
+      return "Sorry, I couldn't fetch the stock information right now.";
     }
   }
 

@@ -1934,40 +1934,64 @@ body {
   .chatbot-sidebar {
     width: 100vw;
     right: -100vw;
+    top: 0;
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  .chatbot-sidebar.open {
+    right: 0;
   }
 
   .floating-chatbot-btn {
     bottom: 15px;
     right: 15px;
-    width: 50px;
-    height: 50px;
-    font-size: 1.2rem;
+    width: 55px;
+    height: 55px;
+    font-size: 1.3rem;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   .chatbot-header {
-    padding: 12px 15px;
-    font-size: 1rem;
+    padding: 15px;
+    font-size: 1.1rem;
+  }
+
+  .chatbot-close {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .chatbot-messages {
-    padding: 10px;
+    padding: 15px;
+    gap: 12px;
   }
 
   .chatbot-message {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    padding: 10px 15px;
+    max-width: 90%;
   }
 
   .chatbot-input-area {
-    padding: 10px;
+    padding: 15px;
   }
 
   .chatbot-input {
-    font-size: 0.85rem;
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 12px 18px;
+    -webkit-appearance: none;
+    border-radius: 25px;
   }
 
   .chatbot-send {
-    width: 35px;
-    height: 35px;
-    font-size: 1rem;
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 }
