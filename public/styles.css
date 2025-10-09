@@ -1944,8 +1944,14 @@ body {
   }
 
   .chatbot-messages {
-    height: calc(100vh - 140px); /* Reserve space for header and input */
-    max-height: calc(100vh - 140px);
+    height: calc(100vh - 200px); /* More space for header and input */
+    max-height: calc(100vh - 200px);
+    min-height: 300px;
+  }
+
+  .chatbot-sidebar {
+    height: calc(100vh - 20px);
+    max-height: calc(100vh - 20px);
   }
 
   .floating-chatbot-btn {

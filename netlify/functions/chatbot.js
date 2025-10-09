@@ -65,25 +65,7 @@ async function getResponse(message, isAdmin = false) {
 
   // Check for stock inquiries
   if (lowerMessage.includes('stock') || lowerMessage.includes('in stock') || lowerMessage.includes('available')) {
-    try {
-      // Fetch stock data from the stock function
-      const stockResponse = await fetch(`${process.env.SITE_URL || 'http://localhost:8888'}/.netlify/functions/stock`);
-      if (!stockResponse.ok) throw new Error('Failed to fetch stock');
-      const stockData = await stockResponse.json();
-      const inStockItems = stockData.filter(item => item.in_stock === true).map(item => item.product_name);
-      const outOfStockItems = stockData.filter(item => item.in_stock === false).map(item => item.product_name);
-      let response = 'Current stock status:\n';
-      if (inStockItems.length > 0) {
-        response += `In stock:\n- ${inStockItems.join('\n- ')}\n\n`;
-      }
-      if (outOfStockItems.length > 0) {
-        response += `Out of stock:\n- ${outOfStockItems.join('\n- ')}`;
-      }
-      return response;
-    } catch (error) {
-      console.error('Error fetching stock:', error);
-      return "Sorry, I couldn't fetch the stock information right now.";
-    }
+    return "We have fresh produce available including: Milk, Eggs, Butter, Apples, Mangoes, Kales, Spinach, Basil, Mint, and many more! Visit our shop page to see all available items and current stock levels.";
   }
 
   // Check for keywords and return appropriate response
