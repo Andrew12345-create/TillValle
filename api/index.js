@@ -511,7 +511,27 @@ app.post('/chatbot', async (req, res) => {
   const lowerMessage = message.toLowerCase();
   let response = "I'm here to help with your questions about TillValle!";
 
-  if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+  // Check if user typed just a product name
+  const products = ['milk', 'eggs', 'butter', 'apples', 'mangoes', 'kales', 'spinach', 'basil', 'mint', 'bananas', 'avocados', 'chicken', 'ghee', 'coriander', 'parsley', 'lettuce', 'managu', 'terere', 'salgaa'];
+  const exactProduct = products.find(product => lowerMessage.trim() === product);
+  
+  if (exactProduct) {
+    try {
+      const result = await stockPool.query('SELECT * FROM product_stock WHERE LOWER(product_name) LIKE $1', [`%${exactProduct}%`]);
+      
+      if (result.rows.length > 0) {
+        const item = result.rows[0];
+        response = item.stock_quantity > 0 
+          ? `✅ ${item.product_name}: ${item.stock_quantity} available in stock!`
+          : `❌ ${item.product_name} is currently out of stock. We'll restock soon!`;
+      } else {
+        response = `I couldn't find ${exactProduct} in our inventory. Please check our shop page for available items.`;
+      }
+    } catch (error) {
+      console.error('Stock query error:', error);
+      response = `Let me check ${exactProduct} for you... Please visit our shop page to see current availability.`;
+    }
+  } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
     response = "Hello! Welcome to TillValle! How can I help you with fresh produce delivery today?";
   } else if (lowerMessage.includes('stock') || lowerMessage.includes('in stock') || lowerMessage.includes('available')) {
     try {

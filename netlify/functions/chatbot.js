@@ -63,6 +63,37 @@ const responses = {
 async function getResponse(message, isAdmin = false) {
   const lowerMessage = message.toLowerCase();
 
+  // Check if user typed just a product name
+  const products = ['milk', 'eggs', 'butter', 'apples', 'mangoes', 'kales', 'spinach', 'basil', 'mint', 'bananas', 'avocados', 'chicken', 'ghee', 'coriander', 'parsley', 'lettuce', 'managu', 'terere', 'salgaa'];
+  const exactProduct = products.find(product => lowerMessage.trim() === product);
+  
+  if (exactProduct) {
+    try {
+      const { Pool } = require('pg');
+      const stockPool = new Pool({
+        connectionString: process.env.STOCK_DB_URL,
+        ssl: { rejectUnauthorized: false },
+      });
+      
+      const result = await stockPool.query('SELECT * FROM product_stock WHERE LOWER(product_name) LIKE $1', [`%${exactProduct}%`]);
+      
+      if (result.rows.length > 0) {
+        const item = result.rows[0];
+        const response = item.stock_quantity > 0 
+          ? `✅ ${item.product_name}: ${item.stock_quantity} available in stock!`
+          : `❌ ${item.product_name} is currently out of stock. We'll restock soon!`;
+        await stockPool.end();
+        return response;
+      } else {
+        await stockPool.end();
+        return `I couldn't find ${exactProduct} in our inventory. Please check our shop page for available items.`;
+      }
+    } catch (error) {
+      console.error('Stock query error:', error);
+      return `Let me check ${exactProduct} for you... Please visit our shop page to see current availability.`;
+    }
+  }
+
   // Check for stock inquiries
   if (lowerMessage.includes('stock') || lowerMessage.includes('in stock') || lowerMessage.includes('available')) {
     try {
