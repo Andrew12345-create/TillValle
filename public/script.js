@@ -699,11 +699,17 @@ function showChatbotSidebar() {
   if (chatbotSidebar) {
     chatbotSidebar.classList.add('open');
   }
+  if (floatingChatbotBtn) {
+    floatingChatbotBtn.style.display = 'none';
+  }
 }
 
 function hideChatbotSidebar() {
   if (chatbotSidebar) {
     chatbotSidebar.classList.remove('open');
+  }
+  if (floatingChatbotBtn) {
+    floatingChatbotBtn.style.display = 'flex';
   }
 }
 
