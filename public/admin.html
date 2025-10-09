@@ -188,12 +188,42 @@
               const stockData = await window.fetchStock();
               window.populateAdminStockTable(stockData);
             } else {
-              document.getElementById('status-message').textContent = 'Loading stock functions...';
+              // Fallback: try to fetch stock directly
+              const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+              const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
+              const response = await fetch(stockUrl);
+              if (response.ok) {
+                const stockData = await response.json();
+                populateStockTable(stockData);
+              } else {
+                document.getElementById('status-message').textContent = 'Stock data unavailable';
+              }
             }
           } catch (error) {
             document.getElementById('status-message').textContent = 'Error loading stock data: ' + error.message;
           }
-        }, 100);
+        }, 500);
+        
+        // Local function to populate table
+        function populateStockTable(stockData) {
+          const tbody = document.querySelector('#stock-table tbody');
+          if (!tbody) return;
+          tbody.innerHTML = '';
+          stockData.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${item.product_id}</td>
+              <td>${item.product_name}</td>
+              <td>${item.in_stock ? 'In Stock' : 'Out of Stock'}</td>
+              <td>
+                <button onclick="alert('Stock management requires server connection')">
+                  View Status
+                </button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
       } else {
         alert('Incorrect password');
       }
