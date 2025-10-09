@@ -1,7 +1,7 @@
 const { Pool } = require('pg');
 
 const pool = new Pool({
-  connectionString: process.env.NEON_DATABASE_URL,
+  connectionString: process.env.STOCK_DB_URL,
   ssl: { rejectUnauthorized: false },
   max: 3,
   idleTimeoutMillis: 30000,
@@ -23,8 +23,8 @@ exports.handler = async function(event, context) {
     };
   }
 
-  if (!process.env.NEON_DATABASE_URL) {
-    console.error('NEON_DATABASE_URL not configured');
+  if (!process.env.STOCK_DB_URL) {
+    console.error('STOCK_DB_URL not configured');
     return {
       statusCode: 500,
       headers: {
@@ -37,7 +37,7 @@ exports.handler = async function(event, context) {
 
   try {
     if (event.httpMethod === 'GET') {
-      const result = await pool.query('SELECT product_id, product_name, stock_quantity FROM product_stock ORDER BY product_name');
+      const result = await pool.query('SELECT * FROM product_stock ORDER BY product_name');
       return {
         statusCode: 200,
         headers: {
