@@ -70,8 +70,8 @@ async function getResponse(message, isAdmin = false) {
       const stockResponse = await fetch(`${process.env.SITE_URL || 'http://localhost:8888'}/.netlify/functions/stock`);
       if (!stockResponse.ok) throw new Error('Failed to fetch stock');
       const stockData = await stockResponse.json();
-      const inStockItems = stockData.filter(item => item.stock_quantity > 0).map(item => item.product_name);
-      const outOfStockItems = stockData.filter(item => item.stock_quantity <= 0).map(item => item.product_name);
+      const inStockItems = stockData.filter(item => item.in_stock === true).map(item => item.product_name);
+      const outOfStockItems = stockData.filter(item => item.in_stock === false).map(item => item.product_name);
       let response = 'Current stock status:\n';
       if (inStockItems.length > 0) {
         response += `In stock:\n- ${inStockItems.join('\n- ')}\n\n`;

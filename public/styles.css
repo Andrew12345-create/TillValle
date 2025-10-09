@@ -1943,6 +1943,11 @@ body {
     right: 0;
   }
 
+  .chatbot-messages {
+    height: calc(100vh - 140px); /* Reserve space for header and input */
+    max-height: calc(100vh - 140px);
+  }
+
   .floating-chatbot-btn {
     bottom: 15px;
     right: 15px;
