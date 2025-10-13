@@ -177,6 +177,64 @@
           dropdown.classList.remove('show');
         }
       });
+      // Render cart items from localStorage
+      function renderCart() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartItems = document.getElementById('cart-items');
+        const cartTotal = document.getElementById('cart-total');
+        const cartCount = document.getElementById('cart-count');
+        
+        cartItems.innerHTML = '';
+        let total = 0;
+        
+        if (cart.length === 0) {
+          cartItems.innerHTML = '<li style="text-align:center;color:var(--text-secondary);padding:40px;">Your cart is empty</li>';
+        } else {
+          cart.forEach((item, index) => {
+            total += item.price * item.quantity;
+            
+            const li = document.createElement('li');
+            li.className = 'cart-item';
+            li.innerHTML = `
+              <span>${item.name} - KES ${item.price}</span>
+              <div class="cart-quantity-controls">
+                <button class="decrease-qty" onclick="updateQuantity(${index}, -1)">-</button>
+                <input type="text" class="item-qty" value="${item.quantity}" readonly />
+                <button class="increase-qty" onclick="updateQuantity(${index}, 1)">+</button>
+                <button class="remove-item" onclick="removeItem(${index})" style="background:transparent;border:none;color:#ef4444;font-weight:bold;cursor:pointer;">Remove</button>
+              </div>
+            `;
+            cartItems.appendChild(li);
+          });
+        }
+        
+        cartTotal.textContent = `Total: KSh ${total}`;
+        const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+        if (cartCount) cartCount.textContent = totalQuantity;
+      }
+      
+      // Update quantity function
+      window.updateQuantity = function(index, change) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart[index].quantity += change;
+        if (cart[index].quantity <= 0) {
+          cart.splice(index, 1);
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderCart();
+      };
+      
+      // Remove item function
+      window.removeItem = function(index) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart.splice(index, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderCart();
+      };
+      
+      // Initial render
+      renderCart();
+      
       // Checkout button event listener
       document.getElementById('checkout-btn').addEventListener('click', () => {
         window.location.href = 'location.html';

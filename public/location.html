@@ -121,6 +121,39 @@
       font-size: 1.1rem;
       font-weight: 600;
     }
+    
+    .popular-location {
+      background: white;
+      border: 2px solid var(--accent-green);
+      color: var(--accent-green);
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    
+    .popular-location:hover {
+      background: var(--accent-green);
+      color: white;
+      transform: translateY(-1px);
+    }
+    
+    @media (max-width: 768px) {
+      #location-section {
+        margin: 20px;
+        padding: 20px;
+      }
+      
+      #location-section h2 {
+        font-size: 1.5rem;
+      }
+      
+      #map {
+        height: 300px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -146,20 +179,81 @@
 
   <!-- Location Section -->
   <section id="location-section">
-    <h2>Select Your Delivery Location</h2>
-    <p>Search for your location or drag the pin on the map.</p>
+    <div style="text-align: center; margin-bottom: 30px;">
+      <h2>📍 Where should we deliver?</h2>
+      <p style="font-size: 1.1rem; color: var(--text-secondary);">Help us find you so we can deliver your fresh farm products!</p>
+    </div>
+    
+    <!-- Quick Options -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
+      <button id="current-location-btn" class="btn" style="padding: 12px; font-size: 0.9rem; background: var(--accent-green-light);">
+        📱 Use My Location
+      </button>
+      <button id="popular-locations-btn" class="btn" style="padding: 12px; font-size: 0.9rem; background: var(--accent-yellow); color: var(--accent-green);">
+        🏙️ Popular Areas
+      </button>
+    </div>
+    
+    <!-- Popular Locations (hidden by default) -->
+    <div id="popular-locations" style="display: none; margin-bottom: 20px; padding: 15px; background: rgba(45,106,79,0.05); border-radius: 10px;">
+      <h4 style="margin: 0 0 10px 0; color: var(--accent-green);">Quick Select:</h4>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px;">
+        <button class="popular-location" data-coords="-1.2921,36.8219">Nairobi CBD</button>
+        <button class="popular-location" data-coords="-1.3031,36.7073">Karen</button>
+        <button class="popular-location" data-coords="-1.2634,36.8078">Westlands</button>
+        <button class="popular-location" data-coords="-1.2441,36.8927">Eastleigh</button>
+        <button class="popular-location" data-coords="-1.3197,36.9275">Embakasi</button>
+        <button class="popular-location" data-coords="-1.2167,36.8833">Kasarani</button>
+      </div>
+    </div>
+    
     <div class="form-group">
-      <label for="location-search">Search Location:</label>
-      <input type="text" id="location-search" placeholder="Enter a place name">
-      <button id="current-location-btn" class="btn" style="margin-top: 10px;">Use Current Location</button>
+      <label for="location-search">🔍 Or search for your location:</label>
+      <input type="text" id="location-search" placeholder="Type your area, street, or landmark...">
       <div id="search-results" class="search-results"></div>
     </div>
-    <div id="map" style="height: 400px; width: 100%;"></div>
-    <div class="form-group">
-      <label for="selected-location">Selected Location:</label>
-      <input type="text" id="selected-location" readonly placeholder="Drag the pin or select from search">
+    
+    <div style="background: rgba(45,106,79,0.05); padding: 15px; border-radius: 10px; margin: 20px 0;">
+      <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary); text-align: center;">
+        💡 <strong>Tip:</strong> Use "My Location" for GPS precision or drag the red pin to your exact delivery spot
+      </p>
     </div>
-    <button id="proceed-btn" class="btn" style="width: 100%; margin-top: 20px;">Proceed to Payment</button>
+    
+    <div id="map" style="height: 400px; width: 100%; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></div>
+    
+    <div class="form-group" style="margin-top: 20px;">
+      <label for="selected-location">📍 Your delivery address:</label>
+      <input type="text" id="selected-location" readonly placeholder="Select a location above" style="background: #f8f9fa; font-weight: 500;">
+    </div>
+    
+    <!-- Delivery Fee Section -->
+    <div id="delivery-fee-section" style="display: none; background: linear-gradient(135deg, rgba(255,209,102,0.1), rgba(255,183,77,0.1)); padding: 20px; border-radius: 15px; margin: 20px 0; border: 2px solid var(--accent-yellow);">
+      <h4 style="margin: 0 0 15px 0; color: var(--accent-green); display: flex; align-items: center; gap: 8px;">
+        🚚 <span>Delivery Fee Calculation</span>
+      </h4>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+        <div>
+          <p style="margin: 5px 0; font-size: 0.9rem;"><strong>Distance:</strong> <span id="delivery-distance">-</span> km</p>
+          <p style="margin: 5px 0; font-size: 0.9rem;"><strong>Delivery Fee:</strong> <span id="delivery-fee" style="color: var(--accent-green); font-weight: bold;">KES -</span></p>
+        </div>
+        <div>
+          <p style="margin: 5px 0; font-size: 0.9rem;"><strong>Cart Total:</strong> <span id="cart-total-display">KES -</span></p>
+          <p style="margin: 5px 0; font-size: 0.9rem;"><strong>Final Total:</strong> <span id="final-total" style="color: var(--accent-green); font-weight: bold; font-size: 1.1rem;">KES -</span></p>
+        </div>
+      </div>
+
+    </div>
+    
+    <div style="background: linear-gradient(135deg, rgba(45,106,79,0.1), rgba(52,184,136,0.1)); padding: 20px; border-radius: 15px; margin: 20px 0;">
+      <h4 style="margin: 0 0 10px 0; color: var(--accent-green);">🚚 Delivery Information</h4>
+      <p style="margin: 5px 0; font-size: 0.9rem;">• Delivery fee: KES 400 per 17km from Nairobi town</p>
+      <p style="margin: 5px 0; font-size: 0.9rem;">• Delivery within 2-4 hours during business hours</p>
+      <p style="margin: 5px 0; font-size: 0.9rem;">• Fresh products delivered directly to your door</p>
+    </div>
+    
+    <button id="proceed-btn" class="btn" style="width: 100%; margin-top: 20px; padding: 18px; font-size: 1.2rem; font-weight: 700;">
+      ✅ Confirm Location & Continue
+    </button>
   </section>
 
 
@@ -240,16 +334,68 @@
       }
     }
 
+    // Nairobi town center coordinates (reference point for delivery fee)
+    const nairobiTown = [-1.2864, 36.8172];
+    
+    // Calculate distance between two coordinates (Haversine formula)
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Earth's radius in kilometers
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
+    
+    // Calculate delivery fee based on distance
+    function calculateDeliveryFee(distance) {
+      // Fee structure: KES 400 per 17km (approximately KES 23.53 per km)
+      const feePerKm = 400 / 17;
+      const minFee = 100; // Minimum fee for very short distances
+      const calculatedFee = Math.round(distance * feePerKm);
+      return Math.max(calculatedFee, minFee);
+    }
+    
+    // Update delivery fee display
+    function updateDeliveryFee(lat, lng) {
+      const distance = calculateDistance(nairobiTown[0], nairobiTown[1], lat, lng);
+      const deliveryFee = calculateDeliveryFee(distance);
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const finalTotal = cartTotal + deliveryFee;
+      
+      document.getElementById('delivery-distance').textContent = distance.toFixed(1);
+      document.getElementById('delivery-fee').textContent = `KES ${deliveryFee}`;
+      document.getElementById('cart-total-display').textContent = `KES ${cartTotal}`;
+      document.getElementById('final-total').textContent = `KES ${finalTotal}`;
+      document.getElementById('delivery-fee-section').style.display = 'block';
+      
+      // Hide free delivery notice since there's no free delivery
+      document.getElementById('free-delivery-notice').style.display = 'none';
+      
+      // Store delivery info for payment page
+      localStorage.setItem('deliveryInfo', JSON.stringify({
+        distance: distance.toFixed(1),
+        fee: deliveryFee,
+        cartTotal: cartTotal,
+        finalTotal: finalTotal
+      }));
+    }
+
     // Update location on drag
     marker.on('dragend', async function(event) {
       const position = marker.getLatLng();
       const address = await reverseGeocode(position.lat, position.lng);
       document.getElementById('selected-location').value = address;
+      updateDeliveryFee(position.lat, position.lng);
     });
 
     // Initial location
     reverseGeocode(-1.2864, 36.8172).then(address => {
       document.getElementById('selected-location').value = address;
+      updateDeliveryFee(-1.2864, 36.8172);
     });
 
     // Debounce function
@@ -284,6 +430,7 @@
             map.setView([lat, lng], 15);
             marker.setLatLng([lat, lng]);
             document.getElementById('selected-location').value = result.display_name;
+            updateDeliveryFee(lat, lng);
             searchResults.innerHTML = '';
             searchInput.value = '';
           });
@@ -297,23 +444,52 @@
 
     searchInput.addEventListener('input', debouncedSearch);
 
+    // Popular locations functionality
+    document.getElementById('popular-locations-btn').addEventListener('click', () => {
+      const popularDiv = document.getElementById('popular-locations');
+      popularDiv.style.display = popularDiv.style.display === 'none' ? 'block' : 'none';
+    });
+    
+    // Popular location buttons
+    document.querySelectorAll('.popular-location').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const coords = btn.dataset.coords.split(',');
+        const lat = parseFloat(coords[0]);
+        const lng = parseFloat(coords[1]);
+        map.setView([lat, lng], 15);
+        marker.setLatLng([lat, lng]);
+        const address = await reverseGeocode(lat, lng);
+        document.getElementById('selected-location').value = address;
+        updateDeliveryFee(lat, lng);
+        document.getElementById('popular-locations').style.display = 'none';
+        showCartToast(`✅ ${btn.textContent} selected!`);
+      });
+    });
+
     // Current location button
     document.getElementById('current-location-btn').addEventListener('click', () => {
+      showCartToast('📍 Getting your location...');
       if (navigator.geolocation) {
+        // Request high accuracy location
         navigator.geolocation.getCurrentPosition(async (position) => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
-          map.setView([lat, lng], 15);
+          map.setView([lat, lng], 18); // Higher zoom for more precision
           marker.setLatLng([lat, lng]);
           const address = await reverseGeocode(lat, lng);
           document.getElementById('selected-location').value = address;
-          showCartToast('Current location set.');
+          updateDeliveryFee(lat, lng);
+          showCartToast('✅ Exact location set successfully!');
         }, (error) => {
           console.error('Geolocation error:', error);
-          showCartToast('Unable to get current location. Please check permissions.');
+          showCartToast('❌ Unable to get location. Please enable location services or select manually.');
+        }, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
         });
       } else {
-        showCartToast('Geolocation is not supported by this browser.');
+        showCartToast('❌ Geolocation not supported. Please select your location manually.');
       }
     });
 

@@ -1,3 +1,29 @@
+// Define modal function globally at the top
+let modal = null;
+let currentProduct = null;
+
+window.openProductModal = function(name, description, imageSrc, price) {
+  if (!modal) {
+    setTimeout(() => openProductModal(name, description, imageSrc, price), 100);
+    return;
+  }
+  
+  const modalName = document.getElementById('modal-product-name');
+  const modalDescription = document.getElementById('modal-product-description');
+  const modalImage = document.getElementById('modal-product-image');
+  const modalPrice = document.getElementById('modal-product-price');
+  const quantityInput = document.getElementById('modal-quantity');
+  
+  currentProduct = { name, price };
+  modalName.textContent = name;
+  modalDescription.textContent = description;
+  modalImage.src = imageSrc;
+  modalImage.alt = name;
+  modalPrice.textContent = `KES ${price}`;
+  quantityInput.value = 1;
+  modal.classList.add('show');
+};
+
 const cartItemsContainer = document.getElementById('cart-items');
 const cartTotalElem = document.getElementById('cart-total');
 
@@ -209,120 +235,10 @@ function renderCart() {
   }
 }
 
-// Modal related elements
-const modal = document.createElement('div');
-modal.id = 'product-modal';
-modal.className = 'product-modal';
-modal.style.display = 'none';
-
-modal.innerHTML = `
-  <div class="product-modal-content">
-    <div class="product-modal-header">
-      <h3 id="modal-product-name"></h3>
-      <button class="close-modal" aria-label="Close modal">&times;</button>
-    </div>
-    <div class="product-modal-body">
-      <img id="modal-product-image" src="" alt="" class="product-image" />
-      <p id="modal-product-description"></p>
-      <p id="modal-product-price"></p>
-      <div class="quantity-controls">
-        <button id="modal-decrease-qty">-</button>
-        <input type="text" id="modal-quantity" value="1" readonly />
-        <button id="modal-increase-qty">+</button>
-      </div>
-      <button id="add-to-cart-modal" class="add-to-cart-modal">Add to Cart</button>
-    </div>
-  </div>
-`;
-
-document.body.appendChild(modal);
-
-const modalName = document.getElementById('modal-product-name');
-const modalDescription = document.getElementById('modal-product-description');
-const modalImage = document.getElementById('modal-product-image');
-const modalPrice = document.getElementById('modal-product-price');
-const quantityInput = document.getElementById('modal-quantity');
-const addToCartModalBtn = document.getElementById('add-to-cart-modal');
-const closeModalBtn = modal.querySelector('.close-modal');
-const decreaseQtyBtn = document.getElementById('modal-decrease-qty');
-const increaseQtyBtn = document.getElementById('modal-increase-qty');
-
-let currentProduct = null;
-
-window.openProductModal = function(name, description, imageSrc, price) {
-  console.log('Opening modal for:', name); // Debug log
-  const stockStatus = JSON.parse(localStorage.getItem('productStock')) || {};
-  const productMapping = {
-    'Milk': 'milk',
-    'Eggs': 'eggs',
-    'Eggs (Kienyeji)': 'eggs-kienyeji',
-    'Egg Crate (30 eggs)': 'egg-crate',
-    'Butter': 'butter',
-    'Chicken': 'chicken',
-    'Ghee': 'ghee',
-    'Apples': 'apples',
-    'Raw Bananas': 'raw-bananas',
-    'Bananas (ripe)': 'bananas-ripe',
-    'Soursop Fruit': 'soursop-fruit',
-    'Blueberries': 'blueberries',
-    'Macadamia': 'macadamia',
-    'Dragonfruit': 'dragonfruit',
-    'Mangoes': 'mangoes',
-    'Lemon': 'lemon',
-    'Pawpaw': 'pawpaw',
-    'Pixies': 'pixies',
-    'Avocadoes': 'avocadoes',
-    'Yellow Passion': 'yellow-passion',
-    'Kiwi': 'kiwi',
-    'Basil': 'basil',
-    'Coriander': 'coriander',
-    'Mint': 'mint',
-    'Parsley': 'parsley',
-    'Soursop Leaves': 'soursop-leaves',
-    'Kales (Sukuma Wiki)': 'kales',
-    'Lettuce': 'lettuce',
-    'Managu': 'managu',
-    'Terere': 'terere',
-    'Salgaa': 'salgaa',
-    'Spinach': 'spinach'
-  };
-  const productId = productMapping[name];
-  const stockQty = productId ? stockStatus[productId] : undefined;
-
-  currentProduct = { name, price };
-  modalName.textContent = name;
-  modalDescription.textContent = description;
-  modalImage.src = imageSrc;
-  modalImage.alt = name;
-  modalPrice.textContent = `KES ${price}`;
-
-  // Show stock quantity in modal
-  let stockInfoElem = document.getElementById('modal-stock-info');
-  if (!stockInfoElem) {
-    stockInfoElem = document.createElement('p');
-    stockInfoElem.id = 'modal-stock-info';
-    stockInfoElem.style.fontWeight = 'bold';
-    stockInfoElem.style.marginTop = '0.5rem';
-    modalPrice.parentNode.insertBefore(stockInfoElem, quantityInput.parentNode);
-  }
-  if (stockQty === undefined) {
-    stockInfoElem.textContent = 'Stock information not available';
-    addToCartModalBtn.disabled = false;
-  } else if (stockQty <= 0) {
-    stockInfoElem.textContent = 'Out of stock';
-    addToCartModalBtn.disabled = true;
-  } else {
-    stockInfoElem.textContent = `In stock: ${stockQty}`;
-    addToCartModalBtn.disabled = false;
-  }
-
-  quantityInput.value = 1;
-  modal.style.display = 'block';
-  console.log('Modal should be visible now'); // Debug log
-};
+// Modal elements will be referenced when modal is created
 
 function closeProductModal() {
-  modal.style.display = 'none';
+  modal.classList.remove('show');
 }
 
 closeModalBtn.addEventListener('click', closeProductModal);
@@ -608,6 +524,35 @@ window.toggleStock = async function(productId, currentQuantity) {
 
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
+  // Create modal
+  modal = document.createElement('div');
+  modal.id = 'product-modal';
+  modal.className = 'product-modal';
+  modal.innerHTML = `
+    <div class="product-modal-content">
+      <div class="product-modal-header">
+        <h3 id="modal-product-name"></h3>
+        <button class="close-modal" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="product-modal-body">
+        <img id="modal-product-image" src="" alt="" class="product-image" />
+        <p id="modal-product-description"></p>
+        <p id="modal-product-price"></p>
+        <div class="quantity-controls">
+          <button id="modal-decrease-qty">-</button>
+          <input type="text" id="modal-quantity" value="1" readonly />
+          <button id="modal-increase-qty">+</button>
+        </div>
+        <button id="add-to-cart-modal" class="add-to-cart-modal">Add to Cart</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  
+  // Setup modal event listeners
+  const closeModalBtn = modal.querySelector('.close-modal');
+  closeModalBtn.addEventListener('click', closeProductModal);
+  
   renderUserArea();
   renderCart();
   updateCartCount();
