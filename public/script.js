@@ -31,6 +31,11 @@ const cartTotalElem = document.getElementById('cart-total');
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 function getUserFromLocalStorage() {
+  // Set default language to English if not set
+  if (!localStorage.getItem('selectedLanguage')) {
+    localStorage.setItem('selectedLanguage', 'en');
+  }
+  
   const email = localStorage.getItem('email');
   if (email) {
     return { email };

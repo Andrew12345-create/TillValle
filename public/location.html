@@ -466,11 +466,60 @@
       });
     });
 
+    // Enhanced location tracking with watchPosition
+    function tryWatchPosition() {
+      showCartToast('🔄 Getting precise location...');
+      let bestAccuracy = Infinity;
+      let bestPosition = null;
+      let attempts = 0;
+      const maxAttempts = 10;
+      
+      const watchId = navigator.geolocation.watchPosition(async (position) => {
+        attempts++;
+        const accuracy = position.coords.accuracy;
+        
+        // Keep track of best position
+        if (accuracy < bestAccuracy) {
+          bestAccuracy = accuracy;
+          bestPosition = position;
+          
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          map.setView([lat, lng], 19);
+          marker.setLatLng([lat, lng]);
+          const address = await reverseGeocode(lat, lng);
+          document.getElementById('selected-location').value = address;
+          updateDeliveryFee(lat, lng);
+          showCartToast(`📍 Accuracy: ±${Math.round(accuracy)}m (attempt ${attempts})`);
+        }
+        
+        // Stop if we get very good accuracy or max attempts
+        if (accuracy <= 10 || attempts >= maxAttempts) {
+          navigator.geolocation.clearWatch(watchId);
+          showCartToast(`✅ Best location set! Final accuracy: ±${Math.round(bestAccuracy)}m`);
+        }
+      }, (error) => {
+        navigator.geolocation.clearWatch(watchId);
+        showCartToast('❌ Enhanced tracking failed. Please select manually.');
+      }, {
+        enableHighAccuracy: true,
+        timeout: 30000,
+        maximumAge: 0
+      });
+      
+      // Auto-stop after 45 seconds
+      setTimeout(() => {
+        navigator.geolocation.clearWatch(watchId);
+        if (bestPosition) {
+          showCartToast(`⏱️ Tracking complete. Best accuracy: ±${Math.round(bestAccuracy)}m`);
+        }
+      }, 45000);
+    }
+
     // Current location button
     document.getElementById('current-location-btn').addEventListener('click', () => {
-      showCartToast('📍 Getting your location...');
+      showCartToast('📍 Getting precise location...');
       if (navigator.geolocation) {
-        // Request high accuracy location
         navigator.geolocation.getCurrentPosition(async (position) => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
@@ -479,10 +528,35 @@
           const address = await reverseGeocode(lat, lng);
           document.getElementById('selected-location').value = address;
           updateDeliveryFee(lat, lng);
-          showCartToast('✅ Exact location set successfully!');
+          const accuracy = position.coords.accuracy;
+          showCartToast(`✅ Location set! Accuracy: ±${Math.round(accuracy)} meters`);
+          
+          // If accuracy is poor, suggest using enhanced tracking
+          if (accuracy > 100) {
+            setTimeout(() => {
+              showCartToast('💡 For better accuracy, we\'ll try enhanced tracking...');
+              tryWatchPosition();
+            }, 2000);
+          }
         }, (error) => {
           console.error('Geolocation error:', error);
-          showCartToast('❌ Unable to get location. Please enable location services or select manually.');
+          let errorMsg = '❌ Location error: ';
+          switch(error.code) {
+            case error.PERMISSION_DENIED:
+              errorMsg += 'Please allow location access in your browser';
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorMsg += 'Location unavailable. Try moving to an open area';
+              break;
+            case error.TIMEOUT:
+              errorMsg += 'Location request timed out. Trying again...';
+              // Retry with watchPosition for better accuracy
+              tryWatchPosition();
+              return;
+            default:
+              errorMsg += 'Unknown error. Please select manually';
+          }
+          showCartToast(errorMsg);
         }, {
           enableHighAccuracy: true,
           timeout: 10000,

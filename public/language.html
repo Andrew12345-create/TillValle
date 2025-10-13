@@ -94,7 +94,11 @@
   <script src="script.js" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+      // Set default language to English if not set
+      if (!localStorage.getItem('selectedLanguage')) {
+        localStorage.setItem('selectedLanguage', 'en');
+      }
+      const currentLang = localStorage.getItem('selectedLanguage');
       
       // Update status indicators
       document.querySelectorAll('.language-status').forEach(status => {
