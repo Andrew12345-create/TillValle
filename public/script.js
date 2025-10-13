@@ -112,14 +112,22 @@ function updateCartCount() {
   }
 }
 
-function showCartToast(message) {
+function showCartToast(message, isError = false) {
   const cartToast = document.getElementById('cart-toast');
   if (!cartToast) return;
-  cartToast.textContent = message;
+  
+  cartToast.classList.remove('show', 'error');
+  cartToast.innerHTML = `<span>${message}</span>`;
+  
+  if (isError) {
+    cartToast.classList.add('error');
+  }
+  
   cartToast.classList.add('show');
+  
   setTimeout(() => {
     cartToast.classList.remove('show');
-  }, 2000);
+  }, 3000);
 }
 
 function renderCart() {
@@ -242,6 +250,7 @@ const increaseQtyBtn = document.getElementById('modal-increase-qty');
 let currentProduct = null;
 
 window.openProductModal = function(name, description, imageSrc, price) {
+  console.log('Opening modal for:', name); // Debug log
   const stockStatus = JSON.parse(localStorage.getItem('productStock')) || {};
   const productMapping = {
     'Milk': 'milk',
@@ -309,6 +318,7 @@ window.openProductModal = function(name, description, imageSrc, price) {
 
   quantityInput.value = 1;
   modal.style.display = 'block';
+  console.log('Modal should be visible now'); // Debug log
 };
 
 function closeProductModal() {
@@ -337,7 +347,7 @@ increaseQtyBtn.addEventListener('click', () => {
 
 addToCartModalBtn.addEventListener('click', () => {
   if (!user || !user.email) {
-    showCartToast("Please log in to add items to cart");
+    showCartToast("Please log in to add items to cart", true);
     setTimeout(() => {
       window.location.href = 'login.html';
     }, 2000);
@@ -354,15 +364,16 @@ addToCartModalBtn.addEventListener('click', () => {
     }
     saveCart();
     renderCart();
+    updateCartCount();
     closeProductModal();
-    showCartToast(`${currentProduct.name} added to cart`);
+    showCartToast(`${currentProduct.name} added to cart!`);
   }
 });
 
 // Add product to cart from product cards without modal (fallback)
 window.addToCart = function(name, price) {
   if (!user || !user.email) {
-    showCartToast("Please log in to add items to cart");
+    showCartToast("Please log in to add items to cart", true);
     setTimeout(() => {
       window.location.href = 'login.html';
     }, 2000);
@@ -405,7 +416,7 @@ window.addToCart = function(name, price) {
   };
   const productId = productMapping[name];
   if (productId && stockStatus[productId] <= 0) {
-    showCartToast('Sorry, this item is currently out of stock. We apologize for the inconvenience.');
+    showCartToast('Sorry, this item is currently out of stock. We apologize for the inconvenience.', true);
     return;
   }
   const existingItem = cart.find(item => item.name === name);
@@ -416,7 +427,8 @@ window.addToCart = function(name, price) {
   }
   saveCart();
   renderCart();
-  showCartToast(`${name} added to cart`);
+  updateCartCount();
+  showCartToast(`${name} added to cart!`);
 };
 
 // Floating cart button click to open cart page
