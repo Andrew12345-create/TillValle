@@ -250,17 +250,30 @@
         try {
           const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
           const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/.netlify/functions/chatbot';
+          const currentLang = localStorage.getItem('selectedLanguage') || 'en';
           const response = await fetch(chatbotUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message })
+            body: JSON.stringify({ message, language: currentLang })
           });
           const data = await response.json();
           if (loadingMessage) loadingMessage.remove();
           messagesDiv.innerHTML += `<div class="chatbot-message bot">${data.message}</div>`;
         } catch (error) {
           if (loadingMessage) loadingMessage.remove();
-          messagesDiv.innerHTML += `<div class="chatbot-message bot">Hello! Welcome to TillValle! I'm running in offline mode.</div>`;
+          const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+          const offlineResponses = {
+            en: { human: "I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com.", default: "Hello! Welcome to TillValle! I'm running in offline mode." },
+            sw: { human: "Nitakuunganisha na wakala wetu Angela Wanjiru kwa angelawanjiru@gmail.com.", default: "Hujambo! Karibu TilleValle! Ninafanya kazi nje ya mtandao." },
+            fr: { human: "Je vais vous connecter avec notre agent Angela Wanjiru à angelawanjiru@gmail.com.", default: "Bonjour! Bienvenue chez TilleValle! Je fonctionne en mode hors ligne." },
+            zh: { human: "我将为您联系客服代表 Angela Wanjiru，邮箱：angelawanjiru@gmail.com。", default: "您好！欢迎来到 TilleValle！我正在离线模式下运行。" }
+          };
+          const responses = offlineResponses[currentLang] || offlineResponses.en;
+          if (message.toLowerCase().includes('human') || message.toLowerCase().includes('agent')) {
+            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.human}</div>`;
+          } else {
+            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.default}</div>`;
+          }
         }
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       }

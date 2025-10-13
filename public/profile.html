@@ -18,6 +18,7 @@
           a.appendChild(r);
       })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
   </script>
+  <script src="translations.js"></script>
   <script src="script.js" defer></script>
   <style>
     .profile-section h2 a {
@@ -41,13 +42,13 @@
         <a href="index.html" class="nav-link logo-link">
           <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
         </a>
-        <a href="shop.html" class="nav-link">Shop</a>
-        <a href="about.html" class="nav-link">About</a>
-        <a href="contact.html" class="nav-link">Contact</a>
+        <a href="shop.html" class="nav-link" data-translate="shop">Shop</a>
+        <a href="about.html" class="nav-link" data-translate="about">About</a>
+        <a href="contact.html" class="nav-link" data-translate="contact">Contact</a>
       </div>
       <div class="nav-right">
         <span id="user-area"></span>
-        <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
+        <a href="cart.html" class="nav-link">🛒 <span data-translate="cart">Cart</span> (<span id="cart-count">0</span>)</a>
       </div>
     </nav>
     <hr>
@@ -58,43 +59,43 @@
       <div class="profile-avatar">
         <span id="user-initial">U</span>
       </div>
-      <h1 id="profile-title">My Profile</h1>
-      <p id="user-email">Welcome back!</p>
+      <h1 id="profile-title" data-translate="myProfile">My Profile</h1>
+      <p id="user-email" data-translate="welcomeBack">Welcome back!</p>
     </div>
     
     <div class="profile-grid">
       <div class="profile-card" onclick="window.location.href='account.html'">
         <div class="card-icon">👤</div>
-        <h3>Account Settings</h3>
-        <p>Manage your personal information and preferences</p>
+        <h3 data-translate="accountSettings">Account Settings</h3>
+        <p data-translate="managePersonalInfo">Manage your personal information and preferences</p>
         <div class="card-arrow">→</div>
       </div>
 
       <div class="profile-card" onclick="window.location.href='orderhistory.html'">
         <div class="card-icon">📦</div>
-        <h3>Order History</h3>
-        <p>View your past orders and track deliveries</p>
+        <h3 data-translate="orderHistory">Order History</h3>
+        <p data-translate="viewPastOrders">View your past orders and track deliveries</p>
         <div class="card-arrow">→</div>
       </div>
 
       <div class="profile-card" onclick="window.location.href='faq.html'">
         <div class="card-icon">❓</div>
-        <h3>Help & FAQ</h3>
-        <p>Get answers to frequently asked questions</p>
+        <h3 data-translate="helpFaq">Help & FAQ</h3>
+        <p data-translate="getFaqAnswers">Get answers to frequently asked questions</p>
         <div class="card-arrow">→</div>
       </div>
 
       <div class="profile-card" onclick="window.location.href='language.html'">
         <div class="card-icon">🌐</div>
-        <h3>Language</h3>
-        <p>Choose your preferred language</p>
+        <h3 data-translate="language">Language</h3>
+        <p data-translate="chooseLanguage">Choose your preferred language</p>
         <div class="card-arrow">→</div>
       </div>
 
       <div class="profile-card logout-card" id="logout-card">
         <div class="card-icon">🚪</div>
-        <h3>Logout</h3>
-        <p>Sign out of your account</p>
+        <h3 data-translate="logout">Logout</h3>
+        <p data-translate="signOut">Sign out of your account</p>
         <div class="card-arrow">→</div>
       </div>
     </div>
@@ -137,14 +138,14 @@
           initial;
         let adminLink = '';
         if (userEmail === 'andrewmunamwangi@gmail.com') {
-          adminLink = `<a href="admin.html" class="nav-link">Admin</a>`;
+          adminLink = `<a href="admin.html" class="nav-link" data-translate="admin">Admin</a>`;
         }
         userArea.innerHTML = `
           <div class="user-dropdown-container">
             <span class="user-initial" onclick="toggleUserDropdown()" title="${userEmail}">${userDisplay}</span>
             <div class="user-dropdown" id="user-dropdown">
-              <a href="profile.html">Profile</a>
-              <a href="#" class="logout-btn" onclick="logout()">Logout</a>
+              <a href="profile.html" data-translate="profile">Profile</a>
+              <a href="#" class="logout-btn" onclick="logout()" data-translate="logout">Logout</a>
             </div>
           </div>
           ${adminLink}
@@ -268,7 +269,96 @@
           messagesDiv.innerHTML += `<div class="chatbot-message bot">${data.message}</div>`;
         } catch (error) {
           if (loadingMessage) loadingMessage.remove();
-          messagesDiv.innerHTML += `<div class="chatbot-message bot">Hello! Welcome to TillValle! I'm running in offline mode.</div>`;
+          if (message.toLowerCase().includes('human') || message.toLowerCase().includes('agent')) {
+            messagesDiv.innerHTML += `<div class="chatbot-message bot">I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com. She's available to provide real-time assistance with your TillValle needs!</div>`;
+          } else {
+            messagesDiv.innerHTML += `<div class="chatbot-message bot">Hello! Welcome to TillValle! I'm running in offline mode.</div>`;
+          }
+        }
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
+    });
+  </script>
+
+  <!-- Toast -->
+  <div id="cart-toast"></div>
+
+  <!-- Chatbot Sidebar -->
+  <div id="chatbot-sidebar" class="chatbot-sidebar">
+    <div class="chatbot-header">
+      <span>TillieBot</span>
+      <button id="chatbot-close" class="chatbot-close">&times;</button>
+    </div>
+    <div id="chatbot-messages" class="chatbot-messages">
+      <div class="chatbot-message bot">
+        Hello! I'm TillieBot, your TillValle assistant. 🌱 I can help you with:<br><br>
+        • Product information & stock levels<br>
+        • Delivery pricing for your location<br>
+        • Order assistance<br><br>
+        For live chat with a human agent, just ask! How can I help you today?
+      </div>
+    </div>
+    <div class="chatbot-input-area">
+      <div class="chatbot-input-container">
+        <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Type your message...">
+        <button id="chatbot-send" class="chatbot-send">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Chatbot Button -->
+  <div id="floating-chatbot-btn" class="floating-chatbot-btn">
+    <span class="chatbot-emoji">💬</span>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 TilleValle. All rights reserved.</p>
+  </footer>
+</body>
+</html>) {
+        chatbotClose.addEventListener('click', () => {
+          if (chatbotSidebar) chatbotSidebar.classList.remove('open');
+          if (floatingChatbotBtn) floatingChatbotBtn.style.display = 'flex';
+        });
+      }
+      if (chatbotSend) {
+        chatbotSend.addEventListener('click', sendMessage);
+      }
+      if (chatbotInput) {
+        chatbotInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') sendMessage();
+        });
+      }
+      
+      async function sendMessage() {
+        const message = chatbotInput.value.trim();
+        if (!message) return;
+        
+        const messagesDiv = document.getElementById('chatbot-messages');
+        messagesDiv.innerHTML += `<div class="chatbot-message user">${message}</div>`;
+        chatbotInput.value = '';
+        messagesDiv.innerHTML += `<div class="chatbot-message bot">Thinking...</div>`;
+        const loadingMessage = messagesDiv.lastElementChild;
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        
+        try {
+          const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+          const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/.netlify/functions/chatbot';
+          const response = await fetch(chatbotUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message })
+          });
+          const data = await response.json();
+          if (loadingMessage) loadingMessage.remove();
+          messagesDiv.innerHTML += `<div class="chatbot-message bot">${data.message}</div>`;
+        } catch (error) {
+          if (loadingMessage) loadingMessage.remove();
+          if (message.toLowerCase().includes('human') || message.toLowerCase().includes('agent')) {
+            messagesDiv.innerHTML += `<div class="chatbot-message bot">I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com. She's available to provide real-time assistance with your TillValle needs!</div>`;
+          } else {
+            messagesDiv.innerHTML += `<div class="chatbot-message bot">Hello! Welcome to TillValle! I'm running in offline mode.</div>`;
+          }
         }
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       }

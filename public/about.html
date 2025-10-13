@@ -231,7 +231,11 @@
           messagesDiv.innerHTML += `<div class="chatbot-message bot">${data.message}</div>`;
         } catch (error) {
           if (loadingMessage) loadingMessage.remove();
-          messagesDiv.innerHTML += `<div class="chatbot-message bot">Hello! Welcome to TillValle! I'm running in offline mode.</div>`;
+          if (message.toLowerCase().includes('human') || message.toLowerCase().includes('agent')) {
+            messagesDiv.innerHTML += `<div class="chatbot-message bot">I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com. She's available to provide real-time assistance with your TillValle needs!</div>`;
+          } else {
+            messagesDiv.innerHTML += `<div class="chatbot-message bot">Hello! Welcome to TillValle! I'm running in offline mode.</div>`;
+          }
         }
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       }

@@ -825,4 +825,4 @@ window.addEventListener('resize', () => {
   }
 }
 
-// Other existing code unchanged...
+

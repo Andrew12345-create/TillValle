@@ -42,13 +42,13 @@
     <a href="index.html" class="nav-link logo-link">
       <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
     </a>
-    <a href="shop.html" class="nav-link">Shop</a>
-    <a href="about.html" class="nav-link">About</a>
-    <a href="contact.html" class="nav-link">Contact</a>
+    <a href="shop.html" class="nav-link" data-translate="shop">Shop</a>
+    <a href="about.html" class="nav-link" data-translate="about">About</a>
+    <a href="contact.html" class="nav-link" data-translate="contact">Contact</a>
   </div>
   <div class="nav-right">
     <span id="user-area"></span>
-    <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
+    <a href="cart.html" class="nav-link">🛒 <span data-translate="cart">Cart</span> (<span id="cart-count">0</span>)</a>
   </div>
 </nav>
 <hr>
@@ -57,18 +57,18 @@
 
   <main>
     <section class="hero">
-      <h1>Welcome to <span>TilleValle</span></h1>
-      <p>Fresh eggs, butter, greens, and herbs — from our farms in Gilgil staight to your table.</p>
-      <a href="shop.html" class="btn">Shop Now</a>
+      <h1><span data-translate="welcome">Welcome to</span> <span>TilleValle</span></h1>
+      <p data-translate="freshProduce">Fresh eggs, butter, greens, and herbs — from our farms in Gilgil staight to your table.</p>
+      <a href="shop.html" class="btn" data-translate="shopNow">Shop Now</a>
     </section>
     
     <!-- About Preview Section -->
     <section class="about-preview animated fadeIn">
-      <a href="about.html"><h2>About Us</h2></a>
+      <a href="about.html"><h2 data-translate="aboutUs">About Us</h2></a>
       <p>
         TilleValle was founded by our dedicated team with a mission to deliver healthy, fresh, and organic farm products to families in Kenya. Our journey began when our visionary founders recognized a need for sustainable produce...
       </p>
-      <a href="about.html" class="btn">Read More</a>
+      <a href="about.html" class="btn" data-translate="readMore">Read More</a>
     </section>
 
   </main>
@@ -108,6 +108,7 @@
     <span class="chatbot-emoji">💬</span>
   </div>
 
+  <script src="translations.js"></script>
   <script src="script.js" defer></script>
   <script>
     // Hide loading screen when page loads
@@ -201,17 +202,30 @@
         try {
           const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
           const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/.netlify/functions/chatbot';
+          const currentLang = localStorage.getItem('selectedLanguage') || 'en';
           const response = await fetch(chatbotUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message })
+            body: JSON.stringify({ message, language: currentLang })
           });
           const data = await response.json();
           if (loadingMessage) loadingMessage.remove();
           messagesDiv.innerHTML += `<div class="chatbot-message bot">${data.message}</div>`;
         } catch (error) {
           if (loadingMessage) loadingMessage.remove();
-          messagesDiv.innerHTML += `<div class="chatbot-message bot">Hello! Welcome to TillValle! I'm running in offline mode.</div>`;
+          const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+          const offlineResponses = {
+            en: { human: "I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com.", default: "Hello! Welcome to TilleValle! I'm running in offline mode." },
+            sw: { human: "Nitakuunganisha na wakala wetu Angela Wanjiru kwa angelawanjiru@gmail.com.", default: "Hujambo! Karibu TilleValle! Ninafanya kazi nje ya mtandao." },
+            fr: { human: "Je vais vous connecter avec notre agent Angela Wanjiru à angelawanjiru@gmail.com.", default: "Bonjour! Bienvenue chez TilleValle! Je fonctionne en mode hors ligne." },
+            zh: { human: "我将为您联系客服代表 Angela Wanjiru，邮箱：angelawanjiru@gmail.com。", default: "您好！欢迎来到 TilleValle！我正在离线模式下运行。" }
+          };
+          const responses = offlineResponses[currentLang] || offlineResponses.en;
+          if (message.toLowerCase().includes('human') || message.toLowerCase().includes('agent')) {
+            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.human}</div>`;
+          } else {
+            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.default}</div>`;
+          }
         }
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       }

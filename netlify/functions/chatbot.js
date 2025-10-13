@@ -109,8 +109,42 @@ const responses = {
   ]
 };
 
-async function getResponse(message, isAdmin = false) {
+async function getResponse(message, isAdmin = false, language = 'en') {
   const lowerMessage = message.toLowerCase();
+  
+  // Chatbot responses in multiple languages
+  const chatbotTranslations = {
+    en: {
+      greeting: "Hello! Welcome to TilleValle! How can I help you with fresh produce delivery today?",
+      products: "We offer fresh products: fruits, vegetables, dairy, and herbs from local Kenyan farmers!",
+      delivery: "Same-day delivery across Nairobi for orders before 2 PM. Delivery fees start from KES 200.",
+      liveChat: "I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com. She's available to provide real-time assistance!",
+      default: "I'm here to help with information about our fresh produce, delivery, payments, or ordering. What would you like to know?"
+    },
+    sw: {
+      greeting: "Hujambo! Karibu TilleValle! Ninawezaje kukusaidia na utoaji wa mazao safi leo?",
+      products: "Tunauza mazao safi: matunda, mboga, maziwa, na viungo kutoka kwa wakulima wa Kenya!",
+      delivery: "Utoaji siku moja Nairobi kwa maagizo kabla ya saa 2 mchana. Ada za utoaji kuanzia KES 200.",
+      liveChat: "Nitakuunganisha na wakala wetu wa mazungumzo ya moja kwa moja Angela Wanjiru kwa angelawanjiru@gmail.com. Yupo tayari kutoa msaada!",
+      default: "Nipo hapa kusaidia na taarifa kuhusu mazao yetu safi, utoaji, malipo, au kuagiza. Ungependa kujua nini?"
+    },
+    fr: {
+      greeting: "Bonjour! Bienvenue chez TilleValle! Comment puis-je vous aider avec la livraison de produits frais aujourd'hui?",
+      products: "Nous offrons des produits frais: fruits, légumes, produits laitiers et herbes des fermiers kényans!",
+      delivery: "Livraison le jour même à Nairobi pour les commandes avant 14h. Frais de livraison à partir de 200 KES.",
+      liveChat: "Je vais vous connecter avec notre agent de chat en direct Angela Wanjiru à angelawanjiru@gmail.com. Elle est disponible pour une assistance en temps réel!",
+      default: "Je suis là pour vous aider avec des informations sur nos produits frais, livraison, paiements ou commandes. Que souhaitez-vous savoir?"
+    },
+    zh: {
+      greeting: "您好！欢迎来到 TilleValle！今天我如何帮助您订购新鲜农产品？",
+      products: "我们提供新鲜产品：来自肯尼亚当地农民的水果、蔬菜、乳制品和香草！",
+      delivery: "内罗毕地区下午2点前下单可当日送达。配送费从200肯尼亚先令起。",
+      liveChat: "我将为您联系我们的在线客服代表 Angela Wanjiru，邮箱：angelawanjiru@gmail.com。她可以提供实时帮助！",
+      default: "我在这里帮助您了解我们的新鲜农产品、配送、付款或订购信息。您想了解什么？"
+    }
+  };
+  
+  const responses = chatbotTranslations[language] || chatbotTranslations.en;
 
   // Check for location-based delivery pricing queries
   if (lowerMessage.includes('delivery') || lowerMessage.includes('cost') || lowerMessage.includes('price') || lowerMessage.includes('how much') || lowerMessage.includes('location')) {
@@ -137,7 +171,7 @@ async function getResponse(message, isAdmin = false) {
 
   // Check for live chat requests
   if (lowerMessage.includes('live chat') || lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('real person') || lowerMessage.includes('angela') || lowerMessage.includes('talk to someone') || lowerMessage.includes('speak to')) {
-    return "I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com. She's available to provide real-time assistance with your TillValle needs!";
+    return responses.liveChat;
   }
 
   // Check if user typed just a product name
@@ -232,16 +266,16 @@ async function getResponse(message, isAdmin = false) {
   }
 
   // Check for keywords and return appropriate response
-  if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
-    return responses.greeting[Math.floor(Math.random() * responses.greeting.length)];
+  if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey') || lowerMessage.includes('hujambo') || lowerMessage.includes('bonjour') || lowerMessage.includes('你好')) {
+    return responses.greeting;
   }
 
-  if (lowerMessage.includes('product') || lowerMessage.includes('fruit') || lowerMessage.includes('vegetable') || lowerMessage.includes('dairy') || lowerMessage.includes('herb')) {
-    return responses.products[Math.floor(Math.random() * responses.products.length)];
+  if (lowerMessage.includes('product') || lowerMessage.includes('fruit') || lowerMessage.includes('vegetable') || lowerMessage.includes('dairy') || lowerMessage.includes('herb') || lowerMessage.includes('mazao') || lowerMessage.includes('produit') || lowerMessage.includes('产品')) {
+    return responses.products;
   }
 
-  if (lowerMessage.includes('deliver') || lowerMessage.includes('shipping') || lowerMessage.includes('when') || lowerMessage.includes('time')) {
-    return responses.delivery[Math.floor(Math.random() * responses.delivery.length)];
+  if (lowerMessage.includes('deliver') || lowerMessage.includes('shipping') || lowerMessage.includes('when') || lowerMessage.includes('time') || lowerMessage.includes('utoaji') || lowerMessage.includes('livraison') || lowerMessage.includes('配送')) {
+    return responses.delivery;
   }
 
   if (lowerMessage.includes('pay') || lowerMessage.includes('payment') || lowerMessage.includes('mpesa') || lowerMessage.includes('card')) {
@@ -261,7 +295,7 @@ async function getResponse(message, isAdmin = false) {
   }
 
   // Default response
-  return responses.default[Math.floor(Math.random() * responses.default.length)];
+  return responses.default;
 }
 
 exports.handler = async (event, context) => {
@@ -279,7 +313,7 @@ exports.handler = async (event, context) => {
     const parsedBody = JSON.parse(event.body);
     console.log('Parsed request body:', parsedBody);
 
-    const { message, isAdmin } = parsedBody;
+    const { message, isAdmin, language } = parsedBody;
 
     if (!message) {
       return {
@@ -289,7 +323,7 @@ exports.handler = async (event, context) => {
     }
 
     // Get response based on message content
-    const botMessage = await getResponse(message, isAdmin || false);
+    const botMessage = await getResponse(message, isAdmin || false, language || 'en');
     console.log('Bot response:', botMessage);
 
     return {

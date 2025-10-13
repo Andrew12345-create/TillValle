@@ -1,4 +1,6 @@
-  /* ========= CONSOLIDATED STYLES - ALL CSS FILES MERGED & OPTIMIZED ========= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+/* ========= CONSOLIDATED STYLES - ALL CSS FILES MERGED & OPTIMIZED ========= */
 
 /* ========= LOADING SCREEN ========= */
 #loading-screen {
@@ -54,7 +56,6 @@
 }
 
 /* ========= GLOBAL RESET ========= */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 :root {
   /* Light Theme Colors */

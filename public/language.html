@@ -72,6 +72,15 @@
         </div>
         <div class="language-status" id="status-fr"></div>
       </div>
+
+      <div class="language-card" data-lang="zh">
+        <div class="language-flag">🇨🇳</div>
+        <div class="language-info">
+          <h3>中文</h3>
+          <p>中文语言</p>
+        </div>
+        <div class="language-status" id="status-zh"></div>
+      </div>
     </div>
   </main>
 
@@ -97,7 +106,7 @@
       document.querySelectorAll('.language-card').forEach(card => {
         card.addEventListener('click', function() {
           const lang = this.dataset.lang;
-          const langNames = { en: 'English', sw: 'Kiswahili', fr: 'Français' };
+          const langNames = { en: 'English', sw: 'Kiswahili', fr: 'Français', zh: '中文' };
           
           localStorage.setItem('selectedLanguage', lang);
           
@@ -107,13 +116,13 @@
           });
           document.getElementById(`status-${lang}`).textContent = '✓';
           
-          // Show toast
+          // Show toast and redirect to home
           const toast = document.getElementById('cart-toast');
           toast.textContent = `Language changed to ${langNames[lang]}`;
           toast.classList.add('show');
           setTimeout(() => {
-            toast.classList.remove('show');
-          }, 3000);
+            window.location.href = 'index.html';
+          }, 1000);
         });
       });
     });
