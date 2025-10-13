@@ -25,6 +25,11 @@
   </script>
 </head>
 <body>
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <img src="logo.jpg" alt="TilleValle" class="loading-logo">
+    <div class="loading-spinner"></div>
+  </div>
   <header>
     <nav class="navbar">
       <div class="nav-left">
@@ -97,7 +102,11 @@
     </div>
     <div id="chatbot-messages" class="chatbot-messages">
       <div class="chatbot-message bot">
-        Hello! I'm TillieBot, your TillValle assistant. How can I help you today? You can ask me about our fresh products, delivery, or anything else!
+        Hello! I'm TillieBot, your TillValle assistant. 🌱 I can help you with:<br><br>
+        • Product information & stock levels<br>
+        • Delivery pricing for your location<br>
+        • Order assistance<br><br>
+        For live chat with a human agent, just ask! How can I help you today?
       </div>
     </div>
     <div class="chatbot-input-area">
@@ -120,5 +129,113 @@
   </div>
 
   <script src="script.js" defer></script>
+  <script>
+    // Hide loading screen when page loads
+    window.addEventListener('load', function() {
+      const loadingScreen = document.getElementById('loading-screen');
+      if (loadingScreen) {
+        loadingScreen.classList.add('hidden');
+        setTimeout(() => loadingScreen.remove(), 800);
+      }
+    });
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      const userEmail = localStorage.getItem('email');
+      const userArea = document.getElementById('user-area');
+      if (userArea && userEmail) {
+        const initial = userEmail.charAt(0).toUpperCase();
+        const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
+        const userDisplay = profilePicture ? 
+          `<img src="${profilePicture}" alt="Profile" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">` : 
+          initial;
+        let adminLink = '';
+        if (userEmail === 'andrewmunamwangi@gmail.com') {
+          adminLink = `<a href="admin.html" class="nav-link">Admin</a>`;
+        }
+        userArea.innerHTML = `
+          <div class="user-dropdown-container">
+            <span class="user-initial" onclick="toggleUserDropdown()" title="${userEmail}">${userDisplay}</span>
+            <div class="user-dropdown" id="user-dropdown">
+              <a href="profile.html">Profile</a>
+              <a href="#" class="logout-btn" onclick="logout()">Logout</a>
+            </div>
+          </div>
+          ${adminLink}
+        `;
+      }
+      window.toggleUserDropdown = function() {
+        const dropdown = document.getElementById('user-dropdown');
+        if (dropdown) dropdown.classList.toggle('show');
+      };
+      window.logout = function() {
+        localStorage.removeItem('email');
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
+      };
+      document.addEventListener('click', (event) => {
+        const dropdown = document.getElementById('user-dropdown');
+        const container = document.querySelector('.user-dropdown-container');
+        if (dropdown && container && !container.contains(event.target)) {
+          dropdown.classList.remove('show');
+        }
+      });
+      // Chatbot functions
+      const floatingChatbotBtn = document.getElementById('floating-chatbot-btn');
+      const chatbotSidebar = document.getElementById('chatbot-sidebar');
+      const chatbotClose = document.getElementById('chatbot-close');
+      const chatbotSend = document.getElementById('chatbot-send');
+      const chatbotInput = document.getElementById('chatbot-input');
+      
+      if (floatingChatbotBtn) {
+        floatingChatbotBtn.addEventListener('click', () => {
+          if (chatbotSidebar) chatbotSidebar.classList.add('open');
+          floatingChatbotBtn.style.display = 'none';
+        });
+      }
+      if (chatbotClose) {
+        chatbotClose.addEventListener('click', () => {
+          if (chatbotSidebar) chatbotSidebar.classList.remove('open');
+          if (floatingChatbotBtn) floatingChatbotBtn.style.display = 'flex';
+        });
+      }
+      if (chatbotSend) {
+        chatbotSend.addEventListener('click', sendMessage);
+      }
+      if (chatbotInput) {
+        chatbotInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') sendMessage();
+        });
+      }
+      
+      async function sendMessage() {
+        const message = chatbotInput.value.trim();
+        if (!message) return;
+        
+        const messagesDiv = document.getElementById('chatbot-messages');
+        messagesDiv.innerHTML += `<div class="chatbot-message user">${message}</div>`;
+        chatbotInput.value = '';
+        messagesDiv.innerHTML += `<div class="chatbot-message bot">Thinking...</div>`;
+        const loadingMessage = messagesDiv.lastElementChild;
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        
+        try {
+          const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+          const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/.netlify/functions/chatbot';
+          const response = await fetch(chatbotUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message })
+          });
+          const data = await response.json();
+          if (loadingMessage) loadingMessage.remove();
+          messagesDiv.innerHTML += `<div class="chatbot-message bot">${data.message}</div>`;
+        } catch (error) {
+          if (loadingMessage) loadingMessage.remove();
+          messagesDiv.innerHTML += `<div class="chatbot-message bot">Hello! Welcome to TillValle! I'm running in offline mode.</div>`;
+        }
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
+    });
+  </script>
 </body>
 </html>

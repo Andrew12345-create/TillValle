@@ -10,6 +10,51 @@ const pool = new Pool({
   idleTimeoutMillis: 30000,
 });
 
+// Location-based delivery pricing
+const deliveryPricing = {
+  'nairobi town': 400,
+  'muthaiga north gardens balozi': 400,
+  'muthaiga': 400,
+  'westlands': 350,
+  'karen': 450,
+  'kilimani': 300,
+  'lavington': 350,
+  'kileleshwa': 300,
+  'parklands': 250,
+  'eastleigh': 200,
+  'kasarani': 300,
+  'thika road': 350,
+  'thika': 350,
+  'ngong road': 400,
+  'ngong': 400,
+  'langata': 450,
+  'embakasi': 300,
+  'donholm': 350,
+  'buruburu': 300,
+  'umoja': 250,
+  'kayole': 200,
+  'dandora': 200,
+  'githurai': 250,
+  'ruiru': 300,
+  'kiambu': 350,
+  'kikuyu': 400,
+  'runda': 450,
+  'gigiri': 400,
+  'spring valley': 350,
+  'upperhill': 350,
+  'hurlingham': 350,
+  'south b': 300,
+  'south c': 350,
+  'adams arcade': 350,
+  'kilimani': 300,
+  'riverside': 350,
+  'woodley': 300,
+  'dagoretti': 250,
+  'kawangware': 200,
+  'kibera': 200,
+  'mathare': 200
+};
+
 const responses = {
   greeting: [
     "Hello! Welcome to TillValle! How can I help you with fresh produce delivery today?",
@@ -24,9 +69,13 @@ const responses = {
   ],
 
   delivery: [
-    "We offer same-day delivery across Nairobi and surrounding areas for orders placed before 2 PM. Delivery fees start from KES 200 depending on your location.",
-    "Fast delivery service! Orders before 2 PM are delivered the same day. We cover Nairobi, Westlands, Karen, and nearby areas.",
-    "Same-day delivery available for orders placed before 2 PM. We deliver fresh produce right to your doorstep across Nairobi and surrounding areas."
+    "We offer same-day delivery across Nairobi and surrounding areas for orders placed before 2 PM. Delivery fees start from KES 200 depending on your location. Ask me about pricing for your specific location!",
+    "Fast delivery service! Orders before 2 PM are delivered the same day. We cover Nairobi, Westlands, Karen, and nearby areas. I can tell you the exact delivery cost for your area!",
+    "Same-day delivery available for orders placed before 2 PM. We deliver fresh produce right to your doorstep across Nairobi and surrounding areas. Just tell me your location for pricing!"
+  ],
+
+  liveChat: [
+    "I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com. She's available to provide real-time assistance with your TillValle needs!"
   ],
 
   payment: [
@@ -48,9 +97,9 @@ const responses = {
   ],
 
   contact: [
-    "You can reach our customer support at support@tillvalle.com or call us at +254 XXX XXX XXX. We're here to help!",
-    "Need help? Contact us at support@tillvalle.com or visit our contact page. Our team is ready to assist you!",
-    "For any questions or support, email us at support@tillvalle.com or use the contact form on our website."
+    "You can reach our customer support at support@tillvalle.com. For real-time chat with a human agent, contact Angela at angelawanjiru@gmail.com. We're here to help!",
+    "Need help? Contact us at support@tillvalle.com or for live chat support, reach Angela at angelawanjiru@gmail.com. Our team is ready to assist you!",
+    "For any questions or support, email us at support@tillvalle.com. For immediate assistance, contact Angela Wanjiru at angelawanjiru@gmail.com."
   ],
 
   default: [
@@ -62,6 +111,34 @@ const responses = {
 
 async function getResponse(message, isAdmin = false) {
   const lowerMessage = message.toLowerCase();
+
+  // Check for location-based delivery pricing queries
+  if (lowerMessage.includes('delivery') || lowerMessage.includes('cost') || lowerMessage.includes('price') || lowerMessage.includes('how much') || lowerMessage.includes('location')) {
+    // Look for location mentions in the message
+    const locations = Object.keys(deliveryPricing);
+    const mentionedLocation = locations.find(location => lowerMessage.includes(location));
+    
+    if (mentionedLocation) {
+      const price = deliveryPricing[mentionedLocation];
+      const locationName = mentionedLocation.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+      return `🚚 Delivery to ${locationName} costs KES ${price}. We offer same-day delivery for orders placed before 2 PM!\n\nExample: Nairobi Town to Muthaiga North Gardens Balozi = KES 400 ✅`;
+    } else if (lowerMessage.includes('nairobi') || lowerMessage.includes('area') || lowerMessage.includes('where')) {
+      return `📍 Here are our delivery rates for popular areas:\n\n` +
+             `• Nairobi Town: KES 400\n` +
+             `• Westlands: KES 350\n` +
+             `• Karen: KES 450\n` +
+             `• Kilimani: KES 300\n` +
+             `• Parklands: KES 250\n` +
+             `• Eastleigh: KES 200\n` +
+             `• Muthaiga: KES 400\n\n` +
+             `💡 Just tell me your specific location (e.g., "How much to Westlands?") and I'll give you the exact delivery cost!`;
+    }
+  }
+
+  // Check for live chat requests
+  if (lowerMessage.includes('live chat') || lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('real person') || lowerMessage.includes('angela') || lowerMessage.includes('talk to someone') || lowerMessage.includes('speak to')) {
+    return "I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com. She's available to provide real-time assistance with your TillValle needs!";
+  }
 
   // Check if user typed just a product name
   const products = ['milk', 'eggs', 'butter', 'apples', 'mangoes', 'kales', 'spinach', 'basil', 'mint', 'bananas', 'avocados', 'chicken', 'ghee', 'coriander', 'parsley', 'lettuce', 'managu', 'terere', 'salgaa'];

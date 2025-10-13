@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Language - TilleValle</title>
+  <title>Language Settings - TilleValle</title>
   <link rel="icon" href="logo.jpg" type="image/jpeg">
   <link rel="stylesheet" href="styles.css">
 
@@ -26,7 +26,6 @@
         <a href="index.html" class="nav-link logo-link">
           <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
         </a>
-        <a href="index.html" class="nav-link">Home</a>
         <a href="shop.html" class="nav-link">Shop</a>
         <a href="about.html" class="nav-link">About</a>
         <a href="contact.html" class="nav-link">Contact</a>
@@ -40,83 +39,84 @@
   </header>
 
   <main class="profile-container">
-    <h1><a href="account.html" class="back-link">← Back to Account</a></h1>
-    
-    <section class="language-section">
+    <div class="profile-header">
+      <h1><a href="profile.html" class="back-link">← Back to Profile</a></h1>
       <h2>Language Settings</h2>
-      <form id="language-form">
-        <div class="profile-field">
-          <label for="language-select">Select Language:</label>
-          <select id="language-select" class="language-select">
-            <option value="en">English</option>
-            <option value="es">Spanish</option>
-            <option value="fr">French</option>
-            <option value="zh">Chinese</option>
-          </select>
-          <button type="button" id="save-language-btn">Save</button>
+      <p>Choose your preferred language for the TillValle experience</p>
+    </div>
+    
+    <div class="language-options">
+      <div class="language-card" data-lang="en">
+        <div class="language-flag">🇺🇸</div>
+        <div class="language-info">
+          <h3>English</h3>
+          <p>Default language</p>
         </div>
-      </form>
-    </section>
+        <div class="language-status" id="status-en">✓</div>
+      </div>
+
+      <div class="language-card" data-lang="sw">
+        <div class="language-flag">🇰🇪</div>
+        <div class="language-info">
+          <h3>Kiswahili</h3>
+          <p>Lugha ya Kiswahili</p>
+        </div>
+        <div class="language-status" id="status-sw"></div>
+      </div>
+
+      <div class="language-card" data-lang="fr">
+        <div class="language-flag">🇫🇷</div>
+        <div class="language-info">
+          <h3>Français</h3>
+          <p>Langue française</p>
+        </div>
+        <div class="language-status" id="status-fr"></div>
+      </div>
+    </div>
   </main>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const languageSelect = document.getElementById('language-select');
-      const saveBtn = document.getElementById('save-language-btn');
-
-      // Load saved language preference
-      const savedLang = localStorage.getItem('preferredLanguage') || 'en';
-      languageSelect.value = savedLang;
-
-      saveBtn.addEventListener('click', () => {
-        const selectedLang = languageSelect.value;
-        localStorage.setItem('preferredLanguage', selectedLang);
-        alert('Language preference saved!');
-        // Redirect to home page after saving language preference
-        window.location.href = 'index.html';
-      });
-
-      // Optional: Apply language changes immediately on this page if needed
-      // This requires additional i18n implementation which is not included here
-    });
-  </script>
-
-  <!-- Toast -->
-  <div id="cart-toast"></div>
-
-  <!-- Chatbot Sidebar -->
-  <div id="chatbot-sidebar" class="chatbot-sidebar">
-    <div class="chatbot-header">
-      <span>TillieBot</span>
-      <button id="chatbot-close" class="chatbot-close">&times;</button>
-    </div>
-    <div id="chatbot-messages" class="chatbot-messages">
-      <div class="chatbot-message bot">
-        Hello! I'm TillieBot, your TillValle assistant. How can I help you today? You can ask me about our fresh products, delivery, or anything else!
-      </div>
-    </div>
-    <div class="chatbot-input-area">
-      <div class="chatbot-input-container">
-        <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Type your message...">
-        <button id="chatbot-send" class="chatbot-send">➤</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Floating Chatbot Button -->
-  <div id="floating-chatbot-btn" class="floating-chatbot-btn">
-    <span class="chatbot-emoji">💬</span>
-  </div>
-
-  <!-- Floating Cart Button -->
-  <div id="floating-cart-btn" class="floating-cart-btn">
-    <span class="cart-emoji">🛒</span>
-    <span id="floating-cart-count" class="floating-cart-count">0</span>
-  </div>
-
-  <script src="script.js" defer></script>
 
   <footer>
     <p>&copy; 2025 TilleValle. All rights reserved.</p>
   </footer>
+
+  <!-- Toast -->
+  <div id="cart-toast"></div>
+
+  <script src="script.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+      
+      // Update status indicators
+      document.querySelectorAll('.language-status').forEach(status => {
+        status.textContent = '';
+      });
+      document.getElementById(`status-${currentLang}`).textContent = '✓';
+      
+      // Add click handlers
+      document.querySelectorAll('.language-card').forEach(card => {
+        card.addEventListener('click', function() {
+          const lang = this.dataset.lang;
+          const langNames = { en: 'English', sw: 'Kiswahili', fr: 'Français' };
+          
+          localStorage.setItem('selectedLanguage', lang);
+          
+          // Update status indicators
+          document.querySelectorAll('.language-status').forEach(status => {
+            status.textContent = '';
+          });
+          document.getElementById(`status-${lang}`).textContent = '✓';
+          
+          // Show toast
+          const toast = document.getElementById('cart-toast');
+          toast.textContent = `Language changed to ${langNames[lang]}`;
+          toast.classList.add('show');
+          setTimeout(() => {
+            toast.classList.remove('show');
+          }, 3000);
+        });
+      });
+    });
+  </script>
 </body>
 </html>

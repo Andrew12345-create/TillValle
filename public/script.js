@@ -25,16 +25,21 @@ function saveUser() {
 function renderUserArea() {
   const userArea = document.getElementById('user-area');
   if (!userArea) return;
-  user = getUserFromLocalStorage();
-  if (user && user.email) {
-    const initial = user.email.charAt(0).toUpperCase();
+  
+  const userEmail = localStorage.getItem('email');
+  if (userEmail) {
+    const initial = userEmail.charAt(0).toUpperCase();
+    const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
+    const userDisplay = profilePicture ? 
+      `<img src="${profilePicture}" alt="Profile" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">` : 
+      initial;
     let adminLink = '';
-    if (user.email === 'andrewmunamwangi@gmail.com') {
+    if (userEmail === 'andrewmunamwangi@gmail.com') {
       adminLink = `<a href="admin.html" class="nav-link">Admin</a>`;
     }
     userArea.innerHTML = `
       <div class="user-dropdown-container">
-        <span class="user-initial" onclick="toggleUserDropdown()" title="${user.email}">${initial}</span>
+        <span class="user-initial" onclick="toggleUserDropdown()" title="${userEmail}">${userDisplay}</span>
         <div class="user-dropdown" id="user-dropdown">
           <a href="profile.html">Profile</a>
           <a href="#" class="logout-btn" onclick="logout()">Logout</a>
@@ -46,6 +51,15 @@ function renderUserArea() {
     userArea.innerHTML = `<a href="login.html" class="nav-link">Login</a>`;
   }
 }
+
+// Force render navbar immediately and on DOM load
+function forceRenderNavbar() {
+  setTimeout(() => {
+    renderUserArea();
+  }, 50);
+}
+
+forceRenderNavbar();
 
 function toggleUserDropdown() {
   const dropdown = document.getElementById('user-dropdown');
@@ -64,6 +78,10 @@ function logout() {
     window.location.href = 'index.html';
   }, 2000);
 }
+
+// Make functions globally available
+window.toggleUserDropdown = toggleUserDropdown;
+window.logout = logout;
 
 // Close dropdown when clicking outside
 document.addEventListener('click', (event) => {
@@ -576,14 +594,16 @@ window.toggleStock = async function(productId, currentQuantity) {
   }
 };
 
-renderUserArea();
-renderCart();
-updateCartCount();
-
-// Fetch stock on page load for product overlays
+// Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
+  renderUserArea();
+  renderCart();
+  updateCartCount();
   await fetchStock();
 });
+
+// Also call renderUserArea immediately for pages that load script.js after DOM
+renderUserArea();
 
 // Search functionality for shop.html
 function filterProducts(searchTerm) {
@@ -699,7 +719,8 @@ function showChatbotSidebar() {
   if (chatbotSidebar) {
     chatbotSidebar.classList.add('open');
   }
-  if (floatingChatbotBtn) {
+  // On mobile, hide the floating button when chatbot is open
+  if (floatingChatbotBtn && window.innerWidth <= 480) {
     floatingChatbotBtn.style.display = 'none';
   }
 }
@@ -791,6 +812,17 @@ if (chatbotInput) {
   chatbotInput.addEventListener('touchstart', () => {
     chatbotInput.style.fontSize = '16px';
   });
+}
+
+// Handle window resize for chatbot button visibility
+window.addEventListener('resize', () => {
+  if (chatbotSidebar && chatbotSidebar.classList.contains('open') && window.innerWidth <= 480) {
+    if (floatingChatbotBtn) {
+      floatingChatbotBtn.style.display = 'none';
+    }
+  } else if (floatingChatbotBtn && !chatbotSidebar.classList.contains('open')) {
+    floatingChatbotBtn.style.display = 'flex';
+  }
 }
 
 // Other existing code unchanged...
