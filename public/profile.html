@@ -71,6 +71,13 @@
         <div class="card-arrow">→</div>
       </div>
 
+      <div class="profile-card" onclick="window.location.href='location.html'">
+        <div class="card-icon">🏠</div>
+        <h3>Home Location</h3>
+        <p id="home-location-display">No home location set</p>
+        <div class="card-arrow">→</div>
+      </div>
+
       <div class="profile-card" onclick="window.location.href='orderhistory.html'">
         <div class="card-icon">📦</div>
         <h3 data-translate="orderHistory">Order History</h3>
@@ -126,6 +133,16 @@
         }
         document.getElementById('profile-title').textContent = `Hello, ${userName}`;
         document.getElementById('user-email').textContent = userEmail;
+        
+        // Load and display home location
+        const savedLocations = JSON.parse(localStorage.getItem(`savedLocations_${userEmail}`)) || [];
+        const homeLocation = savedLocations.find(loc => loc.type === 'Home');
+        const homeLocationDisplay = document.getElementById('home-location-display');
+        if (homeLocation) {
+          homeLocationDisplay.textContent = homeLocation.address;
+        } else {
+          homeLocationDisplay.textContent = 'No home location set';
+        }
       }
       
       // Manually populate navbar if renderUserArea doesn't work

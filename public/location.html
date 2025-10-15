@@ -404,8 +404,9 @@
       document.getElementById('final-total').textContent = `KES ${finalTotal}`;
       document.getElementById('delivery-fee-section').style.display = 'block';
       
-      // Hide free delivery notice since there's no free delivery
-      document.getElementById('free-delivery-notice').style.display = 'none';
+      // Hide free delivery notice since there's no free delivery (element doesn't exist, so skip)
+      const freeDeliveryNotice = document.getElementById('free-delivery-notice');
+      if (freeDeliveryNotice) freeDeliveryNotice.style.display = 'none';
       
       // Store delivery info for payment page
       localStorage.setItem('deliveryInfo', JSON.stringify({
@@ -625,43 +626,19 @@
       const userEmail = localStorage.getItem('email');
       if (!userEmail) return;
       
-      const savedLocations = JSON.parse(localStorage.getItem(`savedLocations_${userEmail}`)) || {};
+      const savedLocations = JSON.parse(localStorage.getItem(`savedLocations_${userEmail}`)) || [];
       const defaultLocation = localStorage.getItem(`defaultLocation_${userEmail}`);
       
-      if (Object.keys(savedLocations).length > 0) {
-        document.getElementById('saved-locations-section').style.display = 'block';
-        const list = document.getElementById('saved-locations-list');
-        list.innerHTML = '';
-        
-        Object.entries(savedLocations).forEach(([type, data]) => {
-          const btn = document.createElement('button');
-          btn.className = 'popular-location';
-          btn.style.margin = '5px';
-          btn.textContent = `${type === 'home' ? '🏠' : type === 'work' ? '🏢' : '📍'} ${type.charAt(0).toUpperCase() + type.slice(1)}`;
-          if (defaultLocation === type) btn.style.background = 'var(--accent-green)', btn.style.color = 'white';
-          
-          btn.onclick = () => {
-            map.setView([data.lat, data.lng], 15);
-            marker.setLatLng([data.lat, data.lng]);
-            document.getElementById('selected-location').value = data.address;
-            updateDeliveryFee(data.lat, data.lng);
-            showCartToast(`✅ ${type.charAt(0).toUpperCase() + type.slice(1)} location selected!`);
-          };
-          list.appendChild(btn);
-        });
-        
-        // Auto-select home location by default, or default location if set
-        const homeLocation = savedLocations['home'];
-        const locationToUse = defaultLocation && savedLocations[defaultLocation] ? savedLocations[defaultLocation] : homeLocation;
-        const locationName = defaultLocation && savedLocations[defaultLocation] ? defaultLocation : 'home';
-        
-        if (locationToUse) {
-          map.setView([locationToUse.lat, locationToUse.lng], 15);
-          marker.setLatLng([locationToUse.lat, locationToUse.lng]);
-          document.getElementById('selected-location').value = locationToUse.address;
-          updateDeliveryFee(locationToUse.lat, locationToUse.lng);
-          showCartToast(`🏠 Auto-selected ${locationName} location`);
-        }
+      // Auto-select home location by default, or default location if set
+      const homeLocation = savedLocations.find(loc => loc.type === 'Home');
+      const locationToUse = defaultLocation ? savedLocations.find(loc => loc.type === defaultLocation) : homeLocation;
+      
+      if (locationToUse) {
+        map.setView([locationToUse.lat, locationToUse.lng], 15);
+        marker.setLatLng([locationToUse.lat, locationToUse.lng]);
+        document.getElementById('selected-location').value = locationToUse.address;
+        updateDeliveryFee(locationToUse.lat, locationToUse.lng);
+        showCartToast(`🏠 Auto-selected ${locationToUse.type} location`);
       }
     }
     
@@ -673,7 +650,7 @@
     
     // Save location buttons
     document.querySelectorAll('.save-location-btn').forEach(btn => {
-      btn.onclick = () => {
+      btn.addEventListener('click', () => {
         const type = btn.dataset.type;
         const customInput = document.getElementById('custom-location-name');
         const confirmBtn = document.getElementById('save-location-confirm');
@@ -681,11 +658,16 @@
         if (type === 'other') {
           customInput.style.display = 'block';
           confirmBtn.style.display = 'block';
-          confirmBtn.onclick = () => saveLocation(customInput.value || 'other');
+          confirmBtn.addEventListener('click', () => {
+            const customName = customInput.value.trim() || 'Other';
+            saveLocation(customName);
+          });
         } else {
-          saveLocation(type);
+          // Capitalize first letter and save immediately
+          const capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
+          saveLocation(capitalizedType);
         }
-      };
+      });
     });
     
     function saveLocation(type) {
@@ -700,23 +682,28 @@
         return;
       }
       
-      const savedLocations = JSON.parse(localStorage.getItem(`savedLocations_${userEmail}`)) || {};
-      savedLocations[type] = {
+      const savedLocations = JSON.parse(localStorage.getItem(`savedLocations_${userEmail}`)) || [];
+      
+      // Remove existing location of same type
+      const filteredLocations = savedLocations.filter(loc => loc.type !== type);
+      
+      // Add new location
+      filteredLocations.push({
+        type: type,
         address: address,
         lat: position.lat,
         lng: position.lng
-      };
+      });
       
-      localStorage.setItem(`savedLocations_${userEmail}`, JSON.stringify(savedLocations));
-      
-      // Set as default if checkbox is checked
-      if (document.getElementById('set-default-location').checked) {
-        localStorage.setItem(`defaultLocation_${userEmail}`, type);
-      }
+      localStorage.setItem(`savedLocations_${userEmail}`, JSON.stringify(filteredLocations));
       
       showCartToast(`✅ Location saved as ${type}!`);
+      
+      // Hide the entire save location section
       document.getElementById('save-location-section').style.display = 'none';
-      loadSavedLocations();
+      document.getElementById('custom-location-name').style.display = 'none';
+      document.getElementById('save-location-confirm').style.display = 'none';
+      document.getElementById('custom-location-name').value = '';
     }
     
     // Load saved locations on page load
