@@ -43,7 +43,13 @@
 
     <div class="nav-right">
       <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
-      <span id="user-area"></span>
+      <a href="login.html" class="nav-link" id="login-btn">Login</a>
+      <span class="user-initial" id="profile-avatar" style="display:none;cursor:pointer;position:relative;" onclick="toggleDropdown()">A</span>
+      <a href="admin.html" class="nav-link" id="admin-btn" style="display:none;">Admin</a>
+      <div class="user-dropdown" id="user-dropdown" style="position:absolute;top:40px;right:0;background:var(--bg-secondary);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.1);min-width:120px;z-index:1200;display:none;border:1px solid rgba(255,255,255,0.2);">
+        <a href="profile.html" style="display:block;padding:10px 15px;color:var(--text-primary);text-decoration:none;font-size:14px;">Profile</a>
+        <a href="#" onclick="logout()" style="display:block;padding:10px 15px;color:#ef4444;text-decoration:none;font-size:14px;border-top:1px solid rgba(0,0,0,0.1);">Logout</a>
+      </div>
     </div>
   </nav>
   <hr />
@@ -315,6 +321,7 @@
     // Update counter when page loads
     updateCartCounter();
   </script>
+  <script src="navbar-universal.js"></script>
   <script src="script.js" defer></script>
   <script>
     // Hide loading screen when page loads

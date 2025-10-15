@@ -31,8 +31,11 @@
         <a href="contact.html" class="nav-link">Contact</a>
       </div>
       <div class="nav-right">
-        <span id="user-area"></span>
         <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
+        <a href="login.html" class="nav-link" id="login-btn">Login</a>
+        <a href="profile.html" class="nav-link" id="profile-btn" style="display:none;">Profile</a>
+        <a href="admin.html" class="nav-link" id="admin-btn" style="display:none;">Admin</a>
+        <a href="#" class="nav-link" id="logout-btn" style="display:none;" onclick="logout()">Logout</a>
       </div>
     </nav>
     <hr>
@@ -88,6 +91,7 @@
     <span id="floating-cart-count" class="floating-cart-count">0</span>
   </div>
 
+  <script src="navbar-auth.js"></script>
   <script src="script.js" defer></script>
 
   <!-- EmailJS SDK -->

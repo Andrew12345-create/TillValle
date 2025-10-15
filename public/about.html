@@ -45,7 +45,13 @@
       </div>
       <div class="nav-right">
         <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
-        <span id="user-area"></span>
+        <a href="login.html" class="nav-link" id="login-btn">Login</a>
+        <span class="user-initial" id="profile-avatar" style="display:none;cursor:pointer;position:relative;" onclick="toggleDropdown()">A</span>
+        <a href="admin.html" class="nav-link" id="admin-btn" style="display:none;">Admin</a>
+        <div class="user-dropdown" id="user-dropdown" style="position:absolute;top:40px;right:0;background:var(--bg-secondary);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.1);min-width:120px;z-index:1200;display:none;border:1px solid rgba(255,255,255,0.2);">
+          <a href="profile.html" style="display:block;padding:10px 15px;color:var(--text-primary);text-decoration:none;font-size:14px;">Profile</a>
+          <a href="#" onclick="logout()" style="display:block;padding:10px 15px;color:#ef4444;text-decoration:none;font-size:14px;border-top:1px solid rgba(0,0,0,0.1);">Logout</a>
+        </div>
       </div>
     </nav>
     <hr />
@@ -128,6 +134,7 @@
     <span id="floating-cart-count" class="floating-cart-count">0</span>
   </div>
 
+  <script src="navbar-universal.js"></script>
   <script src="script.js" defer></script>
   <script>
     // Hide loading screen when page loads
@@ -141,6 +148,36 @@
     
     document.addEventListener('DOMContentLoaded', function() {
       const userEmail = localStorage.getItem('email');
+      const loginBtn = document.getElementById('login-btn');
+      const profileArea = document.getElementById('profile-area');
+      const adminBtn = document.getElementById('admin-btn');
+      const userAvatar = document.getElementById('user-avatar');
+      
+      if (userEmail) {
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (profileArea) profileArea.style.display = 'inline-block';
+        const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
+        if (profilePicture && userAvatar) {
+          userAvatar.innerHTML = `<img src="${profilePicture}" alt="Profile" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+        } else if (userAvatar) {
+          userAvatar.textContent = userEmail.charAt(0).toUpperCase();
+        }
+        if (adminBtn && userEmail === 'andrewmunamwangi@gmail.com') {
+          adminBtn.style.display = 'inline-block';
+        }
+      }
+      
+      window.toggleDropdown = function() {
+        const dropdown = document.getElementById('user-dropdown');
+        if (dropdown) dropdown.classList.toggle('show');
+      };
+      
+      window.logout = function() {
+        localStorage.removeItem('email');
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
+      };
+      
       const userArea = document.getElementById('user-area');
       if (userArea && userEmail) {
         const initial = userEmail.charAt(0).toUpperCase();

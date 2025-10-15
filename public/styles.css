@@ -1074,6 +1074,21 @@ body {
   background: rgba(239,68,68,0.1);
 }
 
+/* User Area Visibility Fix */
+#user-area {
+  display: flex !important;
+  align-items: center;
+  gap: 15px;
+  min-height: 30px;
+  visibility: visible !important;
+}
+
+.user-dropdown-container {
+  position: relative;
+  display: inline-block !important;
+  visibility: visible !important;
+}
+
 /* Search Container */
 .search-container {
   display: flex;

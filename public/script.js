@@ -55,7 +55,11 @@ function saveUser() {
 
 function renderUserArea() {
   const userArea = document.getElementById('user-area');
-  if (!userArea) return;
+  if (!userArea) {
+    // Try again after a short delay if user-area not found
+    setTimeout(renderUserArea, 100);
+    return;
+  }
   
   const userEmail = localStorage.getItem('email');
   if (userEmail) {
@@ -85,12 +89,22 @@ function renderUserArea() {
 
 // Force render navbar immediately and on DOM load
 function forceRenderNavbar() {
-  setTimeout(() => {
-    renderUserArea();
-  }, 50);
+  renderUserArea();
+  // Also try again after delays to ensure it renders
+  setTimeout(renderUserArea, 50);
+  setTimeout(renderUserArea, 200);
+  setTimeout(renderUserArea, 500);
 }
 
+// Call immediately
 forceRenderNavbar();
+
+// Also call when page loads
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', forceRenderNavbar);
+} else {
+  forceRenderNavbar();
+}
 
 function toggleUserDropdown() {
   const dropdown = document.getElementById('user-dropdown');
@@ -566,6 +580,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Also call renderUserArea immediately for pages that load script.js after DOM
 renderUserArea();
+
+// Robust navbar initialization - ensure it always renders
+function ensureNavbarRenders() {
+  const userArea = document.getElementById('user-area');
+  if (userArea && userArea.innerHTML.trim() === '') {
+    renderUserArea();
+  }
+}
+
+// Check every 500ms for the first 5 seconds to ensure navbar renders
+let navbarCheckCount = 0;
+const navbarInterval = setInterval(() => {
+  ensureNavbarRenders();
+  navbarCheckCount++;
+  if (navbarCheckCount >= 10) { // Stop after 5 seconds (10 * 500ms)
+    clearInterval(navbarInterval);
+  }
+}, 500);
+
+// Also check when window loads
+window.addEventListener('load', () => {
+  setTimeout(ensureNavbarRenders, 100);
+});
 
 // Search functionality for shop.html
 function filterProducts(searchTerm) {
