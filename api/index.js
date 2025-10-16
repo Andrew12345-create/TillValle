@@ -500,6 +500,39 @@ app.post('/reset-password', async (req, res) => {
 });
 
 // ==========================
+// DELETE ACCOUNT
+// ==========================
+app.delete('/delete-account', async (req, res) => {
+  const { email, password } = req.body;
+  
+  if (!email || !password) {
+    return res.json({ ok: false, error: 'Email and password required' });
+  }
+  
+  try {
+    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (result.rows.length === 0) {
+      return res.json({ ok: false, error: 'Account not found' });
+    }
+    
+    const user = result.rows[0];
+    const isValid = await bcrypt.compare(password, user.password_hash);
+    
+    if (!isValid) {
+      return res.json({ ok: false, error: 'Invalid password' });
+    }
+    
+    await pool.query('DELETE FROM users WHERE email = $1', [email]);
+    
+    req.session.destroy();
+    res.json({ ok: true, message: 'Account deleted successfully' });
+  } catch (error) {
+    console.error('Delete account error:', error);
+    res.json({ ok: false, error: 'Failed to delete account' });
+  }
+});
+
+// ==========================
 // CHATBOT
 // ==========================
 app.post('/chatbot', async (req, res) => {

@@ -502,52 +502,29 @@
 
     // Enhanced location tracking with watchPosition
     function tryWatchPosition() {
-      showCartToast('🔄 Getting precise location...');
-      let bestAccuracy = Infinity;
-      let bestPosition = null;
-      let attempts = 0;
-      const maxAttempts = 10;
+      showCartToast('🔄 Getting enhanced location...');
       
       const watchId = navigator.geolocation.watchPosition(async (position) => {
-        attempts++;
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
         const accuracy = position.coords.accuracy;
         
-        // Keep track of best position
-        if (accuracy < bestAccuracy) {
-          bestAccuracy = accuracy;
-          bestPosition = position;
-          
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          map.setView([lat, lng], 19);
-          marker.setLatLng([lat, lng]);
-          const address = await reverseGeocode(lat, lng);
-          document.getElementById('selected-location').value = address;
-          updateDeliveryFee(lat, lng);
-          showCartToast(`📍 Accuracy: ±${Math.round(accuracy)}m (attempt ${attempts})`);
-        }
+        map.setView([lat, lng], 18);
+        marker.setLatLng([lat, lng]);
+        const address = await reverseGeocode(lat, lng);
+        document.getElementById('selected-location').value = address;
+        updateDeliveryFee(lat, lng);
         
-        // Stop if we get very good accuracy or max attempts
-        if (accuracy <= 10 || attempts >= maxAttempts) {
-          navigator.geolocation.clearWatch(watchId);
-          showCartToast(`✅ Best location set! Final accuracy: ±${Math.round(bestAccuracy)}m`);
-        }
+        navigator.geolocation.clearWatch(watchId);
+        showCartToast(`✅ Enhanced location set! Accuracy: ±${Math.round(accuracy)}m`);
       }, (error) => {
         navigator.geolocation.clearWatch(watchId);
-        showCartToast('❌ Enhanced tracking failed. Please select manually.');
+        showCartToast('❌ Enhanced tracking failed. Using standard location.');
       }, {
         enableHighAccuracy: true,
-        timeout: 30000,
+        timeout: 15000,
         maximumAge: 0
       });
-      
-      // Auto-stop after 45 seconds
-      setTimeout(() => {
-        navigator.geolocation.clearWatch(watchId);
-        if (bestPosition) {
-          showCartToast(`⏱️ Tracking complete. Best accuracy: ±${Math.round(bestAccuracy)}m`);
-        }
-      }, 45000);
     }
 
     // Current location button
@@ -648,27 +625,7 @@
       document.getElementById('save-location-section').style.display = 'block';
     }
     
-    // Save location buttons
-    document.querySelectorAll('.save-location-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const type = btn.dataset.type;
-        const customInput = document.getElementById('custom-location-name');
-        const confirmBtn = document.getElementById('save-location-confirm');
-        
-        if (type === 'other') {
-          customInput.style.display = 'block';
-          confirmBtn.style.display = 'block';
-          confirmBtn.addEventListener('click', () => {
-            const customName = customInput.value.trim() || 'Other';
-            saveLocation(customName);
-          });
-        } else {
-          // Capitalize first letter and save immediately
-          const capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
-          saveLocation(capitalizedType);
-        }
-      });
-    });
+
     
     function saveLocation(type) {
       const userEmail = localStorage.getItem('email');
@@ -709,6 +666,27 @@
     // Load saved locations on page load
     document.addEventListener('DOMContentLoaded', () => {
       loadSavedLocations();
+      
+      // Save location buttons
+      document.querySelectorAll('.save-location-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const type = btn.dataset.type;
+          const customInput = document.getElementById('custom-location-name');
+          const confirmBtn = document.getElementById('save-location-confirm');
+          
+          if (type === 'other') {
+            customInput.style.display = 'block';
+            confirmBtn.style.display = 'block';
+            confirmBtn.addEventListener('click', () => {
+              const customName = customInput.value.trim() || 'Other';
+              saveLocation(customName);
+            });
+          } else {
+            const capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
+            saveLocation(capitalizedType);
+          }
+        });
+      });
     });
   </script>
 </body>
