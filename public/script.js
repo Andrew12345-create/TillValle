@@ -257,7 +257,13 @@ function renderCart() {
 // Modal elements will be referenced when modal is created
 
 function closeProductModal() {
-  modal.classList.remove('show');
+  modal.style.transform = 'scale(0.8)';
+  modal.style.opacity = '0';
+  setTimeout(() => {
+    modal.classList.remove('show');
+    modal.style.transform = 'scale(1)';
+    modal.style.opacity = '1';
+  }, 300);
 }
 
 closeModalBtn.addEventListener('click', closeProductModal);

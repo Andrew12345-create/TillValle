@@ -1,0 +1,219 @@
+/* Enhanced animations for entire website */
+
+/* Page transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: pageEnter 0.6s ease-out forwards;
+}
+
+@keyframes pageEnter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Enhanced buttons */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transform: translateY(0);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(45,106,79,0.4);
+}
+
+/* Enhanced cards */
+.product, .profile-card, .cart-item, .order-item {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.product::before, .profile-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(45,106,79,0.05), rgba(52,184,136,0.05));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product:hover::before, .profile-card:hover::before {
+  opacity: 1;
+}
+
+.product:hover, .profile-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+/* Floating elements for all pages */
+.floating-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.floating-shape {
+  position: absolute;
+  opacity: 0.1;
+  animation: floatShape 8s ease-in-out infinite;
+}
+
+.floating-shape:nth-child(1) {
+  top: 10%;
+  left: 5%;
+  width: 60px;
+  height: 60px;
+  background: var(--accent-green);
+  border-radius: 50%;
+  animation-delay: 0s;
+}
+
+.floating-shape:nth-child(2) {
+  top: 70%;
+  right: 10%;
+  width: 40px;
+  height: 40px;
+  background: var(--accent-yellow);
+  border-radius: 50%;
+  animation-delay: 2s;
+}
+
+.floating-shape:nth-child(3) {
+  bottom: 20%;
+  left: 15%;
+  width: 80px;
+  height: 80px;
+  background: var(--accent-green-light);
+  border-radius: 50%;
+  animation-delay: 4s;
+}
+
+@keyframes floatShape {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-30px) rotate(90deg); }
+  50% { transform: translateY(-15px) rotate(180deg); }
+  75% { transform: translateY(-25px) rotate(270deg); }
+}
+
+/* Enhanced navbar */
+.navbar {
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+}
+
+.nav-link {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--accent-yellow);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Enhanced forms */
+.form-group input, .form-group select, .form-group textarea {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(45,106,79,0.15);
+}
+
+/* Enhanced sections */
+.about-preview, .contact, .shop, .profile-container {
+  animation: slideInUp 0.8s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Enhanced loading states */
+.loading-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Enhanced hover effects */
+.category-title, .about-container h2, .contact-form-container h2 {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.category-title:hover, .about-container h2:hover, .contact-form-container h2:hover {
+  transform: translateX(10px);
+  color: var(--accent-green-light);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Enhanced mobile animations */
+@media (max-width: 768px) {
+  .product:hover, .profile-card:hover {
+    transform: translateY(-4px) scale(1.01);
+  }
+  
+  .floating-shape {
+    display: none;
+  }
+}

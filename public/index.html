@@ -7,6 +7,8 @@
   <link rel="icon" href="logo.jpg" type="image/jpeg">
   <title>TilleValle - Fresh Farm Goods</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="hero-styles.css">
+  <link rel="stylesheet" href="enhanced-animations.css">
   
   <!-- Open Graph meta tags -->
   <meta property="og:title" content="TilleValle - Fresh Farm Goods">
@@ -62,10 +64,25 @@
   </header>
 
   <main>
-    <section class="hero">
-      <h1><span data-translate="welcome">Welcome to TilleValle</span></h1>
-      <p data-translate="freshProduce">Fresh eggs, butter, greens, and herbs — from our farms in Gilgil staight to your table.</p>
-      <a href="shop.html" class="btn" data-translate="shopNow">Shop Now</a>
+    <section class="hero-animation">
+      <div class="floating-elements">
+        <div class="floating-item">🥬</div>
+        <div class="floating-item">🥕</div>
+        <div class="floating-item">🍅</div>
+        <div class="floating-item">🥒</div>
+        <div class="floating-item">🌽</div>
+        <div class="floating-item">🥑</div>
+      </div>
+      
+      <div class="hero-content">
+        <h1 class="hero-title">Welcome to <span style="color: #ffd166;">TillValle</span></h1>
+        <p class="hero-subtitle">Fresh eggs, butter, greens, and herbs — from our farms in Gilgil straight to your table.</p>
+        <div class="hero-cta">
+          <a href="shop.html" class="btn">Shop Now</a>
+        </div>
+      </div>
+      
+      <div class="wave-animation"></div>
     </section>
     
     <!-- About Preview Section -->
@@ -116,6 +133,8 @@
 
   <script src="translations.js"></script>
   <script src="navbar-auth.js"></script>
+  <script src="global-animations.js"></script>
+  <script src="hero-script.js"></script>
   <script src="script.js" defer></script>
   <script>
     // Hide loading screen when page loads
