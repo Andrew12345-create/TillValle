@@ -3,41 +3,12 @@ const { Pool } = require('pg');
 const pool = new Pool({
   connectionString: process.env.STOCK_DB_URL,
   ssl: { rejectUnauthorized: false },
-  max: 3,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
 });
 
 exports.handler = async function(event, context) {
-  console.log('Stock function called:', event.httpMethod);
-  
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      },
-      body: '',
-    };
-  }
-
-  if (!process.env.STOCK_DB_URL) {
-    console.error('STOCK_DB_URL not configured');
-    return {
-      statusCode: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-      body: JSON.stringify({ error: 'Database not configured' }),
-    };
-  }
-
   try {
     if (event.httpMethod === 'GET') {
-      const result = await pool.query('SELECT * FROM product_stock ORDER BY product_name');
+      const result = await pool.query('SELECT product_id, product_name, in_stock FROM product_stock ORDER BY product_name');
       return {
         statusCode: 200,
         headers: {
@@ -60,9 +31,10 @@ exports.handler = async function(event, context) {
           body: JSON.stringify({ error: 'Invalid request body' }),
         };
       }
+      const in_stock = stock_quantity > 0;
       const result = await pool.query(
-        'UPDATE product_stock SET stock_quantity = $1, last_updated = CURRENT_TIMESTAMP WHERE product_id = $2 RETURNING *',
-        [stock_quantity, product_id]
+        'UPDATE product_stock SET in_stock = $1, last_updated = CURRENT_TIMESTAMP WHERE product_id = $2 RETURNING *',
+        [in_stock, product_id]
       );
       if (result.rowCount === 0) {
         return {

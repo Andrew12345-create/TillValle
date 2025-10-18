@@ -780,13 +780,39 @@ async function sendChatbotMessage() {
     if (loadingMessage) loadingMessage.remove();
     
     // Local fallback responses
+    const currentLang = localStorage.getItem('selectedLanguage') || 'en';
     const lowerMessage = message.toLowerCase();
-    let fallbackResponse = "I'm here to help! For full functionality, please start the API server with 'npm start'.";
     
-    if (lowerMessage.includes('stock')) {
-      fallbackResponse = "Stock information is available when the API server is running. Please start with 'npm start'.";
-    } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
-      fallbackResponse = "Hello! Welcome to TillValle! I'm running in offline mode.";
+    const offlineResponses = {
+      en: {
+        human: "I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com.",
+        stock: "I can help you check our product availability! What specific product are you looking for?",
+        hello: "Hello! Welcome to TillValle! 🌱 I'm TillieBot, your farm-fresh assistant. How can I help you today?",
+        default: "Hello! I'm TillieBot from TillValle! 🌱 I can help you with product information, stock levels, and delivery details. What would you like to know?"
+      },
+      sw: {
+        human: "Nitakuunganisha na wakala wetu Angela Wanjiru kwa angelawanjiru@gmail.com.",
+        stock: "Ninaweza kukusaidia kuangalia upatikanaji wa bidhaa zetu! Unatafuta bidhaa gani?",
+        hello: "Hujambo! Karibu TillValle! 🌱 Mimi ni TillieBot, msaidizi wako wa mazao safi. Ninawezaje kukusaidia?",
+        default: "Hujambo! Mimi ni TillieBot kutoka TillValle! 🌱 Ninaweza kukusaidia na habari za bidhaa na uongozaji. Unahitaji nini?"
+      },
+      fr: {
+        human: "Je vais vous connecter avec notre agent Angela Wanjiru à angelawanjiru@gmail.com.",
+        stock: "Je peux vous aider à vérifier la disponibilité de nos produits! Quel produit recherchez-vous?",
+        hello: "Bonjour! Bienvenue chez TillValle! 🌱 Je suis TillieBot, votre assistant produits frais. Comment puis-je vous aider?",
+        default: "Bonjour! Je suis TillieBot de TillValle! 🌱 Je peux vous aider avec les informations produits et la livraison. Que voulez-vous savoir?"
+      }
+    };
+    
+    const responses = offlineResponses[currentLang] || offlineResponses.en;
+    let fallbackResponse = responses.default;
+    
+    if (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('live')) {
+      fallbackResponse = responses.human;
+    } else if (lowerMessage.includes('stock') || lowerMessage.includes('available')) {
+      fallbackResponse = responses.stock;
+    } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hujambo') || lowerMessage.includes('bonjour')) {
+      fallbackResponse = responses.hello;
     }
     
     appendMessage(fallbackResponse, true);

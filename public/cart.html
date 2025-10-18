@@ -130,6 +130,7 @@
   </footer>
 
   <script src="navbar-auth.js"></script>
+  <script src="chatbot-universal.js"></script>
   <script src="script.js" defer></script>
   <script>
     // Hide loading screen when page loads
@@ -295,10 +296,27 @@
           messagesDiv.innerHTML += `<div class="chatbot-message bot">${data.message}</div>`;
         } catch (error) {
           if (loadingMessage) loadingMessage.remove();
-          if (message.toLowerCase().includes('human') || message.toLowerCase().includes('agent')) {
-            messagesDiv.innerHTML += `<div class="chatbot-message bot">I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com. She's available to provide real-time assistance with your TillValle needs!</div>`;
+          const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+          const lowerMessage = message.toLowerCase();
+          const offlineResponses = {
+            en: {
+              human: "I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com.",
+              default: "Hello! I'm TillieBot from TillValle! 🌱 I can help you with product information, stock levels, and delivery details. What would you like to know?"
+            },
+            sw: {
+              human: "Nitakuunganisha na wakala wetu Angela Wanjiru kwa angelawanjiru@gmail.com.",
+              default: "Hujambo! Mimi ni TillieBot kutoka TillValle! 🌱 Ninaweza kukusaidia na habari za bidhaa na uongozaji. Unahitaji nini?"
+            },
+            fr: {
+              human: "Je vais vous connecter avec notre agent Angela Wanjiru à angelawanjiru@gmail.com.",
+              default: "Bonjour! Je suis TillieBot de TillValle! 🌱 Je peux vous aider avec les informations produits et la livraison. Que voulez-vous savoir?"
+            }
+          };
+          const responses = offlineResponses[currentLang] || offlineResponses.en;
+          if (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('live')) {
+            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.human}</div>`;
           } else {
-            messagesDiv.innerHTML += `<div class="chatbot-message bot">Hello! Welcome to TillValle! I'm running in offline mode.</div>`;
+            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.default}</div>`;
           }
         }
         messagesDiv.scrollTop = messagesDiv.scrollHeight;

@@ -3,16 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Fresh farm goods including eggs, butter, greens, and herbs delivered from Nancy & Jack’s farm.">
+  <meta name="description" content="Fresh farm goods including eggs, butter, greens, and herbs delivered from Nancy & Jack's farm.">
   <link rel="icon" href="logo.jpg" type="image/jpeg">
   <title>TilleValle - Fresh Farm Goods</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="hero-styles.css">
   <link rel="stylesheet" href="enhanced-animations.css">
+  <link rel="stylesheet" href="shop-styles.css">
+  <link rel="stylesheet" href="chatbot.css">
   
   <!-- Open Graph meta tags -->
   <meta property="og:title" content="TilleValle - Fresh Farm Goods">
-  <meta property="og:description" content="Fresh farm goods including eggs, butter, greens, and herbs delivered from Nancy & Jack’s farm.">
+  <meta property="og:description" content="Fresh farm goods including eggs, butter, greens, and herbs delivered from Nancy & Jack's farm.">
   <meta property="og:image" content="images/logo.jpg">
   <meta property="og:url" content="https://yourdomain.com/index.html">
   
@@ -38,51 +40,28 @@
     <div class="loading-spinner"></div>
   </div>
   <header>
-   <!-- Navbar Start -->
-<nav class="navbar">
-  <div class="nav-left">
-    <a href="index.html" class="nav-link logo-link">
-      <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
-    </a>
-    <a href="shop.html" class="nav-link" data-translate="shop">Shop</a>
-    <a href="about.html" class="nav-link" data-translate="about">About</a>
-    <a href="contact.html" class="nav-link" data-translate="contact">Contact</a>
-  </div>
-  <div class="nav-right">
-    <a href="cart.html" class="nav-link">🛒 <span data-translate="cart">Cart</span> (<span id="cart-count">0</span>)</a>
-    <a href="login.html" class="nav-link" id="login-btn">Login</a>
-    <span class="user-initial" id="profile-avatar" style="display:inline-block;cursor:pointer;" onclick="toggleDropdown()">A</span>
-    <a href="admin.html" class="nav-link">Admin</a>
-    <div class="user-dropdown" id="user-dropdown" style="position:absolute;top:40px;right:0;background:var(--bg-secondary);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.1);min-width:120px;z-index:1200;display:none;border:1px solid rgba(255,255,255,0.2);">
-      <a href="profile.html" style="display:block;padding:5px;">Profile</a>
-      <a href="#" onclick="logout()" style="display:block;padding:5px;">Logout</a>
-    </div>
-  </div>
-</nav>
-<hr>
-
+    <nav class="navbar">
+      <div class="nav-left">
+        <a href="index.html" class="nav-link logo-link">
+          <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
+        </a>
+        <a href="shop.html" class="nav-link" data-translate="shop">Shop</a>
+        <a href="about.html" class="nav-link" data-translate="about">About</a>
+        <a href="contact.html" class="nav-link" data-translate="contact">Contact</a>
+      </div>
+      <div class="nav-right">
+        <a href="cart.html" class="nav-link">🛒 <span data-translate="cart">Cart</span> (<span id="cart-count">0</span>)</a>
+        <div id="user-area"></div>
+      </div>
+    </nav>
+    <hr>
   </header>
 
   <main>
-    <section class="hero-animation">
-      <div class="floating-elements">
-        <div class="floating-item">🥬</div>
-        <div class="floating-item">🥕</div>
-        <div class="floating-item">🍅</div>
-        <div class="floating-item">🥒</div>
-        <div class="floating-item">🌽</div>
-        <div class="floating-item">🥑</div>
-      </div>
-      
-      <div class="hero-content">
-        <h1 class="hero-title">Welcome to <span style="color: #ffd166;">TillValle</span></h1>
-        <p class="hero-subtitle">Fresh eggs, butter, greens, and herbs — from our farms in Gilgil straight to your table.</p>
-        <div class="hero-cta">
-          <a href="shop.html" class="btn">Shop Now</a>
-        </div>
-      </div>
-      
-      <div class="wave-animation"></div>
+    <section class="hero">
+      <h1>Welcome to <span>TillValle</span></h1>
+      <p>Fresh eggs, butter, greens, and herbs — from our farms in Gilgil straight to your table.</p>
+      <a href="shop.html" class="btn">Shop Now</a>
     </section>
     
     <!-- About Preview Section -->
@@ -103,33 +82,131 @@
   <!-- Toast -->
   <div id="cart-toast"></div>
 
-  <!-- Chatbot Sidebar -->
-  <div id="chatbot-sidebar" class="chatbot-sidebar">
-    <div class="chatbot-header">
-      <span>TillieBot</span>
-      <button id="chatbot-close" class="chatbot-close">&times;</button>
+  <style>
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(45, 106, 79, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(45, 106, 79, 0); } 100% { box-shadow: 0 0 0 0 rgba(45, 106, 79, 0); } }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .max-chat-btn { position: fixed !important; bottom: 30px !important; right: 30px !important; width: 70px !important; height: 70px !important; background: linear-gradient(135deg, #2d6a4f, #1e4a36) !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; z-index: 10000 !important; color: white !important; font-size: 28px !important; box-shadow: 0 8px 25px rgba(45, 106, 79, 0.4) !important; animation: float 3s ease-in-out infinite, pulse 2s infinite !important; transition: all 0.3s ease !important; border: 3px solid rgba(255,255,255,0.2) !important; }
+    .max-chat-btn:hover { transform: scale(1.1) translateY(-5px) !important; box-shadow: 0 15px 35px rgba(45, 106, 79, 0.6) !important; }
+    .max-chat-panel { position: fixed !important; top: 0 !important; right: -450px !important; width: 420px !important; height: 100vh !important; background: linear-gradient(180deg, #ffffff 0%, #f8fffe 100%) !important; z-index: 9999 !important; transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important; box-shadow: -10px 0 30px rgba(0,0,0,0.15) !important; border-left: 1px solid rgba(45, 106, 79, 0.1) !important; }
+    .max-chat-panel.open { right: 0 !important; animation: slideIn 0.4s ease !important; }
+    .max-chat-header { background: linear-gradient(135deg, #2d6a4f, #1e4a36) !important; color: white !important; padding: 25px !important; display: flex !important; justify-content: space-between !important; align-items: center !important; box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important; }
+    .max-chat-header h3 { margin: 0 !important; font-size: 20px !important; font-weight: 600 !important; }
+    .max-chat-close { background: rgba(255,255,255,0.2) !important; border: none !important; color: white !important; font-size: 24px !important; cursor: pointer !important; width: 35px !important; height: 35px !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; transition: all 0.3s ease !important; }
+    .max-chat-close:hover { background: rgba(255,255,255,0.3) !important; transform: rotate(90deg) !important; }
+    .max-chat-messages { flex: 1 !important; overflow-y: auto !important; padding: 20px !important; background: linear-gradient(180deg, #ffffff 0%, #f8fffe 100%) !important; }
+    .max-chat-input-area { padding: 20px !important; background: white !important; border-top: 1px solid rgba(45, 106, 79, 0.1) !important; box-shadow: 0 -2px 10px rgba(0,0,0,0.05) !important; position: relative !important; }
+    .max-chat-input { width: 100% !important; padding: 15px !important; border: 2px solid rgba(45, 106, 79, 0.2) !important; border-radius: 25px !important; outline: none !important; font-size: 14px !important; transition: all 0.3s ease !important; background: rgba(248, 255, 254, 0.5) !important; }
+    .max-chat-input:focus { border-color: #2d6a4f !important; box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1) !important; }
+    .max-chat-send { position: absolute !important; right: 25px !important; top: 50% !important; transform: translateY(-50%) !important; background: linear-gradient(135deg, #2d6a4f, #1e4a36) !important; color: white !important; border: none !important; width: 45px !important; height: 45px !important; border-radius: 50% !important; cursor: pointer !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 16px !important; transition: all 0.3s ease !important; box-shadow: 0 2px 10px rgba(45, 106, 79, 0.3) !important; }
+    .max-chat-send:hover { transform: translateY(-50%) scale(1.1) !important; box-shadow: 0 4px 15px rgba(45, 106, 79, 0.5) !important; }
+    .max-user-msg { text-align: right !important; margin: 15px 0 !important; animation: fadeIn 0.3s ease !important; }
+    .max-user-msg span { background: linear-gradient(135deg, #2d6a4f, #1e4a36) !important; color: white !important; padding: 12px 18px !important; border-radius: 20px 20px 5px 20px !important; display: inline-block !important; max-width: 80% !important; box-shadow: 0 2px 10px rgba(45, 106, 79, 0.2) !important; }
+    .max-bot-msg { margin: 15px 0 !important; animation: fadeIn 0.3s ease !important; }
+    .max-bot-msg span { background: linear-gradient(135deg, #e8f5e8, #f0f9f0) !important; color: #2d6a4f !important; padding: 12px 18px !important; border-radius: 20px 20px 20px 5px !important; display: inline-block !important; max-width: 80% !important; border-left: 4px solid #2d6a4f !important; box-shadow: 0 2px 10px rgba(45, 106, 79, 0.1) !important; }
+    .max-typing { display: flex !important; align-items: center !important; gap: 5px !important; color: #666 !important; font-style: italic !important; margin: 10px 0 !important; }
+    .max-typing::after { content: '' !important; width: 8px !important; height: 8px !important; border-radius: 50% !important; background: #2d6a4f !important; animation: pulse 1.5s infinite !important; }
+  </style>
+  
+  <div id="max-chatbot-btn" class="max-chat-btn" onclick="openMaxChat()">
+    💬
+  </div>
+  
+  <div id="max-chat-panel" class="max-chat-panel">
+    <div class="max-chat-header">
+      <h3>🌱 TillValle Assistant</h3>
+      <button class="max-chat-close" onclick="closeMaxChat()">&times;</button>
     </div>
-    <div id="chatbot-messages" class="chatbot-messages">
-      <div class="chatbot-message bot">
-        Hello! I'm TillieBot, your TillValle assistant. 🌱 I can help you with:<br><br>
-        • Product information & stock levels<br>
-        • Delivery pricing for your location<br>
-        • Order assistance<br><br>
-        For live chat with a human agent, just ask! How can I help you today?
+    <div id="max-chat-messages" class="max-chat-messages" style="display: flex; flex-direction: column; height: calc(100vh - 160px);">
+      <div class="max-bot-msg">
+        <span>👋 Hello! I'm your TillValle assistant. I can help you with products, delivery, and orders. How can I assist you today?</span>
       </div>
     </div>
-    <div class="chatbot-input-area">
-      <div class="chatbot-input-container">
-        <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Type your message...">
-        <button id="chatbot-send" class="chatbot-send">➤</button>
-      </div>
+    <div class="max-chat-input-area">
+      <input type="text" id="max-chat-input" class="max-chat-input" placeholder="Ask me anything about TillValle..." onkeypress="if(event.key=='Enter') sendMaxMessage()">
+      <button class="max-chat-send" onclick="sendMaxMessage()">➤</button>
     </div>
   </div>
+  
+  <script>
+    function openMaxChat() {
+      document.getElementById('max-chat-panel').classList.add('open');
+      document.getElementById('max-chatbot-btn').style.display = 'none';
+      document.getElementById('max-chat-input').focus();
+    }
+    
+    function closeMaxChat() {
+      document.getElementById('max-chat-panel').classList.remove('open');
+      setTimeout(function() {
+        document.getElementById('max-chatbot-btn').style.display = 'flex';
+      }, 200);
+    }
+    
+    function addMaxTypingIndicator() {
+      var messages = document.getElementById('max-chat-messages');
+      var typing = document.createElement('div');
+      typing.className = 'max-typing';
+      typing.id = 'max-typing-indicator';
+      typing.innerHTML = 'TillValle is typing';
+      messages.appendChild(typing);
+      messages.scrollTop = messages.scrollHeight;
+    }
+    
+    function removeMaxTypingIndicator() {
+      var typing = document.getElementById('max-typing-indicator');
+      if (typing) typing.remove();
+    }
+    
+    async function sendMaxMessage() {
+      var input = document.getElementById('max-chat-input');
+      var messages = document.getElementById('max-chat-messages');
+      var message = input.value.trim();
+      
+      if (!message) return;
+      
+      var userDiv = document.createElement('div');
+      userDiv.className = 'max-user-msg';
+      userDiv.innerHTML = '<span>' + message + '</span>';
+      messages.appendChild(userDiv);
+      
+      input.value = '';
+      messages.scrollTop = messages.scrollHeight;
+      
+      addMaxTypingIndicator();
+      
+      try {
+        var response = await fetch('/.netlify/functions/chatbot', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: message })
+        });
+        var data = await response.json();
+        
+        setTimeout(function() {
+          removeMaxTypingIndicator();
+          var botDiv = document.createElement('div');
+          botDiv.className = 'max-bot-msg';
+          botDiv.innerHTML = '<span>' + data.message + '</span>';
+          messages.appendChild(botDiv);
+          messages.scrollTop = messages.scrollHeight;
+        }, 1000);
+        
+      } catch (error) {
+        setTimeout(function() {
+          removeMaxTypingIndicator();
+          var errorDiv = document.createElement('div');
+          errorDiv.className = 'max-bot-msg';
+          errorDiv.innerHTML = '<span>😔 Sorry, I am having trouble connecting. Please try again or contact us at support@tillvalle.com</span>';
+          messages.appendChild(errorDiv);
+          messages.scrollTop = messages.scrollHeight;
+        }, 1000);
+      }
+    }
+  </script>
 
-  <!-- Floating Chatbot Button -->
-  <div id="floating-chatbot-btn" class="floating-chatbot-btn">
-    <span class="chatbot-emoji">💬</span>
-  </div>
+
+
 
   <script src="translations.js"></script>
   <script src="navbar-auth.js"></script>
@@ -148,50 +225,9 @@
     
     document.addEventListener('DOMContentLoaded', function() {
       const userEmail = localStorage.getItem('email');
-      const loginBtn = document.getElementById('login-btn');
-      const profileArea = document.getElementById('profile-area');
-      const adminBtn = document.getElementById('admin-btn');
-      const profileAvatar = document.getElementById('profile-avatar');
-      
-      // Update profile avatar
-      if (userEmail && profileAvatar) {
-        const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
-        if (profilePicture) {
-          profileAvatar.innerHTML = `<img src="${profilePicture}" alt="Profile" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
-        } else {
-          profileAvatar.textContent = userEmail.charAt(0).toUpperCase();
-        }
-      }
-      
-      const userAvatar = document.getElementById('user-avatar');
-      
-      if (userEmail) {
-        // User logged in
-        if (loginBtn) loginBtn.style.display = 'none';
-        if (profileArea) profileArea.style.display = 'inline-block';
-        
-        // Set avatar
-        const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
-        if (profilePicture && userAvatar) {
-          userAvatar.innerHTML = `<img src="${profilePicture}" alt="Profile" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
-        } else if (userAvatar) {
-          userAvatar.textContent = userEmail.charAt(0).toUpperCase();
-        }
-        
-        // Show admin for admin user
-        if (adminBtn && userEmail === 'andrewmunamwangi@gmail.com') {
-          adminBtn.style.display = 'inline-block';
-        }
-      }
-      
-      window.logout = function() {
-        localStorage.removeItem('email');
-        localStorage.removeItem('user');
-        window.location.href = 'login.html';
-      };
-      
       const userArea = document.getElementById('user-area');
-      if (userArea && userEmail) {
+      
+      if (userEmail && userArea) {
         const initial = userEmail.charAt(0).toUpperCase();
         const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
         const userDisplay = profilePicture ? 
@@ -211,16 +247,21 @@
           </div>
           ${adminLink}
         `;
+      } else if (userArea) {
+        userArea.innerHTML = `<a href="login.html" class="nav-link">Login</a>`;
       }
+      
       window.toggleUserDropdown = function() {
         const dropdown = document.getElementById('user-dropdown');
         if (dropdown) dropdown.classList.toggle('show');
       };
+      
       window.logout = function() {
         localStorage.removeItem('email');
         localStorage.removeItem('user');
         window.location.href = 'login.html';
       };
+      
       document.addEventListener('click', (event) => {
         const dropdown = document.getElementById('user-dropdown');
         const container = document.querySelector('.user-dropdown-container');
@@ -228,91 +269,18 @@
           dropdown.classList.remove('show');
         }
       });
-      // Chatbot functions
-      const floatingChatbotBtn = document.getElementById('floating-chatbot-btn');
-      const chatbotSidebar = document.getElementById('chatbot-sidebar');
-      const chatbotClose = document.getElementById('chatbot-close');
-      const chatbotSend = document.getElementById('chatbot-send');
-      const chatbotInput = document.getElementById('chatbot-input');
       
-      if (floatingChatbotBtn) {
-        floatingChatbotBtn.addEventListener('click', () => {
-          if (chatbotSidebar) chatbotSidebar.classList.add('open');
-          floatingChatbotBtn.style.display = 'none';
-        });
-      }
-      if (chatbotClose) {
-        chatbotClose.addEventListener('click', () => {
-          if (chatbotSidebar) chatbotSidebar.classList.remove('open');
-          if (floatingChatbotBtn) floatingChatbotBtn.style.display = 'flex';
-        });
-      }
-      if (chatbotSend) {
-        chatbotSend.addEventListener('click', sendMessage);
-      }
-      if (chatbotInput) {
-        chatbotInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') sendMessage();
-        });
+      // Initialize cart counter
+      function updateCartCounter() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const cartCountElem = document.getElementById('cart-count');
+        if (cartCountElem) cartCountElem.textContent = totalQuantity;
       }
       
-      async function sendMessage() {
-        const message = chatbotInput.value.trim();
-        if (!message) return;
-        
-        const messagesDiv = document.getElementById('chatbot-messages');
-        messagesDiv.innerHTML += `<div class="chatbot-message user">${message}</div>`;
-        chatbotInput.value = '';
-        messagesDiv.innerHTML += `<div class="chatbot-message bot">Thinking...</div>`;
-        const loadingMessage = messagesDiv.lastElementChild;
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        
-        try {
-          const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-          const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/.netlify/functions/chatbot';
-          const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-          const response = await fetch(chatbotUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message, language: currentLang })
-          });
-          const data = await response.json();
-          if (loadingMessage) loadingMessage.remove();
-          messagesDiv.innerHTML += `<div class="chatbot-message bot">${data.message}</div>`;
-        } catch (error) {
-          if (loadingMessage) loadingMessage.remove();
-          const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-          const offlineResponses = {
-            en: { human: "I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com.", default: "Hello! Welcome to TilleValle! I'm running in offline mode." },
-            sw: { human: "Nitakuunganisha na wakala wetu Angela Wanjiru kwa angelawanjiru@gmail.com.", default: "Hujambo! Karibu TilleValle! Ninafanya kazi nje ya mtandao." },
-            fr: { human: "Je vais vous connecter avec notre agent Angela Wanjiru à angelawanjiru@gmail.com.", default: "Bonjour! Bienvenue chez TilleValle! Je fonctionne en mode hors ligne." },
-            zh: { human: "我将为您联系客服代表 Angela Wanjiru，邮箱：angelawanjiru@gmail.com。", default: "您好！欢迎来到 TilleValle！我正在离线模式下运行。" }
-          };
-          const responses = offlineResponses[currentLang] || offlineResponses.en;
-          if (message.toLowerCase().includes('human') || message.toLowerCase().includes('agent')) {
-            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.human}</div>`;
-          } else {
-            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.default}</div>`;
-          }
-        }
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-      }
-    });
-    
-    function toggleDropdown() {
-      const dropdown = document.getElementById('user-dropdown');
-      if (dropdown) {
-        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-      }
-    }
-    
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(event) {
-      const dropdown = document.getElementById('user-dropdown');
-      const avatar = document.getElementById('profile-avatar');
-      if (dropdown && avatar && !avatar.contains(event.target) && !dropdown.contains(event.target)) {
-        dropdown.style.display = 'none';
-      }
+      updateCartCounter();
+      
+
     });
   </script>
 </body>

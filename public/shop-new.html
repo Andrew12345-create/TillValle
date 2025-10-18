@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TillValle Shop</title>
+  <link rel="icon" href="logo.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="shop-styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="index.html" class="nav-link logo-link">
+        <img src="logo.jpg" alt="TillValle Logo" class="logo">
+      </a>
+      <a href="shop.html" class="nav-link">Shop</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <div class="nav-right">
+      <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
+      <div id="user-area"></div>
+    </div>
+  </nav>
+
+  <section class="shop">
+    <h2>Our Products</h2>
+    <div class="search-container">
+      <input type="text" id="search-bar" placeholder="Search products..." class="search-input">
+      <button id="search-btn" class="search-btn">🔍</button>
+    </div>
+
+    <div class="category">
+      <h3 class="category-title">Animal Farm Produce</h3>
+      <div class="products">
+        <div class="product" data-name="Milk" data-price="60" data-image="milk.png">
+          <img src="milk.png" alt="Milk" class="product-image">
+          <h4>Milk</h4>
+          <p class="price">KES 60 / litre</p>
+        </div>
+        <div class="product" data-name="Eggs" data-price="20" data-image="eggs.png">
+          <img src="eggs.png" alt="Eggs" class="product-image">
+          <h4>Eggs</h4>
+          <p class="price">KES 20 / egg</p>
+        </div>
+        <div class="product" data-name="Butter" data-price="700" data-image="butter.png">
+          <img src="butter.png" alt="Butter" class="product-image">
+          <h4>Butter</h4>
+          <p class="price">KES 700 / 500g</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="category">
+      <h3 class="category-title">Vegetables & Greens</h3>
+      <div class="products">
+        <div class="product" data-name="Kales" data-price="30" data-image="kales.png">
+          <img src="kales.png" alt="Kales" class="product-image">
+          <h4>Kales (Sukuma Wiki)</h4>
+          <p class="price">KES 30 / bunch</p>
+        </div>
+        <div class="product" data-name="Spinach" data-price="30" data-image="spinach.png">
+          <img src="spinach.png" alt="Spinach" class="product-image">
+          <h4>Spinach</h4>
+          <p class="price">KES 30 / bunch</p>
+        </div>
+        <div class="product" data-name="Managu" data-price="40" data-image="managu.png">
+          <img src="managu.png" alt="Managu" class="product-image">
+          <h4>Managu</h4>
+          <p class="price">KES 40 / bunch</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Modal -->
+  <div id="product-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title"></h3>
+        <span class="close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <img id="modal-image" src="" alt="">
+        <p id="modal-price"></p>
+        <div class="quantity-controls">
+          <button id="decrease-qty">-</button>
+          <input type="number" id="quantity" value="1" min="1">
+          <button id="increase-qty">+</button>
+        </div>
+        <button id="add-to-cart">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="shop-script.js"></script>
+</body>
+</html>

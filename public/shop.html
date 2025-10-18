@@ -2,13 +2,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>TilleValle Shop</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TillValle Shop</title>
   <link rel="icon" href="logo.jpg" type="image/jpeg">
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="enhanced-animations.css" />
-  <link rel="stylesheet" href="modal-fix.css" />
+  <link rel="stylesheet" href="shop-styles.css">
+  <link rel="stylesheet" href="chatbot.css">
   <meta property="og:title" content="Shop - TilleValle" />
   <meta property="og:description" content="Browse and shop our range of fresh farm goods at TilleValle." />
   <meta property="og:image" content="./images/logo.png" />
@@ -42,16 +41,9 @@
       <a href="about.html" class="nav-link">About</a>
       <a href="contact.html" class="nav-link">Contact</a>
     </div>
-
     <div class="nav-right">
       <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
-      <a href="login.html" class="nav-link" id="login-btn">Login</a>
-      <span class="user-initial" id="profile-avatar" style="display:none;cursor:pointer;position:relative;" onclick="toggleDropdown()">A</span>
-      <a href="admin.html" class="nav-link" id="admin-btn" style="display:none;">Admin</a>
-      <div class="user-dropdown" id="user-dropdown" style="position:absolute;top:40px;right:0;background:var(--bg-secondary);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.1);min-width:120px;z-index:1200;display:none;border:1px solid rgba(255,255,255,0.2);">
-        <a href="profile.html" style="display:block;padding:10px 15px;color:var(--text-primary);text-decoration:none;font-size:14px;">Profile</a>
-        <a href="#" onclick="logout()" style="display:block;padding:10px 15px;color:#ef4444;text-decoration:none;font-size:14px;border-top:1px solid rgba(0,0,0,0.1);">Logout</a>
-      </div>
+      <div id="user-area"></div>
     </div>
   </nav>
   <hr />
@@ -131,39 +123,9 @@
   <!-- Toast -->
   <div id="cart-toast"></div>
 
-  <!-- Chatbot Sidebar -->
-  <div id="chatbot-sidebar" class="chatbot-sidebar">
-    <div class="chatbot-header">
-      <span>TillieBot</span>
-      <button id="chatbot-close" class="chatbot-close">&times;</button>
-    </div>
-    <div id="chatbot-messages" class="chatbot-messages">
-      <div class="chatbot-message bot">
-        Hello! I'm TillieBot, your TillValle assistant. 🌱 I can help you with:<br><br>
-        • Product information & stock levels<br>
-        • Delivery pricing for your location<br>
-        • Order assistance<br><br>
-        For live chat with a human agent, just ask! How can I help you today?
-      </div>
-    </div>
-    <div class="chatbot-input-area">
-      <div class="chatbot-input-container">
-        <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Type your message...">
-        <button id="chatbot-send" class="chatbot-send">➤</button>
-      </div>
-    </div>
-  </div>
 
-  <!-- Floating Chatbot Button -->
-  <div id="floating-chatbot-btn" class="floating-chatbot-btn">
-    <span class="chatbot-emoji">💬</span>
-  </div>
 
-  <!-- Floating Cart Button -->
-  <div id="floating-cart-btn" class="floating-cart-btn">
-    <span class="cart-emoji">🛒</span>
-    <span id="floating-cart-count" class="floating-cart-count">0</span>
-  </div>
+
 
   <script>
     // Define modal function immediately
@@ -231,12 +193,10 @@
           // Save cart to localStorage
           localStorage.setItem('cart', JSON.stringify(cart));
           
-          // Update cart counter in navbar
+          // Update cart counter in navbar and floating button
           const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
           const cartCountElem = document.getElementById('cart-count');
-          if (cartCountElem) {
-            cartCountElem.textContent = totalQuantity;
-          }
+          if (cartCountElem) cartCountElem.textContent = totalQuantity;
           
           modal.classList.remove('show');
           
@@ -315,16 +275,58 @@
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
       const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
       const cartCountElem = document.getElementById('cart-count');
-      if (cartCountElem) {
-        cartCountElem.textContent = totalQuantity;
-      }
+      if (cartCountElem) cartCountElem.textContent = totalQuantity;
     }
     
     // Update counter when page loads
     updateCartCounter();
+    
+
+    
+    // Add search functionality
+    const searchInput = document.getElementById('search-bar');
+    const searchBtn = document.getElementById('search-btn');
+    
+    function performSearch() {
+      const query = searchInput.value.toLowerCase().trim();
+      const products = document.querySelectorAll('.product');
+      const categories = document.querySelectorAll('.category');
+      
+      if (!query) {
+        products.forEach(product => product.style.display = 'flex');
+        categories.forEach(category => category.style.display = 'block');
+        return;
+      }
+      
+      categories.forEach(category => {
+        const categoryProducts = category.querySelectorAll('.product');
+        let hasVisibleProducts = false;
+        
+        categoryProducts.forEach(product => {
+          const productName = product.querySelector('h4').textContent.toLowerCase();
+          if (productName.includes(query)) {
+            product.style.display = 'flex';
+            hasVisibleProducts = true;
+          } else {
+            product.style.display = 'none';
+          }
+        });
+        
+        category.style.display = hasVisibleProducts ? 'block' : 'none';
+      });
+    }
+    
+    if (searchBtn) searchBtn.addEventListener('click', performSearch);
+    if (searchInput) {
+      searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') performSearch();
+      });
+      searchInput.addEventListener('input', performSearch);
+    }
   </script>
   <script src="navbar-universal.js"></script>
   <script src="global-animations.js"></script>
+  <script src="chatbot.js"></script>
   <script src="script.js" defer></script>
   <script>
     // Hide loading screen when page loads
@@ -339,7 +341,8 @@
     document.addEventListener('DOMContentLoaded', function() {
       const userEmail = localStorage.getItem('email');
       const userArea = document.getElementById('user-area');
-      if (userArea && userEmail) {
+      
+      if (userEmail && userArea) {
         const initial = userEmail.charAt(0).toUpperCase();
         const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
         const userDisplay = profilePicture ? 
@@ -359,16 +362,21 @@
           </div>
           ${adminLink}
         `;
+      } else if (userArea) {
+        userArea.innerHTML = `<a href="login.html" class="nav-link">Login</a>`;
       }
+      
       window.toggleUserDropdown = function() {
         const dropdown = document.getElementById('user-dropdown');
         if (dropdown) dropdown.classList.toggle('show');
       };
+      
       window.logout = function() {
         localStorage.removeItem('email');
         localStorage.removeItem('user');
         window.location.href = 'login.html';
       };
+      
       document.addEventListener('click', (event) => {
         const dropdown = document.getElementById('user-dropdown');
         const container = document.querySelector('.user-dropdown-container');
@@ -376,75 +384,7 @@
           dropdown.classList.remove('show');
         }
       });
-      // Chatbot functions
-      const floatingChatbotBtn = document.getElementById('floating-chatbot-btn');
-      const chatbotSidebar = document.getElementById('chatbot-sidebar');
-      const chatbotClose = document.getElementById('chatbot-close');
-      const chatbotSend = document.getElementById('chatbot-send');
-      const chatbotInput = document.getElementById('chatbot-input');
-      
-      if (floatingChatbotBtn) {
-        floatingChatbotBtn.addEventListener('click', () => {
-          if (chatbotSidebar) chatbotSidebar.classList.add('open');
-          floatingChatbotBtn.style.display = 'none';
-        });
-      }
-      if (chatbotClose) {
-        chatbotClose.addEventListener('click', () => {
-          if (chatbotSidebar) chatbotSidebar.classList.remove('open');
-          if (floatingChatbotBtn) floatingChatbotBtn.style.display = 'flex';
-        });
-      }
-      if (chatbotSend) {
-        chatbotSend.addEventListener('click', sendMessage);
-      }
-      if (chatbotInput) {
-        chatbotInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') sendMessage();
-        });
-      }
-      
-      async function sendMessage() {
-        const message = chatbotInput.value.trim();
-        if (!message) return;
-        
-        const messagesDiv = document.getElementById('chatbot-messages');
-        messagesDiv.innerHTML += `<div class="chatbot-message user">${message}</div>`;
-        chatbotInput.value = '';
-        messagesDiv.innerHTML += `<div class="chatbot-message bot">Thinking...</div>`;
-        const loadingMessage = messagesDiv.lastElementChild;
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        
-        try {
-          const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-          const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/.netlify/functions/chatbot';
-          const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-          const response = await fetch(chatbotUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message, language: currentLang })
-          });
-          const data = await response.json();
-          if (loadingMessage) loadingMessage.remove();
-          messagesDiv.innerHTML += `<div class="chatbot-message bot">${data.message}</div>`;
-        } catch (error) {
-          if (loadingMessage) loadingMessage.remove();
-          const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-          const offlineResponses = {
-            en: { human: "I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com.", default: "Hello! Welcome to TillValle! I'm running in offline mode." },
-            sw: { human: "Nitakuunganisha na wakala wetu Angela Wanjiru kwa angelawanjiru@gmail.com.", default: "Hujambo! Karibu TilleValle! Ninafanya kazi nje ya mtandao." },
-            fr: { human: "Je vais vous connecter avec notre agent Angela Wanjiru à angelawanjiru@gmail.com.", default: "Bonjour! Bienvenue chez TilleValle! Je fonctionne en mode hors ligne." },
-            zh: { human: "我将为您联系客服代表 Angela Wanjiru，邮箱：angelawanjiru@gmail.com。", default: "您好！欢迎来到 TilleValle！我正在离线模式下运行。" }
-          };
-          const responses = offlineResponses[currentLang] || offlineResponses.en;
-          if (message.toLowerCase().includes('human') || message.toLowerCase().includes('agent')) {
-            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.human}</div>`;
-          } else {
-            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.default}</div>`;
-          }
-        }
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-      }
+
     });
   </script>
 </body>

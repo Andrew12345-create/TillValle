@@ -40,28 +40,7 @@
   animation: fadeInUp 1s ease-out 1.5s forwards;
 }
 
-.floating-elements {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
 
-.floating-item {
-  position: absolute;
-  font-size: 3rem;
-  opacity: 0.7;
-  animation: float 6s ease-in-out infinite;
-}
-
-.floating-item:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
-.floating-item:nth-child(2) { top: 60%; right: 15%; animation-delay: 1s; }
-.floating-item:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 2s; }
-.floating-item:nth-child(4) { top: 40%; right: 30%; animation-delay: 3s; }
-.floating-item:nth-child(5) { bottom: 20%; right: 10%; animation-delay: 4s; }
-.floating-item:nth-child(6) { top: 70%; left: 40%; animation-delay: 5s; }
 
 .wave-animation {
   position: absolute;
