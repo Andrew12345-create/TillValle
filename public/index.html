@@ -71,7 +71,13 @@
       <button id="chat-close">×</button>
     </div>
     <div id="chat-messages">
-      <div class="bot-msg">Hello! How can I help you with TillValle products today?</div>
+      <div class="bot-msg">🌱 Hi! I'm TillieBot, your smart farming assistant! I can help you with:
+      <br><br>📦 <strong>Product Info</strong> - Ask about any product
+      <br>🚚 <strong>Delivery</strong> - Shipping & delivery details  
+      <br>💰 <strong>Pricing</strong> - Current prices & offers
+      <br>🛒 <strong>Orders</strong> - Help with your cart
+      <br>👨‍🌾 <strong>Farming Tips</strong> - Growing advice
+      <br><br>What would you like to know?</div>
     </div>
     <div id="chat-input-area">
       <input type="text" id="chat-input" placeholder="Type your message...">
@@ -92,7 +98,7 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      z-index: 1000;
+      z-index: 9998;
       color: white;
       font-size: 26px;
       box-shadow: 0 6px 20px rgba(45,106,79,0.4);
@@ -109,16 +115,16 @@
       position: fixed;
       bottom: 95px;
       right: 20px;
-      width: 380px;
-      height: 450px;
+      width: 400px;
+      height: 500px;
       background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-      border-radius: 15px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+      border-radius: 20px;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.3);
       display: none;
       flex-direction: column;
-      z-index: 1001;
-      border: 2px solid rgba(45,106,79,0.1);
-      backdrop-filter: blur(10px);
+      z-index: 9999;
+      border: 2px solid rgba(45,106,79,0.2);
+      backdrop-filter: blur(15px);
     }
     
     #chat-header {
@@ -187,11 +193,12 @@
     }
     
     .bot-msg {
-      background: linear-gradient(135deg, #f1f3f4 0%, #e8eaed 100%);
-      color: #333;
+      background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+      color: #2d6a4f;
       align-self: flex-start;
       border-bottom-left-radius: 6px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 3px 10px rgba(45,106,79,0.1);
+      border-left: 3px solid #40916c;
     }
     
     .user-msg {
@@ -286,6 +293,62 @@
   </style>
 
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // User authentication
+      const userEmail = localStorage.getItem('email');
+      const userArea = document.getElementById('user-area');
+      
+      if (userEmail && userArea) {
+        const initial = userEmail.charAt(0).toUpperCase();
+        const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
+        const userDisplay = profilePicture ? 
+          `<img src="${profilePicture}" alt="Profile" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">` : 
+          initial;
+        let adminLink = '';
+        if (userEmail === 'andrewmunamwangi@gmail.com') {
+          adminLink = `<a href="admin.html" class="nav-link">Admin</a>`;
+        }
+        userArea.innerHTML = `
+          <div class="user-dropdown-container">
+            <span class="user-initial" onclick="toggleUserDropdown()" title="${userEmail}">${userDisplay}</span>
+            <div class="user-dropdown" id="user-dropdown" style="position:absolute;top:40px;right:0;background:var(--bg-secondary);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.1);min-width:120px;z-index:1200;display:none;border:1px solid rgba(255,255,255,0.2);">
+              <a href="profile.html" style="display:block;padding:10px 15px;color:var(--text-primary);text-decoration:none;font-size:14px;">Profile</a>
+              <a href="#" onclick="logout()" style="display:block;padding:10px 15px;color:#ef4444;text-decoration:none;font-size:14px;border-top:1px solid rgba(0,0,0,0.1);">Logout</a>
+            </div>
+          </div>
+          ${adminLink}
+        `;
+      } else if (userArea) {
+        userArea.innerHTML = `<a href="login.html" class="nav-link">Login</a>`;
+      }
+      
+      window.toggleUserDropdown = function() {
+        const dropdown = document.getElementById('user-dropdown');
+        if (dropdown) dropdown.classList.toggle('show');
+      };
+      
+      window.logout = function() {
+        localStorage.removeItem('email');
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
+      };
+      
+      document.addEventListener('click', (event) => {
+        const dropdown = document.getElementById('user-dropdown');
+        const container = document.querySelector('.user-dropdown-container');
+        if (dropdown && container && !container.contains(event.target)) {
+          dropdown.classList.remove('show');
+        }
+      });
+      
+      // Cart counter
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const cartCountElem = document.getElementById('cart-count');
+      if (cartCountElem) cartCountElem.textContent = totalQuantity;
+    });
+    
+    // Chatbot functionality
     document.getElementById('chat-btn').onclick = function() {
       document.getElementById('chat-window').style.display = 'flex';
       document.getElementById('chat-btn').style.display = 'none';
@@ -299,19 +362,78 @@
     function sendMessage() {
       const input = document.getElementById('chat-input');
       const messages = document.getElementById('chat-messages');
-      const message = input.value.trim();
+      const message = input.value.trim().toLowerCase();
       
       if (!message) return;
       
-      messages.innerHTML += '<div class="user-msg">' + message + '</div>';
+      messages.innerHTML += '<div class="user-msg">' + input.value + '</div>';
       input.value = '';
       
-      setTimeout(() => {
-        messages.innerHTML += '<div class="bot-msg">Thanks for your message! I\'m here to help with TillValle products and orders.</div>';
-        messages.scrollTop = messages.scrollHeight;
-      }, 1000);
-      
+      // Show typing indicator
+      const typing = document.createElement('div');
+      typing.className = 'typing-indicator show';
+      typing.innerHTML = '🤖 TillieBot is typing...';
+      messages.appendChild(typing);
       messages.scrollTop = messages.scrollHeight;
+      
+      setTimeout(() => {
+        typing.remove();
+        let response = getSmartResponse(message);
+        messages.innerHTML += '<div class="bot-msg">' + response + '</div>';
+        messages.scrollTop = messages.scrollHeight;
+      }, 1500);
+    }
+    
+    function getSmartResponse(message) {
+      // Product inquiries
+      if (message.includes('milk') || message.includes('dairy')) {
+        return '🥛 <strong>Fresh Milk</strong> - KES 120/liter<br>Our milk comes from free-range cows in Gilgil. Rich in calcium and delivered fresh daily! Would you like to add some to your cart?';
+      }
+      if (message.includes('egg') || message.includes('chicken')) {
+        return '🥚 <strong>Farm Fresh Eggs</strong> - KES 25/piece<br>🐔 <strong>Free-Range Chicken</strong> - KES 800/kg<br>Both from happy, healthy chickens! Perfect for protein-rich meals.';
+      }
+      if (message.includes('fruit') || message.includes('mango') || message.includes('banana')) {
+        return '🍌 <strong>Fresh Fruits Available:</strong><br>• Bananas - KES 150/bunch<br>• Mangoes - KES 40/piece<br>• Avocados - KES 30/piece<br>All picked fresh from our partner farms!';
+      }
+      if (message.includes('vegetable') || message.includes('kale') || message.includes('spinach')) {
+        return '🥬 <strong>Fresh Vegetables:</strong><br>• Kales (Sukuma Wiki) - KES 30/bunch<br>• Spinach - KES 30/bunch<br>• Lettuce - KES 80/head<br>Packed with nutrients and harvested daily!';
+      }
+      if (message.includes('herb') || message.includes('basil') || message.includes('mint')) {
+        return '🌿 <strong>Fresh Herbs:</strong><br>• Basil - KES 50/bunch<br>• Mint - KES 40/bunch<br>• Coriander - KES 30/bunch<br>Perfect for cooking and natural remedies!';
+      }
+      
+      // Delivery inquiries
+      if (message.includes('deliver') || message.includes('shipping') || message.includes('location')) {
+        return '🚚 <strong>Delivery Info:</strong><br>• Nairobi: KES 200 (Same day)<br>• Kiambu: KES 150<br>• Nakuru: KES 300<br>• Other areas: Contact us<br>Free delivery on orders over KES 2000!';
+      }
+      
+      // Pricing inquiries
+      if (message.includes('price') || message.includes('cost') || message.includes('cheap')) {
+        return '💰 <strong>Our Pricing:</strong><br>We offer competitive farm-to-table prices! Check our shop for current rates. We also have:<br>• Bulk discounts available<br>• Weekly specials<br>• Loyalty rewards<br>What specific product pricing interests you?';
+      }
+      
+      // Farming tips
+      if (message.includes('grow') || message.includes('plant') || message.includes('farm') || message.includes('tip')) {
+        return '👨‍🌾 <strong>Farming Tips:</strong><br>• Plant kales during rainy season<br>• Use organic compost for better yields<br>• Water vegetables early morning<br>• Rotate crops to maintain soil health<br>Need specific growing advice? Ask me!';
+      }
+      
+      // Order help
+      if (message.includes('order') || message.includes('cart') || message.includes('buy')) {
+        return '🛒 <strong>Order Help:</strong><br>1. Browse our shop page<br>2. Click products to add to cart<br>3. Review your cart<br>4. Proceed to checkout<br>Need help with a specific step?';
+      }
+      
+      // Contact/support
+      if (message.includes('contact') || message.includes('support') || message.includes('help') || message.includes('human')) {
+        return '📞 <strong>Contact Support:</strong><br>• Email: support@tillvalle.com<br>• Phone: +254 700 123 456<br>• WhatsApp: +254 700 123 456<br>• Live Chat: Available 8AM-6PM<br>Our team is here to help!';
+      }
+      
+      // Greetings
+      if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+        return '👋 Hello there! Welcome to TillValle! I\'m here to help you find the freshest farm products. What can I assist you with today?';
+      }
+      
+      // Default response
+      return '🤔 I\'m not sure about that, but I\'d love to help! Try asking me about:<br>• Product information<br>• Delivery details<br>• Pricing<br>• Farming tips<br>• Order assistance<br><br>Or contact our support team for personalized help!';
     }
     
     document.getElementById('chat-send').onclick = sendMessage;
@@ -321,5 +443,6 @@
   </script>
 
   <script src="script.js" defer></script>
+  <script src="chatbot-ai.js"></script>
 </body>
 </html>

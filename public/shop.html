@@ -34,10 +34,7 @@
     <div class="nav-right">
       <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
       <div id="user-area"></div>
-      <div class="user-dropdown" id="user-dropdown" style="position:absolute;top:40px;right:0;background:var(--bg-secondary);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.1);min-width:120px;z-index:1200;display:none;border:1px solid rgba(255,255,255,0.2);">
-        <a href="profile.html" style="display:block;padding:10px 15px;color:var(--text-primary);text-decoration:none;font-size:14px;">Profile</a>
-        <a href="#" onclick="logout()" style="display:block;padding:10px 15px;color:#ef4444;text-decoration:none;font-size:14px;border-top:1px solid rgba(0,0,0,0.1);">Logout</a>
-      </div>
+
     </div>
   </nav>
 
@@ -105,18 +102,22 @@
   <!-- Product Modal -->
   <div id="product-modal" class="modal">
     <div class="modal-content">
-      <span class="close">&times;</span>
+      <button class="close">&times;</button>
       <div class="modal-body">
         <img id="modal-image" src="" alt="" class="modal-image">
         <div class="modal-info">
           <h3 id="modal-title"></h3>
           <p id="modal-description"></p>
-          <p id="modal-price" class="modal-price"></p>
+          <div id="modal-price" class="modal-price"></div>
           <div class="quantity-selector">
-            <label for="quantity">Quantity:</label>
-            <input type="number" id="quantity" min="1" value="1">
+            <label for="quantity">Select Quantity</label>
+            <div class="quantity-controls">
+              <button type="button" class="quantity-btn" onclick="decreaseQuantity()">−</button>
+              <input type="number" id="quantity" min="1" value="1" readonly>
+              <button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
+            </div>
           </div>
-          <button id="add-to-cart-btn" class="add-to-cart-btn">Add to Cart</button>
+          <button id="add-to-cart-btn" class="add-to-cart-btn">🛒 Add to Cart</button>
         </div>
       </div>
     </div>
@@ -136,7 +137,13 @@
       <button id="chat-close">×</button>
     </div>
     <div id="chat-messages">
-      <div class="bot-msg">Hello! How can I help you with TillValle products today?</div>
+      <div class="bot-msg">🌱 Hi! I'm TillieBot, your smart farming assistant! I can help you with:
+      <br><br>📦 <strong>Product Info</strong> - Ask about any product
+      <br>🚚 <strong>Delivery</strong> - Shipping & delivery details  
+      <br>💰 <strong>Pricing</strong> - Current prices & offers
+      <br>🛒 <strong>Orders</strong> - Help with your cart
+      <br>👨🌾 <strong>Farming Tips</strong> - Growing advice
+      <br><br>What would you like to know?</div>
     </div>
     <div id="chat-input-area">
       <input type="text" id="chat-input" placeholder="Type your message...">
@@ -167,14 +174,15 @@
       position: fixed;
       bottom: 90px;
       right: 20px;
-      width: 350px;
-      height: 400px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      width: 380px;
+      height: 450px;
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      border-radius: 15px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
       display: none;
       flex-direction: column;
       z-index: 1001;
+      border: 2px solid rgba(45,106,79,0.1);
     }
     
     #chat-header {
@@ -209,8 +217,10 @@
     }
     
     .bot-msg {
-      background: #f0f0f0;
+      background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+      color: #2d6a4f;
       align-self: flex-start;
+      border-left: 3px solid #40916c;
     }
     
     .user-msg {
@@ -247,6 +257,61 @@
   </style>
 
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // User authentication
+      const userEmail = localStorage.getItem('email');
+      const userArea = document.getElementById('user-area');
+      
+      if (userEmail && userArea) {
+        const initial = userEmail.charAt(0).toUpperCase();
+        const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
+        const userDisplay = profilePicture ? 
+          `<img src="${profilePicture}" alt="Profile" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">` : 
+          initial;
+        let adminLink = '';
+        if (userEmail === 'andrewmunamwangi@gmail.com') {
+          adminLink = `<a href="admin.html" class="nav-link">Admin</a>`;
+        }
+        userArea.innerHTML = `
+          <div class="user-dropdown-container">
+            <span class="user-initial" onclick="toggleUserDropdown()" title="${userEmail}">${userDisplay}</span>
+            <div class="user-dropdown" id="user-dropdown" style="position:absolute;top:40px;right:0;background:var(--bg-secondary);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.1);min-width:120px;z-index:1200;display:none;border:1px solid rgba(255,255,255,0.2);">
+              <a href="profile.html" style="display:block;padding:10px 15px;color:var(--text-primary);text-decoration:none;font-size:14px;">Profile</a>
+              <a href="#" onclick="logout()" style="display:block;padding:10px 15px;color:#ef4444;text-decoration:none;font-size:14px;border-top:1px solid rgba(0,0,0,0.1);">Logout</a>
+            </div>
+          </div>
+          ${adminLink}
+        `;
+      } else if (userArea) {
+        userArea.innerHTML = `<a href="login.html" class="nav-link">Login</a>`;
+      }
+      
+      window.toggleUserDropdown = function() {
+        const dropdown = document.getElementById('user-dropdown');
+        if (dropdown) dropdown.classList.toggle('show');
+      };
+      
+      window.logout = function() {
+        localStorage.removeItem('email');
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
+      };
+      
+      document.addEventListener('click', (event) => {
+        const dropdown = document.getElementById('user-dropdown');
+        const container = document.querySelector('.user-dropdown-container');
+        if (dropdown && container && !container.contains(event.target)) {
+          dropdown.classList.remove('show');
+        }
+      });
+      
+      // Cart counter
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const cartCountElem = document.getElementById('cart-count');
+      if (cartCountElem) cartCountElem.textContent = totalQuantity;
+    });
+    
     // Chatbot functionality
     document.getElementById('chat-btn').onclick = function() {
       document.getElementById('chat-window').style.display = 'flex';
@@ -261,19 +326,54 @@
     function sendMessage() {
       const input = document.getElementById('chat-input');
       const messages = document.getElementById('chat-messages');
-      const message = input.value.trim();
+      const message = input.value.trim().toLowerCase();
       
       if (!message) return;
       
-      messages.innerHTML += '<div class="user-msg">' + message + '</div>';
+      messages.innerHTML += '<div class="user-msg">' + input.value + '</div>';
       input.value = '';
       
-      setTimeout(() => {
-        messages.innerHTML += '<div class="bot-msg">Thanks for your message! I\'m here to help with TillValle products and orders.</div>';
-        messages.scrollTop = messages.scrollHeight;
-      }, 1000);
-      
+      // Show typing indicator
+      const typing = document.createElement('div');
+      typing.className = 'typing-indicator show';
+      typing.innerHTML = '🤖 TillieBot is typing...';
+      messages.appendChild(typing);
       messages.scrollTop = messages.scrollHeight;
+      
+      setTimeout(() => {
+        typing.remove();
+        let response = getSmartResponse(message);
+        messages.innerHTML += '<div class="bot-msg">' + response + '</div>';
+        messages.scrollTop = messages.scrollHeight;
+      }, 1500);
+    }
+    
+    function getSmartResponse(message) {
+      if (message.includes('milk') || message.includes('dairy')) {
+        return '🥛 <strong>Fresh Milk</strong> - KES 120/liter<br>Our milk comes from free-range cows in Gilgil. Rich in calcium and delivered fresh daily! Would you like to add some to your cart?';
+      }
+      if (message.includes('egg') || message.includes('chicken')) {
+        return '🥚 <strong>Farm Fresh Eggs</strong> - KES 25/piece<br>🐔 <strong>Free-Range Chicken</strong> - KES 800/kg<br>Both from happy, healthy chickens! Perfect for protein-rich meals.';
+      }
+      if (message.includes('fruit') || message.includes('mango') || message.includes('banana')) {
+        return '🍌 <strong>Fresh Fruits Available:</strong><br>• Bananas - KES 150/bunch<br>• Mangoes - KES 40/piece<br>• Avocados - KES 30/piece<br>All picked fresh from our partner farms!';
+      }
+      if (message.includes('vegetable') || message.includes('kale') || message.includes('spinach')) {
+        return '🥬 <strong>Fresh Vegetables:</strong><br>• Kales (Sukuma Wiki) - KES 30/bunch<br>• Spinach - KES 30/bunch<br>• Lettuce - KES 80/head<br>Packed with nutrients and harvested daily!';
+      }
+      if (message.includes('deliver') || message.includes('shipping')) {
+        return '🚚 <strong>Delivery Info:</strong><br>• Nairobi: KES 200 (Same day)<br>• Kiambu: KES 150<br>• Free delivery on orders over KES 2000!';
+      }
+      if (message.includes('price') || message.includes('cost')) {
+        return '💰 <strong>Our Pricing:</strong><br>We offer competitive farm-to-table prices! Check our current rates above. Bulk discounts available!';
+      }
+      if (message.includes('order') || message.includes('cart')) {
+        return '🛒 <strong>Order Help:</strong><br>Click any product above to view details and add to cart. Need help with checkout?';
+      }
+      if (message.includes('contact') || message.includes('support')) {
+        return '📞 <strong>Contact:</strong> support@tillvalle.com<br>📱 <strong>WhatsApp:</strong> +254 700 123 456';
+      }
+      return '🤔 I can help with product info, pricing, delivery, and orders. What would you like to know?';
     }
     
     document.getElementById('chat-send').onclick = sendMessage;
@@ -294,19 +394,41 @@
       document.getElementById('modal-image').alt = name;
       document.getElementById('quantity').value = 1;
       
-      document.getElementById('product-modal').style.display = 'flex';
+      const modal = document.getElementById('product-modal');
+      modal.style.display = 'flex';
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
     }
     
+    function closeModal() {
+      const modal = document.getElementById('product-modal');
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+    
+    window.closeModal = closeModal;
+    
     // Close modal
-    document.querySelector('.close').onclick = function() {
-      document.getElementById('product-modal').style.display = 'none';
-    };
+    document.querySelector('.close').addEventListener('click', closeModal);
     
     // Close modal when clicking outside
     window.onclick = function(event) {
       const modal = document.getElementById('product-modal');
       if (event.target === modal) {
-        modal.style.display = 'none';
+        closeModal();
+      }
+    };
+    
+    // Quantity controls
+    window.increaseQuantity = function() {
+      const input = document.getElementById('quantity');
+      input.value = parseInt(input.value) + 1;
+    };
+    
+    window.decreaseQuantity = function() {
+      const input = document.getElementById('quantity');
+      if (parseInt(input.value) > 1) {
+        input.value = parseInt(input.value) - 1;
       }
     };
     
@@ -314,12 +436,51 @@
     document.getElementById('add-to-cart-btn').onclick = function() {
       const quantity = parseInt(document.getElementById('quantity').value);
       if (quantity > 0) {
-        alert('Added ' + quantity + ' x ' + currentProduct.name + ' to cart!');
-        document.getElementById('product-modal').style.display = 'none';
+        // Add animation to button
+        const btn = this;
+        btn.style.transform = 'scale(0.95)';
+        btn.textContent = '✓ Added!';
+        
+        setTimeout(() => {
+          btn.style.transform = 'scale(1)';
+          btn.textContent = '🛒 Add to Cart';
+          closeModal();
+        }, 1000);
+        
+        // Show toast notification
+        showToast(`Added ${quantity}x ${currentProduct.name} to cart!`);
       }
     };
+    
+    // Toast notification
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: linear-gradient(135deg, #00b894, #00cec9);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 50px;
+        box-shadow: 0 8px 25px rgba(0,184,148,0.3);
+        z-index: 999999;
+        font-weight: 600;
+        transform: translateY(100px);
+        transition: all 0.3s ease;
+      `;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => toast.style.transform = 'translateY(0)', 100);
+      setTimeout(() => {
+        toast.style.transform = 'translateY(100px)';
+        setTimeout(() => document.body.removeChild(toast), 300);
+      }, 3000);
+    }
   </script>
 
   <script src="script.js" defer></script>
+  <script src="chatbot-ai.js"></script>
 </body>
 </html>
