@@ -50,7 +50,7 @@ const pool = new Pool({
 });
 
 const stockPool = new Pool({
-  connectionString: process.env.STOCK_DB_URL,
+  connectionString: 'postgresql://neondb_owner:npg_qn6wAlZJavf3@ep-billowing-mode-adkbmnzk-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
   ssl: { rejectUnauthorized: false },
 });
 
@@ -532,88 +532,91 @@ app.delete('/delete-account', async (req, res) => {
   }
 });
 
+const responses = {
+  greeting: "Hello! Welcome to TillValle! How can I help you today?",
+  products: "We offer fresh fruits, vegetables, dairy, and herbs from local Kenyan farmers!",
+  delivery: "Same-day delivery across Nairobi for orders before 2 PM. Delivery fees start from KES 200.",
+  payment: "We accept M-Pesa and card payments.",
+  order: "Visit our shop page, add items to cart, and checkout with M-Pesa or card.",
+  contact: "Contact us at support@tillvalle.com or Angela at angelawanjiru@gmail.com.",
+  default: "I can help with products, delivery, payments, or orders. What would you like to know?"
+};
+
+async function getStockInfo(query) {
+  try {
+    const isAllStockQuery = query.includes('all') || query.includes('complete') || query.includes('full');
+
+    let stockData;
+    if (isAllStockQuery) {
+      // Return all stock
+      const result = await stockPool.query('SELECT product_name, stock_quantity FROM product_stock ORDER BY product_name');
+      stockData = result.rows.map(row => ({
+        name: row.product_name,
+        quantity: row.stock_quantity || 0
+      }));
+    } else {
+      // Search for specific products
+      const result = await stockPool.query(
+        'SELECT product_name, stock_quantity FROM product_stock WHERE LOWER(product_name) LIKE $1',
+        [`%${query}%`]
+      );
+      stockData = result.rows.map(row => ({
+        name: row.product_name,
+        quantity: row.stock_quantity || 0
+      }));
+    }
+
+    if (stockData.length === 0) {
+      return isAllStockQuery
+        ? "📦 No products found in our stock database."
+        : `📦 Sorry, I couldn't find "${query}" in our stock. Try asking for "all stock" to see everything available.`;
+    }
+
+    let stockList = isAllStockQuery ? "📦 Complete Stock Information:\n\n" : "📦 Stock Information:\n\n";
+    stockData.forEach(item => {
+      stockList += `• ${item.name}: ${item.quantity} units\n`;
+    });
+    return stockList;
+
+  } catch (error) {
+    console.error('Stock query error:', error);
+    return "📦 Complete Stock Information:\nI'm having trouble accessing our stock database right now. Please try again in a moment, or contact us directly for current availability.";
+  }
+}
+
+async function getResponse(message) {
+  const msg = message.toLowerCase();
+
+  if (msg.includes('hello') || msg.includes('hi')) return responses.greeting;
+  if (msg.includes('stock') || msg.includes('inventory') || msg.includes('available')) {
+    return await getStockInfo(msg);
+  }
+  if (msg.includes('product') || msg.includes('fruit') || msg.includes('vegetable')) return responses.products;
+  if (msg.includes('deliver') || msg.includes('shipping')) return responses.delivery;
+  if (msg.includes('pay') || msg.includes('payment') || msg.includes('mpesa')) return responses.payment;
+  if (msg.includes('order') || msg.includes('buy')) return responses.order;
+  if (msg.includes('contact') || msg.includes('support')) return responses.contact;
+
+  return responses.default;
+}
+
 // ==========================
 // CHATBOT
 // ==========================
 app.post('/chatbot', async (req, res) => {
-  const { message, isAdmin } = req.body;
+  const { message } = req.body;
   if (!message) {
-    return res.status(400).json({ error: 'Message is required' });
+    return res.status(400).json({ error: 'Message required' });
   }
 
-  const lowerMessage = message.toLowerCase();
-  let response = "I'm here to help with your questions about TillValle!";
+  try {
+    const response = await getResponse(message);
 
-  // Check if user typed just a product name
-  const products = ['milk', 'eggs', 'butter', 'apples', 'mangoes', 'kales', 'spinach', 'basil', 'mint', 'bananas', 'avocados', 'chicken', 'ghee', 'coriander', 'parsley', 'lettuce', 'managu', 'terere', 'salgaa'];
-  const exactProduct = products.find(product => lowerMessage.trim() === product);
-  
-  if (exactProduct) {
-    try {
-      const result = await stockPool.query('SELECT * FROM product_stock WHERE LOWER(product_name) LIKE $1', [`%${exactProduct}%`]);
-      
-      if (result.rows.length > 0) {
-        const item = result.rows[0];
-        response = item.stock_quantity > 0 
-          ? `✅ ${item.product_name}: ${item.stock_quantity} available in stock!`
-          : `❌ ${item.product_name} is currently out of stock. We'll restock soon!`;
-      } else {
-        response = `I couldn't find ${exactProduct} in our inventory. Please check our shop page for available items.`;
-      }
-    } catch (error) {
-      console.error('Stock query error:', error);
-      response = `Let me check ${exactProduct} for you... Please visit our shop page to see current availability.`;
-    }
-  } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
-    response = "Hello! Welcome to TillValle! How can I help you with fresh produce delivery today?";
-  } else if (lowerMessage.includes('stock') || lowerMessage.includes('in stock') || lowerMessage.includes('available')) {
-    try {
-      // Check for specific item queries
-      const products = ['milk', 'eggs', 'butter', 'apples', 'mangoes', 'kales', 'spinach', 'basil', 'mint', 'bananas', 'avocados', 'chicken', 'ghee', 'coriander', 'parsley', 'lettuce', 'managu', 'terere', 'salgaa'];
-      const mentionedProduct = products.find(product => lowerMessage.includes(product));
-      
-      if (mentionedProduct) {
-        // Query for specific item
-        const result = await stockPool.query('SELECT * FROM product_stock WHERE LOWER(product_name) LIKE $1', [`%${mentionedProduct}%`]);
-        
-        if (result.rows.length > 0) {
-          const item = result.rows[0];
-          response = item.stock_quantity > 0 
-            ? `✅ ${item.product_name}: ${item.stock_quantity} available in stock!`
-            : `❌ ${item.product_name} is currently out of stock. We'll restock soon!`;
-        } else {
-          response = `I couldn't find ${mentionedProduct} in our inventory. Please check our shop page for available items.`;
-        }
-      } else {
-        // General stock query - show all items
-        const result = await stockPool.query('SELECT * FROM product_stock ORDER BY product_name');
-        const inStockItems = result.rows.filter(item => item.stock_quantity > 0);
-        const outOfStockItems = result.rows.filter(item => item.stock_quantity <= 0);
-        
-        response = 'Current stock levels:\n\n';
-        
-        if (inStockItems.length > 0) {
-          response += '✅ In Stock:\n';
-          inStockItems.forEach(item => {
-            response += `• ${item.product_name}: ${item.stock_quantity} available\n`;
-          });
-          response += '\n';
-        }
-        
-        if (outOfStockItems.length > 0) {
-          response += '❌ Out of Stock:\n';
-          outOfStockItems.forEach(item => {
-            response += `• ${item.product_name}\n`;
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Stock query error:', error);
-      response = "We have fresh produce available! Visit our shop page to see current stock levels.";
-    }
+    return res.json({ message: response });
+  } catch (error) {
+    console.error('Chatbot error:', error);
+    return res.status(500).json({ error: 'Server error', message: 'Please try again later.' });
   }
-
-  res.json({ message: response });
 });
 
 // ==========================

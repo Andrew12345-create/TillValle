@@ -100,160 +100,16 @@
   <!-- Toast -->
   <div id="cart-toast"></div>
 
-  <!-- Chat Button -->
-  <div id="chat-btn">💬</div>
-  
-  <!-- Chat Window -->
-  <div id="chat-window">
-    <div id="chat-header">
-      <span>TillValle Chat</span>
-      <button id="chat-close">×</button>
-    </div>
-    <div id="chat-messages">
-      <div class="bot-msg">Hello! How can I help you with TillValle products today?</div>
-    </div>
-    <div id="chat-input-area">
-      <input type="text" id="chat-input" placeholder="Type your message...">
-      <button id="chat-send">Send</button>
-    </div>
+  <!-- Floating Chatbot Button -->
+  <div id="floating-chatbot-btn" class="floating-chatbot-btn">
+    <span class="chatbot-emoji">💬</span>
   </div>
 
-  <style>
-    #chat-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-      background: #2d6a4f;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 1000;
-      color: white;
-      font-size: 24px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-    
-    #chat-window {
-      position: fixed;
-      bottom: 90px;
-      right: 20px;
-      width: 350px;
-      height: 400px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-      display: none;
-      flex-direction: column;
-      z-index: 1001;
-    }
-    
-    #chat-header {
-      background: #2d6a4f;
-      color: white;
-      padding: 15px;
-      border-radius: 10px 10px 0 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    #chat-close {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
-    }
-    
-    #chat-messages {
-      flex: 1;
-      padding: 15px;
-      overflow-y: auto;
-    }
-    
-    .bot-msg, .user-msg {
-      margin: 10px 0;
-      padding: 8px 12px;
-      border-radius: 15px;
-      max-width: 80%;
-    }
-    
-    .bot-msg {
-      background: #f0f0f0;
-      align-self: flex-start;
-    }
-    
-    .user-msg {
-      background: #2d6a4f;
-      color: white;
-      align-self: flex-end;
-      margin-left: auto;
-      text-align: right;
-    }
-    
-    #chat-input-area {
-      padding: 15px;
-      border-top: 1px solid #eee;
-      display: flex;
-      gap: 10px;
-    }
-    
-    #chat-input {
-      flex: 1;
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      border-radius: 20px;
-      outline: none;
-    }
-    
-    #chat-send {
-      background: #2d6a4f;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 20px;
-      cursor: pointer;
-    }
-  </style>
-
-  <script>
-    document.getElementById('chat-btn').onclick = function() {
-      document.getElementById('chat-window').style.display = 'flex';
-      document.getElementById('chat-btn').style.display = 'none';
-    };
-    
-    document.getElementById('chat-close').onclick = function() {
-      document.getElementById('chat-window').style.display = 'none';
-      document.getElementById('chat-btn').style.display = 'flex';
-    };
-    
-    function sendMessage() {
-      const input = document.getElementById('chat-input');
-      const messages = document.getElementById('chat-messages');
-      const message = input.value.trim();
-      
-      if (!message) return;
-      
-      messages.innerHTML += '<div class="user-msg">' + message + '</div>';
-      input.value = '';
-      
-      setTimeout(() => {
-        messages.innerHTML += '<div class="bot-msg">Thanks for your message! I\'m here to help with TillValle products and orders.</div>';
-        messages.scrollTop = messages.scrollHeight;
-      }, 1000);
-      
-      messages.scrollTop = messages.scrollHeight;
-    }
-    
-    document.getElementById('chat-send').onclick = sendMessage;
-    document.getElementById('chat-input').onkeypress = function(e) {
-      if (e.key === 'Enter') sendMessage();
-    };
-  </script>
+  <!-- Floating Cart Button -->
+  <div id="floating-cart-btn" class="floating-cart-btn">
+    <span class="cart-emoji">🛒</span>
+    <span id="floating-cart-count" class="floating-cart-count">0</span>
+  </div>
 
 
 
@@ -261,7 +117,7 @@
 
   <script src="navbar-universal.js"></script>
   <script src="global-animations.js"></script>
-  <script src="chatbot.js"></script>
+  <script src="global-chat.js"></script>
   <script src="script.js" defer></script>
   <script>
     // Hide loading screen when page loads
