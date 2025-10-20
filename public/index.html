@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TillValle</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="global-chat.css">
   <!-- Hotjar Tracking Code -->
   <script>
     (function(h,o,t,j,a,r){
@@ -115,8 +116,9 @@
       position: fixed;
       bottom: 95px;
       right: 20px;
-      width: 400px;
-      height: 500px;
+      width: 380px;
+      height: 450px;
+      max-height: calc(100vh - 120px);
       background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
       border-radius: 20px;
       box-shadow: 0 15px 50px rgba(0,0,0,0.3);
@@ -125,6 +127,14 @@
       z-index: 9999;
       border: 2px solid rgba(45,106,79,0.2);
       backdrop-filter: blur(15px);
+      transform: scale(0.7) translateY(30px) rotateX(15deg);
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    #chat-window.show {
+      transform: scale(1) translateY(0) rotateX(0deg);
+      opacity: 1;
     }
     
     #chat-header {
@@ -327,6 +337,9 @@
       visibility: visible;
       transform: translateY(0);
     }
+  </style>
+  <script src="global-chat.js"></script>
+    }
     
     .user-dropdown a {
       display: block;
@@ -416,6 +429,7 @@
     };
   </script>
 
+  <script src="navbar-universal.js"></script>
   <script src="chatbot-ai.js"></script>
   <script src="script.js" defer></script>
 </body>

@@ -6,6 +6,7 @@
   <title>Shop - TillValle</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="shop-styles.css">
+  <link rel="stylesheet" href="global-chat.css">
   <!-- Hotjar Tracking Code -->
   <script>
     (function(h,o,t,j,a,r){
@@ -151,110 +152,7 @@
     </div>
   </div>
 
-  <style>
-    #chat-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-      background: #2d6a4f;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 1000;
-      color: white;
-      font-size: 24px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-    
-    #chat-window {
-      position: fixed;
-      bottom: 90px;
-      right: 20px;
-      width: 380px;
-      height: 450px;
-      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-      border-radius: 15px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-      display: none;
-      flex-direction: column;
-      z-index: 1001;
-      border: 2px solid rgba(45,106,79,0.1);
-    }
-    
-    #chat-header {
-      background: #2d6a4f;
-      color: white;
-      padding: 15px;
-      border-radius: 10px 10px 0 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    #chat-close {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
-    }
-    
-    #chat-messages {
-      flex: 1;
-      padding: 15px;
-      overflow-y: auto;
-    }
-    
-    .bot-msg, .user-msg {
-      margin: 10px 0;
-      padding: 8px 12px;
-      border-radius: 15px;
-      max-width: 80%;
-    }
-    
-    .bot-msg {
-      background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
-      color: #2d6a4f;
-      align-self: flex-start;
-      border-left: 3px solid #40916c;
-    }
-    
-    .user-msg {
-      background: #2d6a4f;
-      color: white;
-      align-self: flex-end;
-      margin-left: auto;
-      text-align: right;
-    }
-    
-    #chat-input-area {
-      padding: 15px;
-      border-top: 1px solid #eee;
-      display: flex;
-      gap: 10px;
-    }
-    
-    #chat-input {
-      flex: 1;
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      border-radius: 20px;
-      outline: none;
-    }
-    
-    #chat-send {
-      background: #2d6a4f;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 20px;
-      cursor: pointer;
-    }
-  </style>
+
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -480,7 +378,8 @@
     }
   </script>
 
+  <script src="navbar-universal.js"></script>
   <script src="script.js" defer></script>
-  <script src="chatbot-ai.js"></script>
+  <script src="global-chat.js"></script>
 </body>
 </html>

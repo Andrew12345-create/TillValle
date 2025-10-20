@@ -1,55 +1,58 @@
-// Universal navbar script for all pages
+// Universal navbar functionality for all pages
 document.addEventListener('DOMContentLoaded', function() {
+  const userArea = document.getElementById('user-area');
   const userEmail = localStorage.getItem('email');
-  const loginBtn = document.getElementById('login-btn');
-  const profileAvatar = document.getElementById('profile-avatar');
-  const adminBtn = document.getElementById('admin-btn');
   
-  // Update profile avatar
-  if (userEmail && profileAvatar) {
+  if (userEmail && userArea) {
+    const initial = userEmail.charAt(0).toUpperCase();
     const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
-    if (profilePicture) {
-      profileAvatar.innerHTML = `<img src="${profilePicture}" alt="Profile" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
-    } else {
-      profileAvatar.textContent = userEmail.charAt(0).toUpperCase();
-    }
-    profileAvatar.style.display = 'inline-block';
-    if (loginBtn) loginBtn.style.display = 'none';
+    const userDisplay = profilePicture ? 
+      `<img src="${profilePicture}" alt="Profile" style="width:35px;height:35px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.3);">` : 
+      initial;
     
-    // Show admin for admin user
-    if (adminBtn && userEmail === 'andrewmunamwangi@gmail.com') {
-      adminBtn.style.display = 'inline-block';
+    let adminLink = '';
+    if (userEmail === 'andrewmunamwangi@gmail.com') {
+      adminLink = `<a href="admin.html" class="nav-link">Admin</a>`;
     }
-  } else {
-    // Not logged in
-    if (profileAvatar) profileAvatar.style.display = 'none';
-    if (adminBtn) adminBtn.style.display = 'none';
-    if (loginBtn) loginBtn.style.display = 'inline-block';
+    
+    userArea.innerHTML = `
+      <div class="user-dropdown-container">
+        <span class="user-initial" onclick="toggleUserDropdown()" title="${userEmail}">${userDisplay}</span>
+        <div class="user-dropdown" id="user-dropdown">
+          <a href="profile.html">Profile</a>
+          <a href="#" onclick="logout()">Logout</a>
+        </div>
+      </div>
+      ${adminLink}
+    `;
+  } else if (userArea) {
+    userArea.innerHTML = `<a href="login.html" class="nav-link">Login</a>`;
   }
+  
+  // Global functions
+  window.toggleUserDropdown = function() {
+    const dropdown = document.getElementById('user-dropdown');
+    if (dropdown) dropdown.classList.toggle('show');
+  };
+  
+  window.logout = function() {
+    localStorage.removeItem('email');
+    localStorage.removeItem('user');
+    window.location.href = 'login.html';
+  };
+  
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (event) => {
+    const dropdown = document.getElementById('user-dropdown');
+    const container = document.querySelector('.user-dropdown-container');
+    if (dropdown && container && !container.contains(event.target)) {
+      dropdown.classList.remove('show');
+    }
+  });
+  
+  // Update cart counter
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartCountElem = document.getElementById('cart-count');
+  if (cartCountElem) cartCountElem.textContent = totalQuantity;
 });
-
-function toggleDropdown() {
-  const dropdown = document.getElementById('user-dropdown');
-  if (dropdown) {
-    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-  }
-}
-
-function logout() {
-  localStorage.removeItem('email');
-  localStorage.removeItem('user');
-  window.location.href = 'login.html';
-}
-
-// Close dropdown when clicking outside
-document.addEventListener('click', function(event) {
-  const dropdown = document.getElementById('user-dropdown');
-  const avatar = document.getElementById('profile-avatar');
-  if (dropdown && avatar && !avatar.contains(event.target) && !dropdown.contains(event.target)) {
-    dropdown.style.display = 'none';
-  }
-});
-
-// Make functions global
-window.toggleDropdown = toggleDropdown;
-window.logout = logout;

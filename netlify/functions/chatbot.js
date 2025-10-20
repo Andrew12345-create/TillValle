@@ -8,10 +8,51 @@ const responses = {
   default: "I can help with products, delivery, payments, or orders. What would you like to know?"
 };
 
-function getResponse(message) {
+async function getStockInfo(query) {
+  try {
+    const stockFunctionUrl = `${process.env.URL}/.netlify/functions/stock`;
+    const isAllStockQuery = query.includes('all') || query.includes('complete') || query.includes('full');
+
+    const response = await fetch(stockFunctionUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query: isAllStockQuery ? '' : query, type: isAllStockQuery ? 'all' : 'specific' }),
+    });
+
+    if (!response.ok) {
+      console.error('Error fetching stock from Netlify function:', response.status, response.statusText);
+      return "📦 Complete Stock Information:\nI'm having trouble accessing our stock database right now. Please try again in a moment, or contact us directly for current availability.";
+    }
+
+    const stockData = await response.json();
+
+    if (stockData.length === 0) {
+      return isAllStockQuery
+        ? "📦 No products found in our stock database."
+        : `📦 Sorry, I couldn't find "${query}" in our stock. Try asking for "all stock" to see everything available.`;
+    }
+
+    let stockList = isAllStockQuery ? "📦 Complete Stock Information:\n\n" : "📦 Stock Information:\n\n";
+    stockData.forEach(item => {
+      stockList += `• ${item.name}: ${item.quantity} units\n`;
+    });
+    return stockList;
+
+  } catch (error) {
+    console.error('Stock query error:', error);
+    return "📦 Complete Stock Information:\nI'm having trouble accessing our stock database right now. Please try again in a moment, or contact us directly for current availability.";
+  }
+}
+
+async function getResponse(message) {
   const msg = message.toLowerCase();
   
   if (msg.includes('hello') || msg.includes('hi')) return responses.greeting;
+  if (msg.includes('stock') || msg.includes('inventory') || msg.includes('available')) {
+    return await getStockInfo(msg);
+  }
   if (msg.includes('product') || msg.includes('fruit') || msg.includes('vegetable')) return responses.products;
   if (msg.includes('deliver') || msg.includes('shipping')) return responses.delivery;
   if (msg.includes('pay') || msg.includes('payment') || msg.includes('mpesa')) return responses.payment;
@@ -45,6 +86,8 @@ exports.handler = async (event) => {
       return { statusCode: 400, body: JSON.stringify({ error: 'Message required' }) };
     }
 
+    const response = await getResponse(message);
+    
     return {
       statusCode: 200,
       headers: {
@@ -52,7 +95,7 @@ exports.handler = async (event) => {
         'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Allow-Methods': 'POST, OPTIONS'
       },
-      body: JSON.stringify({ message: getResponse(message) })
+      body: JSON.stringify({ message: response })
     };
   } catch (error) {
     return {
