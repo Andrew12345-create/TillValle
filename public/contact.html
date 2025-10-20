@@ -63,9 +63,168 @@
   <!-- Toast -->
   <div id="cart-toast"></div>
 
-
-
-
+  <style>
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(45, 106, 79, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(45, 106, 79, 0); } 100% { box-shadow: 0 0 0 0 rgba(45, 106, 79, 0); } }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideInBounce { 0% { transform: translateX(100%) scale(0.8); opacity: 0; } 60% { transform: translateX(-10px) scale(1.05); opacity: 1; } 100% { transform: translateX(0) scale(1); opacity: 1; } }
+    @keyframes clickPulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(45, 106, 79, 0.7); } 50% { transform: scale(1.1); box-shadow: 0 0 0 15px rgba(45, 106, 79, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(45, 106, 79, 0); } }
+    .max-chat-btn { position: fixed !important; bottom: 30px !important; right: 30px !important; width: 70px !important; height: 70px !important; background: linear-gradient(135deg, #2d6a4f, #40916c) !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; z-index: 10000 !important; color: white !important; font-size: 28px !important; box-shadow: 0 8px 25px rgba(45, 106, 79, 0.4) !important; animation: float 3s ease-in-out infinite, pulse 2s infinite !important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; border: 3px solid rgba(255,255,255,0.2) !important; }
+    .max-chat-btn:hover { transform: scale(1.15) translateY(-8px) rotate(10deg) !important; box-shadow: 0 20px 40px rgba(45, 106, 79, 0.7) !important; }
+    .max-chat-btn:active { transform: scale(0.95) !important; animation: clickPulse 0.3s ease !important; }
+    .max-chat-panel { position: fixed !important; top: 0 !important; right: -450px !important; width: 420px !important; height: 100vh !important; background: linear-gradient(180deg, #ffffff 0%, #f8fffe 100%) !important; z-index: 9999 !important; transition: right 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important; box-shadow: -15px 0 40px rgba(0,0,0,0.2) !important; border-left: 2px solid rgba(45, 106, 79, 0.1) !important; backdrop-filter: blur(10px) !important; }
+    .max-chat-panel.open { right: 0 !important; animation: slideInBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important; }
+    .max-chat-header { background: linear-gradient(135deg, #2d6a4f, #40916c) !important; color: white !important; padding: 25px !important; display: flex !important; justify-content: space-between !important; align-items: center !important; box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important; position: relative !important; }
+    .max-chat-header::before { content: '' !important; position: absolute !important; bottom: 0 !important; left: 0 !important; right: 0 !important; height: 2px !important; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent) !important; }
+    .max-chat-header h3 { margin: 0 !important; font-size: 20px !important; font-weight: 600 !important; }
+    .max-chat-close { background: rgba(255,255,255,0.2) !important; border: none !important; color: white !important; font-size: 24px !important; cursor: pointer !important; width: 35px !important; height: 35px !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; transition: all 0.3s ease !important; }
+    .max-chat-close:hover { background: rgba(255,255,255,0.3) !important; transform: rotate(90deg) !important; }
+    .max-chat-messages { flex: 1 !important; overflow-y: auto !important; padding: 20px !important; background: linear-gradient(180deg, #ffffff 0%, #f8fffe 100%) !important; }
+    .max-chat-input-area { padding: 20px !important; background: white !important; border-top: 1px solid rgba(45, 106, 79, 0.1) !important; box-shadow: 0 -2px 10px rgba(0,0,0,0.05) !important; position: relative !important; }
+    .max-chat-input { width: 100% !important; padding: 15px !important; border: 2px solid rgba(45, 106, 79, 0.2) !important; border-radius: 25px !important; outline: none !important; font-size: 14px !important; transition: all 0.3s ease !important; background: rgba(248, 255, 254, 0.5) !important; }
+    .max-chat-input:focus { border-color: #2d6a4f !important; box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1) !important; }
+    .max-chat-send { position: absolute !important; right: 25px !important; top: 50% !important; transform: translateY(-50%) !important; background: linear-gradient(135deg, #2d6a4f, #40916c) !important; color: white !important; border: none !important; width: 45px !important; height: 45px !important; border-radius: 50% !important; cursor: pointer !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 16px !important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; box-shadow: 0 4px 15px rgba(45, 106, 79, 0.3) !important; }
+    .max-chat-send:hover { transform: translateY(-50%) scale(1.15) rotate(15deg) !important; box-shadow: 0 6px 20px rgba(45, 106, 79, 0.6) !important; }
+    .max-chat-send:active { transform: translateY(-50%) scale(0.9) !important; }
+    .max-user-msg { text-align: right !important; margin: 15px 0 !important; animation: fadeIn 0.3s ease !important; }
+    .max-user-msg span { background: linear-gradient(135deg, #2d6a4f, #40916c) !important; color: white !important; padding: 12px 18px !important; border-radius: 20px 20px 5px 20px !important; display: inline-block !important; max-width: 80% !important; box-shadow: 0 4px 15px rgba(45, 106, 79, 0.3) !important; position: relative !important; }
+    .max-user-msg span::before { content: '' !important; position: absolute !important; bottom: -2px !important; right: 5px !important; width: 0 !important; height: 0 !important; border-left: 8px solid #40916c !important; border-bottom: 8px solid transparent !important; }
+    .max-bot-msg { margin: 15px 0 !important; animation: fadeIn 0.3s ease !important; }
+    .max-bot-msg span { background: linear-gradient(135deg, #e8f5e8, #f0f9f0) !important; color: #2d6a4f !important; padding: 12px 18px !important; border-radius: 20px 20px 20px 5px !important; display: inline-block !important; max-width: 80% !important; border-left: 4px solid #2d6a4f !important; box-shadow: 0 4px 15px rgba(45, 106, 79, 0.15) !important; position: relative !important; }
+    .max-bot-msg span::before { content: '' !important; position: absolute !important; bottom: -2px !important; left: 5px !important; width: 0 !important; height: 0 !important; border-right: 8px solid #f0f9f0 !important; border-bottom: 8px solid transparent !important; }
+    .max-typing { display: flex !important; align-items: center !important; gap: 5px !important; color: #666 !important; font-style: italic !important; margin: 10px 0 !important; }
+    .max-typing::after { content: '' !important; width: 8px !important; height: 8px !important; border-radius: 50% !important; background: #2d6a4f !important; animation: pulse 1.5s infinite !important; }
+  </style>
+  
+  <div id="max-chatbot-btn" class="max-chat-btn" onclick="openMaxChat()">
+    💬
+  </div>
+  
+  <div id="max-chat-panel" class="max-chat-panel">
+    <div class="max-chat-header">
+      <h3>🌱 TillValle Assistant</h3>
+      <button class="max-chat-close" onclick="closeMaxChat()">&times;</button>
+    </div>
+    <div id="max-chat-messages" class="max-chat-messages" style="display: flex; flex-direction: column; height: calc(100vh - 160px);">
+      <div class="max-bot-msg">
+        <span>👋 Hello! I'm your TillValle assistant. I can help you with products, delivery, and orders. How can I assist you today?</span>
+      </div>
+    </div>
+    <div class="max-chat-input-area">
+      <input type="text" id="max-chat-input" class="max-chat-input" placeholder="Ask me anything about TillValle..." onkeypress="if(event.key=='Enter') sendMaxMessage()">
+      <button class="max-chat-send" onclick="sendMaxMessage()">➤</button>
+    </div>
+  </div>
+  
+  <script>
+    function openMaxChat() {
+      document.getElementById('max-chat-panel').classList.add('open');
+      document.getElementById('max-chatbot-btn').style.display = 'none';
+      document.getElementById('max-chat-input').focus();
+    }
+    
+    function closeMaxChat() {
+      document.getElementById('max-chat-panel').classList.remove('open');
+      setTimeout(function() {
+        document.getElementById('max-chatbot-btn').style.display = 'flex';
+      }, 200);
+    }
+    
+    function addMaxTypingIndicator() {
+      var messages = document.getElementById('max-chat-messages');
+      var typing = document.createElement('div');
+      typing.className = 'max-typing';
+      typing.id = 'max-typing-indicator';
+      typing.innerHTML = 'TillValle is typing';
+      messages.appendChild(typing);
+      messages.scrollTop = messages.scrollHeight;
+    }
+    
+    function removeMaxTypingIndicator() {
+      var typing = document.getElementById('max-typing-indicator');
+      if (typing) typing.remove();
+    }
+    
+    async function sendMaxMessage() {
+      var input = document.getElementById('max-chat-input');
+      var messages = document.getElementById('max-chat-messages');
+      var message = input.value.trim();
+      
+      if (!message) return;
+      
+      var userDiv = document.createElement('div');
+      userDiv.className = 'max-user-msg';
+      userDiv.innerHTML = '<span>' + message + '</span>';
+      messages.appendChild(userDiv);
+      
+      input.value = '';
+      messages.scrollTop = messages.scrollHeight;
+      
+      addMaxTypingIndicator();
+      
+      try {
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/.netlify/functions/chatbot';
+        var response = await fetch(chatbotUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: message })
+        });
+        var data = await response.json();
+        
+        setTimeout(function() {
+          removeMaxTypingIndicator();
+          var botDiv = document.createElement('div');
+          botDiv.className = 'max-bot-msg';
+          botDiv.innerHTML = '<span>' + data.message + '</span>';
+          messages.appendChild(botDiv);
+          messages.scrollTop = messages.scrollHeight;
+        }, 1000);
+        
+      } catch (error) {
+        setTimeout(function() {
+          removeMaxTypingIndicator();
+          const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+          const lowerMessage = message.toLowerCase();
+          const offlineResponses = {
+            en: {
+              human: "I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com.",
+              stock: "I can help you check our product availability! What specific product are you looking for?",
+              hello: "Hello! Welcome to TillValle! 🌱 I'm TillieBot, your farm-fresh assistant. How can I help you today?",
+              default: "Hello! I'm TillieBot from TillValle! 🌱 I can help you with product information, stock levels, and delivery details. What would you like to know?"
+            },
+            sw: {
+              human: "Nitakuunganisha na wakala wetu Angela Wanjiru kwa angelawanjiru@gmail.com.",
+              stock: "Ninaweza kukusaidia kuangalia upatikanaji wa bidhaa zetu! Unatafuta bidhaa gani?",
+              hello: "Hujambo! Karibu TillValle! 🌱 Mimi ni TillieBot, msaidizi wako wa mazao safi. Ninawezaje kukusaidia?",
+              default: "Hujambo! Mimi ni TillieBot kutoka TillValle! 🌱 Ninaweza kukusaidia na habari za bidhaa na uongozaji. Unahitaji nini?"
+            },
+            fr: {
+              human: "Je vais vous connecter avec notre agent Angela Wanjiru à angelawanjiru@gmail.com.",
+              stock: "Je peux vous aider à vérifier la disponibilité de nos produits! Quel produit recherchez-vous?",
+              hello: "Bonjour! Bienvenue chez TillValle! 🌱 Je suis TillieBot, votre assistant produits frais. Comment puis-je vous aider?",
+              default: "Bonjour! Je suis TillieBot de TillValle! 🌱 Je peux vous aider avec les informations produits et la livraison. Que voulez-vous savoir?"
+            }
+          };
+          const responses = offlineResponses[currentLang] || offlineResponses.en;
+          let fallbackResponse = responses.default;
+          if (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('live')) {
+            fallbackResponse = responses.human;
+          } else if (lowerMessage.includes('stock') || lowerMessage.includes('available')) {
+            fallbackResponse = responses.stock;
+          } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hujambo') || lowerMessage.includes('bonjour')) {
+            fallbackResponse = responses.hello;
+          }
+          var errorDiv = document.createElement('div');
+          errorDiv.className = 'max-bot-msg';
+          errorDiv.innerHTML = '<span>' + fallbackResponse + '</span>';
+          messages.appendChild(errorDiv);
+          messages.scrollTop = messages.scrollHeight;
+        }, 1000);
+      }
+    }
+  </script>
 
   <script src="navbar-auth.js"></script>
   <script src="chatbot.js"></script>

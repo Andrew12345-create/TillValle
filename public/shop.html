@@ -1,71 +1,57 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TillValle Shop</title>
-  <link rel="icon" href="logo.jpg" type="image/jpeg">
+  <title>Shop - TillValle</title>
+  <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="shop-styles.css">
-  <link rel="stylesheet" href="chatbot.css">
-  <meta property="og:title" content="Shop - TilleValle" />
-  <meta property="og:description" content="Browse and shop our range of fresh farm goods at TilleValle." />
-  <meta property="og:image" content="./images/logo.png" />
-  <meta property="og:url" content="https://yourdomain.com/shop.html" />
-  <meta name="twitter:card" content="summary_large_image" />
-
-  <!-- Hotjar Tracking Code for Tillvalle -->
+  <!-- Hotjar Tracking Code -->
   <script>
-      (function(h,o,t,j,a,r){
-          h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-          h._hjSettings={hjid:6534945,hjsv:6};
-          a=o.getElementsByTagName('head')[0];
-          r=o.createElement('script');r.async=1;
-          r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-          a.appendChild(r);
-      })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5208839,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
   </script>
 </head>
 <body>
-  <!-- Loading Screen -->
-  <div id="loading-screen">
-    <img src="logo.jpg" alt="TilleValle" class="loading-logo">
-    <div class="loading-spinner"></div>
-  </div>
   <nav class="navbar">
     <div class="nav-left">
       <a href="index.html" class="nav-link logo-link">
-        <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
+        <img src="logo.jpg" alt="TillValle Logo" class="logo">
       </a>
       <a href="shop.html" class="nav-link">Shop</a>
       <a href="about.html" class="nav-link">About</a>
       <a href="contact.html" class="nav-link">Contact</a>
     </div>
+    <div class="nav-center">
+      <!-- Search bar removed -->
+    </div>
     <div class="nav-right">
       <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
       <div id="user-area"></div>
+      <div class="user-dropdown" id="user-dropdown" style="position:absolute;top:40px;right:0;background:var(--bg-secondary);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.1);min-width:120px;z-index:1200;display:none;border:1px solid rgba(255,255,255,0.2);">
+        <a href="profile.html" style="display:block;padding:10px 15px;color:var(--text-primary);text-decoration:none;font-size:14px;">Profile</a>
+        <a href="#" onclick="logout()" style="display:block;padding:10px 15px;color:#ef4444;text-decoration:none;font-size:14px;border-top:1px solid rgba(0,0,0,0.1);">Logout</a>
+      </div>
     </div>
   </nav>
-  <hr />
 
-  <section class="shop">
-    <h2>Our Products</h2>
-    <div class="search-container">
-      <input type="text" id="search-bar" placeholder="Search products..." class="search-input" />
-      <button id="search-btn" class="search-btn">🔍</button>
-    </div>
-
-    <!-- Category: Animal Farm Produce -->
+  <section class="shop-section">
+    <h2>Fresh Farm Produce</h2>
+    
+    <!-- Category: Animal & Farm Produce -->
     <div class="category">
-      <h3 class="category-title">Animal Farm Produce</h3>
+      <h3 class="category-title">Animal & Farm Produce</h3>
       <div class="products animal-farm">
-        <div class="product" onclick="openProductModal('Milk', 'Fresh milk from our farm.', 'milk.png', 60)"><img src="milk.png" alt="Milk" class="product-image"><h4>Milk</h4><p class="price" data-price="60">KES 60 / litre</p></div>
-        <div class="product" onclick="openProductModal('Eggs', 'Fresh eggs from our farm.', 'eggs.png', 20)"><img src="eggs.png" alt="Eggs" class="product-image"><h4>Eggs</h4><p class="price" data-price="20">KES 20 / egg</p></div>
-        <div class="product" onclick="openProductModal('Eggs (Kienyeji)', 'Traditional Kienyeji eggs.', 'eggs-kienyeji.png', 30)"><img src="eggs-kienyeji.png" alt="Eggs (Kienyeji)" class="product-image"><h4>Eggs (Kienyeji)</h4><p class="price" data-price="30">KES 30 / egg</p></div>
-        <div class="product" onclick="openProductModal('Egg Crate (30 eggs)', 'Crate of 30 fresh eggs.', 'eggs.png', 600)"><img src="eggs.png" alt="Egg Crate" class="product-image"><h4>Egg Crate (30 eggs)</h4><p class="price" data-price="600">KES 600 / crate</p></div>
-        <div class="product" onclick="openProductModal('Butter', 'Fresh butter from our farm.', 'butter.png', 700)"><img src="butter.png" alt="Butter" class="product-image"><h4>Butter</h4><p class="price" data-price="700">KES 700 / 500g</p></div>
-        <div class="product" onclick="openProductModal('Chicken', 'Fresh chicken from our farm.', 'chicken.png', 900)"><img src="chicken.png" alt="Chicken" class="product-image"><h4>Chicken</h4><p class="price" data-price="900">from KES 900</p></div>
-        <div class="product" onclick="openProductModal('Ghee', 'Pure ghee from our farm.', 'ghee.png', 650)"><img src="ghee.png" alt="Ghee" class="product-image"><h4>Ghee</h4><p class="price" data-price="650">KES 650 / 250g</p></div>
+        <div class="product" onclick="openProductModal('Fresh Milk', 'Pure, fresh milk from our farm.', 'milk.png', 120)"><img src="milk.png" alt="Fresh Milk" class="product-image"><h4>Fresh Milk</h4><p class="price" data-price="120">KES 120 / liter</p></div>
+        <div class="product" onclick="openProductModal('Free-Range Chicken', 'Healthy, free-range chicken.', 'chicken.png', 800)"><img src="chicken.png" alt="Free-Range Chicken" class="product-image"><h4>Free-Range Chicken</h4><p class="price" data-price="800">KES 800 / kg</p></div>
+        <div class="product" onclick="openProductModal('Farm Fresh Eggs', 'Fresh eggs from free-range chickens.', 'eggs.png', 25)"><img src="eggs.png" alt="Farm Fresh Eggs" class="product-image"><h4>Farm Fresh Eggs</h4><p class="price" data-price="25">KES 25 / piece</p></div>
+        <div class="product" onclick="openProductModal('Pure Ghee', 'Traditional clarified butter.', 'ghee.png', 600)"><img src="ghee.png" alt="Pure Ghee" class="product-image"><h4>Pure Ghee</h4><p class="price" data-price="600">KES 600 / 500g</p></div>
       </div>
     </div>
 
@@ -73,13 +59,10 @@
     <div class="category">
       <h3 class="category-title">Fruits</h3>
       <div class="products">
-        <div class="product" onclick="openProductModal('Apples', 'Fresh, crisp apples from our farm.', 'apples.png', 40)"><img src="apples.png" alt="Apples" class="product-image"><h4>Apples</h4><p class="price" data-price="40">KES 40 / piece</p></div>
-        <div class="product" onclick="openProductModal('Raw Bananas', 'Green bananas perfect for cooking.', 'raw-bananas.png', 100)"><img src="raw-bananas.png" alt="Raw Bananas" class="product-image"><h4>Raw Bananas</h4><p class="price" data-price="100">KES 100 / bunch</p></div>
-        <div class="product" onclick="openProductModal('Bananas (ripe)', 'Sweet, ripe bananas ready to eat.', 'bananas-ripe.png', 15)"><img src="bananas-ripe.png" alt="Bananas (ripe)" class="product-image"><h4>Bananas (ripe)</h4><p class="price" data-price="10">KES 10/ piece</p></div>
-        <div class="product" onclick="openProductModal('Soursop Fruit', 'Exotic soursop fruit with unique flavor.', 'soursop.png', 250)"><img src="soursop.png" alt="Soursop Fruit" class="product-image"><h4>Soursop Fruit</h4><p class="price" data-price="250">from KES 250</p></div>
-        <div class="product" onclick="openProductModal('Blueberries', 'Fresh blueberries, packed with antioxidants.', 'blueberries.png', 500)"><img src="blueberries.png" alt="Blueberries" class="product-image"><h4>Blueberries</h4><p class="price" data-price="500">KES 500 / punnet</p></div>
-        <div class="product" onclick="openProductModal('Macadamia', 'Premium macadamia nuts, 250g pack.', 'macadamia.png', 300)"><img src="macadamia.png" alt="Macadamia" class="product-image"><h4>Macadamia</h4><p class="price" data-price="300">KES 300 / 250g</p></div>
-        <div class="product" onclick="openProductModal('Dragonfruit', 'Colorful dragonfruit with sweet taste.', 'dragonfruit.png', 250)"><img src="dragonfruit.png" alt="Dragonfruit" class="product-image"><h4>Dragonfruit</h4><p class="price" data-price="250">KES 250 / piece</p></div>
+        <div class="product" onclick="openProductModal('Bananas', 'Fresh bananas, perfect for snacking.', 'bananas-ripe.png', 150)"><img src="bananas-ripe.png" alt="Bananas" class="product-image"><h4>Bananas</h4><p class="price" data-price="150">KES 150 / bunch</p></div>
+        <div class="product" onclick="openProductModal('Oranges', 'Juicy oranges, rich in vitamin C.', 'oranges.png', 200)"><img src="oranges.png" alt="Oranges" class="product-image"><h4>Oranges</h4><p class="price" data-price="200">KES 200 / kg</p></div>
+        <div class="product" onclick="openProductModal('Apples', 'Crisp apples, great for healthy eating.', 'apples.png', 300)"><img src="apples.png" alt="Apples" class="product-image"><h4>Apples</h4><p class="price" data-price="300">KES 300 / kg</p></div>
+        <div class="product" onclick="openProductModal('Watermelon', 'Sweet watermelon, perfect for hot days.', 'watermelon.png', 250)"><img src="watermelon.png" alt="Watermelon" class="product-image"><h4>Watermelon</h4><p class="price" data-price="250">KES 250 / piece</p></div>
         <div class="product" onclick="openProductModal('Mangoes', 'Juicy mangoes, perfect for summer.', 'mangoes.png', 40)"><img src="mangoes.png" alt="Mangoes" class="product-image"><h4>Mangoes</h4><p class="price" data-price="40">KES 40 / piece</p></div>
         <div class="product" onclick="openProductModal('Lemon', 'Fresh lemons for cooking and drinks.', 'lemon.png', 20)"><img src="lemon.png" alt="Lemon" class="product-image"><h4>Lemon</h4><p class="price" data-price="20">KES 20 / piece</p></div>
         <div class="product" onclick="openProductModal('Pawpaw', 'Sweet pawpaw fruit, rich in vitamins.', 'pawpaw.png', 120)"><img src="pawpaw.png" alt="Pawpaw" class="product-image"><h4>Pawpaw</h4><p class="price" data-price="120">KES 120 / piece</p></div>
@@ -87,6 +70,9 @@
         <div class="product" onclick="openProductModal('Avocadoes', 'Creamy avocados for healthy eating.', 'avocadoes.png', 30)"><img src="avocadoes.png" alt="Avocadoes" class="product-image"><h4>Avocadoes</h4><p class="price" data-price="30">KES 30 / piece</p></div>
         <div class="product" onclick="openProductModal('Yellow Passion', 'Tangy passion fruit for juices.', 'yellow-passion.png', 25)"><img src="yellow-passion.png" alt="Yellow Passion" class="product-image"><h4>Yellow Passion</h4><p class="price" data-price="25">KES 25 / piece</p></div>
         <div class="product" onclick="openProductModal('Kiwi', 'Nutritious kiwi fruit, full of vitamin C.', 'kiwi.png', 60)"><img src="kiwi.png" alt="Kiwi" class="product-image"><h4>Kiwi</h4><p class="price" data-price="60">KES 60 / piece</p></div>
+        <div class="product" onclick="openProductModal('Raw Bananas', 'Green bananas for cooking.', 'raw-bananas.png', 100)"><img src="raw-bananas.png" alt="Raw Bananas" class="product-image"><h4>Raw Bananas</h4><p class="price" data-price="100">KES 100 / bunch</p></div>
+        <div class="product" onclick="openProductModal('Dragon Fruit', 'Exotic dragon fruit, sweet and nutritious.', 'dragonfruit.png', 300)"><img src="dragonfruit.png" alt="Dragon Fruit" class="product-image"><h4>Dragon Fruit</h4><p class="price" data-price="300">KES 300 / piece</p></div>
+        <div class="product" onclick="openProductModal('Soursop', 'Tropical soursop fruit, great for juices.', 'soursop.png', 250)"><img src="soursop.png" alt="Soursop" class="product-image"><h4>Soursop</h4><p class="price" data-price="250">KES 250 / piece</p></div>
       </div>
     </div>
 
@@ -116,276 +102,224 @@
     </div>
   </section>
 
+  <!-- Product Modal -->
+  <div id="product-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div class="modal-body">
+        <img id="modal-image" src="" alt="" class="modal-image">
+        <div class="modal-info">
+          <h3 id="modal-title"></h3>
+          <p id="modal-description"></p>
+          <p id="modal-price" class="modal-price"></p>
+          <div class="quantity-selector">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" min="1" value="1">
+          </div>
+          <button id="add-to-cart-btn" class="add-to-cart-btn">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer>
-    <p>&copy; 2025 TilleValle. All rights reserved.</p>
+    <p>&copy; 2025 TillValle. All rights reserved.</p>
   </footer>
 
-  <!-- Toast -->
-  <div id="cart-toast"></div>
+  <!-- Chat Button -->
+  <div id="chat-btn">💬</div>
+  
+  <!-- Chat Window -->
+  <div id="chat-window">
+    <div id="chat-header">
+      <span>TillValle Chat</span>
+      <button id="chat-close">×</button>
+    </div>
+    <div id="chat-messages">
+      <div class="bot-msg">Hello! How can I help you with TillValle products today?</div>
+    </div>
+    <div id="chat-input-area">
+      <input type="text" id="chat-input" placeholder="Type your message...">
+      <button id="chat-send">Send</button>
+    </div>
+  </div>
 
-
-
-
+  <style>
+    #chat-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background: #2d6a4f;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 1000;
+      color: white;
+      font-size: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    
+    #chat-window {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 350px;
+      height: 400px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      display: none;
+      flex-direction: column;
+      z-index: 1001;
+    }
+    
+    #chat-header {
+      background: #2d6a4f;
+      color: white;
+      padding: 15px;
+      border-radius: 10px 10px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    #chat-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    
+    #chat-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+    }
+    
+    .bot-msg, .user-msg {
+      margin: 10px 0;
+      padding: 8px 12px;
+      border-radius: 15px;
+      max-width: 80%;
+    }
+    
+    .bot-msg {
+      background: #f0f0f0;
+      align-self: flex-start;
+    }
+    
+    .user-msg {
+      background: #2d6a4f;
+      color: white;
+      align-self: flex-end;
+      margin-left: auto;
+      text-align: right;
+    }
+    
+    #chat-input-area {
+      padding: 15px;
+      border-top: 1px solid #eee;
+      display: flex;
+      gap: 10px;
+    }
+    
+    #chat-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      outline: none;
+    }
+    
+    #chat-send {
+      background: #2d6a4f;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+  </style>
 
   <script>
-    // Define modal function immediately
-    function openProductModal(name, description, imageSrc, price) {
-      // Create modal if it doesn't exist
-      let modal = document.getElementById('product-modal');
-      if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'product-modal';
-        modal.className = 'product-modal';
-        modal.innerHTML = `
-          <div class="product-modal-content">
-            <div class="product-modal-header">
-              <h3 id="modal-product-name"></h3>
-              <button class="close-modal">&times;</button>
-            </div>
-            <div class="product-modal-body">
-              <img id="modal-product-image" src="" alt="" class="product-image" />
-              <p id="modal-product-description"></p>
-              <p id="modal-product-price"></p>
-              <p id="modal-stock-info" style="font-weight:bold;color:var(--accent-green);"></p>
-              <div class="quantity-controls">
-                <button id="modal-decrease-qty">-</button>
-                <input type="text" id="modal-quantity" value="1" readonly />
-                <button id="modal-increase-qty">+</button>
-              </div>
-              <button id="add-to-cart-modal" class="add-to-cart-modal">Add to Cart</button>
-            </div>
-          </div>
-        `;
-        document.body.appendChild(modal);
-        
-        // Add event listeners
-        modal.querySelector('.close-modal').onclick = () => modal.classList.remove('show');
-        modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('show'); };
-        
-        const decreaseBtn = document.getElementById('modal-decrease-qty');
-        const increaseBtn = document.getElementById('modal-increase-qty');
-        const quantityInput = document.getElementById('modal-quantity');
-        
-        decreaseBtn.onclick = () => {
-          let qty = parseInt(quantityInput.value);
-          if (qty > 1) quantityInput.value = qty - 1;
-        };
-        
-        increaseBtn.onclick = () => {
-          let qty = parseInt(quantityInput.value);
-          quantityInput.value = qty + 1;
-        };
-        
-        document.getElementById('add-to-cart-modal').onclick = () => {
-          const qty = parseInt(quantityInput.value);
-          
-          // Get existing cart from localStorage
-          let cart = JSON.parse(localStorage.getItem('cart')) || [];
-          
-          // Check if item already exists in cart
-          const existingItem = cart.find(item => item.name === name);
-          if (existingItem) {
-            existingItem.quantity += qty;
-          } else {
-            cart.push({ name: name, price: price, quantity: qty });
-          }
-          
-          // Save cart to localStorage
-          localStorage.setItem('cart', JSON.stringify(cart));
-          
-          // Update cart counter in navbar and floating button
-          const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-          const cartCountElem = document.getElementById('cart-count');
-          if (cartCountElem) cartCountElem.textContent = totalQuantity;
-          
-          modal.classList.remove('show');
-          
-          // Show success message
-          const toast = document.getElementById('cart-toast');
-          if (toast) {
-            toast.innerHTML = `<span>✅ ${name} added to cart!</span>`;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-          }
-        };
+    // Chatbot functionality
+    document.getElementById('chat-btn').onclick = function() {
+      document.getElementById('chat-window').style.display = 'flex';
+      document.getElementById('chat-btn').style.display = 'none';
+    };
+    
+    document.getElementById('chat-close').onclick = function() {
+      document.getElementById('chat-window').style.display = 'none';
+      document.getElementById('chat-btn').style.display = 'flex';
+    };
+    
+    function sendMessage() {
+      const input = document.getElementById('chat-input');
+      const messages = document.getElementById('chat-messages');
+      const message = input.value.trim();
+      
+      if (!message) return;
+      
+      messages.innerHTML += '<div class="user-msg">' + message + '</div>';
+      input.value = '';
+      
+      setTimeout(() => {
+        messages.innerHTML += '<div class="bot-msg">Thanks for your message! I\'m here to help with TillValle products and orders.</div>';
+        messages.scrollTop = messages.scrollHeight;
+      }, 1000);
+      
+      messages.scrollTop = messages.scrollHeight;
+    }
+    
+    document.getElementById('chat-send').onclick = sendMessage;
+    document.getElementById('chat-input').onkeypress = function(e) {
+      if (e.key === 'Enter') sendMessage();
+    };
+    
+    // Product modal functionality
+    let currentProduct = {};
+    
+    function openProductModal(name, description, image, price) {
+      currentProduct = { name, description, image, price };
+      
+      document.getElementById('modal-title').textContent = name;
+      document.getElementById('modal-description').textContent = description;
+      document.getElementById('modal-price').textContent = 'KES ' + price;
+      document.getElementById('modal-image').src = image;
+      document.getElementById('modal-image').alt = name;
+      document.getElementById('quantity').value = 1;
+      
+      document.getElementById('product-modal').style.display = 'flex';
+    }
+    
+    // Close modal
+    document.querySelector('.close').onclick = function() {
+      document.getElementById('product-modal').style.display = 'none';
+    };
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('product-modal');
+      if (event.target === modal) {
+        modal.style.display = 'none';
       }
-      
-      // Fetch stock info from database
-      const productMapping = {
-        'Milk': 'milk', 'Eggs': 'eggs', 'Eggs (Kienyeji)': 'eggs-kienyeji', 'Egg Crate (30 eggs)': 'egg-crate',
-        'Butter': 'butter', 'Chicken': 'chicken', 'Ghee': 'ghee', 'Apples': 'apples', 'Raw Bananas': 'raw-bananas',
-        'Bananas (ripe)': 'bananas-ripe', 'Soursop Fruit': 'soursop-fruit', 'Blueberries': 'blueberries',
-        'Macadamia': 'macadamia', 'Dragonfruit': 'dragonfruit', 'Mangoes': 'mangoes', 'Lemon': 'lemon',
-        'Pawpaw': 'pawpaw', 'Pixies': 'pixies', 'Avocadoes': 'avocadoes', 'Yellow Passion': 'yellow-passion',
-        'Kiwi': 'kiwi', 'Basil': 'basil', 'Coriander': 'coriander', 'Mint': 'mint', 'Parsley': 'parsley',
-        'Soursop Leaves': 'soursop-leaves', 'Kales (Sukuma Wiki)': 'kales', 'Lettuce': 'lettuce',
-        'Managu': 'managu', 'Terere': 'terere', 'Salgaa': 'salgaa', 'Spinach': 'spinach'
-      };
-      const productId = productMapping[name];
-      
-      // Populate modal with product data
-      document.getElementById('modal-product-name').textContent = name;
-      document.getElementById('modal-product-description').textContent = description;
-      document.getElementById('modal-product-image').src = imageSrc;
-      document.getElementById('modal-product-image').alt = name;
-      document.getElementById('modal-product-price').textContent = `KES ${price}`;
-      document.getElementById('modal-quantity').value = 1;
-      
-      // Show loading for stock info
-      const stockInfo = document.getElementById('modal-stock-info');
-      stockInfo.textContent = '🔄 Loading stock info...';
-      stockInfo.style.color = 'var(--text-secondary)';
-      
-      // Fetch stock from database
-      if (productId) {
-        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
-        
-        fetch(stockUrl)
-          .then(response => response.json())
-          .then(data => {
-            const product = data.find(item => item.product_id === productId);
-            const stockQty = product ? product.stock_quantity : 0;
-            
-            if (stockQty <= 0) {
-              stockInfo.textContent = '❌ Out of stock';
-              stockInfo.style.color = '#ef4444';
-              document.getElementById('add-to-cart-modal').disabled = true;
-            } else {
-              stockInfo.textContent = `✅ In stock: ${stockQty} available`;
-              stockInfo.style.color = 'var(--accent-green)';
-              document.getElementById('add-to-cart-modal').disabled = false;
-            }
-          })
-          .catch(() => {
-            stockInfo.textContent = '📦 Stock info unavailable';
-            stockInfo.style.color = 'var(--text-secondary)';
-          });
-      } else {
-        stockInfo.textContent = '📦 Stock info unavailable';
-        stockInfo.style.color = 'var(--text-secondary)';
+    };
+    
+    // Add to cart functionality
+    document.getElementById('add-to-cart-btn').onclick = function() {
+      const quantity = parseInt(document.getElementById('quantity').value);
+      if (quantity > 0) {
+        alert('Added ' + quantity + ' x ' + currentProduct.name + ' to cart!');
+        document.getElementById('product-modal').style.display = 'none';
       }
-      
-      // Show modal
-      modal.classList.add('show');
-    }
-    
-    // Initialize cart counter on page load
-    function updateCartCounter() {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-      const cartCountElem = document.getElementById('cart-count');
-      if (cartCountElem) cartCountElem.textContent = totalQuantity;
-    }
-    
-    // Update counter when page loads
-    updateCartCounter();
-    
-
-    
-    // Add search functionality
-    const searchInput = document.getElementById('search-bar');
-    const searchBtn = document.getElementById('search-btn');
-    
-    function performSearch() {
-      const query = searchInput.value.toLowerCase().trim();
-      const products = document.querySelectorAll('.product');
-      const categories = document.querySelectorAll('.category');
-      
-      if (!query) {
-        products.forEach(product => product.style.display = 'flex');
-        categories.forEach(category => category.style.display = 'block');
-        return;
-      }
-      
-      categories.forEach(category => {
-        const categoryProducts = category.querySelectorAll('.product');
-        let hasVisibleProducts = false;
-        
-        categoryProducts.forEach(product => {
-          const productName = product.querySelector('h4').textContent.toLowerCase();
-          if (productName.includes(query)) {
-            product.style.display = 'flex';
-            hasVisibleProducts = true;
-          } else {
-            product.style.display = 'none';
-          }
-        });
-        
-        category.style.display = hasVisibleProducts ? 'block' : 'none';
-      });
-    }
-    
-    if (searchBtn) searchBtn.addEventListener('click', performSearch);
-    if (searchInput) {
-      searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') performSearch();
-      });
-      searchInput.addEventListener('input', performSearch);
-    }
+    };
   </script>
-  <script src="navbar-universal.js"></script>
-  <script src="global-animations.js"></script>
-  <script src="chatbot.js"></script>
+
   <script src="script.js" defer></script>
-  <script>
-    // Hide loading screen when page loads
-    window.addEventListener('load', function() {
-      const loadingScreen = document.getElementById('loading-screen');
-      if (loadingScreen) {
-        loadingScreen.classList.add('hidden');
-        setTimeout(() => loadingScreen.remove(), 800);
-      }
-    });
-    
-    document.addEventListener('DOMContentLoaded', function() {
-      const userEmail = localStorage.getItem('email');
-      const userArea = document.getElementById('user-area');
-      
-      if (userEmail && userArea) {
-        const initial = userEmail.charAt(0).toUpperCase();
-        const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
-        const userDisplay = profilePicture ? 
-          `<img src="${profilePicture}" alt="Profile" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">` : 
-          initial;
-        let adminLink = '';
-        if (userEmail === 'andrewmunamwangi@gmail.com') {
-          adminLink = `<a href="admin.html" class="nav-link">Admin</a>`;
-        }
-        userArea.innerHTML = `
-          <div class="user-dropdown-container">
-            <span class="user-initial" onclick="toggleUserDropdown()" title="${userEmail}">${userDisplay}</span>
-            <div class="user-dropdown" id="user-dropdown">
-              <a href="profile.html">Profile</a>
-              <a href="#" class="logout-btn" onclick="logout()">Logout</a>
-            </div>
-          </div>
-          ${adminLink}
-        `;
-      } else if (userArea) {
-        userArea.innerHTML = `<a href="login.html" class="nav-link">Login</a>`;
-      }
-      
-      window.toggleUserDropdown = function() {
-        const dropdown = document.getElementById('user-dropdown');
-        if (dropdown) dropdown.classList.toggle('show');
-      };
-      
-      window.logout = function() {
-        localStorage.removeItem('email');
-        localStorage.removeItem('user');
-        window.location.href = 'login.html';
-      };
-      
-      document.addEventListener('click', (event) => {
-        const dropdown = document.getElementById('user-dropdown');
-        const container = document.querySelector('.user-dropdown-container');
-        if (dropdown && container && !container.contains(event.target)) {
-          dropdown.classList.remove('show');
-        }
-      });
-
-    });
-  </script>
 </body>
 </html>
