@@ -66,7 +66,7 @@ function renderUserArea() {
     const initial = userEmail.charAt(0).toUpperCase();
     const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
     const userDisplay = profilePicture ? 
-      `<img src="${profilePicture}" alt="Profile" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">` : 
+  `<img src="${profilePicture}" alt="Profile" class="user-avatar">` : 
       initial;
     let adminLink = '';
     if (userEmail === 'andrewmunamwangi@gmail.com') {

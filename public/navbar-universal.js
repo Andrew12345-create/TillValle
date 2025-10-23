@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const initial = userEmail.charAt(0).toUpperCase();
     const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
     const userDisplay = profilePicture ? 
-      `<img src="${profilePicture}" alt="Profile" style="width:35px;height:35px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.3);">` : 
+  `<img src="${profilePicture}" alt="Profile" class="user-avatar">` : 
       initial;
     
     let adminLink = '';

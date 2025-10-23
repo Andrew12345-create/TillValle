@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
     `;
     document.body.prepend(loader);
-    
+
     // Hide loader after page loads
     window.addEventListener('load', () => {
       setTimeout(() => {
@@ -20,41 +20,40 @@ document.addEventListener('DOMContentLoaded', function() {
       }, 800);
     });
   }
-  
-  // Enhanced Chat Functionality
-  const chatBtn = document.getElementById('chat-btn');
-  const chatWindow = document.getElementById('chat-window');
-  const chatClose = document.getElementById('chat-close');
-  const chatSend = document.getElementById('chat-send');
-  const chatInput = document.getElementById('chat-input');
-  
-  if (chatBtn && chatWindow) {
+
+  // Enhanced Chatbot Sidebar Functionality
+  const chatBtn = document.getElementById('floating-chatbot-btn');
+  const chatSidebar = document.getElementById('chatbot-sidebar');
+  const chatClose = document.getElementById('chatbot-close');
+  const chatSend = document.getElementById('chatbot-send');
+  const chatInput = document.getElementById('chatbot-input');
+  const chatBackdrop = document.getElementById('chatbot-backdrop');
+
+  if (chatBtn && chatSidebar) {
     chatBtn.addEventListener('click', () => {
-      chatWindow.style.display = 'flex';
-      setTimeout(() => chatWindow.classList.add('show'), 10);
-      
-      chatBtn.style.transform = 'scale(0.8)';
-      setTimeout(() => chatBtn.style.display = 'none', 200);
+      chatSidebar.classList.add('open');
+      chatBackdrop.classList.add('show');
     });
   }
-  
-  if (chatClose && chatWindow) {
+
+  if (chatClose && chatSidebar) {
     chatClose.addEventListener('click', () => {
-      chatWindow.classList.remove('show');
-      setTimeout(() => {
-        chatWindow.style.display = 'none';
-        if (chatBtn) {
-          chatBtn.style.display = 'flex';
-          chatBtn.style.transform = 'scale(1)';
-        }
-      }, 500);
+      chatSidebar.classList.remove('open');
+      chatBackdrop.classList.remove('show');
     });
   }
-  
+
+  if (chatBackdrop) {
+    chatBackdrop.addEventListener('click', () => {
+      chatSidebar.classList.remove('open');
+      chatBackdrop.classList.remove('show');
+    });
+  }
+
   if (chatSend) {
     chatSend.addEventListener('click', sendMessage);
   }
-  
+
   if (chatInput) {
     chatInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') sendMessage();
@@ -64,33 +63,26 @@ document.addEventListener('DOMContentLoaded', function() {
   async function sendMessage() {
     const message = chatInput.value.trim();
     if (!message) return;
-    
-    const messagesDiv = document.getElementById('chat-messages');
-    messagesDiv.innerHTML += `<div class="user-msg">${message}</div>`;
+
+    const messagesDiv = document.getElementById('chatbot-messages');
+    messagesDiv.innerHTML += `<div class="chatbot-message user">${message}</div>`;
     chatInput.value = '';
-    
+
     // Enhanced typing indicator
     const typing = document.createElement('div');
-    typing.className = 'typing-indicator show';
-    typing.innerHTML = `
-      🤖 Checking stock
-      <div class="typing-dots">
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
-      </div>
-    `;
+    typing.className = 'chatbot-typing';
+    typing.innerHTML = '🤖 TillieBot is thinking...';
     messagesDiv.appendChild(typing);
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    
+
     try {
       const response = await getAIResponse(message);
       typing.remove();
-      messagesDiv.innerHTML += `<div class="bot-msg">${response}</div>`;
+      messagesDiv.innerHTML += `<div class="chatbot-message bot">${response}</div>`;
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     } catch (error) {
       typing.remove();
-      messagesDiv.innerHTML += `<div class="bot-msg">Sorry, I'm having trouble right now. Please try again.</div>`;
+      messagesDiv.innerHTML += `<div class="chatbot-message bot">Sorry, I'm having trouble right now. Please try again.</div>`;
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
   }

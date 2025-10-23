@@ -1,0 +1,231 @@
+/* Index-only overrides and hero polish */
+:root {
+  --index-hero-min-height: 68vh;
+}
+
+/* Page-level background: subtle mix of grey and green for homepage */
+body.homepage {
+  background: linear-gradient(135deg,
+    var(--bg) 0%,                      /* light grey */
+    rgba(226,240,230,0.6) 30%,         /* pale green wash */
+    rgba(22,163,74,0.06) 60%,          /* very subtle green */
+    rgba(6,95,70,0.04) 100%            /* tint toward darker green */
+  );
+  background-attachment: fixed;
+}
+
+/* Navbar override for homepage - make it green */
+body.homepage .navbar {
+  background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-green-light) 100%);
+  box-shadow: 0 6px 16px rgba(22,163,74,0.18);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+/* Hero override */
+.home-hero {
+  padding: 90px 20px;
+  min-height: var(--index-hero-min-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  /* Enhanced gradient using CSS variables for consistency */
+  background: linear-gradient(135deg, rgba(22,163,74,0.88) 0%, rgba(6,95,70,0.82) 60%);
+  position: relative;
+  overflow: hidden;
+  animation: heroFadeIn 1.5s ease-out;
+}
+
+.home-hero h1 {
+  font-size: 3.2rem;
+  margin-bottom: 12px;
+  font-weight: 800;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  animation: slideInUp 1s ease-out 0.3s both;
+}
+
+.home-hero p {
+  max-width: 760px;
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.95);
+  margin-bottom: 20px;
+  animation: slideInUp 1s ease-out 0.6s both;
+}
+
+.home-hero .btn {
+  padding: 14px 34px;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  background: linear-gradient(135deg, var(--accent-yellow) 0%, #ffb74d 100%);
+  color: var(--accent-green);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(255,209,102,0.3);
+  animation: slideInUp 1s ease-out 0.9s both;
+}
+
+.home-hero .btn:hover {
+  background: linear-gradient(135deg, #ffb74d 0%, #ff9f1a 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(255,209,102,0.4);
+}
+
+/* Homepage navbar links - ensure high contrast on green hero */
+body.homepage .nav-left .nav-link,
+body.homepage .nav-right .nav-link,
+body.homepage .nav-center .nav-link {
+  color: white;
+  background: transparent;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+body.homepage .nav-left .nav-link:hover,
+body.homepage .nav-right .nav-link:hover,
+body.homepage .nav-center .nav-link:hover {
+  background: rgba(255,255,255,0.08);
+  transform: translateY(-2px);
+}
+
+body.homepage .nav-link:focus {
+  outline: 3px solid rgba(255,255,255,0.18);
+  outline-offset: 2px;
+}
+
+/* Floating chatbot button styling for homepage */
+#floating-chatbot-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent-green), var(--accent-green-light));
+  color: white;
+  font-size: 1.4rem;
+  box-shadow: 0 8px 30px rgba(6,95,70,0.25);
+  cursor: pointer;
+  z-index: 1400;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+#floating-chatbot-btn:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(6,95,70,0.28); }
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .home-hero, .home-hero .floating-item, .home-hero .btn, #floating-chatbot-btn {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Improve focus visibility for keyboard users */
+.home-hero .btn:focus, #floating-chatbot-btn:focus { outline: 3px solid rgba(255,209,102,0.25); outline-offset: 3px; }
+
+/* Floating produce icons */
+.home-hero .floating-elements {
+  pointer-events: none;
+}
+
+.home-hero .floating-item {
+  font-size: 1.9rem;
+  opacity: 0.8;
+  animation: floatAround 10s ease-in-out infinite;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  transition: filter 0.3s ease;
+}
+
+.home-hero .floating-item:hover {
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+}
+
+.home-hero .floating-item:nth-child(1) {
+  animation-delay: 0s;
+  animation-duration: 12s;
+}
+.home-hero .floating-item:nth-child(2) {
+  animation-delay: 1.5s;
+  animation-duration: 14s;
+}
+.home-hero .floating-item:nth-child(3) {
+  animation-delay: 3s;
+  animation-duration: 10s;
+}
+.home-hero .floating-item:nth-child(4) {
+  animation-delay: 4.5s;
+  animation-duration: 16s;
+}
+.home-hero .floating-item:nth-child(5) {
+  animation-delay: 6s;
+  animation-duration: 11s;
+}
+.home-hero .floating-item:nth-child(6) {
+  animation-delay: 7.5s;
+  animation-duration: 13s;
+}
+
+/* About preview tweaks on homepage */
+.about-preview {
+  margin-top: 28px;
+  padding: 48px;
+  border-radius: 16px;
+  animation: fadeInUp 1s ease-out;
+}
+
+/* Keyframes for animations */
+@keyframes heroFadeIn {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInUp {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatAround {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-20px) rotate(5deg); }
+  50% { transform: translateY(-10px) rotate(-5deg); }
+  75% { transform: translateY(-30px) rotate(3deg); }
+}
+
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Enhanced responsive hero */
+@media (max-width: 1024px) {
+  .home-hero h1 { font-size: 2.8rem; }
+  .home-hero p { font-size: 1rem; max-width: 600px; }
+}
+
+@media (max-width: 768px) {
+  .home-hero {
+    padding: 60px 15px;
+    min-height: 60vh;
+  }
+  .home-hero h1 { font-size: 2.2rem; }
+  .home-hero p { font-size: 1rem; max-width: 90%; }
+  .home-hero .btn { padding: 12px 28px; font-size: 1rem; }
+  .about-preview { padding: 32px; margin-top: 20px; }
+}
+
+@media (max-width: 480px) {
+  .home-hero {
+    padding: 40px 10px;
+    min-height: 50vh;
+  }
+  .home-hero h1 { font-size: 1.8rem; margin-bottom: 10px; }
+  .home-hero p { font-size: 0.9rem; margin-bottom: 15px; }
+  .home-hero .btn { padding: 10px 24px; font-size: 0.9rem; }
+  .about-preview { padding: 24px; margin-top: 15px; border-radius: 12px; }
+}

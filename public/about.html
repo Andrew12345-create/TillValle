@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>About TilleValle</title>
   <link rel="icon" href="logo.jpg" type="image/jpeg" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/site.css" />
+  <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="enhanced-animations.css" />
   <link rel="stylesheet" href="chatbot.css" />
   <meta property="og:title" content="About TilleValle" />
@@ -141,7 +142,7 @@
         if (profileArea) profileArea.style.display = 'inline-block';
         const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
         if (profilePicture && userAvatar) {
-          userAvatar.innerHTML = `<img src="${profilePicture}" alt="Profile" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+          userAvatar.innerHTML = `<img src="${profilePicture}" alt="Profile" class="user-avatar">`;
         } else if (userAvatar) {
           userAvatar.textContent = userEmail.charAt(0).toUpperCase();
         }
@@ -165,8 +166,8 @@
       if (userArea && userEmail) {
         const initial = userEmail.charAt(0).toUpperCase();
         const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
-        const userDisplay = profilePicture ? 
-          `<img src="${profilePicture}" alt="Profile" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">` : 
+        const userDisplay = profilePicture ?
+          `<img src="${profilePicture}" alt="Profile" class="user-avatar">` :
           initial;
         let adminLink = '';
         if (userEmail === 'andrewmunamwangi@gmail.com') {

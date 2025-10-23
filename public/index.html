@@ -3,367 +3,220 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TillValle</title>
+  <title>TillValle - Fresh Farm Produce from Kenya</title>
   <link rel="icon" href="logo.jpg" type="image/jpeg">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="global-chat.css">
-  <!-- Hotjar Tracking Code for Tillvalle on vercel -->
-<script>
-    (function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:6551901,hjsv:6};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-</script>
-</head>
-<body>
-  <nav class="navbar">
-    <div class="nav-left">
-      <a href="index.html" class="nav-link logo-link">
-        <img src="logo.jpg" alt="TillValle Logo" class="logo">
-      </a>
-      <a href="shop.html" class="nav-link">Shop</a>
-      <a href="about.html" class="nav-link">About</a>
-      <a href="contact.html" class="nav-link">Contact</a>
-    </div>
-    <div class="nav-center">
-      <!-- Search bar removed -->
-    </div>
-    <div class="nav-right">
-      <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
-      <div id="user-area"></div>
-    </div>
-  </nav>
-
-  <section class="hero">
-    <div class="floating-elements">
-      <div class="floating-item">🥕</div>
-      <div class="floating-item">🍎</div>
-      <div class="floating-item">🥬</div>
-      <div class="floating-item">🍌</div>
-      <div class="floating-item">🥛</div>
-      <div class="floating-item">🥚</div>
-    </div>
-    <h1><span> Welcome to </span><span>TillValle</span></h1>
-    <p>Experience the finest quality fruits, vegetables, herbs, and farm products from Kenya's best farms. Fresh, organic, and delivered with care.</p>
-    <a href="shop.html" class="btn">Shop Now</a>
-  </section>
-
-  <section class="about-preview">
-    <h2>Why Choose TillValle?</h2>
-    <p>We connect you directly with local farmers to bring you the freshest produce. From crisp vegetables to sweet fruits, creamy milk to free-range eggs - everything is sourced with quality and sustainability in mind.</p>
-    <p>Our commitment to freshness means your order is picked, packed, and delivered within 24 hours of harvest.</p>
-    <a href="about.html" class="btn">Learn More</a>
-  </section>
-
-  <footer>
-    <p>&copy; 2025 TillValle. All rights reserved.</p>
-  </footer>
-
-  <!-- Chat Button -->
-  <div id="chat-btn">💬</div>
-  
-  <!-- Chat Window -->
-  <div id="chat-window">
-    <div id="chat-header">
-      <span>TillValle Chat</span>
-      <button id="chat-close">×</button>
-    </div>
-    <div id="chat-messages">
-      <div class="bot-msg">🌱 Hi! I'm TillieBot, your smart farming assistant! I can help you with:
-      <br><br>📦 <strong>Product Info</strong> - Ask about any product
-      <br>🚚 <strong>Delivery</strong> - Shipping & delivery details  
-      <br>💰 <strong>Pricing</strong> - Current prices & offers
-      <br>🛒 <strong>Orders</strong> - Help with your cart
-      <br>👨‍🌾 <strong>Farming Tips</strong> - Growing advice
-      <br><br>What would you like to know?</div>
-    </div>
-    <div id="chat-input-area">
-      <input type="text" id="chat-input" placeholder="Type your message...">
-      <button id="chat-send">Send</button>
-    </div>
-  </div>
-
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    #chat-btn {
+    :root {
+      --primary: #2d6a4f;
+      --primary-dark: #1b4332;
+      --primary-light: #40916c;
+      --accent: #ff6b6b;
+      --accent-light: #ff9999;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --text-light: #94a3b8;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8fafc;
+      --bg-tertiary: #f1f5f9;
+      --glass: rgba(255, 255, 255, 0.25);
+      --glass-border: rgba(255, 255, 255, 0.18);
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      --gradient-accent: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+      --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-2xl: 1.5rem;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      overflow-x: hidden;
+    }
+
+    /* Loading Screen */
+    #loading-screen {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 65px;
-      height: 65px;
-      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
-      border-radius: 50%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--gradient-hero);
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      z-index: 9998;
-      color: white;
-      font-size: 26px;
-      box-shadow: 0 6px 20px rgba(45,106,79,0.4);
-      transition: all 0.3s ease;
-      border: 3px solid rgba(255,255,255,0.2);
-    }
-    
-    #chat-btn:hover {
-      transform: scale(1.1) translateY(-2px);
-      box-shadow: 0 8px 25px rgba(45,106,79,0.5);
-    }
-    
-    #chat-window {
-      position: fixed;
-      bottom: 95px;
-      right: 20px;
-      width: 380px;
-      height: 450px;
-      max-height: calc(100vh - 120px);
-      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-      border-radius: 20px;
-      box-shadow: 0 15px 50px rgba(0,0,0,0.3);
-      display: none;
-      flex-direction: column;
       z-index: 9999;
-      border: 2px solid rgba(45,106,79,0.2);
-      backdrop-filter: blur(15px);
-      transform: scale(0.7) translateY(30px) rotateX(15deg);
-      opacity: 0;
-      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: opacity 0.5s ease;
     }
-    
-    #chat-window.show {
-      transform: scale(1) translateY(0) rotateX(0deg);
-      opacity: 1;
-    }
-    
-    #chat-header {
-      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+
+    .loading-content {
+      text-align: center;
       color: white;
-      padding: 18px;
-      border-radius: 13px 13px 0 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 600;
-      font-size: 16px;
     }
-    
-    #chat-close {
-      background: rgba(255,255,255,0.2);
-      border: none;
-      color: white;
-      font-size: 22px;
-      cursor: pointer;
-      width: 35px;
-      height: 35px;
+
+    .loading-logo {
+      width: 80px;
+      height: 80px;
+      background: url('logo.jpg') center/cover;
       border-radius: 50%;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+
+    .loading-text {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    /* Hero Animation Styles */
+    .hero-animation {
+      position: relative;
+      height: 100vh;
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s ease;
+      overflow: hidden;
     }
-    
-    #chat-close:hover {
-      background: rgba(255,255,255,0.3);
-      transform: rotate(90deg);
-    }
-    
-    #chat-messages {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    
-    #chat-messages::-webkit-scrollbar {
-      width: 6px;
-    }
-    
-    #chat-messages::-webkit-scrollbar-track {
-      background: rgba(45,106,79,0.1);
-      border-radius: 10px;
-    }
-    
-    #chat-messages::-webkit-scrollbar-thumb {
-      background: #2d6a4f;
-      border-radius: 10px;
-    }
-    
-    .bot-msg, .user-msg {
-      padding: 12px 16px;
-      border-radius: 18px;
-      max-width: 85%;
-      word-wrap: break-word;
-      font-size: 14px;
-      line-height: 1.4;
-      animation: messageSlide 0.3s ease;
-    }
-    
-    .bot-msg {
-      background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
-      color: #2d6a4f;
-      align-self: flex-start;
-      border-bottom-left-radius: 6px;
-      box-shadow: 0 3px 10px rgba(45,106,79,0.1);
-      border-left: 3px solid #40916c;
-    }
-    
-    .user-msg {
-      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+
+    .hero-content {
+      text-align: center;
       color: white;
-      align-self: flex-end;
-      border-bottom-right-radius: 6px;
-      box-shadow: 0 2px 8px rgba(45,106,79,0.3);
+      z-index: 10;
+      max-width: 800px;
+      padding: 0 20px;
     }
-    
-    #chat-input-area {
-      padding: 18px;
-      border-top: 1px solid rgba(45,106,79,0.1);
-      display: flex;
-      gap: 12px;
-      align-items: center;
+
+    .hero-title {
+      font-size: 4rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fadeInUp 1s ease-out 0.5s forwards;
     }
-    
-    #chat-input {
-      flex: 1;
-      padding: 12px 16px;
-      border: 2px solid rgba(45,106,79,0.2);
-      border-radius: 25px;
-      outline: none;
-      font-size: 14px;
-      transition: all 0.3s ease;
-      background: rgba(255,255,255,0.9);
+
+    .hero-subtitle {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1s ease-out 1s forwards;
     }
-    
-    #chat-input:focus {
-      border-color: #2d6a4f;
-      box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
+
+    .hero-cta {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 1s ease-out 1.5s forwards;
     }
-    
-    #chat-send {
-      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
-      color: white;
-      border: none;
-      padding: 12px 18px;
-      border-radius: 25px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(45,106,79,0.3);
+
+    .floating-elements {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
     }
-    
-    #chat-send:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(45,106,79,0.4);
+
+    .floating-item {
+      position: absolute;
+      font-size: 3rem;
+      opacity: 0.7;
+      animation: float 6s ease-in-out infinite;
     }
-    
-    .typing-indicator {
-      display: none;
-      align-self: flex-start;
-      padding: 12px 16px;
-      background: #f1f3f4;
-      border-radius: 18px;
-      border-bottom-left-radius: 6px;
-      color: #666;
-      font-style: italic;
-    }
-    
-    .typing-indicator.show {
-      display: block;
-      animation: pulse 1.5s infinite;
-    }
-    
-    @keyframes messageSlide {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
+
+    .floating-item:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+    .floating-item:nth-child(2) { top: 60%; right: 15%; animation-delay: 1s; }
+    .floating-item:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 2s; }
+    .floating-item:nth-child(4) { top: 40%; right: 30%; animation-delay: 3s; }
+    .floating-item:nth-child(5) { bottom: 20%; right: 10%; animation-delay: 4s; }
+    .floating-item:nth-child(6) { top: 70%; left: 40%; animation-delay: 5s; }
+
+    @keyframes fadeInUp {
       to {
         opacity: 1;
         transform: translateY(0);
       }
     }
-    
-    @keyframes pulse {
-      0%, 100% { opacity: 0.6; }
-      50% { opacity: 1; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      25% { transform: translateY(-20px) rotate(5deg); }
+      50% { transform: translateY(-10px) rotate(-5deg); }
+      75% { transform: translateY(-15px) rotate(3deg); }
     }
-    
-    .user-dropdown-container {
-      position: relative;
-    }
-    
-    .user-initial {
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-    }
-    
-    .user-initial:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: scale(1.1);
-    }
-    
-    .user-dropdown {
+
+    .wave-animation {
       position: absolute;
-      top: 100%;
-      right: 0;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      min-width: 150px;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(-10px);
-      transition: all 0.3s ease;
-      z-index: 10000;
-      margin-top: 5px;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100px;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,60 C300,120 900,0 1200,60 L1200,120 L0,120 Z" fill="%23ffffff" opacity="0.1"/></svg>');
+      background-size: cover;
+      animation: wave 3s ease-in-out infinite;
     }
-    
-    .user-dropdown.show {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
+
+    @keyframes wave {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(-50px); }
     }
-  </style>
-  <script src="global-chat.js"></script>
+
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2.5rem; }
+      .hero-subtitle { font-size: 1.2rem; }
+      .floating-item { font-size: 2rem; }
     }
-    
-    .user-dropdown a {
-      display: block;
-      padding: 12px 16px;
-      color: #333;
+
+    /* Button style */
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background: var(--accent);
+      color: white;
       text-decoration: none;
-      transition: background 0.3s ease;
-      border-radius: 8px;
-      margin: 4px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      transition: all 0.3s ease;
     }
-    
-    .user-dropdown a:hover {
-      background: #f8f9fa;
-      color: #2d6a4f;
-    }
-    
-    @media (max-width: 480px) {
-      #chat-window {
-        width: calc(100vw - 40px);
-        right: 20px;
-        left: 20px;
-        bottom: 95px;
-      }
+
+    .btn:hover {
+      background: var(--accent-light);
+      transform: translateY(-2px);
     }
   </style>
 
@@ -371,19 +224,19 @@
     document.addEventListener('DOMContentLoaded', function() {
       const userArea = document.getElementById('user-area');
       const userEmail = localStorage.getItem('email');
-      
+
       if (userEmail) {
         const initial = userEmail.charAt(0).toUpperCase();
         const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
-        const userDisplay = profilePicture ? 
-          `<img src="${profilePicture}" alt="Profile" style="width:35px;height:35px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.3);">` : 
+        const userDisplay = profilePicture ?
+          `<img src="${profilePicture}" alt="Profile" class="user-avatar">` :
           initial;
-        
+
         let adminLink = '';
         if (userEmail === 'andrewmunamwangi@gmail.com') {
           adminLink = `<a href="admin.html" class="nav-link">Admin</a>`;
         }
-        
+
         userArea.innerHTML = `
           <div class="user-dropdown-container">
             <span class="user-initial" onclick="toggleUserDropdown()" title="${userEmail}">${userDisplay}</span>
@@ -397,18 +250,18 @@
       } else {
         userArea.innerHTML = `<a href="login.html" class="nav-link">Login</a>`;
       }
-      
+
       window.toggleUserDropdown = function() {
         const dropdown = document.getElementById('user-dropdown');
         if (dropdown) dropdown.classList.toggle('show');
       };
-      
+
       window.logout = function() {
         localStorage.removeItem('email');
         localStorage.removeItem('user');
         window.location.href = 'login.html';
       };
-      
+
       document.addEventListener('click', (event) => {
         const dropdown = document.getElementById('user-dropdown');
         const container = document.querySelector('.user-dropdown-container');
@@ -417,254 +270,70 @@
         }
       });
     });
-    
-    // Chatbot functionality
-    document.getElementById('chat-btn').onclick = function() {
-      document.getElementById('chat-window').style.display = 'flex';
-      document.getElementById('chat-btn').style.display = 'none';
-    };
-    
-    document.getElementById('chat-close').onclick = function() {
-      document.getElementById('chat-window').style.display = 'none';
-      document.getElementById('chat-btn').style.display = 'flex';
-    };
   </script>
+
+  <section class="hero-animation">
+    <div class="floating-elements">
+      <div class="floating-item">🥬</div>
+      <div class="floating-item">🥕</div>
+      <div class="floating-item">🍅</div>
+      <div class="floating-item">🥒</div>
+      <div class="floating-item">🌽</div>
+      <div class="floating-item">🥑</div>
+    </div>
+
+    <div class="hero-content">
+      <h1 class="hero-title">Fresh from Farm to Table</h1>
+      <p class="hero-subtitle">Premium organic produce delivered fresh to your doorstep in Kenya</p>
+      <div class="hero-cta">
+        <a href="shop.html" class="btn">Start Shopping</a>
+      </div>
+    </div>
+
+    <div class="wave-animation"></div>
+  </section>
+
+  <script>
+    // Add interactive hover effects
+    document.querySelectorAll('.floating-item').forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        item.style.transform = 'scale(1.2) rotate(10deg)';
+        item.style.transition = 'transform 0.3s ease';
+      });
+
+      item.addEventListener('mouseleave', () => {
+        item.style.transform = 'scale(1) rotate(0deg)';
+      });
+    });
+
+    // Parallax scroll effect
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const parallax = document.querySelector('.floating-elements');
+      const speed = scrolled * 0.5;
+      parallax.style.transform = `translateY(${speed}px)`;
+    });
+  </script>
+
+  <header>
+    <nav class="navbar">
+      <div class="nav-left">
+        <a href="index.html" class="nav-link logo-link">
+          <img src="./logo.jpg" alt="TilleValle Logo" class="logo" />
+        </a>
+        <a href="shop.html" class="nav-link">Shop</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+      </div>
+      <div class="nav-right">
+        <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
+        <span id="user-area"></span>
+      </div>
+    </nav>
+  </header>
 
   <script src="navbar-universal.js"></script>
   <script src="chatbot-ai.js"></script>
   <script src="script.js" defer></script>
-</body>
-</html>
-    }
-    
-    .user-dropdown a {
-      display: block;
-      padding: 12px 16px;
-      color: #333;
-      text-decoration: none;
-      transition: background 0.3s ease;
-      border-radius: 8px;
-      margin: 4px;
-    }
-    
-    .user-dropdown a:hover {
-      background: #f8f9fa;
-      color: #2d6a4f;
-    }
-    
-    @media (max-width: 480px) {
-      #chat-window {
-        width: calc(100vw - 40px);
-        right: 20px;
-        left: 20px;
-        bottom: 95px;
-      }
-    }
-  </style>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // User authentication
-      const userEmail = localStorage.getItem('email');
-      const userArea = document.getElementById('user-area');
-      
-      if (userEmail && userArea) {
-        const initial = userEmail.charAt(0).toUpperCase();
-        const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
-        const userDisplay = profilePicture ? 
-          `<img src="${profilePicture}" alt="Profile" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">` : 
-          initial;
-        let adminLink = '';
-        if (userEmail === 'andrewmunamwangi@gmail.com') {
-          adminLink = `<a href="admin.html" class="nav-link">Admin</a>`;
-        }
-        userArea.innerHTML = `
-          <div class="user-dropdown-container">
-            <span class="user-initial" onclick="toggleUserDropdown()" title="${userEmail}">${userDisplay}</span>
-            <div class="user-dropdown" id="user-dropdown">
-              <a href="profile.html">Profile</a>
-              <a href="#" onclick="logout()">Logout</a>
-            </div>
-          </div>
-          ${adminLink}
-        `;
-      } else if (userArea) {
-        userArea.innerHTML = `<a href="login.html" class="nav-link">Login</a>`;
-      }
-      
-      window.toggleUserDropdown = function() {
-        const dropdown = document.getElementById('user-dropdown');
-        if (dropdown) dropdown.classList.toggle('show');
-      };
-      
-      window.logout = function() {
-        localStorage.removeItem('email');
-        localStorage.removeItem('user');
-        window.location.href = 'login.html';
-      };
-      
-      document.addEventListener('click', (event) => {
-        const dropdown = document.getElementById('user-dropdown');
-        const container = document.querySelector('.user-dropdown-container');
-        if (dropdown && container && !container.contains(event.target)) {
-          dropdown.classList.remove('show');
-        }
-      });
-      
-      // Cart counter
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-      const cartCountElem = document.getElementById('cart-count');
-      if (cartCountElem) cartCountElem.textContent = totalQuantity;
-    });
-    
-    // Chatbot functionality
-    document.getElementById('chat-btn').onclick = function() {
-      document.getElementById('chat-window').style.display = 'flex';
-      document.getElementById('chat-btn').style.display = 'none';
-    };
-    
-    document.getElementById('chat-close').onclick = function() {
-      document.getElementById('chat-window').style.display = 'none';
-      document.getElementById('chat-btn').style.display = 'flex';
-    };
-    
-    document.getElementById('chat-send').onclick = sendMessage;
-    document.getElementById('chat-input').onkeypress = function(e) {
-      if (e.key === 'Enter') sendMessage();
-    };       <span class="user-initial" onclick="toggleUserDropdown()" title="${userEmail}">${userDisplay}</span>
-            <div class="user-dropdown" id="user-dropdown" style="position:absolute;top:40px;right:0;background:var(--bg-secondary);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.1);min-width:120px;z-index:1200;display:none;border:1px solid rgba(255,255,255,0.2);">
-              <a href="profile.html" style="display:block;padding:10px 15px;color:var(--text-primary);text-decoration:none;font-size:14px;">Profile</a>
-              <a href="#" onclick="logout()" style="display:block;padding:10px 15px;color:#ef4444;text-decoration:none;font-size:14px;border-top:1px solid rgba(0,0,0,0.1);">Logout</a>
-            </div>
-          </div>
-          ${adminLink}
-        `;
-      } else if (userArea) {
-        userArea.innerHTML = `<a href="login.html" class="nav-link">Login</a>`;
-      }
-      
-      window.toggleUserDropdown = function() {
-        const dropdown = document.getElementById('user-dropdown');
-        if (dropdown) dropdown.classList.toggle('show');
-      };
-      
-      window.logout = function() {
-        localStorage.removeItem('email');
-        localStorage.removeItem('user');
-        window.location.href = 'login.html';
-      };
-      
-      document.addEventListener('click', (event) => {
-        const dropdown = document.getElementById('user-dropdown');
-        const container = document.querySelector('.user-dropdown-container');
-        if (dropdown && container && !container.contains(event.target)) {
-          dropdown.classList.remove('show');
-        }
-      });
-      
-      // Cart counter
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-      const cartCountElem = document.getElementById('cart-count');
-      if (cartCountElem) cartCountElem.textContent = totalQuantity;
-    });
-    
-    // Chatbot functionality
-    document.getElementById('chat-btn').onclick = function() {
-      document.getElementById('chat-window').style.display = 'flex';
-      document.getElementById('chat-btn').style.display = 'none';
-    };
-    
-    document.getElementById('chat-close').onclick = function() {
-      document.getElementById('chat-window').style.display = 'none';
-      document.getElementById('chat-btn').style.display = 'flex';
-    };
-    
-    function sendMessage() {
-      const input = document.getElementById('chat-input');
-      const messages = document.getElementById('chat-messages');
-      const message = input.value.trim().toLowerCase();
-      
-      if (!message) return;
-      
-      messages.innerHTML += '<div class="user-msg">' + input.value + '</div>';
-      input.value = '';
-      
-      // Show typing indicator
-      const typing = document.createElement('div');
-      typing.className = 'typing-indicator show';
-      typing.innerHTML = '🤖 TillieBot is typing...';
-      messages.appendChild(typing);
-      messages.scrollTop = messages.scrollHeight;
-      
-      setTimeout(() => {
-        typing.remove();
-        let response = getSmartResponse(message);
-        messages.innerHTML += '<div class="bot-msg">' + response + '</div>';
-        messages.scrollTop = messages.scrollHeight;
-      }, 1500);
-    }
-    
-    function getSmartResponse(message) {
-      // Product inquiries
-      if (message.includes('milk') || message.includes('dairy')) {
-        return '🥛 <strong>Fresh Milk</strong> - KES 120/liter<br>Our milk comes from free-range cows in Gilgil. Rich in calcium and delivered fresh daily! Would you like to add some to your cart?';
-      }
-      if (message.includes('egg') || message.includes('chicken')) {
-        return '🥚 <strong>Farm Fresh Eggs</strong> - KES 25/piece<br>🐔 <strong>Free-Range Chicken</strong> - KES 800/kg<br>Both from happy, healthy chickens! Perfect for protein-rich meals.';
-      }
-      if (message.includes('fruit') || message.includes('mango') || message.includes('banana')) {
-        return '🍌 <strong>Fresh Fruits Available:</strong><br>• Bananas - KES 150/bunch<br>• Mangoes - KES 40/piece<br>• Avocados - KES 30/piece<br>All picked fresh from our partner farms!';
-      }
-      if (message.includes('vegetable') || message.includes('kale') || message.includes('spinach')) {
-        return '🥬 <strong>Fresh Vegetables:</strong><br>• Kales (Sukuma Wiki) - KES 30/bunch<br>• Spinach - KES 30/bunch<br>• Lettuce - KES 80/head<br>Packed with nutrients and harvested daily!';
-      }
-      if (message.includes('herb') || message.includes('basil') || message.includes('mint')) {
-        return '🌿 <strong>Fresh Herbs:</strong><br>• Basil - KES 50/bunch<br>• Mint - KES 40/bunch<br>• Coriander - KES 30/bunch<br>Perfect for cooking and natural remedies!';
-      }
-      
-      // Delivery inquiries
-      if (message.includes('deliver') || message.includes('shipping') || message.includes('location')) {
-        return '🚚 <strong>Delivery Info:</strong><br>• Nairobi: KES 200 (Same day)<br>• Kiambu: KES 150<br>• Nakuru: KES 300<br>• Other areas: Contact us<br>Free delivery on orders over KES 2000!';
-      }
-      
-      // Pricing inquiries
-      if (message.includes('price') || message.includes('cost') || message.includes('cheap')) {
-        return '💰 <strong>Our Pricing:</strong><br>We offer competitive farm-to-table prices! Check our shop for current rates. We also have:<br>• Bulk discounts available<br>• Weekly specials<br>• Loyalty rewards<br>What specific product pricing interests you?';
-      }
-      
-      // Farming tips
-      if (message.includes('grow') || message.includes('plant') || message.includes('farm') || message.includes('tip')) {
-        return '👨‍🌾 <strong>Farming Tips:</strong><br>• Plant kales during rainy season<br>• Use organic compost for better yields<br>• Water vegetables early morning<br>• Rotate crops to maintain soil health<br>Need specific growing advice? Ask me!';
-      }
-      
-      // Order help
-      if (message.includes('order') || message.includes('cart') || message.includes('buy')) {
-        return '🛒 <strong>Order Help:</strong><br>1. Browse our shop page<br>2. Click products to add to cart<br>3. Review your cart<br>4. Proceed to checkout<br>Need help with a specific step?';
-      }
-      
-      // Contact/support
-      if (message.includes('contact') || message.includes('support') || message.includes('help') || message.includes('human')) {
-        return '📞 <strong>Contact Support:</strong><br>• Email: support@tillvalle.com<br>• Phone: +254 700 123 456<br>• WhatsApp: +254 700 123 456<br>• Live Chat: Available 8AM-6PM<br>Our team is here to help!';
-      }
-      
-      // Greetings
-      if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
-        return '👋 Hello there! Welcome to TillValle! I\'m here to help you find the freshest farm products. What can I assist you with today?';
-      }
-      
-      // Default response
-      return '🤔 I\'m not sure about that, but I\'d love to help! Try asking me about:<br>• Product information<br>• Delivery details<br>• Pricing<br>• Farming tips<br>• Order assistance<br><br>Or contact our support team for personalized help!';
-    }
-    
-    document.getElementById('chat-send').onclick = sendMessage;
-    document.getElementById('chat-input').onkeypress = function(e) {
-      if (e.key === 'Enter') sendMessage();
-    };
-  </script>
-
-  <script src="script.js" defer></script>
-  <script src="chatbot-ai.js"></script>
 </body>
 </html>

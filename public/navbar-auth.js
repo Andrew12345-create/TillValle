@@ -20,7 +20,7 @@ function updateNavbarAuth() {
         <div class="user-dropdown-container" style="position:relative;">
           <div class="profile-trigger" style="cursor:pointer;">
             ${profilePicture ? 
-              `<img src="${profilePicture}" alt="Profile" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">` : 
+              `<img src="${profilePicture}" alt="Profile" class="user-avatar">` : 
               `<span class="user-initial">${initial}</span>`
             }
           </div>

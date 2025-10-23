@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TillValle - Payment</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/site.css">
   <link rel="stylesheet" href="shop-styles.css">
   <link rel="icon" href="logo.jpg" type="image/jpeg">
 
@@ -45,7 +45,7 @@
   <section id="order-summary">
     <h3>Order Summary</h3>
     <ul id="order-items"></ul>
-    <p id="order-total" style="font-weight: bold; font-size: 1.2em;"></p>
+  <p id="order-total" class="fw-bold"></p>
   </section>
 
   <!-- Payment Section -->
@@ -62,7 +62,7 @@
       <!-- Removed location input field as location is set on location.html -->
       <div class="form-group">
         <label>Your Selected Location</label>
-        <p id="display-location" style="font-weight: bold; padding: 8px; background: #f0f0f0; border-radius: 4px;"></p>
+  <p id="display-location" class="fw-bold p-8 bg-light rounded-sm"></p>
       </div>
       <div id="mpesa-fields" class="payment-fields">
         <div class="form-group">
@@ -70,7 +70,7 @@
           <input type="tel" id="phone-number" name="phone-number" placeholder="07XXXXXXXX" required>
         </div>
       </div>
-      <div id="card-fields" class="payment-fields" style="display: none;">
+  <div id="card-fields" class="payment-fields d-none">
         <div class="form-group">
           <label for="card-number">Card Number</label>
           <input type="text" id="card-number" name="card-number" placeholder="1234 5678 9012 3456" required>

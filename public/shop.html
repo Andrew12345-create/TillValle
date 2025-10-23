@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shop - TillValle</title>
   <link rel="icon" href="logo.jpg" type="image/jpeg" />
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/site.css">
   <link rel="stylesheet" href="shop-styles.css">
   <link rel="stylesheet" href="global-chat.css">
   <!-- Hotjar Tracking Code -->
@@ -156,16 +156,16 @@
 
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function() {
       // User authentication
       const userEmail = localStorage.getItem('email');
-      const userArea = document.getElementById('user-area');
+  const userArea = document.getElementById('user-area');
       
       if (userEmail && userArea) {
         const initial = userEmail.charAt(0).toUpperCase();
         const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
-        const userDisplay = profilePicture ? 
-          `<img src="${profilePicture}" alt="Profile" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">` : 
+        const userDisplay = profilePicture ?
+          `<img src="${profilePicture}" alt="Profile" class="user-avatar">` :
           initial;
         let adminLink = '';
         if (userEmail === 'andrewmunamwangi@gmail.com') {
@@ -211,16 +211,22 @@
       if (cartCountElem) cartCountElem.textContent = totalQuantity;
     });
     
-    // Chatbot functionality
-    document.getElementById('chat-btn').onclick = function() {
-      document.getElementById('chat-window').style.display = 'flex';
-      document.getElementById('chat-btn').style.display = 'none';
-    };
-    
-    document.getElementById('chat-close').onclick = function() {
-      document.getElementById('chat-window').style.display = 'none';
-      document.getElementById('chat-btn').style.display = 'flex';
-    };
+    // Chatbot functionality - defensive bindings
+    const chatBtn = document.getElementById('chat-btn');
+    const chatWindow = document.getElementById('chat-window');
+    const chatClose = document.getElementById('chat-close');
+    if (chatBtn && chatWindow) {
+      chatBtn.addEventListener('click', function(){
+        chatWindow.style.display = 'flex';
+        chatBtn.style.display = 'none';
+      });
+    }
+    if (chatClose && chatWindow && chatBtn) {
+      chatClose.addEventListener('click', function(){
+        chatWindow.style.display = 'none';
+        chatBtn.style.display = 'flex';
+      });
+    }
     
     function sendMessage() {
       const input = document.getElementById('chat-input');
@@ -275,10 +281,10 @@
       return '🤔 I can help with product info, pricing, delivery, and orders. What would you like to know?';
     }
     
-    document.getElementById('chat-send').onclick = sendMessage;
-    document.getElementById('chat-input').onkeypress = function(e) {
-      if (e.key === 'Enter') sendMessage();
-    };
+    const chatSendBtn = document.getElementById('chat-send');
+    const chatInput = document.getElementById('chat-input');
+    if (chatSendBtn) chatSendBtn.addEventListener('click', sendMessage);
+    if (chatInput) chatInput.addEventListener('keypress', function(e){ if (e.key === 'Enter') sendMessage(); });
     
     // Product modal functionality
     let currentProduct = {};
@@ -308,8 +314,9 @@
     
     window.closeModal = closeModal;
     
-    // Close modal
-    document.querySelector('.close').addEventListener('click', closeModal);
+  // Close modal (defensive)
+  const closeBtn = document.querySelector('.close');
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
     
     // Close modal when clicking outside
     window.onclick = function(event) {
@@ -333,7 +340,8 @@
     };
     
     // Add to cart functionality
-    document.getElementById('add-to-cart-btn').onclick = function() {
+    const addToCartBtn = document.getElementById('add-to-cart-btn');
+    if (addToCartBtn) addToCartBtn.addEventListener('click', function() {
       const quantity = parseInt(document.getElementById('quantity').value);
       if (quantity > 0) {
         // Add animation to button
@@ -350,9 +358,9 @@
         // Show toast notification
         showToast(`Added ${quantity}x ${currentProduct.name} to cart!`);
       }
-    };
+    });
     
-    // Toast notification
+  // Toast notification
     function showToast(message) {
       const toast = document.createElement('div');
       toast.style.cssText = `
