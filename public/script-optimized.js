@@ -433,7 +433,7 @@ function appendMessage(message, isBot = false) {
 }
 
 async function sendChatbotMessage() {
-  const message = chatbotElements.input.value.trim();
+  const message = chatbotElements.input ? (chatbotElements.input.value || '').trim() : '';
   if (!message) return;
 
   appendMessage(message, false);
@@ -472,17 +472,19 @@ chatbotElements.input?.addEventListener('keypress', (e) => {
 
 // Search functionality
 function filterProducts(searchTerm) {
-  const lowerSearchTerm = searchTerm.toLowerCase();
+  const lowerSearchTerm = (searchTerm || '').toLowerCase();
   document.querySelectorAll('.product').forEach(product => {
-    const productName = product.querySelector('h4').textContent.toLowerCase();
+    const h4 = product.querySelector('h4');
+    const productName = h4 ? (h4.textContent || '').toLowerCase() : '';
     product.style.display = productName.includes(lowerSearchTerm) ? 'block' : 'none';
   });
 }
 
 function filterAdminStock(searchTerm) {
-  const lowerSearchTerm = searchTerm.toLowerCase();
+  const lowerSearchTerm = (searchTerm || '').toLowerCase();
   document.querySelectorAll('#stock-table tbody tr').forEach(row => {
-    const productName = row.cells[1].textContent.toLowerCase();
+    const cell = row.cells[1];
+    const productName = cell ? (cell.textContent || '').toLowerCase() : '';
     row.style.display = productName.includes(lowerSearchTerm) ? '' : 'none';
   });
 }

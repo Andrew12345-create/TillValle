@@ -29,10 +29,12 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   async function sendMessage() {
-    const message = chatbotInput.value.trim();
+    if (!chatbotInput) return;
+    const message = (chatbotInput.value || '').trim();
     if (!message) return;
 
     const messagesDiv = document.getElementById('chatbot-messages');
+    if (!messagesDiv) return;
     messagesDiv.innerHTML += `<div class="chatbot-message user">${message}</div>`;
     chatbotInput.value = '';
     messagesDiv.innerHTML += `<div class="chatbot-message bot">Thinking...</div>`;

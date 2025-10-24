@@ -101,6 +101,9 @@
         <button class="action-btn" id="edit-password-btn">
           <span>🔒</span> Change Password
         </button>
+        <button class="action-btn" id="theme-toggle-btn">
+          <span>🌙</span> Toggle Dark Mode
+        </button>
         <button class="action-btn logout-btn" id="logout-btn">
           <span>🚪</span> Logout
         </button>
@@ -124,6 +127,22 @@
               alert('Password updated successfully!');
             }
           });
+
+          // Theme toggle functionality
+          const themeToggleBtn = document.getElementById('theme-toggle-btn');
+          themeToggleBtn.addEventListener('click', () => {
+            const body = document.body;
+            const isDark = body.classList.toggle('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeToggleBtn.innerHTML = isDark ? '<span>☀️</span> Toggle Light Mode' : '<span>🌙</span> Toggle Dark Mode';
+          });
+
+          // Load saved theme
+          const savedTheme = localStorage.getItem('theme');
+          if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeToggleBtn.innerHTML = '<span>☀️</span> Toggle Light Mode';
+          }
 
           // Logout button functionality
           const logoutBtn = document.getElementById('logout-btn');

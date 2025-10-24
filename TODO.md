@@ -1,11 +1,12 @@
-# MAX UPGRADE Plan for TillValle Chat and Index.html
+# CSS Upgrade for index.html and profile.html
 
 ## Tasks
-- [x] Update index.html - Remove inline chat window elements and add floating chatbot button and sidebar structure
-- [x] Integrate advanced chatbot styles - Ensure styles.css is properly linked and chatbot elements use the advanced styling
-- [x] Enhance chatbot functionality - Consolidate and improve JS integration for better stock queries, conversation memory, and AI-like responses
-- [x] Update global-chat.js for sidebar integration and enhanced features
-- [x] Add shop-styles.css to index.html for consistent navbar and color scheme
-- [ ] Test chatbot on index.html: Stock queries, product info, delivery, etc.
-- [ ] Ensure responsive design: Test on mobile, tablet, desktop
-- [ ] Final testing: Open index.html in browser, interact with chatbot, verify all features work
+- [ ] Update public/styles.css for index.html: Modernize navbar, hero section, buttons, and overall design with better shadows, typography, gradients, and responsiveness.
+- [ ] Update public/css/site.css for profile.html: Enhance profile grid with glassmorphism, improved card designs, spacing, hover animations, and mobile responsiveness.
+- [ ] Test pages in browser for visual improvements and responsiveness.
+- [ ] Verify no style conflicts with existing scripts.
+
+## Completed
+- [x] Analyze index.html and profile.html files.
+- [x] Create comprehensive plan for CSS upgrades focusing on UI/UX.
+- [x] Get user approval for the plan.

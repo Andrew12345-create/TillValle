@@ -64,7 +64,7 @@
       <h1 id="profile-title" data-translate="myProfile">My Profile</h1>
       <p id="user-email" data-translate="welcomeBack">Welcome back!</p>
     </div>
-    
+
     <div class="profile-grid">
       <div class="profile-card" onclick="window.location.href='account.html'">
         <div class="card-icon">👤</div>
@@ -98,6 +98,13 @@
         <div class="card-icon">🌐</div>
         <h3 data-translate="language">Language</h3>
         <p data-translate="chooseLanguage">Choose your preferred language</p>
+        <div class="card-arrow">→</div>
+      </div>
+
+      <div class="profile-card" onclick="window.location.href='theme.html'">
+        <div class="card-icon">🌙</div>
+        <h3>Theme</h3>
+        <p>Toggle between light and dark mode</p>
         <div class="card-arrow">→</div>
       </div>
 
@@ -180,7 +187,7 @@
       
       // Logout functionality
       const logoutCard = document.getElementById('logout-card');
-      
+
       logoutCard.addEventListener('click', async function() {
         try {
           const isNetlify = window.location.hostname.includes('netlify') || window.location.href.includes('netlify');
@@ -212,7 +219,28 @@
           window.location.href = 'login.html';
         }
       });
-      
+
+      // Theme toggle functionality
+      const themeToggleCard = document.getElementById('theme-toggle-card');
+      themeToggleCard.addEventListener('click', function() {
+        const body = document.body;
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        body.classList.toggle('dark-theme');
+        localStorage.setItem('theme', newTheme);
+        // Update icon
+        const icon = themeToggleCard.querySelector('.card-icon');
+        icon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+      });
+
+      // Apply saved theme on load
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        const icon = themeToggleCard.querySelector('.card-icon');
+        icon.textContent = '☀️';
+      }
+
       // Add dropdown toggle function
       window.toggleUserDropdown = function() {
         const dropdown = document.getElementById('user-dropdown');

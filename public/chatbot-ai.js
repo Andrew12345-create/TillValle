@@ -1,8 +1,8 @@
 async function sendMessage() {
   const input = document.getElementById('chat-input');
   const messages = document.getElementById('chat-messages');
-  const message = input.value.trim();
-  
+  if (!input || !messages) return; // nothing to do if elements missing
+  const message = (input.value || '').trim();
   if (!message) return;
   
   messages.innerHTML += '<div class="user-msg">' + message + '</div>';

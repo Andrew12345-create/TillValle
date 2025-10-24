@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-
 /* ========= CONSOLIDATED STYLES - ALL CSS FILES MERGED & OPTIMIZED ========= */
 
 /* ========= LOADING SCREEN ========= */
@@ -19,6 +17,12 @@
   overflow: hidden;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
+  animation: backgroundShift 4s ease-in-out infinite;
+}
+
+@keyframes backgroundShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 .loading-container {
@@ -179,6 +183,10 @@
   --hover-bg: rgba(6,95,70,0.04);
   --shadow-color: rgba(0,0,0,0.1);
   --radius: 10px;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 
   /* Aliases for older variable names used throughout the legacy stylesheet */
   --accent-green: var(--accent);
@@ -214,7 +222,7 @@
 body{
   font-family: 'Poppins', sans-serif;
   line-height: 1.6;
-  background: var(--bg);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
@@ -488,14 +496,12 @@ body{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* gentler, less saturated background to sit nicely over content */
-  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(245,250,245,0.96));
-  padding: 12px 20px;
-  box-shadow: 0 6px 16px rgba(15,23,42,0.04);
+  background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+  padding: 15px 30px;
+  box-shadow: 0 4px 20px rgba(45, 106, 79, 0.3);
   z-index: 1100;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid rgba(15,23,42,0.04);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
 /* Ensure cart icon is always visible in navbar */
@@ -846,15 +852,15 @@ body{
 }
 
 .profile-avatar {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   background: linear-gradient(135deg, var(--accent-green), var(--accent-green-light));
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 20px;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: white;
   box-shadow: 0 8px 25px rgba(45,106,79,0.3);
@@ -1113,18 +1119,27 @@ body{
 
 .user-initial {
   display: inline-block;
-  width: 30px;
-  height: 30px;
+  width: 40px; /* Increased size */
+  height: 40px; /* Increased size */
   background: var(--accent-green);
   color: white;
   border-radius: 50%;
   text-align: center;
-  line-height: 30px;
+  line-height: 40px; /* Adjusted line-height for new size */
   font-weight: bold;
-  font-size: 14px;
+  font-size: 18px; /* Increased font size */
   cursor: pointer;
   position: relative;
   transition: background 0.3s ease;
+  object-fit: cover; /* Ensure images fit well */
+}
+
+.user-avatar {
+  width: 40px; /* Increased size */
+  height: 40px; /* Increased size */
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent-yellow); /* Added border for consistency */
 }
 
 .user-initial:hover {

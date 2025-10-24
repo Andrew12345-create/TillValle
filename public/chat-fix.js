@@ -7,12 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (chatBtn) {
     chatBtn.addEventListener('click', () => {
-      chatWindow.style.display = 'flex';
+      if (chatWindow) chatWindow.style.display = 'flex';
     });
   }
   if (chatClose) {
     chatClose.addEventListener('click', () => {
-      chatWindow.style.display = 'none';
+      if (chatWindow) chatWindow.style.display = 'none';
     });
   }
   if (chatSend) {
@@ -25,12 +25,13 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   async function sendMessage() {
-    const message = chatInput.value.trim();
+    const message = chatInput ? (chatInput.value || '').trim() : '';
     if (!message) return;
-    
+
     const messagesDiv = document.getElementById('chat-messages');
+    if (!messagesDiv) return;
     messagesDiv.innerHTML += `<div class="user-msg">${message}</div>`;
-    chatInput.value = '';
+    if (chatInput) chatInput.value = '';
     
     const typing = document.createElement('div');
     typing.className = 'typing-indicator show';

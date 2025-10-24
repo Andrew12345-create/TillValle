@@ -30,16 +30,22 @@ document.addEventListener('DOMContentLoaded', function() {
   const chatBackdrop = document.getElementById('chatbot-backdrop');
 
   if (chatBtn && chatSidebar) {
-    chatBtn.addEventListener('click', () => {
-      chatSidebar.classList.add('open');
-      chatBackdrop.classList.add('show');
-    });
+    if (chatBackdrop) {
+      chatBtn.addEventListener('click', () => {
+        chatSidebar.classList.add('open');
+        chatBackdrop.classList.add('show');
+      });
+    } else {
+      chatBtn.addEventListener('click', () => {
+        chatSidebar.classList.add('open');
+      });
+    }
   }
 
   if (chatClose && chatSidebar) {
     chatClose.addEventListener('click', () => {
       chatSidebar.classList.remove('open');
-      chatBackdrop.classList.remove('show');
+      if (chatBackdrop) chatBackdrop.classList.remove('show');
     });
   }
 
@@ -61,12 +67,13 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   async function sendMessage() {
-    const message = chatInput.value.trim();
+    const message = chatInput ? (chatInput.value || '').trim() : '';
     if (!message) return;
 
     const messagesDiv = document.getElementById('chatbot-messages');
+    if (!messagesDiv) return;
     messagesDiv.innerHTML += `<div class="chatbot-message user">${message}</div>`;
-    chatInput.value = '';
+    if (chatInput) chatInput.value = '';
 
     // Enhanced typing indicator
     const typing = document.createElement('div');
