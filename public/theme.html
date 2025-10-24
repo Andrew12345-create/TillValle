@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Theme Settings - TillValle</title>
+  <link rel="icon" href="logo.jpg" type="image/jpeg" />
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="global-chat.css">
+  <style>
+    .theme-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    .theme-section {
+      background: var(--bg-secondary);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .theme-option {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      margin: 10px 0;
+      background: var(--card);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+    .theme-option:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .theme-option.selected {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+      color: white;
+    }
+    .theme-preview {
+      width: 60px;
+      height: 40px;
+      border-radius: 4px;
+      margin-right: 15px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .theme-name {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    .theme-desc {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    .save-btn {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+    }
+    .save-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(22, 163, 74, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="index.html" class="nav-link logo-link">
+        <img src="logo.jpg" alt="TillValle Logo" class="logo">
+      </a>
+      <a href="shop.html" class="nav-link">Shop</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <div class="nav-right">
+      <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
+      <div id="user-area"></div>
+    </div>
+  </nav>
+
+  <div class="theme-container">
+    <h1 style="text-align: center; color: var(--text-primary); margin-bottom: 30px;">Choose Your Theme</h1>
+
+    <div class="theme-section">
+      <h2 style="color: var(--text-primary); margin-bottom: 20px;">Color Themes</h2>
+
+      <div class="theme-option" data-theme="dark">
+        <div class="theme-preview" style="background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);"></div>
+        <div>
+          <div class="theme-name">Dark Theme</div>
+          <div class="theme-desc">Dark background with green accents - easy on the eyes</div>
+        </div>
+      </div>
+
+      <div class="theme-option" data-theme="light">
+        <div class="theme-preview" style="background: linear-gradient(135deg, #f3f4f6 0%, #c3cfe2 100%);"></div>
+        <div>
+          <div class="theme-name">Light Theme</div>
+          <div class="theme-desc">Light and bright - classic clean look</div>
+        </div>
+      </div>
+
+      <div class="theme-option" data-theme="green">
+        <div class="theme-preview" style="background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);"></div>
+        <div>
+          <div class="theme-name">Green Theme</div>
+          <div class="theme-desc">Nature-inspired green tones throughout</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="save-btn" onclick="saveTheme()">Save Theme</button>
+  </div>
+
+  <script src="navbar-universal.js"></script>
+  <script src="global-chat.js"></script>
+  <script>
+    // Load current theme
+    const currentTheme = localStorage.getItem('selectedTheme') || 'dark';
+    document.querySelector(`[data-theme="${currentTheme}"]`).classList.add('selected');
+
+    // Theme selection
+    document.querySelectorAll('.theme-option').forEach(option => {
+      option.addEventListener('click', function() {
+        document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+    });
+
+    function saveTheme() {
+      const selectedTheme = document.querySelector('.theme-option.selected').dataset.theme;
+      localStorage.setItem('selectedTheme', selectedTheme);
+
+      // Apply theme immediately
+      applyTheme(selectedTheme);
+
+      // Show success message
+      alert('Theme saved successfully!');
+
+      // Redirect back to profile
+      window.location.href = 'profile.html';
+    }
+
+    function applyTheme(theme) {
+      const root = document.documentElement;
+      if (theme === 'dark') {
+        root.style.setProperty('--bg', '#1a1a1a');
+        root.style.setProperty('--bg-secondary', '#2a2a2a');
+        root.style.setProperty('--text-primary', '#ffffff');
+        root.style.setProperty('--text-secondary', '#cccccc');
+      } else if (theme === 'light') {
+        root.style.setProperty('--bg', '#f3f4f6');
+        root.style.setProperty('--bg-secondary', '#ffffff');
+        root.style.setProperty('--text-primary', '#0f172a');
+        root.style.setProperty('--text-secondary', '#374151');
+      } else if (theme === 'green') {
+        root.style.setProperty('--bg', '#2d6a4f');
+        root.style.setProperty('--bg-secondary', '#40916c');
+        root.style.setProperty('--text-primary', '#ffffff');
+        root.style.setProperty('--text-secondary', '#e6f7f0');
+      }
+    }
+  </script>
+</body>
+</html>
