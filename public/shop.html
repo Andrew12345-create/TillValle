@@ -288,10 +288,10 @@
     if (chatInput) chatInput.addEventListener('keypress', function(e){ if (e.key === 'Enter') sendMessage(); });
     
     // Product modal functionality
-    let currentProduct = {};
-    
+    let modalCurrentProduct = {};
+
     function openProductModal(name, description, image, price) {
-      currentProduct = { name, description, image, price };
+      modalCurrentProduct = { name, description, image, price };
       
       document.getElementById('modal-title').textContent = name;
       document.getElementById('modal-description').textContent = description;
@@ -357,7 +357,7 @@
         }, 1000);
         
         // Show toast notification
-        showToast(`Added ${quantity}x ${currentProduct.name} to cart!`);
+        showToast(`Added ${quantity}x ${modalCurrentProduct.name} to cart!`);
       }
     });
     

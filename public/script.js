@@ -397,7 +397,7 @@ window.removeFromCart = function(name) {
 
 // Update product quantity display on cards
 function updateProductQuantityDisplay(name) {
-  const qtyElement = document.getElementById(`qty-${name.replace(/\s+/g, '-')}`);
+  const qtyElement = document.getElementById(`qty-${name.replace(/[^a-zA-Z0-9]+/g, '-')}`);
   if (qtyElement) {
     const existingItem = cart.find(item => item.name === name);
     qtyElement.textContent = existingItem ? existingItem.quantity : 0;
