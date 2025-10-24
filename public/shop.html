@@ -236,8 +236,12 @@
       
       if (!message) return;
       
-      messages.innerHTML += '<div class="user-msg">' + input.value + '</div>';
-      input.value = '';
+  // Append user message safely using textContent to avoid HTML injection
+  const userMsgDiv = document.createElement('div');
+  userMsgDiv.className = 'user-msg';
+  userMsgDiv.textContent = input.value;
+  messages.appendChild(userMsgDiv);
+  input.value = '';
       
       // Show typing indicator
       const typing = document.createElement('div');
@@ -249,8 +253,12 @@
       setTimeout(() => {
         typing.remove();
         let response = getSmartResponse(message);
-        messages.innerHTML += '<div class="bot-msg">' + response + '</div>';
-        messages.scrollTop = messages.scrollHeight;
+  // Append bot response. Responses originate from site logic, so innerHTML is intentional
+  const botMsgDiv = document.createElement('div');
+  botMsgDiv.className = 'bot-msg';
+  botMsgDiv.innerHTML = response;
+  messages.appendChild(botMsgDiv);
+  messages.scrollTop = messages.scrollHeight;
       }, 1500);
     }
     

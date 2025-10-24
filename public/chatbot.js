@@ -35,11 +35,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const messagesDiv = document.getElementById('chatbot-messages');
     if (!messagesDiv) return;
-    messagesDiv.innerHTML += `<div class="chatbot-message user">${message}</div>`;
-    chatbotInput.value = '';
-    messagesDiv.innerHTML += `<div class="chatbot-message bot">Thinking...</div>`;
-    const loadingMessage = messagesDiv.lastElementChild;
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  // Append user message safely
+  const userDiv = document.createElement('div');
+  userDiv.className = 'chatbot-message user';
+  userDiv.textContent = message;
+  messagesDiv.appendChild(userDiv);
+  chatbotInput.value = '';
+  const loadingDiv = document.createElement('div');
+  loadingDiv.className = 'chatbot-message bot';
+  loadingDiv.textContent = 'Thinking...';
+  messagesDiv.appendChild(loadingDiv);
+  const loadingMessage = loadingDiv;
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
     try {
       const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -50,8 +57,12 @@ document.addEventListener('DOMContentLoaded', function() {
         body: JSON.stringify({ message })
       });
       const data = await response.json();
-      if (loadingMessage) loadingMessage.remove();
-      messagesDiv.innerHTML += `<div class="chatbot-message bot">${data.message}</div>`;
+  if (loadingMessage) loadingMessage.remove();
+  const botDiv = document.createElement('div');
+  botDiv.className = 'chatbot-message bot';
+  // Treat server responses as text to avoid HTML injection
+  botDiv.textContent = data.message;
+  messagesDiv.appendChild(botDiv);
     } catch (error) {
       if (loadingMessage) loadingMessage.remove();
       const currentLang = localStorage.getItem('selectedLanguage') || 'en';
@@ -72,9 +83,15 @@ document.addEventListener('DOMContentLoaded', function() {
       };
       const responses = offlineResponses[currentLang] || offlineResponses.en;
       if (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('live')) {
-        messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.human}</div>`;
+        const botDiv = document.createElement('div');
+        botDiv.className = 'chatbot-message bot';
+        botDiv.textContent = responses.human;
+        messagesDiv.appendChild(botDiv);
       } else {
-        messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.default}</div>`;
+        const botDiv2 = document.createElement('div');
+        botDiv2.className = 'chatbot-message bot';
+        botDiv2.textContent = responses.default;
+        messagesDiv.appendChild(botDiv2);
       }
     }
     messagesDiv.scrollTop = messagesDiv.scrollHeight;

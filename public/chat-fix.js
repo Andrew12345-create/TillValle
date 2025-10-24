@@ -28,26 +28,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const message = chatInput ? (chatInput.value || '').trim() : '';
     if (!message) return;
 
-    const messagesDiv = document.getElementById('chat-messages');
-    if (!messagesDiv) return;
-    messagesDiv.innerHTML += `<div class="user-msg">${message}</div>`;
-    if (chatInput) chatInput.value = '';
+  const messagesDiv = document.getElementById('chat-messages');
+  if (!messagesDiv) return;
+  const userDiv = document.createElement('div');
+  userDiv.className = 'user-msg';
+  userDiv.textContent = message;
+  messagesDiv.appendChild(userDiv);
+  if (chatInput) chatInput.value = '';
     
     const typing = document.createElement('div');
-    typing.className = 'typing-indicator show';
-    typing.innerHTML = '🤖 Checking stock...';
+  typing.className = 'typing-indicator show';
+  typing.textContent = '🤖 Checking stock...';
     messagesDiv.appendChild(typing);
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
     
     try {
       const response = await getAIResponse(message);
-      typing.remove();
-      messagesDiv.innerHTML += `<div class="bot-msg">${response}</div>`;
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  typing.remove();
+  const botDiv = document.createElement('div');
+  botDiv.className = 'bot-msg';
+  botDiv.innerHTML = response; // site-generated
+  messagesDiv.appendChild(botDiv);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
     } catch (error) {
-      typing.remove();
-      messagesDiv.innerHTML += `<div class="bot-msg">Sorry, I am having trouble. Please try again.</div>`;
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  typing.remove();
+  const errDiv = document.createElement('div');
+  errDiv.className = 'bot-msg';
+  errDiv.textContent = 'Sorry, I am having trouble. Please try again.';
+  messagesDiv.appendChild(errDiv);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
   }
   

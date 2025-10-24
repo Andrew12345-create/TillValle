@@ -415,7 +415,7 @@ if (floatingCartBtn) {
 async function fetchStock() {
   try {
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
+    const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/api/stock';
     const response = await fetch(stockUrl);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
@@ -562,9 +562,9 @@ window.toggleStock = async function(productId, currentQuantity) {
 
   showStockToast('WAITING...');
   try {
-    // Use Netlify function URL for production, localhost for development
+    // Use API URL for production, localhost for development
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
+    const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/api/stock';
     const response = await fetch(stockUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -598,9 +598,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="quantity-controls">
           <button id="modal-decrease-qty">-</button>
           <input type="text" id="modal-quantity" value="1" readonly />
-          <button id="modal-increase-qty">+</button>
         </div>
-        <button id="add-to-cart-modal" class="add-to-cart-modal">Add to Cart</button>
+        <div class="modal-action-buttons">
+          <button id="modal-increase-qty">+</button>
+          <button id="add-to-cart-modal" class="add-to-cart-modal">✓</button>
+        </div>
       </div>
     </div>
   `;
@@ -720,7 +722,7 @@ if (toggleAllStockBtn) {
 
       const updatePromises = stockData.map(item => {
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
+        const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/api/stock';
         return fetch(stockUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -788,7 +790,7 @@ async function sendChatbotMessage() {
 
   try {
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/.netlify/functions/chatbot';
+    const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/api/chatbot';
     const user = getUserFromLocalStorage();
     const isAdmin = user && user.email === 'andrewmunamwangi@gmail.com';
     const response = await fetch(chatbotUrl, {

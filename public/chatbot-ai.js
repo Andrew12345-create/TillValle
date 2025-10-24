@@ -5,24 +5,34 @@ async function sendMessage() {
   const message = (input.value || '').trim();
   if (!message) return;
   
-  messages.innerHTML += '<div class="user-msg">' + message + '</div>';
+  // Append user message safely
+  const userDiv = document.createElement('div');
+  userDiv.className = 'user-msg';
+  userDiv.textContent = message;
+  messages.appendChild(userDiv);
   input.value = '';
   
   const typing = document.createElement('div');
   typing.className = 'typing-indicator show';
-  typing.innerHTML = '🤖 Checking stock and thinking...';
+  typing.textContent = '🤖 Checking stock and thinking...';
   messages.appendChild(typing);
   messages.scrollTop = messages.scrollHeight;
   
   try {
     const response = await getAIResponse(message);
-    typing.remove();
-    messages.innerHTML += '<div class="bot-msg">' + response + '</div>';
-    messages.scrollTop = messages.scrollHeight;
+  typing.remove();
+  const botDiv = document.createElement('div');
+  botDiv.className = 'bot-msg';
+  botDiv.innerHTML = response; // response is site-generated
+  messages.appendChild(botDiv);
+  messages.scrollTop = messages.scrollHeight;
   } catch (error) {
-    typing.remove();
-    messages.innerHTML += '<div class="bot-msg">Sorry, I am having trouble. Please try again.</div>';
-    messages.scrollTop = messages.scrollHeight;
+  typing.remove();
+  const errDiv = document.createElement('div');
+  errDiv.className = 'bot-msg';
+  errDiv.textContent = 'Sorry, I am having trouble. Please try again.';
+  messages.appendChild(errDiv);
+  messages.scrollTop = messages.scrollHeight;
   }
 }
 
