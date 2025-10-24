@@ -204,6 +204,42 @@ body {
   text-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
+/* Product Card Quantity Controls */
+.product-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.product-btn {
+  background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+  color: white;
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(45, 106, 79, 0.3);
+}
+
+.product-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 5px 15px rgba(45, 106, 79, 0.4);
+}
+
+.product-quantity {
+  min-width: 40px;
+  text-align: center;
+  font-weight: bold;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
 /* Product Modal Styles */
 .modal {
   display: none;
@@ -230,8 +266,8 @@ body {
 .modal-content {
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   border-radius: 25px;
+  max-width: 400px;
   width: 90%;
-  max-width: 500px;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
@@ -278,8 +314,8 @@ body {
 }
 
 .modal-image {
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   object-fit: contain;
   border-radius: 20px;
   flex-shrink: 0;

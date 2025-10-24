@@ -338,7 +338,7 @@ document.addEventListener('click', (e) => {
 });
 
 // Add product to cart from product cards without modal (fallback)
-window.addToCart = function(name, price) {
+window.addToCart = function(name, price, imageSrc) {
   if (!user || !user.email) {
     showCartToast("Please log in to add items to cart", true);
     setTimeout(() => {
@@ -348,38 +348,10 @@ window.addToCart = function(name, price) {
   }
   const stockStatus = JSON.parse(localStorage.getItem('productStock')) || {};
   const productMapping = {
-    'Milk': 'milk',
-    'Eggs': 'eggs',
-    'Eggs (Kienyeji)': 'eggs-kienyeji',
-    'Egg Crate (30 eggs)': 'egg-crate',
-    'Butter': 'butter',
-    'Chicken': 'chicken',
-    'Ghee': 'ghee',
-    'Apples': 'apples',
-    'Raw Bananas': 'raw-bananas',
-    'Bananas (ripe)': 'bananas-ripe',
-    'Soursop Fruit': 'soursop-fruit',
-    'Blueberries': 'blueberries',
-    'Macadamia': 'macadamia',
-    'Dragonfruit': 'dragonfruit',
-    'Mangoes': 'mangoes',
-    'Lemon': 'lemon',
-    'Pawpaw': 'pawpaw',
-    'Pixies': 'pixies',
-    'Avocadoes': 'avocadoes',
-    'Yellow Passion': 'yellow-passion',
-    'Kiwi': 'kiwi',
-    'Basil': 'basil',
-    'Coriander': 'coriander',
-    'Mint': 'mint',
-    'Parsley': 'parsley',
-    'Soursop Leaves': 'soursop-leaves',
-    'Kales (Sukuma Wiki)': 'kales',
-    'Lettuce': 'lettuce',
-    'Managu': 'managu',
-    'Terere': 'terere',
-    'Salgaa': 'salgaa',
-    'Spinach': 'spinach'
+    'Fresh Milk': 'milk',
+    'Farm Fresh Eggs': 'eggs',
+    'Free-Range Chicken': 'chicken',
+    'Pure Ghee': 'ghee'
   };
   const productId = productMapping[name];
   if (productId && stockStatus[productId] <= 0) {
@@ -390,13 +362,47 @@ window.addToCart = function(name, price) {
   if (existingItem) {
     existingItem.quantity++;
   } else {
-    cart.push({ name, price, quantity: 1 });
+    cart.push({ name, price, quantity: 1, image: imageSrc });
   }
   saveCart();
   renderCart();
   updateCartCount();
+  updateProductQuantityDisplay(name);
   showCartToast(`${name} added to cart!`);
 };
+
+// Remove product from cart from product cards
+window.removeFromCart = function(name) {
+  if (!user || !user.email) {
+    showCartToast("Please log in to add items to cart", true);
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 2000);
+    return;
+  }
+  const existingItem = cart.find(item => item.name === name);
+  if (existingItem) {
+    if (existingItem.quantity > 1) {
+      existingItem.quantity--;
+    } else {
+      cart = cart.filter(item => item.name !== name);
+    }
+    saveCart();
+    renderCart();
+    updateCartCount();
+    updateProductQuantityDisplay(name);
+    showCartToast(`${name} quantity decreased!`);
+  }
+};
+
+// Update product quantity display on cards
+function updateProductQuantityDisplay(name) {
+  const qtyElement = document.getElementById(`qty-${name.replace(/\s+/g, '-')}`);
+  if (qtyElement) {
+    const existingItem = cart.find(item => item.name === name);
+    qtyElement.textContent = existingItem ? existingItem.quantity : 0;
+  }
+}
 
 // Floating cart button click to open cart page
 const floatingCartBtn = document.getElementById('floating-cart-btn');
@@ -639,28 +645,22 @@ window.addEventListener('load', () => {
 // Search functionality for shop.html
 function filterProducts(searchTerm) {
   const products = document.querySelectorAll('.product');
-  const lowerSearchTerm = searchTerm.toLowerCase();
+  const lowerSearchTerm = (searchTerm || '').toLowerCase();
   products.forEach(product => {
-    const productName = product.querySelector('h4').textContent.toLowerCase();
-    if (productName.includes(lowerSearchTerm)) {
-      product.style.display = 'block';
-    } else {
-      product.style.display = 'none';
-    }
+    const h4 = product.querySelector('h4');
+    const productName = h4 ? (h4.textContent || '').toLowerCase() : '';
+    product.style.display = productName.includes(lowerSearchTerm) ? 'block' : 'none';
   });
 }
 
 // Search functionality for admin.html
 function filterAdminStock(searchTerm) {
   const rows = document.querySelectorAll('#stock-table tbody tr');
-  const lowerSearchTerm = searchTerm.toLowerCase();
+  const lowerSearchTerm = (searchTerm || '').toLowerCase();
   rows.forEach(row => {
-    const productName = row.cells[1].textContent.toLowerCase();
-    if (productName.includes(lowerSearchTerm)) {
-      row.style.display = '';
-    } else {
-      row.style.display = 'none';
-    }
+    const cell = row.cells[1];
+    const productName = cell ? (cell.textContent || '').toLowerCase() : '';
+    row.style.display = productName.includes(lowerSearchTerm) ? '' : 'none';
   });
 }
 
@@ -881,6 +881,6 @@ window.addEventListener('resize', () => {
   } else if (floatingChatbotBtn && !chatbotSidebar.classList.contains('open')) {
     floatingChatbotBtn.style.display = 'flex';
   }
-}
+});
 
 
