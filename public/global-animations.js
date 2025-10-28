@@ -57,6 +57,11 @@ document.addEventListener('DOMContentLoaded', function() {
       const speed = (index + 1) * 0.2;
       shape.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`;
     });
+    // Toggle navbar scrolled backdrop for a sleek sticky effect
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+      if (scrolled > 20) navbar.classList.add('scrolled'); else navbar.classList.remove('scrolled');
+    }
   });
 
   // Add ripple effect to clickable elements
@@ -105,5 +110,14 @@ document.addEventListener('DOMContentLoaded', function() {
     el.style.position = 'relative';
     el.style.overflow = 'hidden';
     el.addEventListener('click', createRipple);
+  });
+
+  // Highlight active nav link based on current path
+  const current = window.location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.nav-link').forEach(a => {
+    try {
+      const href = (a.getAttribute('href') || '').split('/').pop();
+      if (href === current) a.classList.add('active');
+    } catch (e) {}
   });
 });

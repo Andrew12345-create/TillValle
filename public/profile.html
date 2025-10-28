@@ -38,23 +38,7 @@
     <img src="logo.jpg" alt="TilleValle" class="loading-logo">
     <div class="loading-spinner"></div>
   </div>
-  <header>
-    <nav class="navbar">
-      <div class="nav-left">
-        <a href="index.html" class="nav-link logo-link">
-          <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
-        </a>
-        <a href="shop.html" class="nav-link" data-translate="shop">Shop</a>
-        <a href="about.html" class="nav-link" data-translate="about">About</a>
-        <a href="contact.html" class="nav-link" data-translate="contact">Contact</a>
-      </div>
-      <div class="nav-right">
-        <span id="user-area"></span>
-        <a href="cart.html" class="nav-link">🛒 <span data-translate="cart">Cart</span> (<span id="cart-count">0</span>)</a>
-      </div>
-    </nav>
-    <hr>
-  </header>
+  <div id="navbar-container"></div>
 
   <main class="profile-container">
     <div class="profile-header">
@@ -118,6 +102,13 @@
   </main>
 
   <script>
+    // Load navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('navbar-container').innerHTML = data;
+      });
+
     // Hide loading screen when page loads
     window.addEventListener('load', function() {
       const loadingScreen = document.getElementById('loading-screen');

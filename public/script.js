@@ -644,6 +644,30 @@ window.addEventListener('load', () => {
   setTimeout(ensureNavbarRenders, 100);
 });
 
+// Enhance navbar visuals and active state across pages
+function enhanceNavbar() {
+  const navbar = document.querySelector('.navbar');
+  if (!navbar) return false;
+  const current = window.location.pathname.split('/').pop() || 'index.html';
+  navbar.querySelectorAll('.nav-link').forEach(a => {
+    try {
+      const href = (a.getAttribute('href') || '').split('/').pop();
+      if (href === current) a.classList.add('active'); else a.classList.remove('active');
+    } catch (e) { /* ignore */ }
+  });
+  return true;
+}
+
+// Try to initialize navbar enhancements a few times (in case navbar is fetched dynamically)
+(function tryEnhanceNavbar() {
+  if (enhanceNavbar()) return;
+  let attempts = 0;
+  const id = setInterval(() => {
+    attempts++;
+    if (enhanceNavbar() || attempts > 8) clearInterval(id);
+  }, 300);
+})();
+
 // Search functionality for shop.html
 function filterProducts(searchTerm) {
   const products = document.querySelectorAll('.product');
@@ -883,6 +907,104 @@ window.addEventListener('resize', () => {
   } else if (floatingChatbotBtn && !chatbotSidebar.classList.contains('open')) {
     floatingChatbotBtn.style.display = 'flex';
   }
+});
+
+// Normalize inline product onclicks into data-attributes (non-destructive cleanup)
+function normalizeProductInlineHandlers() {
+  try {
+    const products = document.querySelectorAll('.product[onclick]');
+    products.forEach(product => {
+      const onclick = product.getAttribute('onclick');
+      if (!onclick) return;
+      const match = onclick.match(/openProductModal\('([^']+)'\s*,\s*'([^']*)'\s*,\s*'([^']*)'\s*,\s*([0-9.]+)\)/);
+      if (match) {
+        const [, name, description, image, price] = match;
+        product.dataset.name = name;
+        product.dataset.description = description;
+        product.dataset.image = image;
+        product.dataset.price = price;
+        product.removeAttribute('onclick');
+      }
+
+      // Normalize product control buttons
+      const controlBtns = product.querySelectorAll('.product-controls .product-btn[onclick]');
+      controlBtns.forEach(btn => {
+        const cb = btn.getAttribute('onclick') || '';
+        const addMatch = cb.match(/addToCart\('([^']+)'\s*,\s*([0-9.]+)\s*,\s*'([^']*)'\)/);
+        const remMatch = cb.match(/removeFromCart\('([^']+)'\)/);
+        if (addMatch) {
+          btn.dataset.action = 'add';
+          btn.dataset.name = addMatch[1];
+          btn.dataset.price = addMatch[2];
+          btn.dataset.image = addMatch[3] || '';
+          btn.removeAttribute('onclick');
+        } else if (remMatch) {
+          btn.dataset.action = 'remove';
+          btn.dataset.name = remMatch[1];
+          btn.removeAttribute('onclick');
+        }
+      });
+    });
+  } catch (e) {
+    console.warn('normalizeProductInlineHandlers error', e);
+  }
+}
+
+// Delegated handlers for product cards and product controls in shop.html
+document.addEventListener('click', (e) => {
+  const productEl = e.target.closest && e.target.closest('.product');
+  if (!productEl) return;
+
+  // if click came from a product control button, handle add/remove
+  const btn = e.target.closest && e.target.closest('.product-btn');
+  if (btn) {
+    e.stopPropagation();
+
+    // Prefer data-action attributes normalized earlier
+    const actionAttr = btn.dataset && btn.dataset.action;
+    if (actionAttr === 'add') {
+      const name = btn.dataset.name || productEl.dataset.name || productEl.querySelector('h4')?.textContent?.trim();
+      const price = parseFloat(btn.dataset.price || productEl.dataset.price || productEl.querySelector('.price')?.dataset?.price || '0');
+      const img = btn.dataset.image || productEl.dataset.image || productEl.querySelector('img')?.src || '';
+      if (name) window.addToCart && window.addToCart(name, price, img);
+      return;
+    }
+    if (actionAttr === 'remove') {
+      const name = btn.dataset.name || productEl.dataset.name || productEl.querySelector('h4')?.textContent?.trim();
+      if (name) window.removeFromCart && window.removeFromCart(name);
+      return;
+    }
+
+    // Fallback to text content (+ / -)
+    const action = (btn.textContent || '').trim();
+    const nameEl = productEl.querySelector('h4');
+    const name = nameEl ? nameEl.textContent.trim() : null;
+    const price = parseFloat(productEl.querySelector('.price')?.dataset?.price || '0');
+    const img = productEl.querySelector('img')?.src || '';
+    if (!name) return;
+    if (action === '+' || action === '＋') {
+      window.addToCart && window.addToCart(name, price, img);
+    } else if (action === '-' || action === '−' || action === '−') {
+      window.removeFromCart && window.removeFromCart(name);
+    }
+    return;
+  }
+
+  // Product card click: prefer normalized data-* values, then onclick parsing, then DOM fallback
+  const name = productEl.dataset.name || (productEl.getAttribute && (function(){
+    const onclickAttr = productEl.getAttribute('onclick');
+    if (onclickAttr) {
+      const match = onclickAttr.match(/openProductModal\('([^']+)'\s*,\s*'([^']*)'\s*,\s*'([^']*)'\s*,\s*([0-9.]+)\)/);
+      if (match) return match[1];
+    }
+    return null;
+  })()) || productEl.querySelector('h4')?.textContent?.trim();
+
+  const description = productEl.dataset.description || '';
+  const image = productEl.dataset.image || productEl.querySelector('img')?.src || '';
+  const price = parseFloat(productEl.dataset.price || productEl.querySelector('.price')?.dataset?.price || '0');
+
+  if (name) openProductModal && openProductModal(name, description, image, price);
 });
 
 

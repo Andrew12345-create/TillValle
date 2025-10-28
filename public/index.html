@@ -223,71 +223,16 @@
   </style>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // User authentication
-      const userEmail = localStorage.getItem('email');
-      const userArea = document.getElementById('user-area');
-      
-      if (userEmail && userArea) {
-        const initial = userEmail.charAt(0).toUpperCase();
-        const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
-        const userDisplay = profilePicture ?
-          `<img src="${profilePicture}" alt="Profile" class="user-avatar">` :
-          initial;
-        let adminLink = '';
-        if (userEmail === 'andrewmunamwangi@gmail.com') {
-          adminLink = `<a href="admin.html" class="nav-link">Admin</a>`;
-        }
-        userArea.innerHTML = `
-          <div class="user-dropdown-container">
-            <span class="user-initial" onclick="toggleUserDropdown()" title="${userEmail}">${userDisplay}</span>
-            <div class="user-dropdown" id="user-dropdown" style="position:absolute;top:40px;right:0;background:var(--bg-secondary);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.1);min-width:120px;z-index:1200;display:none;border:1px solid rgba(255,255,255,0.2);">
-              <a href="profile.html" style="display:block;padding:10px 15px;color:var(--text-primary);text-decoration:none;font-size:14px;">Profile</a>
-              <a href="#" onclick="logout()" style="display:block;padding:10px 15px;color:#ef4444;text-decoration:none;font-size:14px;border-top:1px solid rgba(0,0,0,0.1);">Logout</a>
-            </div>
-          </div>
-          ${adminLink}
-        `;
-      } else if (userArea) {
-        userArea.innerHTML = `<a href="login.html" class="nav-link">Login</a>`;
-      }
-      
-      window.toggleUserDropdown = function() {
-        const dropdown = document.getElementById('user-dropdown');
-        if (dropdown) dropdown.classList.toggle('show');
-      };
-      
-      window.logout = function() {
-        localStorage.removeItem('email');
-        localStorage.removeItem('user');
-        window.location.href = 'login.html';
-      };
-      
-      document.addEventListener('click', (event) => {
-        const dropdown = document.getElementById('user-dropdown');
-        const container = document.querySelector('.user-dropdown-container');
-        if (dropdown && container && !container.contains(event.target)) {
-          dropdown.classList.remove('show');
-        }
+    // Load navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('navbar-container').innerHTML = data;
       });
-    });
   </script>
 
   <header>
-    <nav class="navbar">
-      <div class="nav-left">
-        <a href="index.html" class="nav-link logo-link">
-          <img src="./logo.jpg" alt="TilleValle Logo" class="logo" />
-        </a>
-        <a href="shop.html" class="nav-link">Shop</a>
-        <a href="about.html" class="nav-link">About</a>
-        <a href="contact.html" class="nav-link">Contact</a>
-      </div>
-      <div class="nav-right">
-        <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
-        <div id="user-area"></div>
-      </div>
-    </nav>
+    <div id="navbar-container"></div>
   </header>
 
   <section class="hero-animation">

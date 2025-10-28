@@ -25,42 +25,14 @@
     <div class="loading-spinner"></div>
   </div>
   <link rel="stylesheet" href="css/site.css" />
-  <nav class="navbar">
-    <div class="nav-left">
-      <a href="index.html" class="nav-link logo-link">
-        <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
-      </a>
-      <a href="shop.html" class="nav-link">Shop</a>
-      <a href="about.html" class="nav-link">About</a>
-      <a href="contact.html" class="nav-link">Contact</a>
-    </div>
-    <div class="nav-right">
-      <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
-      <a href="login.html" class="nav-link" id="login-btn">Login</a>
-      <a href="profile.html" class="nav-link" id="profile-btn" style="display:none;">Profile</a>
-      <a href="admin.html" class="nav-link" id="admin-btn" style="display:none;">Admin</a>
-      <a href="#" class="nav-link" id="logout-btn" style="display:none;" onclick="logout()">Logout</a>
-    </div>
-  </nav>
+  <div id="navbar-container"></div>
 
-  <section class="cart animated fadeIn" id="cart-section">
+  <section class="cart-section animated fadeIn" id="cart-section">
     <h2>Your Shopping Cart</h2>
     <div class="cart-container">
 
       <ul id="cart-items">
         <!-- Cart items will appear here -->
-        <!-- Example cart item with quantity controls -->
-        <!--
-        <li class="cart-item">
-          <span>Eggs (Kienyeji) - KES 30</span>
-          <div class="cart-quantity-controls">
-            <button class="decrease-qty">-</button>
-            <input type="text" class="item-qty" value="1" readonly />
-            <button class="increase-qty">+</button>
-            <button class="remove-item" style="background: transparent; border: none; color: #ef4444; font-weight: bold; cursor: pointer;">Remove</button>
-          </div>
-        </li>
-        -->
       </ul>
       <b><p id="cart-total">Total: KSh 0</p></b>
       <button id="checkout-btn">Checkout</button>
@@ -260,6 +232,13 @@
   <script src="chatbot-universal.js"></script>
   <script src="script.js" defer></script>
   <script>
+    // Load navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('navbar-container').innerHTML = data;
+      });
+
     // Hide loading screen when page loads
     window.addEventListener('load', function() {
       const loadingScreen = document.getElementById('loading-screen');
@@ -268,47 +247,7 @@
         setTimeout(() => loadingScreen.remove(), 800);
       }
     });
-    
     document.addEventListener('DOMContentLoaded', function() {
-      const userEmail = localStorage.getItem('email');
-      const userArea = document.getElementById('user-area');
-      if (userArea && userEmail) {
-        const initial = userEmail.charAt(0).toUpperCase();
-        const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
-        const userDisplay = profilePicture ? 
-          `<img src="${profilePicture}" alt="Profile" class="user-avatar">` : 
-          initial;
-        let adminLink = '';
-        if (userEmail === 'andrewmunamwangi@gmail.com') {
-          adminLink = `<a href="admin.html" class="nav-link">Admin</a>`;
-        }
-        userArea.innerHTML = `
-          <div class="user-dropdown-container">
-            <span class="user-initial" onclick="toggleUserDropdown()" title="${userEmail}">${userDisplay}</span>
-            <div class="user-dropdown" id="user-dropdown">
-              <a href="profile.html">Profile</a>
-              <a href="#" class="logout-btn" onclick="logout()">Logout</a>
-            </div>
-          </div>
-          ${adminLink}
-        `;
-      }
-      window.toggleUserDropdown = function() {
-        const dropdown = document.getElementById('user-dropdown');
-        if (dropdown) dropdown.classList.toggle('show');
-      };
-      window.logout = function() {
-        localStorage.removeItem('email');
-        localStorage.removeItem('user');
-        window.location.href = 'login.html';
-      };
-      document.addEventListener('click', (event) => {
-        const dropdown = document.getElementById('user-dropdown');
-        const container = document.querySelector('.user-dropdown-container');
-        if (dropdown && container && !container.contains(event.target)) {
-          dropdown.classList.remove('show');
-        }
-      });
       // Render cart items from localStorage
       function renderCart() {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];

@@ -1,12 +1,9 @@
-# CSS Upgrade for index.html and profile.html
+# TODO: Add Vegetables to Stock
 
-## Tasks
-- [ ] Update public/styles.css for index.html: Modernize navbar, hero section, buttons, and overall design with better shadows, typography, gradients, and responsiveness.
-- [ ] Update public/css/site.css for profile.html: Enhance profile grid with glassmorphism, improved card designs, spacing, hover animations, and mobile responsiveness.
-- [ ] Test pages in browser for visual improvements and responsiveness.
-- [ ] Verify no style conflicts with existing scripts.
+- [x] Add Cauliflower, Broccoli, and Kunde as new entries to db/init_stock.sql with default stock quantity of 100
 
-## Completed
-- [x] Analyze index.html and profile.html files.
-- [x] Create comprehensive plan for CSS upgrades focusing on UI/UX.
-- [x] Get user approval for the plan.
+# TODO: Add Products to Shop
+
+- [x] Add Cauliflower, Broccoli, Kunde to Vegetables & Greens category in shop.html
+- [x] Add Honey to Animal & Farm Produce category in shop.html
+- [x] Add Honey to db/init_stock.sql

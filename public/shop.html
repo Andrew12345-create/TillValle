@@ -5,10 +5,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shop - TillValle</title>
-  <link rel="icon" href="logo.jpg" type="image/jpeg" />
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="icon" href="logo.jpg" type="image/jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="shop-styles.css">
-  <link rel="stylesheet" href="global-chat.css">
   <!-- Hotjar Tracking Code -->
   <script>
     (function(h,o,t,j,a,r){
@@ -20,26 +22,138 @@
         a.appendChild(r);
     })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
   </script>
+  <style>
+    :root {
+      --primary: #2d6a4f;
+      --primary-dark: #1b4332;
+      --primary-light: #40916c;
+      --accent: #ff6b6b;
+      --accent-light: #ff9999;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --text-light: #94a3b8;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8fafc;
+      --bg-tertiary: #f1f5f9;
+      --glass: rgba(255, 255, 255, 0.25);
+      --glass-border: rgba(255, 255, 255, 0.18);
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      --gradient-accent: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+      --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-2xl: 1.5rem;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      overflow-x: hidden;
+    }
+
+    /* Loading Screen */
+    #loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--gradient-hero);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    .loading-content {
+      text-align: center;
+      color: white;
+    }
+
+    .loading-logo {
+      width: 80px;
+      height: 80px;
+      background: url('logo.jpg') center/cover;
+      border-radius: 50%;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+
+    .loading-text {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Button style */
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: var(--accent-light);
+      transform: translateY(-2px);
+    }
+  </style>
+
+  <script>
+    // Load navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('navbar-container').innerHTML = data;
+      });
+  </script>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="nav-left">
-      <a href="index.html" class="nav-link logo-link">
-        <img src="logo.jpg" alt="TillValle Logo" class="logo">
-      </a>
-      <a href="shop.html" class="nav-link">Shop</a>
-      <a href="about.html" class="nav-link">About</a>
-      <a href="contact.html" class="nav-link">Contact</a>
-    </div>
-    <div class="nav-center">
-      <!-- Search bar removed -->
-    </div>
-    <div class="nav-right">
-      <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
-      <div id="user-area"></div>
-
-    </div>
-  </nav>
+  <div id="navbar-container"></div>
 
   <section class="shop-section">
     <h2>Fresh Farm Produce</h2>
@@ -52,6 +166,7 @@
         <div class="product" onclick="openProductModal('Free-Range Chicken', 'Healthy, free-range chicken.', 'chicken.png', 800)"><img src="chicken.png" alt="Free-Range Chicken" class="product-image"><h4>Free-Range Chicken</h4><p class="price" data-price="800">KES 800 / kg</p><div class="product-controls"><button class="product-btn" onclick="event.stopPropagation(); removeFromCart('Free-Range Chicken')">−</button><span class="product-quantity" id="qty-Free-Range-Chicken">0</span><button class="product-btn" onclick="event.stopPropagation(); addToCart('Free-Range Chicken', 800, 'chicken.png')">+</button></div></div>
         <div class="product" onclick="openProductModal('Farm Fresh Eggs', 'Fresh eggs from free-range chickens.', 'eggs.png', 25)"><img src="eggs.png" alt="Farm Fresh Eggs" class="product-image"><h4>Farm Fresh Eggs</h4><p class="price" data-price="25">KES 25 / piece</p><div class="product-controls"><button class="product-btn" onclick="event.stopPropagation(); removeFromCart('Farm Fresh Eggs')">−</button><span class="product-quantity" id="qty-Farm-Fresh-Eggs">0</span><button class="product-btn" onclick="event.stopPropagation(); addToCart('Farm Fresh Eggs', 25, 'eggs.png')">+</button></div></div>
         <div class="product" onclick="openProductModal('Pure Ghee', 'Traditional clarified butter.', 'ghee.png', 600)"><img src="ghee.png" alt="Pure Ghee" class="product-image"><h4>Pure Ghee</h4><p class="price" data-price="600">KES 600 / 500g</p><div class="product-controls"><button class="product-btn" onclick="event.stopPropagation(); removeFromCart('Pure Ghee')">−</button><span class="product-quantity" id="qty-Pure-Ghee">0</span><button class="product-btn" onclick="event.stopPropagation(); addToCart('Pure Ghee', 600, 'ghee.png')">+</button></div></div>
+        <div class="product" onclick="openProductModal('Honey', 'Pure, natural honey from local beekeepers.', 'honey.png', 400)"><img src="honey.png" alt="Honey" class="product-image"><h4>Honey</h4><p class="price" data-price="400">KES 400 / 500g</p><div class="product-controls"><button class="product-btn" onclick="event.stopPropagation(); removeFromCart('Honey')">−</button><span class="product-quantity" id="qty-Honey">0</span><button class="product-btn" onclick="event.stopPropagation(); addToCart('Honey', 400, 'honey.png')">+</button></div></div>
       </div>
     </div>
 
@@ -98,6 +213,9 @@
         <div class="product" onclick="openProductModal('Terere', 'Fresh terere leaves for cooking.', 'terere.png', 40)"><img src="terere.png" alt="Terere" class="product-image"><h4>Terere</h4><p class="price" data-price="40">KES 40 / bunch</p><div class="product-controls"><button class="product-btn" onclick="event.stopPropagation(); removeFromCart('Terere')">−</button><span class="product-quantity" id="qty-Terere">0</span><button class="product-btn" onclick="event.stopPropagation(); addToCart('Terere', 40, 'terere.png')">+</button></div></div>
         <div class="product" onclick="openProductModal('Salgaa', 'Fresh salgaa for traditional dishes.', 'salgaa.png', 20)"><img src="salgaa.png" alt="Salgaa" class="product-image"><h4>Salgaa</h4><p class="price" data-price="20">KES 20 / bunch</p><div class="product-controls"><button class="product-btn" onclick="event.stopPropagation(); removeFromCart('Salgaa')">−</button><span class="product-quantity" id="qty-Salgaa">0</span><button class="product-btn" onclick="event.stopPropagation(); addToCart('Salgaa', 20, 'salgaa.png')">+</button></div></div>
         <div class="product" onclick="openProductModal('Spinach', 'Fresh spinach leaves, rich in iron.', 'spinach.png', 30)"><img src="spinach.png" alt="Spinach" class="product-image"><h4>Spinach</h4><p class="price" data-price="30">KES 30 / bunch</p><div class="product-controls"><button class="product-btn" onclick="event.stopPropagation(); removeFromCart('Spinach')">−</button><span class="product-quantity" id="qty-Spinach">0</span><button class="product-btn" onclick="event.stopPropagation(); addToCart('Spinach', 30, 'spinach.png')">+</button></div></div>
+        <div class="product" onclick="openProductModal('Cauliflower', 'Fresh cauliflower, perfect for healthy meals.', 'cauliflower.png', 80)"><img src="cauliflower.png" alt="Cauliflower" class="product-image"><h4>Cauliflower</h4><p class="price" data-price="80">KES 80 / head</p><div class="product-controls"><button class="product-btn" onclick="event.stopPropagation(); removeFromCart('Cauliflower')">−</button><span class="product-quantity" id="qty-Cauliflower">0</span><button class="product-btn" onclick="event.stopPropagation(); addToCart('Cauliflower', 80, 'cauliflower.png')">+</button></div></div>
+        <div class="product" onclick="openProductModal('Broccoli', 'Nutritious broccoli, rich in vitamins.', 'broccoli.png', 70)"><img src="broccoli.png" alt="Broccoli" class="product-image"><h4>Broccoli</h4><p class="price" data-price="70">KES 70 / head</p><div class="product-controls"><button class="product-btn" onclick="event.stopPropagation(); removeFromCart('Broccoli')">−</button><span class="product-quantity" id="qty-Broccoli">0</span><button class="product-btn" onclick="event.stopPropagation(); addToCart('Broccoli', 70, 'broccoli.png')">+</button></div></div>
+        <div class="product" onclick="openProductModal('Kunde', 'Fresh kunde leaves for traditional dishes.', 'kunde.png', 40)"><img src="kunde.png" alt="Kunde" class="product-image"><h4>Kunde</h4><p class="price" data-price="40">KES 40 / bunch</p><div class="product-controls"><button class="product-btn" onclick="event.stopPropagation(); removeFromCart('Kunde')">−</button><span class="product-quantity" id="qty-Kunde">0</span><button class="product-btn" onclick="event.stopPropagation(); addToCart('Kunde', 40, 'kunde.png')">+</button></div></div>
       </div>
     </div>
   </section>
@@ -157,60 +275,12 @@
 
 
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-      // User authentication
-      const userEmail = localStorage.getItem('email');
-  const userArea = document.getElementById('user-area');
-      
-      if (userEmail && userArea) {
-        const initial = userEmail.charAt(0).toUpperCase();
-        const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
-        const userDisplay = profilePicture ?
-          `<img src="${profilePicture}" alt="Profile" class="user-avatar">` :
-          initial;
-        let adminLink = '';
-        if (userEmail === 'andrewmunamwangi@gmail.com') {
-          adminLink = `<a href="admin.html" class="nav-link">Admin</a>`;
-        }
-        userArea.innerHTML = `
-          <div class="user-dropdown-container">
-            <span class="user-initial" onclick="toggleUserDropdown()" title="${userEmail}">${userDisplay}</span>
-            <div class="user-dropdown" id="user-dropdown" style="position:absolute;top:40px;right:0;background:var(--bg-secondary);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.1);min-width:120px;z-index:1200;display:none;border:1px solid rgba(255,255,255,0.2);">
-              <a href="profile.html" style="display:block;padding:10px 15px;color:var(--text-primary);text-decoration:none;font-size:14px;">Profile</a>
-              <a href="#" onclick="logout()" style="display:block;padding:10px 15px;color:#ef4444;text-decoration:none;font-size:14px;border-top:1px solid rgba(0,0,0,0.1);">Logout</a>
-            </div>
-          </div>
-          ${adminLink}
-        `;
-      } else if (userArea) {
-        userArea.innerHTML = `<a href="login.html" class="nav-link">Login</a>`;
-      }
-      
-      window.toggleUserDropdown = function() {
-        const dropdown = document.getElementById('user-dropdown');
-        if (dropdown) dropdown.classList.toggle('show');
-      };
-      
-      window.logout = function() {
-        localStorage.removeItem('email');
-        localStorage.removeItem('user');
-        window.location.href = 'login.html';
-      };
-      
-      document.addEventListener('click', (event) => {
-        const dropdown = document.getElementById('user-dropdown');
-        const container = document.querySelector('.user-dropdown-container');
-        if (dropdown && container && !container.contains(event.target)) {
-          dropdown.classList.remove('show');
-        }
+    // Load navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('navbar-container').innerHTML = data;
       });
-      
-      // Cart counter
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-      const cartCountElem = document.getElementById('cart-count');
-      if (cartCountElem) cartCountElem.textContent = totalQuantity;
-    });
     
     // Chatbot functionality - defensive bindings
     const chatBtn = document.getElementById('chat-btn');

@@ -40,4 +40,8 @@ INSERT INTO product_stock (product_id, product_name, stock_quantity) VALUES
 ('managu', 'Managu', 100),
 ('terere', 'Terere', 100),
 ('salgaa', 'Salgaa', 100),
-('spinach', 'Spinach', 100);
+('spinach', 'Spinach', 100),
+('cauliflower', 'Cauliflower', 100),
+('broccoli', 'Broccoli', 100),
+('kunde', 'Kunde', 100),
+('honey', 'Honey', 100);
