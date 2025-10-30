@@ -66,6 +66,7 @@
 }
 
 .mobile-menu.open {
+    display: flex;
     transform: translateX(0);
 }
 
