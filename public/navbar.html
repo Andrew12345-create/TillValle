@@ -27,4 +27,36 @@
   <a href="cart.html" class="mobile-nav-link">🛒 Cart (<span id="mobile-cart-count">0</span>)</a>
   <div id="mobile-user-area"></div>
 </div>
-<script src="navbar-universal.js"></script>
+<script>
+  // Hamburger menu functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileCloseBtn = document.getElementById('mobile-close-btn');
+    const mobileUserArea = document.getElementById('mobile-user-area');
+
+    if (hamburgerBtn && mobileMenu) {
+      hamburgerBtn.addEventListener('click', function() {
+        mobileMenu.classList.toggle('open');
+        hamburgerBtn.classList.toggle('open');
+      });
+
+      // Close mobile menu when clicking the close button
+      if (mobileCloseBtn) {
+        mobileCloseBtn.addEventListener('click', function() {
+          mobileMenu.classList.remove('open');
+          hamburgerBtn.classList.remove('open');
+        });
+      }
+
+      // Close mobile menu when clicking on a link
+      const mobileLinks = mobileMenu.querySelectorAll('a');
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          mobileMenu.classList.remove('open');
+          hamburgerBtn.classList.remove('open');
+        });
+      });
+    }
+  });
+</script>
