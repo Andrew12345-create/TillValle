@@ -1,9 +1,13 @@
-# TODO: Add Vegetables to Stock
+# TODO: Add Popular Products Section to index.html
 
-- [x] Add Cauliflower, Broccoli, and Kunde as new entries to db/init_stock.sql with default stock quantity of 100
+## Tasks
+- [x] Add "Popular Products" section HTML after the hero section in index.html
+- [x] Include 6 selected popular products: Bananas, Fresh Milk, Farm Fresh Eggs, Kales, Mangoes, Avocados
+- [x] Ensure products have proper data attributes, images, prices, and add-to-cart controls
+- [x] Verify CSS (shop-styles.css) and JS (script.js) are linked for functionality
+- [x] Test the section displays correctly and add-to-cart works
 
-# TODO: Add Products to Shop
-
-- [x] Add Cauliflower, Broccoli, Kunde to Vegetables & Greens category in shop.html
-- [x] Add Honey to Animal & Farm Produce category in shop.html
-- [x] Add Honey to db/init_stock.sql
+## Notes
+- Section placed after hero-animation section, before floating chatbot
+- Products selected based on common popularity in Kenyan markets
+- Grid format similar to shop.html for consistency

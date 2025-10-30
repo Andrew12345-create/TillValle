@@ -220,6 +220,215 @@
       background: var(--accent-light);
       transform: translateY(-2px);
     }
+
+    /* Popular Products Section */
+    .popular-products-section {
+      max-width: 1400px;
+      margin: 60px auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .popular-products-section h2 {
+      text-align: center;
+      color: var(--primary);
+      font-size: 2.8rem;
+      margin-bottom: 15px;
+      position: relative;
+      font-weight: 800;
+    }
+
+    .popular-products-section h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 5px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      border-radius: 3px;
+    }
+
+    .popular-products-section p {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      margin-bottom: 50px;
+      font-weight: 500;
+    }
+
+    .popular-products-section .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 30px;
+      padding: 40px 0;
+    }
+
+    .popular-products-section .product {
+      background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
+      border-radius: 25px;
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 280px;
+      -webkit-backdrop-filter: blur(15px);
+      backdrop-filter: blur(15px);
+    }
+
+    .popular-products-section .product::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,107,107, 0.08), transparent);
+      transition: left 0.7s ease;
+    }
+
+    .popular-products-section .product:hover::before {
+      left: 100%;
+    }
+
+    .popular-products-section .product:hover {
+      transform: translateY(-15px) scale(1.05);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+      border-color: rgba(255,107,107,0.6);
+    }
+
+    .popular-products-section .product-image {
+      width: 100%;
+      height: 140px;
+      object-fit: contain;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      transition: transform 0.4s ease;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .popular-products-section .product:hover .product-image {
+      transform: scale(1.08) rotate(2deg);
+    }
+
+    .popular-products-section .product h4 {
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .popular-products-section .price {
+      color: white;
+      font-weight: 800;
+      font-size: 1.1rem;
+      margin-top: auto;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, var(--accent) 0%, #feca57 100%);
+      border-radius: 30px;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      box-shadow: 0 5px 15px rgba(255,107,107,0.3);
+    }
+
+    .popular-products-section .product-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .popular-products-section .product-btn {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
+    }
+
+    .popular-products-section .product-btn:hover {
+      transform: scale(1.15);
+      box-shadow: 0 6px 18px rgba(45, 106, 79, 0.4);
+    }
+
+    .popular-products-section .product-quantity {
+      min-width: 45px;
+      text-align: center;
+      font-weight: bold;
+      color: var(--text-primary);
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+      .popular-products-section {
+        margin: 40px auto;
+        padding: 0 15px;
+      }
+
+      .popular-products-section h2 {
+        font-size: 2.2rem;
+      }
+
+      .popular-products-section p {
+        font-size: 1.1rem;
+        margin-bottom: 40px;
+      }
+
+      .popular-products-section .products {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 25px;
+        padding: 30px 0;
+      }
+
+      .popular-products-section .product {
+        min-height: 260px;
+        padding: 20px;
+      }
+
+      .popular-products-section .product-image {
+        height: 120px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .popular-products-section h2 {
+        font-size: 1.8rem;
+      }
+
+      .popular-products-section .products {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 20px;
+      }
+
+      .popular-products-section .product {
+        min-height: 240px;
+        padding: 18px;
+      }
+
+      .popular-products-section .product h4 {
+        font-size: 1rem;
+      }
+
+      .popular-products-section .product-image {
+        height: 100px;
+      }
+    }
   </style>
 
   <script>
@@ -277,6 +486,74 @@
       parallax.style.transform = `translateY(${speed}px)`;
     });
   </script>
+
+  <!-- Popular Products Section -->
+  <section class="popular-products-section">
+    <h2>Popular Products</h2>
+    <p>Our best-selling items loved by customers</p>
+    <div class="products">
+      <div class="product" data-name="Bananas" data-description="Fresh bananas, perfect for snacking." data-image="bananas-ripe.png" data-price="150">
+        <img src="bananas-ripe.png" alt="Bananas" class="product-image">
+        <h4>Bananas</h4>
+        <p class="price" data-price="150">KES 150 / bunch</p>
+        <div class="product-controls">
+          <button class="product-btn" data-action="remove" data-name="Bananas">−</button>
+          <span class="product-quantity" id="qty-Bananas">0</span>
+          <button class="product-btn" data-action="add" data-name="Bananas" data-price="150" data-image="bananas-ripe.png">+</button>
+        </div>
+      </div>
+      <div class="product" data-name="Fresh Milk" data-description="Pure, fresh milk from our farm." data-image="milk.png" data-price="120">
+        <img src="milk.png" alt="Fresh Milk" class="product-image">
+        <h4>Fresh Milk</h4>
+        <p class="price" data-price="120">KES 120 / liter</p>
+        <div class="product-controls">
+          <button class="product-btn" data-action="remove" data-name="Fresh Milk">−</button>
+          <span class="product-quantity" id="qty-Fresh-Milk">0</span>
+          <button class="product-btn" data-action="add" data-name="Fresh Milk" data-price="120" data-image="milk.png">+</button>
+        </div>
+      </div>
+      <div class="product" data-name="Farm Fresh Eggs" data-description="Fresh eggs from free-range chickens." data-image="eggs.png" data-price="25">
+        <img src="eggs.png" alt="Farm Fresh Eggs" class="product-image">
+        <h4>Farm Fresh Eggs</h4>
+        <p class="price" data-price="25">KES 25 / piece</p>
+        <div class="product-controls">
+          <button class="product-btn" data-action="remove" data-name="Farm Fresh Eggs">−</button>
+          <span class="product-quantity" id="qty-Farm-Fresh-Eggs">0</span>
+          <button class="product-btn" data-action="add" data-name="Farm Fresh Eggs" data-price="25" data-image="eggs.png">+</button>
+        </div>
+      </div>
+      <div class="product" data-name="Kales (Sukuma Wiki)" data-description="Nutritious kales, perfect for sukuma wiki." data-image="kales.png" data-price="30">
+        <img src="kales.png" alt="Kales (Sukuma Wiki)" class="product-image">
+        <h4>Kales (Sukuma Wiki)</h4>
+        <p class="price" data-price="30">KES 30 / bunch</p>
+        <div class="product-controls">
+          <button class="product-btn" data-action="remove" data-name="Kales (Sukuma Wiki)">−</button>
+          <span class="product-quantity" id="qty-Kales-(Sukuma-Wiki)">0</span>
+          <button class="product-btn" data-action="add" data-name="Kales (Sukuma Wiki)" data-price="30" data-image="kales.png">+</button>
+        </div>
+      </div>
+      <div class="product" data-name="Mangoes" data-description="Juicy mangoes, perfect for summer." data-image="mangoes.png" data-price="40">
+        <img src="mangoes.png" alt="Mangoes" class="product-image">
+        <h4>Mangoes</h4>
+        <p class="price" data-price="40">KES 40 / piece</p>
+        <div class="product-controls">
+          <button class="product-btn" data-action="remove" data-name="Mangoes">−</button>
+          <span class="product-quantity" id="qty-Mangoes">0</span>
+          <button class="product-btn" data-action="add" data-name="Mangoes" data-price="40" data-image="mangoes.png">+</button>
+        </div>
+      </div>
+      <div class="product" data-name="Avocadoes" data-description="Creamy avocados for healthy eating." data-image="avocadoes.png" data-price="30">
+        <img src="avocadoes.png" alt="Avocadoes" class="product-image">
+        <h4>Avocadoes</h4>
+        <p class="price" data-price="30">KES 30 / piece</p>
+        <div class="product-controls">
+          <button class="product-btn" data-action="remove" data-name="Avocadoes">−</button>
+          <span class="product-quantity" id="qty-Avocadoes">0</span>
+          <button class="product-btn" data-action="add" data-name="Avocadoes" data-price="30" data-image="avocadoes.png">+</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Floating Chatbot Button -->
   <button class="floating-chatbot-btn" id="floating-chatbot-btn" title="Chat with TillieBot">
