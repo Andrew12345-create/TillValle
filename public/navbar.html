@@ -29,7 +29,7 @@
 </div>
 <script>
   // Hamburger menu functionality
-  document.addEventListener('DOMContentLoaded', function() {
+  (function() {
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileCloseBtn = document.getElementById('mobile-close-btn');
@@ -58,5 +58,5 @@
         });
       });
     }
-  });
+  })();
 </script>
