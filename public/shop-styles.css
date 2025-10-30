@@ -125,9 +125,9 @@ body {
 
 .products {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 25px;
-  padding: 30px 0;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  padding: 40px 0;
 }
 
 .product {
@@ -838,16 +838,17 @@ body {
 
   .products {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    gap: 25px;
+    padding: 30px 0;
   }
 
   .product {
     min-height: 260px;
-    padding: 18px;
+    padding: 20px;
   }
 
   .product-image {
-    height: 110px;
+    height: 120px;
   }
 
   .search-input {
