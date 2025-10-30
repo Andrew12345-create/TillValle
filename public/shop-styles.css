@@ -69,7 +69,7 @@ body {
 
 .shop-section h2 {
   text-align: center;
-  color: #2d6a4f;
+  color: #16a34a;
   font-size: 2.5rem;
   margin-bottom: 30px;
   position: relative;
@@ -83,7 +83,7 @@ body {
   transform: translateX(-50%);
   width: 80px;
   height: 4px;
-  background: linear-gradient(135deg, #2d6a4f, #40916c);
+  background: linear-gradient(135deg, #16a34a, #22c55e);
   border-radius: 2px;
 }
 
@@ -116,10 +116,10 @@ body {
 }
 
 .category-title {
-  color: #2d6a4f;
+  color: #16a34a;
   font-size: 1.8rem;
   margin-bottom: 20px;
-  border-bottom: 2px solid #2d6a4f;
+  border-bottom: 2px solid #16a34a;
   padding-bottom: 10px;
 }
 
@@ -185,7 +185,7 @@ body {
 }
 
 .product h4 {
-  color: #2c3e50;
+  color: #16a34a;
   margin-bottom: 12px;
   font-size: 1.2rem;
   font-weight: 700;
@@ -193,7 +193,7 @@ body {
 }
 
 .price {
-  color: white !important;
+  color: #16a34a !important;
   font-weight: 800;
   font-size: 1.1rem;
   margin-top: auto;
@@ -236,7 +236,7 @@ body {
   min-width: 45px;
   text-align: center;
   font-weight: bold;
-  color: #2c3e50;
+  color: #16a34a;
   font-size: 1.2rem;
 }
 
@@ -333,7 +333,7 @@ body {
 }
 
 .modal-info h3 {
-  color: #2c3e50;
+  color: #16a34a;
   font-size: 1.8rem;
   margin-bottom: 15px;
   font-weight: 700;
@@ -369,7 +369,7 @@ body {
 
 .quantity-selector label {
   font-weight: 700;
-  color: #2c3e50;
+  color: #16a34a;
   font-size: 1.2rem;
 }
 
@@ -455,7 +455,7 @@ body {
 #modal-product-price {
   font-size: 1.4rem;
   font-weight: bold;
-  color: #2d6a4f;
+  color: #16a34a;
   margin-bottom: 10px;
 }
 
@@ -732,7 +732,7 @@ body {
 }
 
 .chatbot-input:focus {
-  border-color: #2d6a4f;
+  border-color: #16a34a;
 }
 
 .chatbot-send {
