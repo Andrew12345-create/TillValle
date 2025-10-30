@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Hamburger menu functionality
   const hamburgerBtn = document.getElementById('hamburger-btn');
   const mobileMenu = document.getElementById('mobile-menu');
+  const mobileCloseBtn = document.getElementById('mobile-close-btn');
   const mobileUserArea = document.getElementById('mobile-user-area');
 
   if (hamburgerBtn && mobileMenu) {
@@ -70,6 +71,14 @@ document.addEventListener('DOMContentLoaded', function() {
       mobileMenu.classList.toggle('open');
       hamburgerBtn.classList.toggle('open');
     });
+
+    // Close mobile menu when clicking the close button
+    if (mobileCloseBtn) {
+      mobileCloseBtn.addEventListener('click', function() {
+        mobileMenu.classList.remove('open');
+        hamburgerBtn.classList.remove('open');
+      });
+    }
 
     // Close mobile menu when clicking on a link
     const mobileLinks = mobileMenu.querySelectorAll('a');
