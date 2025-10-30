@@ -20,7 +20,9 @@
     <script>
         function showResult(message, isError = false) {
             const resultDiv = document.getElementById('test-result');
-            resultDiv.innerHTML = message;
+            // Use textContent and preserve line breaks
+            resultDiv.textContent = message;
+            resultDiv.style.whiteSpace = 'pre-wrap';
             resultDiv.style.color = isError ? 'red' : 'green';
             console.log(message);
         }

@@ -223,9 +223,16 @@
         if (!message) return;
         
         const messagesDiv = document.getElementById('chatbot-messages');
-        messagesDiv.innerHTML += `<div class="chatbot-message user">${message}</div>`;
+        // Safely append user message
+        const userMessageDiv = document.createElement('div');
+        userMessageDiv.className = 'chatbot-message user';
+        userMessageDiv.textContent = message;
+        messagesDiv.appendChild(userMessageDiv);
         chatbotInput.value = '';
-        messagesDiv.innerHTML += `<div class="chatbot-message bot">Thinking...</div>`;
+        const thinkingDiv = document.createElement('div');
+        thinkingDiv.className = 'chatbot-message bot';
+        thinkingDiv.textContent = 'Thinking...';
+        messagesDiv.appendChild(thinkingDiv);
         const loadingMessage = messagesDiv.lastElementChild;
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
         
@@ -239,7 +246,10 @@
           });
           const data = await response.json();
           if (loadingMessage) loadingMessage.remove();
-          messagesDiv.innerHTML += `<div class="chatbot-message bot">${data.message}</div>`;
+          const botReply = document.createElement('div');
+          botReply.className = 'chatbot-message bot';
+          botReply.textContent = data.message;
+          messagesDiv.appendChild(botReply);
         } catch (error) {
           if (loadingMessage) loadingMessage.remove();
           const currentLang = localStorage.getItem('selectedLanguage') || 'en';
@@ -259,11 +269,10 @@
             }
           };
           const responses = offlineResponses[currentLang] || offlineResponses.en;
-          if (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('live')) {
-            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.human}</div>`;
-          } else {
-            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.default}</div>`;
-          }
+          const respDiv = document.createElement('div');
+          respDiv.className = 'chatbot-message bot';
+          respDiv.textContent = (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('live')) ? responses.human : responses.default;
+          messagesDiv.appendChild(respDiv);
         }
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       }

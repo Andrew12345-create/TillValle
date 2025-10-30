@@ -176,25 +176,16 @@
   </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="nav-left">
-      <a href="index.html" class="nav-link logo-link">
-        <img src="logo.jpg" alt="TillValle Logo" class="logo">
-        <span id="logo-cart-count" class="logo-cart-count">0</span>
-      </a>
-      <a href="shop.html" class="nav-link">Shop</a>
-      <a href="about.html" class="nav-link">About</a>
-      <a href="contact.html" class="nav-link">Contact</a>
-    </div>
-    <div class="nav-right">
-      <div class="cart-icon" onclick="window.location.href='cart.html'">
-        <span>🛒</span>
-        <span id="cart-count" class="cart-count">0</span>
-      </div>
-      <div id="user-area"></div>
-    </div>
-  </nav>
+  <div id="navbar-container"></div>
+
+  <script>
+    // Load navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('navbar-container').innerHTML = data;
+      });
+  </script>
 
   <!-- Location Section -->
   <section id="location-section">
@@ -330,6 +321,7 @@
     <p>&copy; 2025 TilleValle. All rights reserved.</p>
   </footer>
 
+  <script src="navbar-universal.js"></script>
   <script src="script.js" defer></script>
   <script>
     // Chatbot functions
@@ -365,11 +357,18 @@
         const message = chatbotInput.value.trim();
         if (!message) return;
         
-        const messagesDiv = document.getElementById('chatbot-messages');
-        messagesDiv.innerHTML += `<div class="chatbot-message user">${message}</div>`;
-        chatbotInput.value = '';
-        messagesDiv.innerHTML += `<div class="chatbot-message bot">Thinking...</div>`;
-        const loadingMessage = messagesDiv.lastElementChild;
+  const messagesDiv = document.getElementById('chatbot-messages');
+  // Safely append user message
+  const userMessageDiv = document.createElement('div');
+  userMessageDiv.className = 'chatbot-message user';
+  userMessageDiv.textContent = message;
+  messagesDiv.appendChild(userMessageDiv);
+  chatbotInput.value = '';
+  const thinkingDiv = document.createElement('div');
+  thinkingDiv.className = 'chatbot-message bot';
+  thinkingDiv.textContent = 'Thinking...';
+  messagesDiv.appendChild(thinkingDiv);
+  const loadingMessage = messagesDiv.lastElementChild;
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
         
         try {
@@ -382,7 +381,10 @@
           });
           const data = await response.json();
           if (loadingMessage) loadingMessage.remove();
-          messagesDiv.innerHTML += `<div class="chatbot-message bot">${data.message}</div>`;
+          const botReply = document.createElement('div');
+          botReply.className = 'chatbot-message bot';
+          botReply.textContent = data.message;
+          messagesDiv.appendChild(botReply);
         } catch (error) {
           if (loadingMessage) loadingMessage.remove();
           const currentLang = localStorage.getItem('selectedLanguage') || 'en';
@@ -402,11 +404,10 @@
             }
           };
           const responses = offlineResponses[currentLang] || offlineResponses.en;
-          if (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('live')) {
-            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.human}</div>`;
-          } else {
-            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.default}</div>`;
-          }
+          const respDiv = document.createElement('div');
+          respDiv.className = 'chatbot-message bot';
+          respDiv.textContent = (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('live')) ? responses.human : responses.default;
+          messagesDiv.appendChild(respDiv);
         }
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       }
@@ -530,12 +531,13 @@
     const debouncedSearch = debounce(async function() {
       const query = this.value.trim();
       if (query.length < 3) {
-        searchResults.innerHTML = '';
+        // Clear previous results safely
+        while (searchResults.firstChild) searchResults.removeChild(searchResults.firstChild);
         return;
       }
       try {
         const results = await searchPlaces(query);
-        searchResults.innerHTML = '';
+  while (searchResults.firstChild) searchResults.removeChild(searchResults.firstChild);
         results.forEach(result => {
           const div = document.createElement('div');
           div.className = 'search-result';
@@ -547,14 +549,18 @@
             marker.setLatLng([lat, lng]);
             document.getElementById('selected-location').value = result.display_name;
             updateDeliveryFee(lat, lng);
-            searchResults.innerHTML = '';
+      while (searchResults.firstChild) searchResults.removeChild(searchResults.firstChild);
             searchInput.value = '';
           });
           searchResults.appendChild(div);
         });
       } catch (error) {
         console.error('Search failed:', error);
-        searchResults.innerHTML = '<div class="search-result">Search failed. Please try again.</div>';
+  while (searchResults.firstChild) searchResults.removeChild(searchResults.firstChild);
+  const failDiv = document.createElement('div');
+  failDiv.className = 'search-result';
+  failDiv.textContent = 'Search failed. Please try again.';
+  searchResults.appendChild(failDiv);
       }
     }, 300);
 

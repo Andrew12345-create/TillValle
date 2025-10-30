@@ -129,7 +129,7 @@
       var typing = document.createElement('div');
       typing.className = 'max-typing';
       typing.id = 'max-typing-indicator';
-      typing.innerHTML = 'TillValle is typing';
+      typing.textContent = 'TillValle is typing';
       messages.appendChild(typing);
       messages.scrollTop = messages.scrollHeight;
     }
@@ -146,10 +146,12 @@
       
       if (!message) return;
       
-      var userDiv = document.createElement('div');
-      userDiv.className = 'max-user-msg';
-      userDiv.innerHTML = '<span>' + message + '</span>';
-      messages.appendChild(userDiv);
+  var userDiv = document.createElement('div');
+  userDiv.className = 'max-user-msg';
+  var userSpan = document.createElement('span');
+  userSpan.textContent = message;
+  userDiv.appendChild(userSpan);
+  messages.appendChild(userDiv);
       
       input.value = '';
       messages.scrollTop = messages.scrollHeight;
@@ -170,7 +172,9 @@
           removeMaxTypingIndicator();
           var botDiv = document.createElement('div');
           botDiv.className = 'max-bot-msg';
-          botDiv.innerHTML = '<span>' + data.message + '</span>';
+          var botSpan = document.createElement('span');
+          botSpan.textContent = data.message;
+          botDiv.appendChild(botSpan);
           messages.appendChild(botDiv);
           messages.scrollTop = messages.scrollHeight;
         }, 1000);
@@ -211,7 +215,9 @@
           }
           var errorDiv = document.createElement('div');
           errorDiv.className = 'max-bot-msg';
-          errorDiv.innerHTML = '<span>' + fallbackResponse + '</span>';
+          var errSpan = document.createElement('span');
+          errSpan.textContent = fallbackResponse;
+          errorDiv.appendChild(errSpan);
           messages.appendChild(errorDiv);
           messages.scrollTop = messages.scrollHeight;
         }, 1000);

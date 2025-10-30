@@ -28,7 +28,8 @@
         function updateStep(stepId, status, message) {
             const step = document.getElementById(stepId);
             step.className = `test-step ${status}`;
-            step.innerHTML = `${stepId}. ${message}`;
+            // Use textContent to avoid HTML injection
+            step.textContent = `${stepId}. ${message}`;
         }
 
         function testLoginSimulation() {
@@ -128,13 +129,13 @@
             
             const resultDiv = document.getElementById('final-result');
             if (allPassed) {
-                resultDiv.innerHTML = '🎉 All profile functionality tests passed! The user profile system is working correctly.';
+                resultDiv.textContent = '🎉 All profile functionality tests passed! The user profile system is working correctly.';
                 resultDiv.style.color = 'green';
                 resultDiv.style.background = '#f0fff0';
                 resultDiv.style.padding = '15px';
                 resultDiv.style.border = '2px solid green';
             } else {
-                resultDiv.innerHTML = '❌ Some profile tests failed. Please check the error messages above.';
+                resultDiv.textContent = '❌ Some profile tests failed. Please check the error messages above.';
                 resultDiv.style.color = 'red';
                 resultDiv.style.background = '#fff0f0';
                 resultDiv.style.padding = '15px';
@@ -143,7 +144,8 @@
         }
 
         // Initialize
-        document.getElementById('final-result').innerHTML = 'Click "Run Profile Tests" to test the user profile functionality.';
+        const initFinal = document.getElementById('final-result');
+        initFinal.textContent = 'Click "Run Profile Tests" to test the user profile functionality.';
     </script>
 </body>
 </html>

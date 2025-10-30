@@ -21,23 +21,16 @@
   </script>
 </head>
 <body>
-  <header>
-    <nav class="navbar">
-      <div class="nav-left">
-        <a href="index.html" class="nav-link logo-link">
-          <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
-        </a>
-        <a href="shop.html" class="nav-link">Shop</a>
-        <a href="about.html" class="nav-link">About</a>
-        <a href="contact.html" class="nav-link">Contact</a>
-      </div>
-      <div class="nav-right">
-        <span id="user-area"></span>
-        <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
-      </div>
-    </nav>
-    <hr>
-  </header>
+  <div id="navbar-container"></div>
+
+  <script>
+    // Load navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('navbar-container').innerHTML = data;
+      });
+  </script>
 
   <main class="profile-container">
     <div class="profile-header">
@@ -122,6 +115,7 @@
     <span id="floating-cart-count" class="floating-cart-count">0</span>
   </div>
 
+  <script src="navbar-universal.js"></script>
   <script src="script.js" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -193,11 +187,18 @@
         const message = chatbotInput.value.trim();
         if (!message) return;
         
-        const messagesDiv = document.getElementById('chatbot-messages');
-        messagesDiv.innerHTML += `<div class="chatbot-message user">${message}</div>`;
-        chatbotInput.value = '';
-        messagesDiv.innerHTML += `<div class="chatbot-message bot">Thinking...</div>`;
-        const loadingMessage = messagesDiv.lastElementChild;
+  const messagesDiv = document.getElementById('chatbot-messages');
+  // Safely append user message
+  const userMessageDiv = document.createElement('div');
+  userMessageDiv.className = 'chatbot-message user';
+  userMessageDiv.textContent = message;
+  messagesDiv.appendChild(userMessageDiv);
+  chatbotInput.value = '';
+  const thinkingDiv = document.createElement('div');
+  thinkingDiv.className = 'chatbot-message bot';
+  thinkingDiv.textContent = 'Thinking...';
+  messagesDiv.appendChild(thinkingDiv);
+  const loadingMessage = messagesDiv.lastElementChild;
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
         
         try {
@@ -210,7 +211,10 @@
           });
           const data = await response.json();
           if (loadingMessage) loadingMessage.remove();
-          messagesDiv.innerHTML += `<div class="chatbot-message bot">${data.message}</div>`;
+          const botReply = document.createElement('div');
+          botReply.className = 'chatbot-message bot';
+          botReply.textContent = data.message;
+          messagesDiv.appendChild(botReply);
         } catch (error) {
           if (loadingMessage) loadingMessage.remove();
           const currentLang = localStorage.getItem('selectedLanguage') || 'en';
@@ -230,11 +234,10 @@
             }
           };
           const responses = offlineResponses[currentLang] || offlineResponses.en;
-          if (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('live')) {
-            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.human}</div>`;
-          } else {
-            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.default}</div>`;
-          }
+          const respDiv = document.createElement('div');
+          respDiv.className = 'chatbot-message bot';
+          respDiv.textContent = (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('live')) ? responses.human : responses.default;
+          messagesDiv.appendChild(respDiv);
         }
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       }

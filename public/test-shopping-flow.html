@@ -28,8 +28,9 @@
     <script>
         function updateStep(stepId, status, message) {
             const step = document.getElementById(stepId);
-            step.className = `test-step ${status}`;
-            step.innerHTML = `${stepId}. ${message}`;
+        step.className = `test-step ${status}`;
+        // Use textContent to avoid HTML injection
+        step.textContent = `${stepId}. ${message}`;
         }
 
         async function testLogin() {
@@ -153,13 +154,13 @@
             
             const resultDiv = document.getElementById('final-result');
             if (allPassed) {
-                resultDiv.innerHTML = '🎉 All tests passed! Shopping flow is working correctly.';
+                    resultDiv.textContent = '🎉 All tests passed! Shopping flow is working correctly.';
                 resultDiv.style.color = 'green';
                 resultDiv.style.background = '#f0fff0';
                 resultDiv.style.padding = '15px';
                 resultDiv.style.border = '2px solid green';
             } else {
-                resultDiv.innerHTML = '❌ Some tests failed. Please check the error messages above.';
+                    resultDiv.textContent = '❌ Some tests failed. Please check the error messages above.';
                 resultDiv.style.color = 'red';
                 resultDiv.style.background = '#fff0f0';
                 resultDiv.style.padding = '15px';
@@ -167,8 +168,9 @@
             }
         }
 
-        // Initialize
-        document.getElementById('final-result').innerHTML = 'Click "Run All Tests" to start the shopping flow test.';
+            // Initialize
+            const initFinal = document.getElementById('final-result');
+            initFinal.textContent = 'Click "Run All Tests" to start the shopping flow test.';
     </script>
 </body>
 </html>

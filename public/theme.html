@@ -74,20 +74,16 @@
   </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="nav-left">
-      <a href="index.html" class="nav-link logo-link">
-        <img src="logo.jpg" alt="TillValle Logo" class="logo">
-      </a>
-      <a href="shop.html" class="nav-link">Shop</a>
-      <a href="about.html" class="nav-link">About</a>
-      <a href="contact.html" class="nav-link">Contact</a>
-    </div>
-    <div class="nav-right">
-      <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
-      <div id="user-area"></div>
-    </div>
-  </nav>
+  <div id="navbar-container"></div>
+
+  <script>
+    // Load navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('navbar-container').innerHTML = data;
+      });
+  </script>
 
   <div class="theme-container">
     <h1 style="text-align: center; color: var(--text-primary); margin-bottom: 30px;">Choose Your Theme</h1>

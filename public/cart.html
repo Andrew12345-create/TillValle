@@ -206,12 +206,18 @@
       const message = input.value.trim();
       
       if (!message) return;
-      
-      messages.innerHTML += '<div class="user-msg">' + message + '</div>';
+      // Safely append user message
+      const userMsg = document.createElement('div');
+      userMsg.className = 'user-msg';
+      userMsg.textContent = message;
+      messages.appendChild(userMsg);
       input.value = '';
       
       setTimeout(() => {
-        messages.innerHTML += '<div class="bot-msg">Thanks for your message! I\'m here to help with TillValle products and orders.</div>';
+        const botMsg = document.createElement('div');
+        botMsg.className = 'bot-msg';
+        botMsg.textContent = "Thanks for your message! I'm here to help with TillValle products and orders.";
+        messages.appendChild(botMsg);
         messages.scrollTop = messages.scrollHeight;
       }, 1000);
       
@@ -342,11 +348,18 @@
         const message = chatbotInput.value.trim();
         if (!message) return;
         
-        const messagesDiv = document.getElementById('chatbot-messages');
-        messagesDiv.innerHTML += `<div class="chatbot-message user">${message}</div>`;
+  const messagesDiv = document.getElementById('chatbot-messages');
+  // Safely append user message
+  const userMessageDiv = document.createElement('div');
+  userMessageDiv.className = 'chatbot-message user';
+  userMessageDiv.textContent = message;
+  messagesDiv.appendChild(userMessageDiv);
         chatbotInput.value = '';
-        messagesDiv.innerHTML += `<div class="chatbot-message bot">Thinking...</div>`;
-        const loadingMessage = messagesDiv.lastElementChild;
+  const thinkingDiv = document.createElement('div');
+  thinkingDiv.className = 'chatbot-message bot';
+  thinkingDiv.textContent = 'Thinking...';
+  messagesDiv.appendChild(thinkingDiv);
+  const loadingMessage = messagesDiv.lastElementChild;
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
         
         try {
@@ -359,7 +372,10 @@
           });
           const data = await response.json();
           if (loadingMessage) loadingMessage.remove();
-          messagesDiv.innerHTML += `<div class="chatbot-message bot">${data.message}</div>`;
+          const botReply = document.createElement('div');
+          botReply.className = 'chatbot-message bot';
+          botReply.textContent = data.message;
+          messagesDiv.appendChild(botReply);
         } catch (error) {
           if (loadingMessage) loadingMessage.remove();
           const currentLang = localStorage.getItem('selectedLanguage') || 'en';
@@ -379,11 +395,10 @@
             }
           };
           const responses = offlineResponses[currentLang] || offlineResponses.en;
-          if (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('live')) {
-            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.human}</div>`;
-          } else {
-            messagesDiv.innerHTML += `<div class="chatbot-message bot">${responses.default}</div>`;
-          }
+          const respDiv = document.createElement('div');
+          respDiv.className = 'chatbot-message bot';
+          respDiv.textContent = (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('live')) ? responses.human : responses.default;
+          messagesDiv.appendChild(respDiv);
         }
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       }

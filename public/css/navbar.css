@@ -1,0 +1,29 @@
+/* Navbar Styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--navbar-bg-color);
+    color: var(--navbar-text-color);
+}
+
+.nav-link {
+    margin: 0 15px;
+    text-decoration: none;
+    color: inherit; /* Inherit color from parent */
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}
+
+/* Dark Theme Adjustments */
+body.dark-theme .navbar {
+    background-color: #333; /* Dark background for navbar */
+    color: white; /* Light text for navbar */
+}
+
+body.dark-theme .nav-link {
+    color: white; /* Light text for links in dark theme */
+}

@@ -20,7 +20,8 @@
             const password = document.getElementById('test-password').value;
             const resultDiv = document.getElementById('test-result');
             
-            resultDiv.innerHTML = 'Testing connection...';
+            // Reset and show initial status
+            resultDiv.textContent = 'Testing connection...';
             resultDiv.style.color = 'blue';
 
             try {
@@ -30,7 +31,9 @@
                     throw new Error(`Server ping failed: ${pingResponse.status}`);
                 }
                 
-                resultDiv.innerHTML += '<br>✓ Server is reachable';
+                const okLine = document.createElement('div');
+                okLine.textContent = '✓ Server is reachable';
+                resultDiv.appendChild(okLine);
                 
                 // Test login endpoint
                 const loginResponse = await fetch('http://localhost:3000/login', {
@@ -46,11 +49,15 @@
                 }
 
                 const data = await loginResponse.json();
-                resultDiv.innerHTML += `<br>✓ Login successful: ${JSON.stringify(data)}`;
+                const successLine = document.createElement('div');
+                successLine.textContent = `✓ Login successful: ${JSON.stringify(data)}`;
+                resultDiv.appendChild(successLine);
                 resultDiv.style.color = 'green';
 
             } catch (error) {
-                resultDiv.innerHTML += `<br>✗ Error: ${error.message}`;
+                const errLine = document.createElement('div');
+                errLine.textContent = `✗ Error: ${error.message}`;
+                resultDiv.appendChild(errLine);
                 resultDiv.style.color = 'red';
                 console.error('Test error:', error);
             }
