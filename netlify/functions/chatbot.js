@@ -47,8 +47,7 @@ async function getStockInfo(query) {
 }
 
 async function getResponse(message) {
-  const msg = message.toLowerCase();
-  // For stock-related queries use the stock function (keeps that logic local)
+  const msg = message.toLowerCase();  // For stock-related queries use the stock function (keeps that logic local)
   if (msg.includes('stock') || msg.includes('inventory') || msg.includes('available')) {
     return await getStockInfo(msg);
   }

@@ -4,7 +4,7 @@
   "main": "api/index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "set PORT=3001 && node api/index.js",
+    "start": "set PORT=3000 && node api/index.js",
     "build": "echo 'No build step required'"
   },
   "dependencies": {

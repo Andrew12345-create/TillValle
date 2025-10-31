@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shop - TillValle</title>
+  <link rel="stylesheet" href="css/site.css">
   <link rel="stylesheet" href="css/navbar.css">
   <link rel="icon" href="logo.jpg" type="image/jpeg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="shop-styles.css">
+
   <link rel="stylesheet" href="global-chat.css">
   <!-- Hotjar Tracking Code -->
   <script>
@@ -25,134 +25,84 @@
     })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
   </script>
   <style>
-    :root {
-      --primary: #2d6a4f;
-      --primary-dark: #1b4332;
-      --primary-light: #40916c;
-      --accent: #ff6b6b;
-      --accent-light: #ff9999;
-      --text-primary: #0f172a;
-      --text-secondary: #64748b;
-      --text-light: #94a3b8;
-      --bg-primary: #ffffff;
-      --bg-secondary: #f8fafc;
-      --bg-tertiary: #f1f5f9;
-      --glass: rgba(255, 255, 255, 0.25);
-      --glass-border: rgba(255, 255, 255, 0.18);
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-      --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      --gradient-accent: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-      --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --radius-sm: 0.375rem;
-      --radius-md: 0.5rem;
-      --radius-lg: 0.75rem;
-      --radius-xl: 1rem;
-      --radius-2xl: 1.5rem;
-    }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  :root {
+    --brand-500:#40916c;
+    --muted:#64748b;
+    --bg:#f6fbf7;
+    --card:#ffffff;
+    --glass:rgba(255,255,255,0.6);
+    --radius:10px;
+    --max-w:1100px;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Poppins',Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),#e8f6ef);color:#072018}
 
-    html {
-      scroll-behavior: smooth;
-    }
+    /* Page container */
+    #navbar-container{width:100%;}
+    .shop-section{max-width:var(--max-w);margin:22px auto;padding:18px}
+    .shop-section h2{font-size:1.8rem;margin:0 0 12px;color:var(--brand-600);letter-spacing:0.2px}
 
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      line-height: 1.6;
-      color: var(--text-primary);
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      overflow-x: hidden;
-    }
+    /* Categories */
+    .category{margin:18px 0}
+    .category-title{font-weight:600;color:var(--brand-700);margin-bottom:8px}
 
-    /* Loading Screen */
-    #loading-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--gradient-hero);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      transition: opacity 0.5s ease;
-    }
+    /* Product grid */
+  .products{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+  .product{background:var(--card);border-radius:10px;padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;transition:transform .16s ease,box-shadow .16s ease;box-shadow:0 6px 18px rgba(3,8,6,0.06);min-height:180px}
+    .product:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(3,8,6,0.08)}
 
-    .loading-content {
-      text-align: center;
-      color: white;
-    }
+  .product-image{width:100%;height:100px;object-fit:contain;border-radius:8px;background:linear-gradient(180deg,#fff,#f8fffb);padding:6px}
+  .product h4{font-size:0.95rem;margin:8px 0 6px;text-align:center;color:#072018}
+  .product .price{color:var(--muted);font-weight:700;margin-bottom:6px;font-size:0.95rem}
 
-    .loading-logo {
-      width: 80px;
-      height: 80px;
-      background: url('logo.jpg') center/cover;
-      border-radius: 50%;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
+    .product-controls{display:flex;align-items:center;gap:6px}
+    .product-quantity{min-width:28px;text-align:center;font-weight:700}
 
-    .loading-text {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
+    .product-btn{background:var(--brand-600);color:#fff;border:none;padding:6px 10px;border-radius:8px;cursor:pointer;font-size:14px;display:inline-flex;align-items:center;justify-content:center;transition:transform .12s ease}
+    .product-btn:active{transform:scale(.98)}
 
-    .loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top: 4px solid white;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
+    /* Improved product card look when clicked (visual focus) */
+    .product:focus-within,.product:focus{outline:3px solid rgba(45,106,79,0.12);box-shadow:0 12px 30px rgba(16,24,40,0.06)}
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-    }
+  /* Modal */
+  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(4,10,6,0.55);z-index:120;backdrop-filter:blur(6px)}
+  .modal.show{display:flex}
+  .modal-content{background:linear-gradient(180deg,#ffffff,#f7fff7);border-radius:20px;max-width:680px;width:92%;padding:26px 28px;display:flex;flex-direction:column;gap:18px;align-items:center;position:relative;box-shadow:0 40px 80px rgba(3,8,6,0.18)}
+  .modal-body{width:100%;display:flex;flex-direction:column;align-items:center;gap:12px}
+  .modal-image{width:180px;height:140px;object-fit:cover;border-radius:12px;background:#fff;padding:10px;box-shadow:0 8px 20px rgba(3,8,6,0.06)}
+  .modal-info{flex:1;text-align:center;padding:6px}
+  .modal-info h3{margin:0 0 6px;font-size:1.6rem;color:var(--brand-600);font-weight:800}
+  .modal-info p{color:var(--muted);margin:0 0 6px;font-size:1rem;line-height:1.5}
+  .modal-price{font-weight:800;color:var(--brand-600);margin-top:6px;font-size:1.05rem}
+  .quantity-controls{display:flex;align-items:center;gap:14px;margin-top:8px}
+  .quantity-btn{background:var(--brand-600);border:none;padding:12px 14px;border-radius:999px;cursor:pointer;color:#fff;font-weight:800;font-size:18px;box-shadow:0 8px 18px rgba(45,106,79,0.12)}
+  .quantity-display{min-width:28px;text-align:center;font-weight:700;font-size:1.05rem}
+  .add-to-cart-btn,.buy-now-btn{background:var(--brand-600);color:white;border:none;padding:12px 22px;border-radius:999px;cursor:pointer;margin-right:8px;font-weight:800;font-size:16px;box-shadow:0 12px 30px rgba(45,106,79,0.14)}
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+  /* Close button */
+  .modal .close{position:absolute;top:14px;right:14px;background:#fff;border:none;color:var(--brand-700);font-size:20px;cursor:pointer;padding:8px;border-radius:999px;box-shadow:0 6px 18px rgba(3,8,6,0.08)}
+  .modal .close:hover{transform:scale(1.03)}
 
-    /* Button style */
-    .btn {
-      display: inline-block;
-      padding: 12px 24px;
-      background: var(--accent);
-      color: white;
-      text-decoration: none;
-      border-radius: var(--radius-md);
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
+  /* Affirmative action small icon button (check) */
+  .confirm-icon{display:inline-flex;align-items:center;justify-content:center;width:54px;height:44px;border-radius:28px;background:linear-gradient(180deg,var(--brand-600),#1e8c57);color:white;border:none;box-shadow:0 10px 30px rgba(45,106,79,0.18);font-size:18px}
 
-    .btn:hover {
-      background: var(--accent-light);
-      transform: translateY(-2px);
-    }
+    /* Toast */
+    .toast{position:fixed;right:24px;bottom:30px;background:linear-gradient(90deg,var(--brand-600),#56c39f);color:white;padding:12px 18px;border-radius:999px;box-shadow:0 8px 30px rgba(3,8,6,0.12);z-index:9999;font-weight:700}
+
+    /* Floating chatbot */
+    .floating-chatbot-btn{position:fixed;right:22px;bottom:22px;background:var(--brand-600);color:#fff;border-radius:999px;padding:12px 14px;font-size:20px;border:none;box-shadow:0 10px 30px rgba(3,8,6,0.12);cursor:pointer}
+
+    /* Loading screen */
+    #loading-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#e6f0ff,#e6fff3);z-index:9999}
+    .loading-logo{width:74px;height:74px;border-radius:50%;background:url('logo.jpg') center/cover}
+
+    /* Utility */
+    .hidden{display:none}
+
+    @media (max-width:900px){.modal-content{flex-direction:column;align-items:center}.modal-image{width:80%;height:180px}}
+    @media (max-width:480px){.products{grid-template-columns:repeat(2,1fr)}.product-image{height:100px}.product{min-height:200px}}
   </style>
-
-  <script>
-    // Load navbar
-    fetch('navbar.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('navbar-container').innerHTML = data;
-      });
-  </script>
 </head>
 <body>
   <div id="navbar-container"></div>
@@ -235,12 +185,15 @@
           <div class="quantity-selector">
             <label for="quantity">Select Quantity</label>
             <div class="quantity-controls">
-              <button type="button" class="quantity-btn" onclick="decreaseQuantity()">−</button>
-              <input type="number" id="quantity" min="1" value="1" readonly>
-              <button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
-            </div>
+                <button type="button" class="quantity-btn" data-action="decrease">−</button>
+                <input type="number" id="quantity" min="1" value="1" readonly>
+                <button type="button" class="quantity-btn" data-action="increase">+</button>
+              </div>
           </div>
-          <button id="add-to-cart-btn" class="add-to-cart-btn">🛒 Add to Cart</button>
+          <div class="modal-buttons">
+            <button id="add-to-cart-btn" class="add-to-cart-btn">🛒 Add to Cart</button>
+            <button id="buy-now-btn" class="buy-now-btn">⚡ Buy Now</button>
+          </div>
         </div>
       </div>
     </div>
@@ -410,18 +363,51 @@
       }
     };
     
-    // Quantity controls
-    window.increaseQuantity = function() {
-      const input = document.getElementById('quantity');
-      input.value = parseInt(input.value) + 1;
-    };
-    
-    window.decreaseQuantity = function() {
-      const input = document.getElementById('quantity');
-      if (parseInt(input.value) > 1) {
-        input.value = parseInt(input.value) - 1;
+    // Quantity controls (unobtrusive). Attach listeners instead of inline onclicks.
+    (function() {
+      const modal = document.getElementById('product-modal');
+
+      // Modal-level quantity buttons (increase/decrease)
+      if (modal) {
+        modal.addEventListener('click', function(e) {
+          const btn = e.target.closest('.quantity-btn');
+          if (!btn) return;
+          const action = btn.dataset.action;
+          const input = document.getElementById('quantity');
+          if (!input) return;
+          let v = parseInt(input.value, 10) || 1;
+          if (action === 'increase') v++;
+          else if (action === 'decrease' && v > 1) v--;
+          input.value = v;
+        });
       }
-    };
+
+      // Delegated product grid handlers: + / - buttons and product click to open modal
+      document.addEventListener('click', function(e) {
+        const control = e.target.closest('.product-btn');
+        if (control) {
+          const action = control.dataset.action;
+          const product = control.closest('.product');
+          if (!product) return;
+          const qtySpan = product.querySelector('.product-quantity');
+          let cur = parseInt(qtySpan.textContent, 10) || 0;
+          if (action === 'add') cur++;
+          else if (action === 'remove' && cur > 0) cur--;
+          qtySpan.textContent = cur;
+          return; // handled
+        }
+
+        // open product modal when clicking a product (but ignore clicks inside controls)
+        const productCard = e.target.closest('.product');
+        if (productCard && !e.target.closest('.product-controls')) {
+          const name = productCard.dataset.name || '';
+          const desc = productCard.dataset.description || '';
+          const img = productCard.dataset.image || productCard.querySelector('.product-image')?.src || '';
+          const price = productCard.dataset.price || productCard.querySelector('.price')?.dataset.price || '';
+          openProductModal(name, desc, img, price);
+        }
+      });
+    })();
     
     // Add to cart functionality
     const addToCartBtn = document.getElementById('add-to-cart-btn');
@@ -476,6 +462,4 @@
   <script src="script.js" defer></script>
   <script src="global-chat.js"></script>
 </body>
-</html>< l i n k   r e l = " s t y l e s h e e t "   h r e f = " g l o b a l - c h a t . c s s " > 
- 
- 
+</html>
