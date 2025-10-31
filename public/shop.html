@@ -56,6 +56,16 @@
   .product h4{font-size:0.95rem;margin:8px 0 6px;text-align:center;color:#072018}
   .product .price{color:var(--muted);font-weight:700;margin-bottom:6px;font-size:0.95rem}
 
+    /* Recently bought */
+    .recent-section{margin:12px 0 20px;padding:8px 6px}
+    .recent-title{font-size:1rem;margin:0 0 8px;color:var(--brand-700);font-weight:700}
+    .recent-list{display:flex;gap:10px;flex-wrap:nowrap;overflow:auto;padding-bottom:6px}
+    .recent-item{min-width:140px;background:var(--card);border-radius:10px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:8px;box-shadow:0 6px 18px rgba(3,8,6,0.04)}
+    .recent-image{width:84px;height:64px;object-fit:cover;border-radius:8px;background:#fff}
+    .recent-name{font-size:0.9rem;text-align:center;color:#072018;font-weight:700}
+    .recent-price{font-size:0.85rem;color:var(--muted)}
+    .recent-buy-btn{background:transparent;border:1px solid var(--brand-600);color:var(--brand-600);padding:6px 10px;border-radius:999px;cursor:pointer;font-weight:700}
+
     .product-controls{display:flex;align-items:center;gap:6px}
     .product-quantity{min-width:28px;text-align:center;font-weight:700}
 
@@ -109,6 +119,11 @@
 
   <section class="shop-section">
     <h2>Fresh Farm Produce</h2>
+    <!-- Recently bought (persisted in localStorage) -->
+    <div class="recent-section">
+      <h3 class="recent-title">Recently Bought</h3>
+      <div class="recent-list" id="recent-list" aria-live="polite"></div>
+    </div>
     
     <!-- Category: Animal & Farm Produce -->
     <div class="category">
@@ -414,6 +429,15 @@
     if (addToCartBtn) addToCartBtn.addEventListener('click', function() {
       const quantity = parseInt(document.getElementById('quantity').value);
       if (quantity > 0) {
+        // Persist as a recent purchase
+        try {
+          saveRecentPurchase(modalCurrentProduct, quantity);
+          renderRecentPurchases();
+        } catch (e) {
+          // ignore storage errors (e.g., private mode)
+          console.warn('Could not save recent purchase', e);
+        }
+
         // Add animation to button
         const btn = this;
         btn.style.transform = 'scale(0.95)';
@@ -429,6 +453,77 @@
         showToast(`Added ${quantity}x ${modalCurrentProduct.name} to cart!`);
       }
     });
+
+    // Recent purchases: storage & rendering
+    function getRecentPurchases() {
+      try {
+        const raw = localStorage.getItem('tillvalle_recent_purchases');
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveRecentPurchase(product, quantity) {
+      if (!product || !product.name) return;
+      const list = getRecentPurchases();
+      const entry = {
+        name: product.name,
+        image: product.image || '',
+        price: product.price || product.price === 0 ? product.price : (product.price || ''),
+        qty: quantity || 1,
+        ts: Date.now()
+      };
+
+      // Remove any previous entry with same name
+      const filtered = list.filter(it => it.name !== entry.name);
+      filtered.unshift(entry); // most recent first
+      const limited = filtered.slice(0, 8);
+      try { localStorage.setItem('tillvalle_recent_purchases', JSON.stringify(limited)); } catch (e) { /* ignore */ }
+    }
+
+    function renderRecentPurchases() {
+      const container = document.getElementById('recent-list');
+      if (!container) return;
+      const list = getRecentPurchases();
+      container.innerHTML = '';
+      if (!list.length) {
+        container.innerHTML = '<div class="recent-empty">No recent purchases yet — buy something and it will appear here.</div>';
+        return;
+      }
+      list.forEach(item => {
+        const node = document.createElement('div');
+        node.className = 'recent-item';
+        node.innerHTML = `
+          <img src="${item.image}" alt="${item.name}" class="recent-image">
+          <div class="recent-name">${item.name}</div>
+          <div class="recent-price">KES ${item.price} × ${item.qty}</div>
+          <button class="recent-buy-btn" data-name="${escapeHtmlAttr(item.name)}" data-image="${escapeHtmlAttr(item.image)}" data-price="${escapeHtmlAttr(item.price)}">Buy again</button>
+        `;
+        container.appendChild(node);
+      });
+    }
+
+    // Utility escape for attribute insertion
+    function escapeHtmlAttr(s) {
+      if (s === undefined || s === null) return '';
+      return String(s).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    // Handle buy-again clicks (delegated)
+    document.addEventListener('click', function(e) {
+      const btn = e.target.closest('.recent-buy-btn');
+      if (!btn) return;
+      const name = btn.dataset.name || '';
+      const image = btn.dataset.image || '';
+      const price = btn.dataset.price || '';
+      openProductModal(name, '', image, price);
+      // default to 1 quantity in modal
+      const qtyInput = document.getElementById('quantity'); if (qtyInput) qtyInput.value = 1;
+    });
+
+    // render on load
+    renderRecentPurchases();
     
   // Toast notification
     function showToast(message) {
