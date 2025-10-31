@@ -50,7 +50,7 @@ const pool = new Pool({
 });
 
 const stockPool = new Pool({
-  connectionString: 'postgresql://neondb_owner:npg_qn6wAlZJavf3@ep-billowing-mode-adkbmnzk-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
+  connectionString: 'postgresql://neondb_owner:npg_qn6wAlZJavf3@SCRAMBLED_Longtoken(32+)_3b568c4b14986e27.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
   ssl: { rejectUnauthorized: false },
 });
 

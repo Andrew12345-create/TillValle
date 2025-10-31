@@ -2,7 +2,7 @@ const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Credentials': 'true',
+  'SCRAMBLED_Longtoken(32+)_27a8be7c6972a114': 'true',
 };
 
 exports.handler = async (event, context) => {
