@@ -169,6 +169,13 @@
     <button id="toggle-all-stock-btn" style="margin-bottom: 1rem; padding: 0.5rem 1rem; background-color: #c0392b; color: white; border: none; border-radius: 4px; cursor: pointer;">
       Update All Stock Quantities
     </button>
+    <!-- Maintenance controls -->
+    <button id="activate-maintenance-btn" style="margin-left:12px; margin-bottom: 1rem; padding: 0.5rem 1rem; background-color: #8b0000; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      Activate Maintenance Mode
+    </button>
+    <button id="deactivate-maintenance-btn" style="margin-left:12px; margin-bottom: 1rem; padding: 0.5rem 1rem; background-color: #2d6a4f; color: white; border: none; border-radius: 4px; cursor: pointer; display:none;">
+      Deactivate Maintenance Mode
+    </button>
     <div class="search-container">
       <input type="text" id="admin-search-bar" placeholder="Search products..." class="search-input" />
       <button id="admin-search-btn" class="search-btn">🔍</button>
@@ -190,6 +197,17 @@
 
     <!-- Toast -->
     <div id="stock-toast"></div>
+  </div>
+
+  <!-- Maintenance overlay -->
+  <div id="maintenance-overlay" style="display:none; position:fixed; inset:0; background:linear-gradient(180deg,#0b3d2e,#072018); color:white; z-index:99999; align-items:center; justify-content:center; text-align:center; padding:24px;">
+    <div style="max-width:900px; margin:auto;">
+      <h1 style="font-size:48px; margin-bottom:12px; letter-spacing:2px;">TILLVALLE IS IN MAINTENANCE PERIOD</h1>
+      <p style="font-size:20px; opacity:0.95; margin-bottom:18px;">We're performing important updates. Please check back later. For urgent matters contact support@tillvalle.com</p>
+      <div style="display:flex;gap:12px;justify-content:center;">
+        <button id="maintenance-deactivate-inline" style="background:white;color:#0b3d2e;padding:10px 16px;border-radius:8px;border:none;font-weight:700;">Deactivate (Admin)</button>
+      </div>
+    </div>
   </div>
 
   <!-- Chatbot Sidebar -->
@@ -234,6 +252,7 @@
       e.preventDefault();
       const password = document.getElementById('admin-password').value;
       if (password === 'Stock101') {
+        localStorage.setItem('isAdmin', 'true');
         loginSection.style.display = 'none';
         adminContent.style.display = 'block';
         
@@ -356,8 +375,83 @@
         alert('Incorrect password');
       }
     });
+
+    // Maintenance mode handling
+    const activateMaintenanceBtn = document.getElementById('activate-maintenance-btn');
+    const deactivateMaintenanceBtn = document.getElementById('deactivate-maintenance-btn');
+    const maintenanceOverlay = document.getElementById('maintenance-overlay');
+    const maintenanceDeactivateInline = document.getElementById('maintenance-deactivate-inline');
+
+    function showMaintenanceOverlay() {
+      if (maintenanceOverlay) {
+        maintenanceOverlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+      if (activateMaintenanceBtn) activateMaintenanceBtn.style.display = 'none';
+      if (deactivateMaintenanceBtn) deactivateMaintenanceBtn.style.display = 'inline-block';
+    }
+
+    function hideMaintenanceOverlay() {
+      if (maintenanceOverlay) {
+        maintenanceOverlay.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+      if (activateMaintenanceBtn) activateMaintenanceBtn.style.display = 'inline-block';
+      if (deactivateMaintenanceBtn) deactivateMaintenanceBtn.style.display = 'none';
+    }
+
+    function isMaintenanceActive() {
+      try { return localStorage.getItem('tillvalle_maintenance') === '1'; } catch (e) { return false; }
+    }
+
+    function setMaintenanceActive(on) {
+      try {
+        if (on) localStorage.setItem('tillvalle_maintenance', '1');
+        else localStorage.removeItem('tillvalle_maintenance');
+      } catch (e) { /* ignore */ }
+    }
+
+    // Confirm admin action before toggling maintenance
+    async function confirmAdminAction(action) {
+      const pass = prompt('Enter admin password to confirm:');
+      if (pass === null) return false;
+      if (pass === 'Stock101') return true;
+      alert('Incorrect password');
+      return false;
+    }
+
+    if (activateMaintenanceBtn) {
+      activateMaintenanceBtn.addEventListener('click', async function() {
+        const ok = await confirmAdminAction('activate');
+        if (!ok) return;
+        setMaintenanceActive(true);
+        showMaintenanceOverlay();
+      });
+    }
+
+    if (deactivateMaintenanceBtn) {
+      deactivateMaintenanceBtn.addEventListener('click', async function() {
+        const ok = await confirmAdminAction('deactivate');
+        if (!ok) return;
+        setMaintenanceActive(false);
+        hideMaintenanceOverlay();
+      });
+    }
+
+    if (maintenanceDeactivateInline) {
+      maintenanceDeactivateInline.addEventListener('click', async function() {
+        const ok = await confirmAdminAction('deactivate');
+        if (!ok) return;
+        setMaintenanceActive(false);
+        hideMaintenanceOverlay();
+      });
+    }
+
+    // Show overlay on load if maintenance active
+    if (isMaintenanceActive()) showMaintenanceOverlay();
   </script>
 
+  <script src="maintenance.js"></script>
   <script src="navbar-auth.js"></script>
   <script src="script.js" defer></script>
   <script src="global-chat.js"></script>
