@@ -2,11 +2,16 @@
 (function() {
   'use strict';
 
-  function isMaintenanceActive() {
+  async function isMaintenanceActive() {
     try {
-      return localStorage.getItem('tillvalle_maintenance') === '1';
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const maintenanceUrl = isLocal ? 'http://localhost:3001/maintenance' : '/.netlify/functions/maintenance';
+      const response = await fetch(maintenanceUrl);
+      const data = await response.json();
+      return data.active;
     } catch (e) {
-      return false;
+      // Fallback to localStorage if server fails
+      return localStorage.getItem('tillvalle_maintenance') === '1';
     }
   }
 
@@ -75,14 +80,17 @@
   }
 
   // Check maintenance mode on page load
-  if (isMaintenanceActive() && !isAdminUser()) {
-    // Show maintenance overlay immediately
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', showMaintenanceOverlay);
-    } else {
-      showMaintenanceOverlay();
+  (async () => {
+    const maintenanceActive = await isMaintenanceActive();
+    if (maintenanceActive && !isAdminUser()) {
+      // Show maintenance overlay immediately
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', showMaintenanceOverlay);
+      } else {
+        showMaintenanceOverlay();
+      }
     }
-  }
+  })();
 
   // Make functions globally available for admin panel
   window.isMaintenanceActive = isMaintenanceActive;

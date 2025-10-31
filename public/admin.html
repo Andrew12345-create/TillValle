@@ -404,8 +404,16 @@
       try { return localStorage.getItem('tillvalle_maintenance') === '1'; } catch (e) { return false; }
     }
 
-    function setMaintenanceActive(on) {
+    async function setMaintenanceActive(on) {
       try {
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const maintenanceUrl = isLocal ? 'http://localhost:3001/maintenance' : '/.netlify/functions/maintenance';
+        await fetch(maintenanceUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ active: on })
+        });
+        // Fallback to localStorage
         if (on) localStorage.setItem('tillvalle_maintenance', '1');
         else localStorage.removeItem('tillvalle_maintenance');
       } catch (e) { /* ignore */ }
@@ -448,7 +456,10 @@
     }
 
     // Show overlay on load if maintenance active
-    if (isMaintenanceActive()) showMaintenanceOverlay();
+    (async () => {
+      const maintenanceActive = await isMaintenanceActive();
+      if (maintenanceActive) showMaintenanceOverlay();
+    })();
   </script>
 
   <script src="maintenance.js"></script>
