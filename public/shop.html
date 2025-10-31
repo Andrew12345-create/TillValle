@@ -1,7 +1,7 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shop - TillValle</title>
@@ -12,6 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="shop-styles.css">
+  <link rel="stylesheet" href="global-chat.css">
   <!-- Hotjar Tracking Code -->
   <script>
     (function(h,o,t,j,a,r){
@@ -249,29 +250,32 @@
     <p>&copy; 2025 TillValle. All rights reserved.</p>
   </footer>
 
-  <!-- Chat Button -->
-  <div id="chat-btn">💬</div>
-  
-  <!-- Chat Window -->
-  <div id="chat-window">
-    <div id="chat-header">
-      <span>TillValle Chat</span>
-      <button id="chat-close">×</button>
+  <!-- Floating Chatbot Button -->
+  <button class="floating-chatbot-btn" id="floating-chatbot-btn" title="Chat with TillieBot">
+    💬
+  </button>
+
+  <!-- Chatbot Sidebar -->
+  <div class="chatbot-sidebar" id="chatbot-sidebar">
+    <div class="chatbot-header">
+      <span>🤖 TillieBot</span>
+      <button class="chatbot-close" id="chatbot-close">&times;</button>
     </div>
-    <div id="chat-messages">
-      <div class="bot-msg">🌱 Hi! I'm TillieBot, your smart farming assistant! I can help you with:
-      <br><br>📦 <strong>Product Info</strong> - Ask about any product
-      <br>🚚 <strong>Delivery</strong> - Shipping & delivery details  
-      <br>💰 <strong>Pricing</strong> - Current prices & offers
-      <br>🛒 <strong>Orders</strong> - Help with your cart
-      <br>👨🌾 <strong>Farming Tips</strong> - Growing advice
-      <br><br>What would you like to know?</div>
+    <div class="chatbot-messages" id="chatbot-messages">
+      <div class="chatbot-message bot">
+        🌱 Hello! Welcome to TillValle! I'm TillieBot, your smart farming assistant. How can I help you today?
+      </div>
     </div>
-    <div id="chat-input-area">
-      <input type="text" id="chat-input" placeholder="Type your message...">
-      <button id="chat-send">Send</button>
+    <div class="chatbot-input-area">
+      <div class="chatbot-input-container">
+        <input type="text" id="chatbot-input" placeholder="Ask me about products, delivery, or stock..." class="chatbot-input">
+        <button id="chatbot-send" class="chatbot-send">📤</button>
+      </div>
     </div>
   </div>
+
+  <!-- Chatbot Backdrop -->
+  <div class="chatbot-backdrop" id="chatbot-backdrop"></div>
 
 
 
@@ -472,4 +476,6 @@
   <script src="script.js" defer></script>
   <script src="global-chat.js"></script>
 </body>
-</html>
+</html>< l i n k   r e l = " s t y l e s h e e t "   h r e f = " g l o b a l - c h a t . c s s " > 
+ 
+ 

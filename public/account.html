@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account - TilleValle</title>
-  <link rel="icon" href="logo.jpg" type="image/jpeg" />
-  <link rel="stylesheet" href="css/site.css">
-  <link rel="stylesheet" href="css/navbar.css">
+    <link rel="icon" href="logo.jpg" type="image/jpeg" />
+    <link rel="stylesheet" href="css/site.css">
+    <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="shop-styles.css">
+    <link rel="stylesheet" href="global-chat.css">
 
     <!-- Hotjar Tracking Code for Tillvalle -->
     <script>
@@ -53,7 +54,7 @@
         }, 3000);
       }
     </script>
-  </head>
+</head>
 <body>
   <header>
     <nav class="navbar">
@@ -231,6 +232,7 @@
       const chatbotSend = document.getElementById('chatbot-send');
       const chatbotInput = document.getElementById('chatbot-input');
       
+
       if (floatingChatbotBtn) {
         floatingChatbotBtn.addEventListener('click', () => {
           if (chatbotSidebar) chatbotSidebar.classList.add('open');
@@ -252,24 +254,26 @@
         });
       }
       
+
       async function sendMessage() {
         const message = chatbotInput.value.trim();
         if (!message) return;
-        
-  const messagesDiv = document.getElementById('chatbot-messages');
-  // Safely append user message
-  const userMessageDiv = document.createElement('div');
-  userMessageDiv.className = 'chatbot-message user';
-  userMessageDiv.textContent = message;
-  messagesDiv.appendChild(userMessageDiv);
-  chatbotInput.value = '';
-  const thinkingDiv = document.createElement('div');
-  thinkingDiv.className = 'chatbot-message bot';
-  thinkingDiv.textContent = 'Thinking...';
-  messagesDiv.appendChild(thinkingDiv);
-  const loadingMessage = messagesDiv.lastElementChild;
+
+        const messagesDiv = document.getElementById('chatbot-messages');
+        // Safely append user message
+        const userMessageDiv = document.createElement('div');
+        userMessageDiv.className = 'chatbot-message user';
+        userMessageDiv.textContent = message;
+        messagesDiv.appendChild(userMessageDiv);
+        chatbotInput.value = '';
+        const thinkingDiv = document.createElement('div');
+        thinkingDiv.className = 'chatbot-message bot';
+        thinkingDiv.textContent = 'Thinking...';
+        messagesDiv.appendChild(thinkingDiv);
+        const loadingMessage = messagesDiv.lastElementChild;
+
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        
+
         try {
           const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
           const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/.netlify/functions/chatbot';

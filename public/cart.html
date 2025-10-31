@@ -6,6 +6,7 @@
   <title>Your Cart</title>
   <link rel="stylesheet" href="css/navbar.css">
   <link rel="stylesheet" href="css/site.css" />
+  <link rel="stylesheet" href="global-chat.css">
 
   <!-- Hotjar Tracking Code for Tillvalle -->
   <script>
@@ -70,173 +71,41 @@
   <!-- Toast -->
   <div id="cart-toast"></div>
 
-  <!-- Chat Button -->
-  <div id="chat-btn">💬</div>
-  
-  <!-- Chat Window -->
-  <div id="chat-window">
-    <div id="chat-header">
-      <span>TillValle Chat</span>
-      <button id="chat-close">×</button>
+  <!-- Floating Chatbot Button -->
+  <button class="floating-chatbot-btn" id="floating-chatbot-btn" title="Chat with TillieBot">
+    💬
+  </button>
+
+  <!-- Chatbot Sidebar -->
+  <div class="chatbot-sidebar" id="chatbot-sidebar">
+    <div class="chatbot-header">
+      <span>🤖 TillieBot</span>
+      <button class="chatbot-close" id="chatbot-close">&times;</button>
     </div>
-    <div id="chat-messages">
-      <div class="bot-msg">Hello! How can I help you with TillValle products today?</div>
+    <div class="chatbot-messages" id="chatbot-messages">
+      <div class="chatbot-message bot">
+        🌱 Hello! Welcome to TillValle! I'm TillieBot, your smart farming assistant. How can I help you today?
+      </div>
     </div>
-    <div id="chat-input-area">
-      <input type="text" id="chat-input" placeholder="Type your message...">
-      <button id="chat-send">Send</button>
+    <div class="chatbot-input-area">
+      <div class="chatbot-input-container">
+        <input type="text" id="chatbot-input" placeholder="Ask me about products, delivery, or stock..." class="chatbot-input">
+        <button id="chatbot-send" class="chatbot-send">📤</button>
+      </div>
     </div>
   </div>
 
-  <style>
-    #chat-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-      background: #2d6a4f;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 1000;
-      color: white;
-      font-size: 24px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-    
-    #chat-window {
-      position: fixed;
-      bottom: 90px;
-      right: 20px;
-      width: 350px;
-      height: 400px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-      display: none;
-      flex-direction: column;
-      z-index: 1001;
-    }
-    
-    #chat-header {
-      background: #2d6a4f;
-      color: white;
-      padding: 15px;
-      border-radius: 10px 10px 0 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    #chat-close {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
-    }
-    
-    #chat-messages {
-      flex: 1;
-      padding: 15px;
-      overflow-y: auto;
-    }
-    
-    .bot-msg, .user-msg {
-      margin: 10px 0;
-      padding: 8px 12px;
-      border-radius: 15px;
-      max-width: 80%;
-    }
-    
-    .bot-msg {
-      background: #f0f0f0;
-      align-self: flex-start;
-    }
-    
-    .user-msg {
-      background: #2d6a4f;
-      color: white;
-      align-self: flex-end;
-      margin-left: auto;
-      text-align: right;
-    }
-    
-    #chat-input-area {
-      padding: 15px;
-      border-top: 1px solid #eee;
-      display: flex;
-      gap: 10px;
-    }
-    
-    #chat-input {
-      flex: 1;
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      border-radius: 20px;
-      outline: none;
-    }
-    
-    #chat-send {
-      background: #2d6a4f;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 20px;
-      cursor: pointer;
-    }
-  </style>
+  <!-- Chatbot Backdrop -->
+  <div class="chatbot-backdrop" id="chatbot-backdrop"></div>
 
-  <script>
-    document.getElementById('chat-btn').onclick = function() {
-      document.getElementById('chat-window').style.display = 'flex';
-      document.getElementById('chat-btn').style.display = 'none';
-    };
-    
-    document.getElementById('chat-close').onclick = function() {
-      document.getElementById('chat-window').style.display = 'none';
-      document.getElementById('chat-btn').style.display = 'flex';
-    };
-    
-    function sendMessage() {
-      const input = document.getElementById('chat-input');
-      const messages = document.getElementById('chat-messages');
-      const message = input.value.trim();
-      
-      if (!message) return;
-      // Safely append user message
-      const userMsg = document.createElement('div');
-      userMsg.className = 'user-msg';
-      userMsg.textContent = message;
-      messages.appendChild(userMsg);
-      input.value = '';
-      
-      setTimeout(() => {
-        const botMsg = document.createElement('div');
-        botMsg.className = 'bot-msg';
-        botMsg.textContent = "Thanks for your message! I'm here to help with TillValle products and orders.";
-        messages.appendChild(botMsg);
-        messages.scrollTop = messages.scrollHeight;
-      }, 1000);
-      
-      messages.scrollTop = messages.scrollHeight;
-    }
-    
-    document.getElementById('chat-send').onclick = sendMessage;
-    document.getElementById('chat-input').onkeypress = function(e) {
-      if (e.key === 'Enter') sendMessage();
-    };
-  </script>
+
 
   <footer>
     <p>&copy; 2025 TilleValle. All rights reserved.</p>
   </footer>
 
   <script src="navbar-auth.js"></script>
-  <script src="chatbot-universal.js"></script>
+  <script src="global-chat.js"></script>
   <script src="script.js" defer></script>
   <script>
     // Load navbar
@@ -317,92 +186,6 @@
       document.getElementById('checkout-btn').addEventListener('click', () => {
         window.location.href = 'location.html';
       });
-      // Chatbot functions
-      const floatingChatbotBtn = document.getElementById('floating-chatbot-btn');
-      const chatbotSidebar = document.getElementById('chatbot-sidebar');
-      const chatbotClose = document.getElementById('chatbot-close');
-      const chatbotSend = document.getElementById('chatbot-send');
-      const chatbotInput = document.getElementById('chatbot-input');
-      
-      if (floatingChatbotBtn) {
-        floatingChatbotBtn.addEventListener('click', () => {
-          if (chatbotSidebar) chatbotSidebar.classList.add('open');
-          floatingChatbotBtn.style.display = 'none';
-        });
-      }
-      if (chatbotClose) {
-        chatbotClose.addEventListener('click', () => {
-          if (chatbotSidebar) chatbotSidebar.classList.remove('open');
-          if (floatingChatbotBtn) floatingChatbotBtn.style.display = 'flex';
-        });
-      }
-      if (chatbotSend) {
-        chatbotSend.addEventListener('click', sendMessage);
-      }
-      if (chatbotInput) {
-        chatbotInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') sendMessage();
-        });
-      }
-      
-      async function sendMessage() {
-        const message = chatbotInput.value.trim();
-        if (!message) return;
-        
-  const messagesDiv = document.getElementById('chatbot-messages');
-  // Safely append user message
-  const userMessageDiv = document.createElement('div');
-  userMessageDiv.className = 'chatbot-message user';
-  userMessageDiv.textContent = message;
-  messagesDiv.appendChild(userMessageDiv);
-        chatbotInput.value = '';
-  const thinkingDiv = document.createElement('div');
-  thinkingDiv.className = 'chatbot-message bot';
-  thinkingDiv.textContent = 'Thinking...';
-  messagesDiv.appendChild(thinkingDiv);
-  const loadingMessage = messagesDiv.lastElementChild;
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        
-        try {
-          const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-          const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/.netlify/functions/chatbot';
-          const response = await fetch(chatbotUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message })
-          });
-          const data = await response.json();
-          if (loadingMessage) loadingMessage.remove();
-          const botReply = document.createElement('div');
-          botReply.className = 'chatbot-message bot';
-          botReply.textContent = data.message;
-          messagesDiv.appendChild(botReply);
-        } catch (error) {
-          if (loadingMessage) loadingMessage.remove();
-          const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-          const lowerMessage = message.toLowerCase();
-          const offlineResponses = {
-            en: {
-              human: "I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com.",
-              default: "Hello! I'm TillieBot from TillValle! 🌱 I can help you with product information, stock levels, and delivery details. What would you like to know?"
-            },
-            sw: {
-              human: "Nitakuunganisha na wakala wetu Angela Wanjiru kwa angelawanjiru@gmail.com.",
-              default: "Hujambo! Mimi ni TillieBot kutoka TillValle! 🌱 Ninaweza kukusaidia na habari za bidhaa na uongozaji. Unahitaji nini?"
-            },
-            fr: {
-              human: "Je vais vous connecter avec notre agent Angela Wanjiru à angelawanjiru@gmail.com.",
-              default: "Bonjour! Je suis TillieBot de TillValle! 🌱 Je peux vous aider avec les informations produits et la livraison. Que voulez-vous savoir?"
-            }
-          };
-          const responses = offlineResponses[currentLang] || offlineResponses.en;
-          const respDiv = document.createElement('div');
-          respDiv.className = 'chatbot-message bot';
-          respDiv.textContent = (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('live')) ? responses.human : responses.default;
-          messagesDiv.appendChild(respDiv);
-        }
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-      }
     });
   </script>
 </body>
