@@ -43,6 +43,21 @@
         <h1>TILLVALLE IS IN MAINTENANCE PERIOD</h1>
         <p>We're performing important updates. Please check back later.</p>
         <p class="contact">For urgent matters contact support@tillvalle.com</p>
+        <div style="margin-top: 30px;">
+            <button id="admin-access-btn" style="background: white; color: #0b3d2e; padding: 12px 24px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; font-size: 16px;">Admin Access</button>
+        </div>
     </div>
+
+    <script>
+        document.getElementById('admin-access-btn').addEventListener('click', function() {
+            const pass = prompt('Enter admin password:');
+            if (pass === 'Stock101') {
+                localStorage.setItem('isAdmin', 'true');
+                window.location.href = 'admin.html';
+            } else if (pass !== null) {
+                alert('Incorrect password');
+            }
+        });
+    </script>
 </body>
 </html>
