@@ -42,8 +42,6 @@ header hr {
 .contact {
   max-width: var(--max-w);
   margin: 40px auto;
-  padding: 40px 20px;
-  animation: fadeInUp 0.8s ease-out;
 }
 
 .contact h2 {
@@ -55,8 +53,6 @@ header hr {
   letter-spacing: -0.02em;
   position: relative;
 }
-
-.contact h2::after {
   content: '';
   position: absolute;
   bottom: -10px;
@@ -87,14 +83,6 @@ header hr {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--brand-500), var(--brand-600), var(--brand-700));
-}
-
-.contact-form-container:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-hover);
 }
 
 /* Form Elements */
@@ -106,8 +94,6 @@ header hr {
 
 #contactForm input,
 #contactForm textarea {
-  width: 100%;
-  padding: 16px 20px;
   border: 2px solid rgba(45, 106, 79, 0.1);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.8);
@@ -215,8 +201,9 @@ footer p {
 }
 
 /* Chatbot Enhancements */
+  -webkit--webkit-backdrop-filter: blur(10px);
 #max-chatbot-btn {
-  position: fixed;
+  backdrop-filter: blur(10px);
   bottom: 30px;
   right: 30px;
   width: 70px;
@@ -227,6 +214,133 @@ footer p {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+/* Responsive Design */
+@media (max-width: 768px) {
+  .contact {
+    margin: 20px auto;
+    padding: 20px 15px;
+  }
+
+  .contact h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+  }
+
+  .contact-form-container {
+    padding: 30px 20px;
+  }
+
+  #contactForm {
+    gap: 20px;
+  }
+
+  #contactForm input,
+  #contactForm textarea {
+    padding: 14px 16px;
+  }
+
+  #contactForm button[type="submit"] {
+    align-self: center;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact h2 {
+    font-size: 1.8rem;
+  }
+
+  .contact-form-container {
+    padding: 25px 15px;
+  }
+}
+
+/* Offline Indicator */
+.offline-indicator {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: #ff6b6b;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 20px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+  z-index: 1000;
+  animation: slideIn 0.5s ease;
+}
+
+.offline-indicator.online {
+  background: var(--brand-500);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(45, 106, 79, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(45, 106, 79, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(45, 106, 79, 0);
+  }
+}
+
+@keyframes slideInBounce {
+  0% {
+    transform: translateX(100%) scale(0.8);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-10px) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
   z-index: 10000;
   color: white;
   font-size: 28px;

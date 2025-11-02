@@ -620,12 +620,93 @@ app.post('/chatbot', async (req, res) => {
 });
 
 // ==========================
+// MAINTENANCE ENDPOINT
+// ==========================
+app.get('/maintenance', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT active FROM site_maintenance LIMIT 1');
+    const isActive = result.rows.length > 0 && result.rows[0].active;
+    res.json({ active: isActive });
+  } catch (error) {
+    console.error('Maintenance check error:', error);
+    res.status(500).json({ active: false });
+  }
+});
+
+app.post('/maintenance', async (req, res) => {
+  const { active, adminEmail } = req.body;
+
+  if (!adminEmail) {
+    return res.status(400).json({ error: 'Admin email required' });
+  }
+
+  try {
+    // Verify admin email
+    const adminResult = await pool.query('SELECT email FROM maintenance_admins WHERE email = $1', [adminEmail.toLowerCase()]);
+    if (adminResult.rows.length === 0) {
+      return res.status(403).json({ error: 'Unauthorized admin email' });
+    }
+
+    // Update maintenance status
+    await pool.query('UPDATE site_maintenance SET active = $1, last_updated = CURRENT_TIMESTAMP', [active]);
+
+    // Log the action
+    await pool.query(
+      'INSERT INTO maintenance_logs (admin_email, action, timestamp) VALUES ($1, $2, CURRENT_TIMESTAMP)',
+      [adminEmail.toLowerCase(), active ? 'activated' : 'deactivated']
+    );
+
+    res.json({ success: true, active });
+  } catch (error) {
+    console.error('Maintenance update error:', error);
+    res.status(500).json({ error: 'Failed to update maintenance mode' });
+  }
+});
+
+// ==========================
+// MAINTENANCE CHECK MIDDLEWARE
+// ==========================
+async function checkMaintenance(req, res, next) {
+  try {
+    // Check if maintenance mode is active
+    const maintenanceResult = await pool.query('SELECT active FROM site_maintenance LIMIT 1');
+    const isMaintenanceActive = maintenanceResult.rows.length > 0 && maintenanceResult.rows[0].active;
+
+    if (isMaintenanceActive) {
+      // Check if user is admin by email (from session or auth header)
+      const userEmail = req.session?.user?.email || req.headers['x-user-email'];
+
+      if (userEmail) {
+        // Check if email is in maintenance_admins table
+        const adminResult = await pool.query('SELECT email FROM maintenance_admins WHERE email = $1', [userEmail.toLowerCase()]);
+        const isAdmin = adminResult.rows.length > 0;
+
+        if (isAdmin) {
+          // Admin user - allow access
+          return next();
+        }
+      }
+
+      // Not an admin or no email - block access
+      return res.status(503).sendFile(path.join(__dirname, '..', 'public', 'maintenance.html'));
+    }
+
+    // Maintenance not active - proceed normally
+    next();
+  } catch (error) {
+    console.error('Maintenance check error:', error);
+    // On error, allow access to prevent blocking users
+    next();
+  }
+}
+
+// ==========================
 // Start server
 // ==========================
 // ==========================
 // Catch-all (serve frontend) - MUST BE LAST
 // ==========================
-app.all('*', (req, res) => {
+app.all('*', checkMaintenance, (req, res) => {
   if (req.method !== 'GET') {
     return res.status(404).send('Not Found');
   }

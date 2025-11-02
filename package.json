@@ -8,12 +8,12 @@
     "build": "echo 'No build step required'"
   },
   "dependencies": {
-    "@stackframe/stack": "^2.4.8",
     "@google/genai": "^0.3.0",
+    "@stackframe/stack": "^2.4.8",
     "@vercel/analytics": "^1.5.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.1",
+    "dotenv": "^17.2.3",
     "express": "^4.18.2",
     "express-session": "^1.18.2",
     "jsonwebtoken": "^9.0.0",
