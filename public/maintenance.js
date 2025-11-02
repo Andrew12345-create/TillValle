@@ -45,7 +45,7 @@
 
   // Make functions globally available for admin panel
   window.isMaintenanceActive = isMaintenanceActive;
-  window.showMaintenanceOverlay = showMaintenanceOverlay;
+  window.redirectToMaintenance = redirectToMaintenance;
   window.isAdminUser = isAdminUser;
 
 })();

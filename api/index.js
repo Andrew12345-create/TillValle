@@ -715,4 +715,7 @@ app.all('*', checkMaintenance, (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
+  // Open browser automatically
+  const { exec } = require('child_process');
+  exec(`start http://localhost:${PORT}`);
 });
