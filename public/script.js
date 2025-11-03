@@ -857,10 +857,14 @@ function initCookieConsent() {
 
   if (!banner || !acceptBtn || !declineBtn) return;
 
-  // Check if user has already made a choice
-  const cookieChoice = localStorage.getItem('cookie-consent');
+  // Check if user has already made a choice (from localStorage or cookie)
+  const cookieChoice = localStorage.getItem('cookie-consent') || getCookie('cookie_consent');
   if (cookieChoice) {
     banner.classList.add('hidden');
+    // Enable features if accepted
+    if (cookieChoice === 'accepted') {
+      enableCookieFeatures();
+    }
     return;
   }
 
@@ -872,16 +876,76 @@ function initCookieConsent() {
   // Handle accept button
   acceptBtn.addEventListener('click', () => {
     localStorage.setItem('cookie-consent', 'accepted');
+    setCookie('cookie_consent', 'accepted', 365); // Set cookie for 1 year
     banner.classList.add('hidden');
     showCartToast('Cookies accepted! Thank you for your consent.');
+    enableCookieFeatures();
   });
 
   // Handle decline button
   declineBtn.addEventListener('click', () => {
     localStorage.setItem('cookie-consent', 'declined');
+    setCookie('cookie_consent', 'declined', 365); // Set cookie for 1 year
     banner.classList.add('hidden');
     showCartToast('Cookie preferences saved. Some features may be limited.');
   });
+}
+
+// Helper function to set cookies
+function setCookie(name, value, days) {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+  document.cookie = name + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+}
+
+// Helper function to get cookies
+function getCookie(name) {
+  const nameEQ = name + '=';
+  const ca = document.cookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+
+// Function to enable features when cookies are accepted
+function enableCookieFeatures() {
+  // Enable analytics (Google Analytics or similar)
+  if (typeof gtag !== 'undefined') {
+    gtag('consent', 'update', {
+      'analytics_storage': 'granted'
+    });
+  }
+
+  // Set user preference cookies
+  setCookie('user_theme', 'default', 365);
+  setCookie('language_preference', localStorage.getItem('selectedLanguage') || 'en', 365);
+
+  // Enable chatbot personalization
+  setCookie('chatbot_enabled', 'true', 365);
+  setCookie('chatbot_interactions', '0', 365); // Track interactions
+
+  // Set shopping preferences
+  setCookie('shopping_currency', 'KES', 365);
+  setCookie('last_visit', new Date().toISOString(), 365);
+
+  // Enable marketing cookies (for retargeting, etc.)
+  setCookie('marketing_consent', 'true', 365);
+
+  // Set session tracking
+  setCookie('session_id', generateSessionId(), 1); // Expires in 1 day
+
+  // Enable feature flags
+  setCookie('features_enabled', 'analytics,personalization,marketing', 365);
+
+  console.log('Cookie-dependent features enabled: analytics, personalization, marketing, session tracking.');
+}
+
+// Helper function to generate a simple session ID
+function generateSessionId() {
+  return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 }
 
 // Initialize everything when DOM is loaded
