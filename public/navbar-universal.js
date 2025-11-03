@@ -1,5 +1,5 @@
 // Universal navbar functionality for all pages
-document.addEventListener('DOMContentLoaded', function() {
+function initNavbar() {
   const userArea = document.getElementById('user-area');
   const userEmail = localStorage.getItem('email');
   
@@ -116,4 +116,12 @@ document.addEventListener('DOMContentLoaded', function() {
       mobileUserArea.innerHTML = `<a href="login.html" class="mobile-nav-link">Login</a>`;
     }
   }
-});
+}
+
+// Initialize navbar when DOM is ready
+document.addEventListener('DOMContentLoaded', initNavbar);
+
+// Also initialize immediately if navbar elements are already loaded
+if (document.getElementById('hamburger-btn')) {
+  initNavbar();
+}

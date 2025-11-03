@@ -54,6 +54,10 @@ exports.handler = async (event, context) => {
       )
     `);
 
+    // Check site setting: if restrict_to_existing_emails is enabled, do not allow new signups
+    const { isRestrictEmailsEnabled } = require('./_helpers');
+    const restrictEnabled = await isRestrictEmailsEnabled(client);
+
     const { email, password } = JSON.parse(event.body);
     if (!email || !password) {
       return {
@@ -63,6 +67,18 @@ exports.handler = async (event, context) => {
     }
 
     const lowerEmail = email.toLowerCase();
+
+    // If restriction is enabled, only allow signup when the email already exists in users table
+    if (restrictEnabled) {
+      const existingCheck = await client.query('SELECT id FROM users WHERE email = $1', [lowerEmail]);
+      if (existingCheck.rowCount === 0) {
+        return {
+          statusCode: 403,
+          body: JSON.stringify({ ok: false, error: 'Signups are currently restricted. If you already have an account, please log in. For access, contact the site administrator.' }),
+        };
+      }
+      // If email exists, it's okay to proceed (this branch allows re-issuing credentials but avoids creating new accounts)
+    }
 
     const existing = await client.query('SELECT id FROM users WHERE email = $1', [lowerEmail]);
     if (existing.rowCount > 0) {

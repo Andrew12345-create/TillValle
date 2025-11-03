@@ -10,6 +10,11 @@
     <a href="contact.html" class="nav-link">Contact</a>
   </div>
   <div class="nav-right">
+    <form id="global-search-form" action="javascript:void(0);" style="display:inline-flex;align-items:center;margin-right:12px;">
+      <input id="search-bar" name="q" type="search" placeholder="Search products..." aria-label="Search products" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(0,0,0,0.06);min-width:160px;">
+      <button id="search-btn" type="submit" style="margin-left:6px;padding:6px 10px;border-radius:6px;border:none;background:linear-gradient(90deg,#2d6a4f,#40916c);color:white;font-weight:600;cursor:pointer;">Search</button>
+    </form>
+    <a href="#" id="wishlist-link" class="nav-link" title="Wishlist">♡ Wishlist (<span id="wishlist-count">0</span>)</a>
     <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
     <span id="user-area"></span>
   </div>
@@ -19,6 +24,20 @@
     <span class="hamburger-line"></span>
   </button>
 </nav>
+
+<!-- Cookie Consent Banner -->
+<div id="cookie-consent-banner" class="cookie-consent-banner hidden">
+  <div class="cookie-consent-content">
+    <div class="cookie-consent-text">
+      <p>🍪 We use cookies to enhance your experience on TillValle. By continuing to browse, you agree to our use of cookies.</p>
+    </div>
+    <div class="cookie-consent-buttons">
+      <button id="cookie-accept" class="cookie-btn accept">Accept All</button>
+      <button id="cookie-decline" class="cookie-btn decline">Decline</button>
+    </div>
+  </div>
+</div>
+
 <div class="mobile-menu" id="mobile-menu">
   <button class="mobile-close-btn" id="mobile-close-btn" aria-label="Close menu">&times;</button>
   <a href="shop.html" class="mobile-nav-link">Shop</a>
@@ -27,36 +46,19 @@
   <a href="cart.html" class="mobile-nav-link">🛒 Cart (<span id="mobile-cart-count">0</span>)</a>
   <div id="mobile-user-area"></div>
 </div>
-<script>
-  // Hamburger menu functionality
-  (function() {
-    const hamburgerBtn = document.getElementById('hamburger-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const mobileCloseBtn = document.getElementById('mobile-close-btn');
-    const mobileUserArea = document.getElementById('mobile-user-area');
 
-    if (hamburgerBtn && mobileMenu) {
-      hamburgerBtn.addEventListener('click', function() {
-        mobileMenu.classList.toggle('open');
-        hamburgerBtn.classList.toggle('open');
-      });
+<!-- Wishlist modal (injected here so it's available site-wide) -->
+<div id="wishlist-modal" class="wishlist-modal hidden" aria-hidden="true" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:2000;">
+  <div style="background:#fff;max-width:720px;width:94%;border-radius:12px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <h3 style="margin:0;font-size:1.25rem;color:#072018">Your Wishlist</h3>
+      <button id="wishlist-close" aria-label="Close wishlist" style="background:transparent;border:none;font-size:22px;cursor:pointer">&times;</button>
+    </div>
+    <div id="wishlist-contents" style="min-height:80px;max-height:60vh;overflow:auto;display:grid;grid-template-columns:1fr;gap:10px"></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:12px;gap:8px">
+      <button id="wishlist-clear" style="background:#ef4444;color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer">Clear</button>
+      <button id="wishlist-checkout" style="background:linear-gradient(90deg,#2d6a4f,#40916c);color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer">Go to Cart</button>
+    </div>
+  </div>
+</div>
 
-      // Close mobile menu when clicking the close button
-      if (mobileCloseBtn) {
-        mobileCloseBtn.addEventListener('click', function() {
-          mobileMenu.classList.remove('open');
-          hamburgerBtn.classList.remove('open');
-        });
-      }
-
-      // Close mobile menu when clicking on a link
-      const mobileLinks = mobileMenu.querySelectorAll('a');
-      mobileLinks.forEach(link => {
-        link.addEventListener('click', function() {
-          mobileMenu.classList.remove('open');
-          hamburgerBtn.classList.remove('open');
-        });
-      });
-    }
-  })();
-</script>

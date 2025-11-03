@@ -45,6 +45,27 @@
       .then(response => response.text())
       .then(data => {
         document.getElementById('navbar-container').innerHTML = data;
+        // Initialize navbar functionality after navbar is loaded
+        if (typeof initNavbar === 'function') {
+          initNavbar();
+        } else {
+          // Load navbar-universal.js if not already loaded
+          const script = document.createElement('script');
+          script.src = 'navbar-universal.js';
+          script.onload = function() {
+            console.log('navbar-universal.js loaded successfully');
+            if (typeof initNavbar === 'function') {
+              initNavbar();
+            }
+          };
+          script.onerror = function() {
+            console.error('Failed to load navbar-universal.js');
+          };
+          document.head.appendChild(script);
+        }
+      })
+      .catch(error => {
+        console.error('Failed to load navbar.html:', error);
       });
   </script>
 
@@ -108,7 +129,6 @@
 
 
   <script src="maintenance.js"></script>
-  <script src="navbar-universal.js"></script>
   <script src="global-animations.js"></script>
   <script src="global-chat.js"></script>
   <script src="script.js" defer></script>
