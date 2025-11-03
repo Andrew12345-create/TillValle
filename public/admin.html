@@ -162,7 +162,20 @@
         <a href="admin.html" class="nav-link" id="admin-btn" style="display:none;">Admin</a>
         <a href="#" class="nav-link" id="logout-btn" style="display:none;" onclick="logout()">Logout</a>
       </div>
+      <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
     </nav>
+    <div class="mobile-menu" id="mobile-menu">
+      <button class="mobile-close-btn" id="mobile-close-btn" aria-label="Close menu">&times;</button>
+      <a href="shop.html" class="mobile-nav-link">Shop</a>
+      <a href="about.html" class="mobile-nav-link">About</a>
+      <a href="contact.html" class="mobile-nav-link">Contact</a>
+      <a href="cart.html" class="mobile-nav-link">🛒 Cart (<span id="mobile-cart-count">0</span>)</a>
+      <div id="mobile-user-area"></div>
+    </div>
     <hr />
 
     <h1>Manage Product Stock</h1>
@@ -446,6 +459,39 @@
     })();
   </script>
 
+  <script>
+    // Hamburger menu functionality for admin.html
+    (function() {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileCloseBtn = document.getElementById('mobile-close-btn');
+      const mobileUserArea = document.getElementById('mobile-user-area');
+
+      if (hamburgerBtn && mobileMenu) {
+        hamburgerBtn.addEventListener('click', function() {
+          mobileMenu.classList.toggle('open');
+          hamburgerBtn.classList.toggle('open');
+        });
+
+        // Close mobile menu when clicking the close button
+        if (mobileCloseBtn) {
+          mobileCloseBtn.addEventListener('click', function() {
+            mobileMenu.classList.remove('open');
+            hamburgerBtn.classList.remove('open');
+          });
+        }
+
+        // Close mobile menu when clicking on a link
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            mobileMenu.classList.remove('open');
+            hamburgerBtn.classList.remove('open');
+          });
+        });
+      }
+    })();
+  </script>
   <script src="maintenance.js"></script>
   <script src="navbar-auth.js"></script>
   <script src="script.js" defer></script>

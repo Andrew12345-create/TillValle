@@ -579,8 +579,78 @@ window.toggleStock = async function(productId, currentQuantity) {
   }
 };
 
+// Maintenance mode handling
+async function checkMaintenanceMode() {
+  try {
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const maintenanceUrl = isLocal ? 'http://localhost:3001/maintenance' : '/api/maintenance';
+    const response = await fetch(maintenanceUrl);
+    const data = await response.json();
+    return data.active || false;
+  } catch (error) {
+    console.warn('Failed to check maintenance mode:', error);
+    return false;
+  }
+}
+
+function showMaintenanceOverlay() {
+  // Remove existing overlay if present
+  const existingOverlay = document.getElementById('maintenance-overlay');
+  if (existingOverlay) existingOverlay.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'maintenance-overlay';
+  overlay.innerHTML = `
+    <div class="maintenance-content">
+      <h2>🚧 Site Under Maintenance</h2>
+      <p>We're currently performing maintenance to improve your experience. Please check back soon!</p>
+      <p>For urgent inquiries, contact us at <a href="mailto:support@tillvalle.com">support@tillvalle.com</a></p>
+    </div>
+  `;
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    font-family: Arial, sans-serif;
+    text-align: center;
+  `;
+  overlay.querySelector('.maintenance-content').style.cssText = `
+    background: white;
+    color: #333;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 500px;
+    margin: 1rem;
+  `;
+  overlay.querySelector('h2').style.cssText = `
+    margin-top: 0;
+    color: #f1c40f;
+  `;
+  overlay.querySelector('a').style.cssText = `
+    color: #3498db;
+    text-decoration: none;
+  `;
+  document.body.appendChild(overlay);
+  document.body.style.overflow = 'hidden';
+}
+
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
+  // Check maintenance mode first
+  const isMaintenance = await checkMaintenanceMode();
+  if (isMaintenance) {
+    showMaintenanceOverlay();
+    return; // Stop further initialization if maintenance mode
+  }
+
   // Create modal
   modal = document.createElement('div');
   modal.id = 'product-modal';
@@ -607,11 +677,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     </div>
   `;
   document.body.appendChild(modal);
-  
+
   // Setup modal event listeners
   const closeModalBtn = modal.querySelector('.close-modal');
   closeModalBtn.addEventListener('click', closeProductModal);
-  
+
   renderUserArea();
   renderCart();
   updateCartCount();

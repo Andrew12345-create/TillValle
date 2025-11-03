@@ -707,8 +707,9 @@ async function checkMaintenance(req, res, next) {
         }
       }
 
-      // Not an admin or no email - block access
-      return res.status(503).sendFile(path.join(__dirname, '..', 'public', 'maintenance.html'));
+      // Not an admin - allow access but add maintenance header for frontend to handle
+      res.set('X-Maintenance-Mode', 'true');
+      return next();
     }
 
     // Maintenance not active - proceed normally
