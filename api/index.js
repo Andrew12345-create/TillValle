@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const fetch = require('node-fetch');
 
 // App setup
@@ -17,7 +18,7 @@ const BCRYPT_ROUNDS = 10;
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
+  origin: process.env.NODE_ENV === 'production'
     ? ['https://tillvalle.netlify.app']
     : ["http://127.0.0.1:5500", "http://localhost:5500", "http://localhost:3001", "http://localhost:8888"],
   credentials: true,
@@ -32,11 +33,12 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(cookieParser());
 app.use(session({
   secret: process.env.SESSION_SECRET || "superSecretKey",
   resave: false,
   saveUninitialized: false,
-  cookie: { 
+  cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
     sameSite: 'lax'
@@ -673,8 +675,26 @@ async function checkMaintenance(req, res, next) {
     const isMaintenanceActive = maintenanceResult.rows.length > 0 && maintenanceResult.rows[0].active;
 
     if (isMaintenanceActive) {
-      // Check if user is admin by email (from session or auth header)
-      const userEmail = req.session?.user?.email || req.headers['x-user-email'];
+      // Allow admin.html to be always accessible
+      if (req.path === '/admin.html') {
+        return next();
+      }
+
+      // Check if user is admin by email (from session, JWT token, or auth header)
+      let userEmail = req.session?.user?.email || req.headers['x-user-email'];
+
+      // Check for JWT token in cookies or Authorization header
+      if (!userEmail) {
+        const token = req.cookies?.token || req.headers.authorization?.replace('Bearer ', '');
+        if (token) {
+          try {
+            const decoded = jwt.verify(token, JWT_SECRET);
+            userEmail = decoded.email;
+          } catch (err) {
+            console.log('Invalid JWT token in maintenance check');
+          }
+        }
+      }
 
       if (userEmail) {
         // Check if email is in maintenance_admins table
