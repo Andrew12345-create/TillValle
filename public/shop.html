@@ -169,7 +169,7 @@
   .modal.show .modal-content{transform:translateY(0) scale(1);opacity:1}
 
   .modal-body{width:100%;display:flex;flex-direction:column;gap:6px}
-  .modal-image{width:100%;height:280px;object-fit:cover;border-radius:12px;background:#fff;padding:10px;box-shadow:0 10px 30px rgba(3,8,6,0.06)}
+  .modal-image{width:100%;height:300px;object-fit:cover;border-radius:12px;background:#fff;padding:10px;box-shadow:0 10px 30px rgba(3,8,6,0.06)}
   .modal-info{padding:6px;text-align:left}
   .modal-info h3{margin:0 0 8px;font-size:1.6rem;color:var(--brand-600);font-weight:800}
   .modal-info p{color:var(--muted);margin:0 0 10px;font-size:1rem;line-height:1.45}
@@ -180,8 +180,8 @@
   .quantity-display{min-width:36px;text-align:center;font-weight:800;font-size:1.05rem;padding:8px 6px;border-radius:8px;background:#fff;border:1px solid rgba(0,0,0,0.04)}
 
   .modal-buttons{display:flex;align-items:center;gap:10px;margin-top:14px}
-  .add-to-cart-btn{background:linear-gradient(90deg,var(--brand-600),#1e8c57);color:white;border:none;padding:12px 20px;border-radius:12px;cursor:pointer;font-weight:800;font-size:15px;box-shadow:0 12px 30px rgba(45,106,79,0.14)}
-  .buy-now-btn{background:transparent;color:var(--brand-600);border:2px solid var(--brand-600);padding:10px 18px;border-radius:12px;cursor:pointer;font-weight:800}
+  .add-to-cart-btn{background:linear-gradient(90deg,var(--brand-600),#1e8c57);color:white;border:none;padding:8px 16px;border-radius:12px;cursor:pointer;font-weight:800;font-size:14px;box-shadow:0 12px 30px rgba(45,106,79,0.14)}
+  .buy-now-btn{background:transparent;color:var(--brand-600);border:2px solid var(--brand-600);padding:8px 16px;border-radius:12px;cursor:pointer;font-weight:800}
 
   /* Close button */
   .modal .close{position:absolute;top:12px;right:12px;background:#fff;border:none;color:var(--brand-700);font-size:20px;cursor:pointer;padding:8px;border-radius:50%;box-shadow:0 8px 20px rgba(0,0,0,0.08)}
@@ -322,6 +322,55 @@
     </div>
   </section>
 
+  <!-- Shipping & Payment Info -->
+  <section class="shipping-payment-section">
+    <h2>Shipping & Payment</h2>
+    <div class="shipping-info">
+      <h3>Delivery Zones & Prices</h3>
+      <div class="delivery-zones">
+        <div class="zone">
+          <h4>Nairobi</h4>
+          <p>KES 200 (Same day delivery)</p>
+        </div>
+        <div class="zone">
+          <h4>Kiambu</h4>
+          <p>KES 150 (Next day delivery)</p>
+        </div>
+        <div class="zone">
+          <h4>Other Areas</h4>
+          <p>KES 300 (2-3 days delivery)</p>
+        </div>
+      </div>
+      <p class="free-delivery">Free delivery on orders over KES 2000!</p>
+    </div>
+    <div class="payment-options">
+      <h3>Payment Methods</h3>
+      <div class="payment-methods">
+        <div class="payment-method">
+          <span class="payment-icon">📱</span>
+          <div>
+            <h4>M-Pesa</h4>
+            <p>Pay with your mobile money</p>
+          </div>
+        </div>
+        <div class="payment-method">
+          <span class="payment-icon">💳</span>
+          <div>
+            <h4>Credit/Debit Card</h4>
+            <p>Secure online payments</p>
+          </div>
+        </div>
+        <div class="payment-method">
+          <span class="payment-icon">🏦</span>
+          <div>
+            <h4>Bank Transfer</h4>
+            <p>Direct bank payments</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Product Modal -->
   <div id="product-modal" class="modal">
     <div class="modal-content">
@@ -331,6 +380,7 @@
         <div class="modal-info">
           <h3 id="modal-title"></h3>
           <p id="modal-description"></p>
+          <div id="modal-details" class="modal-details"></div>
           <div id="modal-price" class="modal-price"></div>
           <div class="quantity-selector">
             <label for="quantity">Select Quantity</label>
@@ -597,14 +647,15 @@
           return; // handled
         }
 
-        // open product modal when clicking a product (but ignore clicks inside controls)
+        // redirect to product details page when clicking a product (but ignore clicks inside controls)
         const productCard = e.target.closest('.product');
         if (productCard && !e.target.closest('.product-controls')) {
           const name = productCard.dataset.name || '';
           const desc = productCard.dataset.description || '';
           const img = productCard.dataset.image || productCard.querySelector('.product-image')?.src || '';
           const price = productCard.dataset.price || productCard.querySelector('.price')?.dataset.price || '';
-          openProductModal(name, desc, img, price);
+          const url = `product.html?name=${encodeURIComponent(name)}&price=${encodeURIComponent(price)}&image=${encodeURIComponent(img)}&description=${encodeURIComponent(desc)}`;
+          window.location.href = url;
         }
       });
     })();
