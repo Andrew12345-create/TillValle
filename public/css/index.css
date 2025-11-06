@@ -131,7 +131,7 @@ body.homepage .nav-link:focus {
 
 /* Floating produce icons */
 .home-hero .floating-elements {
-  pointer-events: none;
+  pointer-events: all;
 }
 
 .home-hero .floating-item {

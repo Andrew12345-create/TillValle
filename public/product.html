@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details - TillValle</title>
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="icon" href="logo.jpg" type="image/jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shop-styles.css">
+  <link rel="stylesheet" href="global-chat.css">
+  <style>
+    .product-details-section {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+    }
+    .product-image-container {
+      flex: 1;
+      max-width: 600px;
+    }
+    .product-image {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .product-info {
+      flex: 1;
+      padding: 20px 0;
+    }
+    .product-title {
+      font-size: 2.5rem;
+      color: #16a34a;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+    .product-description {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #555;
+      margin-bottom: 20px;
+    }
+    .product-price {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #16a34a;
+      margin-bottom: 30px;
+    }
+    .quantity-selector {
+      margin-bottom: 30px;
+    }
+    .quantity-selector label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .quantity-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      color: white;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 22px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    .quantity-btn:hover {
+      transform: scale(1.1);
+    }
+    .quantity-input {
+      width: 80px;
+      padding: 10px;
+      text-align: center;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 20px;
+    }
+    .add-to-cart-btn, .buy-now-btn {
+      padding: 15px 30px;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+    }
+    .add-to-cart-btn {
+      background: linear-gradient(135deg, #00b894 0%, #00cec9 50%, #55efc4 100%);
+      color: white;
+    }
+    .add-to-cart-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,184,148,0.4);
+    }
+    .buy-now-btn {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 50%, #ff7675 100%);
+      color: white;
+    }
+    .buy-now-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255,107,107,0.4);
+    }
+    @media (max-width: 768px) {
+      .product-details-section {
+        flex-direction: column;
+        gap: 20px;
+      }
+      .product-title {
+        font-size: 2rem;
+      }
+      .action-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <section class="product-details-section">
+    <div class="product-image-container">
+      <img id="product-image" src="" alt="" class="product-image">
+    </div>
+    <div class="product-info">
+      <button onclick="window.history.back()" style="background: #16a34a; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-bottom: 15px;">← Back to Shop</button>
+      <h1 id="product-title" class="product-title"></h1>
+      <p id="product-description" class="product-description"></p>
+      <div id="product-price" class="product-price"></div>
+      <div class="quantity-selector">
+        <label for="quantity">Quantity</label>
+        <div class="quantity-controls">
+          <button class="quantity-btn" id="decrease-qty">-</button>
+          <input type="number" id="quantity" class="quantity-input" min="1" value="1" readonly>
+          <button class="quantity-btn" id="increase-qty">+</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button id="add-to-cart-btn" class="add-to-cart-btn">🛒 Add to Cart</button>
+        <button id="buy-now-btn" class="buy-now-btn">⚡ Buy Now</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 TillValle. All rights reserved.</p>
+  </footer>
+
+  <!-- Floating Chatbot Button -->
+  <button class="floating-chatbot-btn" id="floating-chatbot-btn" title="Chat with TillieBot">
+    💬
+  </button>
+
+  <!-- Chatbot Sidebar -->
+  <div class="chatbot-sidebar" id="chatbot-sidebar">
+    <div class="chatbot-header">
+      <span>🤖 TillieBot</span>
+      <button class="chatbot-close" id="chatbot-close">&times;</button>
+    </div>
+    <div class="chatbot-messages" id="chatbot-messages">
+      <div class="chatbot-message bot">
+        🌱 Hello! Welcome to TillValle! I'm TillieBot, your smart farming assistant. How can I help you today?
+      </div>
+    </div>
+    <div class="chatbot-input-area">
+      <div class="chatbot-input-container">
+        <input type="text" id="chatbot-input" placeholder="Ask me about products, delivery, or stock..." class="chatbot-input">
+        <button id="chatbot-send" class="chatbot-send">📤</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Load navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('navbar-container').innerHTML = data;
+        // Load navbar-universal.js after navbar is loaded
+        const script = document.createElement('script');
+        script.src = 'navbar-universal.js';
+        script.onload = function() {
+          if (typeof initNavbar === 'function') {
+            initNavbar();
+          }
+        };
+        document.head.appendChild(script);
+      });
+
+    // Parse URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get('name') || '';
+    const price = urlParams.get('price') || '';
+    const image = urlParams.get('image') || '';
+    const description = urlParams.get('description') || '';
+
+    // Populate product details
+    document.getElementById('product-title').textContent = name;
+    document.getElementById('product-description').textContent = description;
+    document.getElementById('product-price').textContent = `KES ${price}`;
+    document.getElementById('product-image').src = image;
+    document.getElementById('product-image').alt = name;
+
+    // Quantity controls
+    const quantityInput = document.getElementById('quantity');
+    const decreaseBtn = document.getElementById('decrease-qty');
+    const increaseBtn = document.getElementById('increase-qty');
+
+    decreaseBtn.addEventListener('click', function() {
+      if (parseInt(quantityInput.value) > 1) {
+        quantityInput.value = parseInt(quantityInput.value) - 1;
+      }
+    });
+
+    increaseBtn.addEventListener('click', function() {
+      quantityInput.value = parseInt(quantityInput.value) + 1;
+    });
+
+    // Add to cart
+    document.getElementById('add-to-cart-btn').addEventListener('click', function() {
+      const quantity = parseInt(quantityInput.value);
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      const existingItem = cart.find(item => item.name === name);
+      if (existingItem) {
+        existingItem.quantity += quantity;
+      } else {
+        cart.push({
+          name: name,
+          price: parseInt(price),
+          quantity: quantity
+        });
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      if (typeof updateCartCount === 'function') {
+        updateCartCount();
+      }
+
+      // Show toast
+      showToast(`${name} added to cart!`);
+
+      // Redirect to cart after a short delay
+      setTimeout(() => {
+        window.location.href = 'cart.html';
+      }, 1500);
+    });
+
+    // Buy now
+    document.getElementById('buy-now-btn').addEventListener('click', function() {
+      const quantity = parseInt(quantityInput.value);
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      const existingItem = cart.find(item => item.name === name);
+      if (existingItem) {
+        existingItem.quantity += quantity;
+      } else {
+        cart.push({
+          name: name,
+          price: parseInt(price),
+          quantity: quantity
+        });
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      if (typeof updateCartCount === 'function') {
+        updateCartCount();
+      }
+
+      // Redirect to cart
+      window.location.href = 'cart.html';
+    });
+
+    // Show toast notification
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 5px;
+        z-index: 10001;
+        font-weight: bold;
+      `;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+
+    // Chatbot functionality (same as shop.html)
+    // ... (include the chatbot script from shop.html if needed, but for brevity, assume it's loaded via global-chat.js)
+  </script>
+
+  <script src="global-chat.js"></script>
+  <script src="navbar-universal.js"></script>
+</body>
+</html>

@@ -23,20 +23,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const name = this.dataset.name;
         const price = this.dataset.price;
         const image = this.dataset.image;
+        const description = this.dataset.description || '';
 
-        currentProduct = { name, price: parseInt(price) };
-
-        const modalTitle = document.getElementById('modal-title');
-        const modalPrice = document.getElementById('modal-price');
-        const modalImage = document.getElementById('modal-image');
-        if (modalTitle) modalTitle.textContent = name;
-        if (modalPrice) modalPrice.textContent = `KES ${price}`;
-        if (modalImage) {
-          modalImage.src = image;
-          modalImage.alt = name;
-        }
-
-        if (modal) modal.style.display = 'block';
+        // Redirect to product details page
+        const url = `product.html?name=${encodeURIComponent(name)}&price=${encodeURIComponent(price)}&image=${encodeURIComponent(image)}&description=${encodeURIComponent(description)}`;
+        window.location.href = url;
       });
     });
   }
