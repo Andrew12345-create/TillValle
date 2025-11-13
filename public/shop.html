@@ -193,9 +193,6 @@
     /* Toast */
     .toast{position:fixed;right:24px;bottom:30px;background:linear-gradient(90deg,var(--brand-600),#56c39f);color:white;padding:12px 18px;border-radius:999px;box-shadow:0 8px 30px rgba(3,8,6,0.12);z-index:9999;font-weight:700}
 
-    /* Floating chatbot */
-    .floating-chatbot-btn{position:fixed;right:22px;bottom:22px;background:var(--brand-600);color:#fff;border-radius:999px;padding:12px 14px;font-size:20px;border:none;box-shadow:0 10px 30px rgba(3,8,6,0.12);cursor:pointer}
-
     /* Loading screen */
     #loading-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#e6f0ff,#e6fff3);z-index:9999}
     .loading-logo{width:74px;height:74px;border-radius:50%;background:url('logo.jpg') center/cover}
@@ -444,11 +441,6 @@
     </div>
   </div>
 
-  <!-- Floating Chatbot Button -->
-  <button class="floating-chatbot-btn" id="floating-chatbot-btn" title="Chat with TillieBot">
-    💬
-  </button>
-
   <!-- Chatbot Sidebar -->
   <div class="chatbot-sidebar" id="chatbot-sidebar">
     <div class="chatbot-header">
@@ -488,91 +480,8 @@
           }
         };
         document.head.appendChild(script);
-      });
+    });
 
-    // Chatbot functionality - defensive bindings
-    const chatBtn = document.getElementById('chat-btn');
-    const chatWindow = document.getElementById('chat-window');
-    const chatClose = document.getElementById('chat-close');
-    if (chatBtn && chatWindow) {
-      chatBtn.addEventListener('click', function(){
-        chatWindow.style.display = 'flex';
-        chatBtn.style.display = 'none';
-      });
-    }
-    if (chatClose && chatWindow && chatBtn) {
-      chatClose.addEventListener('click', function(){
-        chatWindow.style.display = 'none';
-        chatBtn.style.display = 'flex';
-      });
-    }
-    
-    function sendMessage() {
-      const input = document.getElementById('chat-input');
-      const messages = document.getElementById('chat-messages');
-      const message = input.value.trim().toLowerCase();
-      
-      if (!message) return;
-      
-  // Append user message safely using textContent to avoid HTML injection
-  const userMsgDiv = document.createElement('div');
-  userMsgDiv.className = 'user-msg';
-  userMsgDiv.textContent = input.value;
-  messages.appendChild(userMsgDiv);
-  input.value = '';
-      
-  // Show typing indicator
-  const typing = document.createElement('div');
-  typing.className = 'typing-indicator show';
-  typing.textContent = '🤖 TillieBot is typing...';
-      messages.appendChild(typing);
-      messages.scrollTop = messages.scrollHeight;
-      
-      setTimeout(() => {
-        typing.remove();
-        let response = getSmartResponse(message);
-  // Append bot response. Responses originate from site logic, so innerHTML is intentional
-  const botMsgDiv = document.createElement('div');
-  botMsgDiv.className = 'bot-msg';
-  botMsgDiv.innerHTML = response;
-  messages.appendChild(botMsgDiv);
-  messages.scrollTop = messages.scrollHeight;
-      }, 1500);
-    }
-    
-    function getSmartResponse(message) {
-      if (message.includes('milk') || message.includes('dairy')) {
-        return '🥛 <strong>Fresh Milk</strong> - KES 120/liter<br>Our milk comes from free-range cows in Gilgil. Rich in calcium and delivered fresh daily! Would you like to add some to your cart?';
-      }
-      if (message.includes('egg') || message.includes('chicken')) {
-        return '🥚 <strong>Farm Fresh Eggs</strong> - KES 25/piece<br>🐔 <strong>Free-Range Chicken</strong> - KES 800/kg<br>Both from happy, healthy chickens! Perfect for protein-rich meals.';
-      }
-      if (message.includes('fruit') || message.includes('mango') || message.includes('banana')) {
-        return '🍌 <strong>Fresh Fruits Available:</strong><br>• Bananas - KES 150/bunch<br>• Mangoes - KES 40/piece<br>• Avocados - KES 30/piece<br>All picked fresh from our partner farms!';
-      }
-      if (message.includes('vegetable') || message.includes('kale') || message.includes('spinach')) {
-        return '🥬 <strong>Fresh Vegetables:</strong><br>• Kales (Sukuma Wiki) - KES 30/bunch<br>• Spinach - KES 30/bunch<br>• Lettuce - KES 80/head<br>Packed with nutrients and harvested daily!';
-      }
-      if (message.includes('deliver') || message.includes('shipping')) {
-        return '🚚 <strong>Delivery Info:</strong><br>• Nairobi: KES 200 (Same day)<br>• Kiambu: KES 150<br>• Free delivery on orders over KES 2000!';
-      }
-      if (message.includes('price') || message.includes('cost')) {
-        return '💰 <strong>Our Pricing:</strong><br>We offer competitive farm-to-table prices! Check our current rates above. Bulk discounts available!';
-      }
-      if (message.includes('order') || message.includes('cart')) {
-        return '🛒 <strong>Order Help:</strong><br>Click any product above to view details and add to cart. Need help with checkout?';
-      }
-      if (message.includes('contact') || message.includes('support')) {
-        return '📞 <strong>Contact:</strong> support@tillvalle.com<br>📱 <strong>WhatsApp:</strong> +254 700 123 456';
-      }
-      return '🤔 I can help with product info, pricing, delivery, and orders. What would you like to know?';
-    }
-    
-    const chatSendBtn = document.getElementById('chat-send');
-    const chatInput = document.getElementById('chat-input');
-    if (chatSendBtn) chatSendBtn.addEventListener('click', sendMessage);
-    if (chatInput) chatInput.addEventListener('keypress', function(e){ if (e.key === 'Enter') sendMessage(); });
-    
     // Product modal functionality
     let modalCurrentProduct = {};
 
