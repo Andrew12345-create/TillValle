@@ -10,11 +10,15 @@
     <a href="contact.html" class="nav-link">Contact</a>
   </div>
   <div class="nav-right">
-    <form id="global-search-form" action="javascript:void(0);" style="display:inline-flex;align-items:center;margin-right:12px;">
-      <input id="search-bar" name="q" type="search" placeholder="Search products..." aria-label="Search products" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(0,0,0,0.06);min-width:160px;">
-      <button id="search-btn" type="submit" style="margin-left:6px;padding:6px 10px;border-radius:6px;border:none;background:linear-gradient(90deg,#2d6a4f,#40916c);color:white;font-weight:600;cursor:pointer;">Search</button>
-    </form>
-    <a href="#" id="wishlist-link" class="nav-link" title="Wishlist">♡ Wishlist (<span id="wishlist-count">0</span>)</a>
+    <div id="delivery-location" style="display:inline-flex;align-items:center;margin-right:12px;background:linear-gradient(145deg,rgba(255,255,255,0.9),rgba(255,255,255,0.7));backdrop-filter:blur(10px);border-radius:20px;padding:8px 15px;border:1px solid rgba(45,106,79,0.2);">
+      <span style="margin-right:8px;font-size:16px;">📍</span>
+      <span id="current-location" style="color:#2d6a4f;font-weight:600;cursor:pointer;" onclick="openLocationSelector()">Select Location</span>
+    </div>
+
+    <div id="compare-widget" style="display:none;margin-right:12px;background:linear-gradient(145deg,rgba(255,255,255,0.9),rgba(255,255,255,0.7));backdrop-filter:blur(10px);border-radius:20px;padding:8px 15px;border:1px solid rgba(45,106,79,0.2);cursor:pointer;" onclick="openCompareModal()">
+      <span style="margin-right:8px;font-size:16px;">⚖️</span>
+      <span style="color:#2d6a4f;font-weight:600;">Compare (<span id="compare-count">0</span>)</span>
+    </div>
     <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
     <span id="user-area"></span>
   </div>
@@ -24,6 +28,40 @@
     <span class="hamburger-line"></span>
   </button>
 </nav>
+
+<!-- Location Selector Modal -->
+<div id="location-selector-modal" style="display:none;position:fixed;z-index:10000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);">
+  <div style="background:linear-gradient(145deg,rgba(255,255,255,0.95),rgba(255,255,255,0.9));backdrop-filter:blur(20px);margin:5% auto;padding:30px;border-radius:25px;width:90%;max-width:500px;box-shadow:0 25px 50px rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.3);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <h2 style="color:#2d6a4f;margin:0;">📍 Select Delivery Location</h2>
+      <button onclick="closeLocationSelector()" style="background:none;border:none;font-size:24px;cursor:pointer;color:#ff6b6b;">&times;</button>
+    </div>
+    <div style="margin-bottom:20px;">
+      <div style="margin-bottom:15px;">
+        <h3 style="color:#2d6a4f;margin-bottom:10px;font-size:1.1rem;">Popular Locations</h3>
+        <div style="display:grid;gap:8px;">
+          <button onclick="selectLocation('Nairobi CBD')" style="background:rgba(45,106,79,0.1);border:1px solid #2d6a4f;color:#2d6a4f;padding:10px 15px;border-radius:12px;cursor:pointer;text-align:left;font-weight:600;">🏙️ Nairobi CBD</button>
+          <button onclick="selectLocation('Westlands')" style="background:rgba(45,106,79,0.1);border:1px solid #2d6a4f;color:#2d6a4f;padding:10px 15px;border-radius:12px;cursor:pointer;text-align:left;font-weight:600;">🏢 Westlands</button>
+          <button onclick="selectLocation('Karen')" style="background:rgba(45,106,79,0.1);border:1px solid #2d6a4f;color:#2d6a4f;padding:10px 15px;border-radius:12px;cursor:pointer;text-align:left;font-weight:600;">🏡 Karen</button>
+          <button onclick="selectLocation('Kiambu')" style="background:rgba(45,106,79,0.1);border:1px solid #2d6a4f;color:#2d6a4f;padding:10px 15px;border-radius:12px;cursor:pointer;text-align:left;font-weight:600;">🌆 Kiambu</button>
+          <button onclick="selectLocation('Thika')" style="background:rgba(45,106,79,0.1);border:1px solid #2d6a4f;color:#2d6a4f;padding:10px 15px;border-radius:12px;cursor:pointer;text-align:left;font-weight:600;">🏭 Thika</button>
+        </div>
+      </div>
+      <div style="border-top:1px solid rgba(45,106,79,0.2);padding-top:15px;">
+        <h3 style="color:#2d6a4f;margin-bottom:10px;font-size:1.1rem;">Custom Location</h3>
+        <input type="text" id="location-input" placeholder="Enter your delivery address..." style="width:100%;padding:15px;border:2px solid #2d6a4f;border-radius:15px;font-size:16px;margin-bottom:15px;">
+        <button onclick="useCurrentLocation()" style="background:linear-gradient(135deg,#2d6a4f,#40916c);color:white;border:none;padding:12px 20px;border-radius:20px;cursor:pointer;margin-right:10px;font-weight:600;">📍 Use Current Location</button>
+        <button onclick="saveDeliveryLocation()" style="background:linear-gradient(135deg,#16a34a,#22c55e);color:white;border:none;padding:12px 20px;border-radius:20px;cursor:pointer;font-weight:600;">Save Location</button>
+      </div>
+    </div>
+    <div style="font-size:14px;color:#666;">
+      <p><strong>Delivery Zones:</strong></p>
+      <p>🏙️ Nairobi - KES 200 (Same day)</p>
+      <p>🌆 Kiambu - KES 150 (Next day)</p>
+      <p>🌍 Other Areas - KES 300 (2-3 days)</p>
+    </div>
+  </div>
+</div>
 
 <!-- Cookie Consent Banner -->
 <div id="cookie-consent-banner" class="cookie-consent-banner hidden">
@@ -45,21 +83,141 @@
   <a href="contact.html" class="mobile-nav-link">Contact</a>
   <a href="cart.html" class="mobile-nav-link">🛒 Cart (<span id="mobile-cart-count">0</span>)</a>
   <div id="mobile-user-area"></div>
-</div>
-
-<!-- Wishlist modal (injected here so it's available site-wide) -->
-<div id="wishlist-modal" class="wishlist-modal hidden" aria-hidden="true" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:2000;">
-  <div style="background:#fff;max-width:720px;width:94%;border-radius:12px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-      <h3 style="margin:0;font-size:1.25rem;color:#072018">Your Wishlist</h3>
-      <button id="wishlist-close" aria-label="Close wishlist" style="background:transparent;border:none;font-size:22px;cursor:pointer">&times;</button>
-    </div>
-    <div id="wishlist-contents" style="min-height:80px;max-height:60vh;overflow:auto;display:grid;grid-template-columns:1fr;gap:10px"></div>
-    <div style="display:flex;justify-content:flex-end;margin-top:12px;gap:8px">
-      <button id="wishlist-clear" style="background:#ef4444;color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer">Clear</button>
-      <button id="wishlist-checkout" style="background:linear-gradient(90deg,#2d6a4f,#40916c);color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer">Go to Cart</button>
+  <div style="padding:10px;border-top:1px solid rgba(45,106,79,0.2);">
+    <div onclick="openLocationSelector()" style="display:flex;align-items:center;gap:8px;padding:8px;background:rgba(45,106,79,0.1);border-radius:15px;cursor:pointer;">
+      <span>📍</span>
+      <span id="mobile-current-location" style="color:#2d6a4f;font-weight:600;">Select Location</span>
     </div>
   </div>
 </div>
+
+<script>
+// Delivery Location Functions
+function openLocationSelector() {
+  document.getElementById('location-selector-modal').style.display = 'block';
+  const savedLocation = localStorage.getItem('deliveryLocation');
+  if (savedLocation) {
+    document.getElementById('location-input').value = savedLocation;
+  }
+}
+
+function closeLocationSelector() {
+  document.getElementById('location-selector-modal').style.display = 'none';
+}
+
+function useCurrentLocation() {
+  const input = document.getElementById('location-input');
+  if (!input) return;
+  
+  if (!navigator.geolocation) {
+    input.value = 'Nairobi, Kenya';
+    showToast('Geolocation not supported. Using default location.');
+    return;
+  }
+  
+  const options = {
+    enableHighAccuracy: true,
+    timeout: 10000,
+    maximumAge: 300000
+  };
+  
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      const lat = position.coords.latitude.toFixed(6);
+      const lng = position.coords.longitude.toFixed(6);
+      
+      fetch(`https://ipapi.co/json/`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.city && data.country) {
+            input.value = `${data.city}, ${data.region}, ${data.country}`;
+          } else {
+            input.value = `${lat}, ${lng}`;
+          }
+        })
+        .catch(() => {
+          input.value = `${lat}, ${lng}`;
+        });
+      
+      showToast('Location detected successfully!');
+    },
+    function(error) {
+      let defaultLocation = 'Nairobi, Kenya';
+      input.value = defaultLocation;
+      showToast('Using default location: Nairobi, Kenya');
+    },
+    options
+  );
+}
+
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;bottom:30px;right:30px;background:linear-gradient(135deg,#16a34a,#22c55e);color:white;padding:15px 25px;border-radius:25px;z-index:999999;font-weight:600;';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => document.body.removeChild(toast), 3000);
+}
+
+function selectLocation(location) {
+  localStorage.setItem('deliveryLocation', location);
+  const currentLocationEl = document.getElementById('current-location');
+  const mobileLocationEl = document.getElementById('mobile-current-location');
+  const displayText = location.length > 20 ? location.substring(0, 20) + '...' : location;
+  
+  if (currentLocationEl) currentLocationEl.textContent = displayText;
+  if (mobileLocationEl) mobileLocationEl.textContent = displayText;
+  
+  closeLocationSelector();
+  
+  // Show success message
+  const toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;bottom:30px;right:30px;background:linear-gradient(135deg,#16a34a,#22c55e);color:white;padding:15px 25px;border-radius:25px;z-index:999999;font-weight:600;';
+  toast.textContent = `Location set to ${location}!`;
+  document.body.appendChild(toast);
+  setTimeout(() => document.body.removeChild(toast), 3000);
+}
+
+function saveDeliveryLocation() {
+  const location = document.getElementById('location-input').value.trim();
+  if (!location) {
+    alert('Please enter a delivery location');
+    return;
+  }
+  
+  localStorage.setItem('deliveryLocation', location);
+  const currentLocationEl = document.getElementById('current-location');
+  const mobileLocationEl = document.getElementById('mobile-current-location');
+  const displayText = location.length > 20 ? location.substring(0, 20) + '...' : location;
+  
+  if (currentLocationEl) currentLocationEl.textContent = displayText;
+  if (mobileLocationEl) mobileLocationEl.textContent = displayText;
+  
+  closeLocationSelector();
+  
+  // Show success message
+  const toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;bottom:30px;right:30px;background:linear-gradient(135deg,#16a34a,#22c55e);color:white;padding:15px 25px;border-radius:25px;z-index:999999;font-weight:600;';
+  toast.textContent = 'Delivery location saved!';
+  document.body.appendChild(toast);
+  setTimeout(() => document.body.removeChild(toast), 3000);
+}
+
+// Load saved location on page load
+document.addEventListener('DOMContentLoaded', function() {
+  const savedLocation = localStorage.getItem('deliveryLocation');
+  if (savedLocation) {
+    document.getElementById('current-location').textContent = savedLocation.length > 20 ? savedLocation.substring(0, 20) + '...' : savedLocation;
+  }
+});
+
+// Close modal when clicking outside
+window.addEventListener('click', function(event) {
+  const modal = document.getElementById('location-selector-modal');
+  if (event.target === modal) {
+    closeLocationSelector();
+  }
+});
+</script>
+
 
 

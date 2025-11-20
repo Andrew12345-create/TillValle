@@ -79,6 +79,157 @@
           a.appendChild(r);
       })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
   </script>
+  <script data-id="cmi7m0fwy0009kz04yac3babp" src="https://tinychat.ai/tinychat.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
+
+    .profile-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .profile-container h1 {
+      margin-bottom: 30px;
+    }
+
+    .back-link {
+      color: #2d6a4f;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .back-link:hover {
+      color: #40916c;
+      transform: translateX(-5px);
+    }
+
+    .faq-section {
+      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 25px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    
+    .faq-section h2 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      margin-bottom: 40px;
+      font-weight: 800;
+    }
+    
+    .faq-content h3 {
+      color: #2d6a4f;
+      font-size: 1.5rem;
+      margin: 30px 0 20px 0;
+      font-weight: 700;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .faq-content h3::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+      border-radius: 2px;
+    }
+    
+    .faq-item {
+      background: linear-gradient(145deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.2) 100%);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .faq-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      border-color: rgba(45, 106, 79, 0.3);
+    }
+    
+    .question {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #2d6a4f;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .question::before {
+      content: '❓';
+      font-size: 1.2rem;
+    }
+    
+    .answer {
+      color: #666;
+      line-height: 1.7;
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255,255,255,0.3);
+      margin-top: 50px;
+    }
+
+    footer p {
+      color: #666;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .faq-section {
+        padding: 30px 20px;
+      }
+      
+      .faq-section h2 {
+        font-size: 2rem;
+      }
+      
+      .faq-item {
+        padding: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -100,7 +251,7 @@
   </header>
 
   <main class="profile-container">
-    <h1><a href="account.html" class="back-link">← Back to Account</a></h1>
+    <h1><a href="profile.html" class="back-link">← Back to Profile</a></h1>
     
     <section class="faq-section">
       <h2>Frequently Asked Questions</h2>
@@ -275,9 +426,7 @@
       }
     });
   </script>
-<script>
-(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="qec3elonJWqywDRATwocl";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
-</script>
+
 
 </body>
 </html>

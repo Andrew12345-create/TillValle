@@ -21,6 +21,184 @@
           a.appendChild(r);
       })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
   </script>
+  <script data-id="cmi7m0fwy0009kz04yac3babp" src="https://tinychat.ai/tinychat.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
+
+    .profile-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .profile-header {
+      text-align: center;
+      margin-bottom: 40px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 25px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .profile-header h1 {
+      margin-bottom: 20px;
+    }
+
+    .back-link {
+      color: #2d6a4f;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .back-link:hover {
+      color: #40916c;
+      transform: translateX(-5px);
+    }
+
+    .profile-header h2 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 15px;
+      font-weight: 800;
+    }
+
+    .profile-header p {
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    .language-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+    }
+
+    .language-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 25px;
+      padding: 30px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid rgba(255,255,255,0.3);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .language-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(45, 106, 79, 0.1), transparent);
+      transition: left 0.7s ease;
+    }
+
+    .language-card:hover::before {
+      left: 100%;
+    }
+
+    .language-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+      border-color: rgba(45, 106, 79, 0.4);
+    }
+
+    .language-flag {
+      font-size: 3rem;
+      transition: transform 0.3s ease;
+    }
+
+    .language-card:hover .language-flag {
+      transform: scale(1.2) rotate(10deg);
+    }
+
+    .language-info {
+      flex: 1;
+    }
+
+    .language-info h3 {
+      color: #2d6a4f;
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .language-info p {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .language-status {
+      font-size: 1.5rem;
+      color: #2d6a4f;
+      font-weight: bold;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255,255,255,0.3);
+      margin-top: 50px;
+    }
+
+    footer p {
+      color: #666;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .language-options {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .profile-header {
+        padding: 30px 20px;
+      }
+      
+      .profile-header h2 {
+        font-size: 2rem;
+      }
+      
+      .language-card {
+        padding: 25px;
+      }
+    }
+  </style>
 </head>
 <body>
   <div id="navbar-container"></div>
@@ -245,9 +423,7 @@
       }
     });
   </script>
-<script>
-(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="qec3elonJWqywDRATwocl";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
-</script>
+
 
 </body>
 </html>

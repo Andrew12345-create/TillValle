@@ -3,17 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TillValle - Payment</title>
+  <title>Payment - TilleValle</title>
   <link rel="stylesheet" href="css/navbar.css">
   <link rel="icon" href="logo.jpg" type="image/jpeg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="shop-styles.css">
+  <link rel="stylesheet" href="css/site.css">
   <link rel="stylesheet" href="global-chat.css">
-
-  <!-- Hotjar Tracking Code for Tillvalle -->
+  
+  <!-- Hotjar Tracking Code -->
   <script>
       (function(h,o,t,j,a,r){
           h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
@@ -24,127 +20,7 @@
           a.appendChild(r);
       })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
   </script>
-  <style>
-    :root {
-      --primary: #2d6a4f;
-      --primary-dark: #1b4332;
-      --primary-light: #40916c;
-      --accent: #ff6b6b;
-      --accent-light: #ff9999;
-      --text-primary: #0f172a;
-      --text-secondary: #64748b;
-      --text-light: #94a3b8;
-      --bg-primary: #ffffff;
-      --bg-secondary: #f8fafc;
-      --bg-tertiary: #f1f5f9;
-      --glass: rgba(255, 255, 255, 0.25);
-      --glass-border: rgba(255, 255, 255, 0.18);
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-      --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      --gradient-accent: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-      --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --radius-sm: 0.375rem;
-      --radius-md: 0.5rem;
-      --radius-lg: 0.75rem;
-      --radius-xl: 1rem;
-      --radius-2xl: 1.5rem;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      line-height: 1.6;
-      color: var(--text-primary);
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      overflow-x: hidden;
-    }
-
-    /* Loading Screen */
-    #loading-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--gradient-hero);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      transition: opacity 0.5s ease;
-    }
-
-    .loading-content {
-      text-align: center;
-      color: white;
-    }
-
-    .loading-logo {
-      width: 80px;
-      height: 80px;
-      background: url('logo.jpg') center/cover;
-      border-radius: 50%;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
-
-    .loading-text {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top: 4px solid white;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* Button style */
-    .btn {
-      display: inline-block;
-      padding: 12px 24px;
-      background: var(--accent);
-      color: white;
-      text-decoration: none;
-      border-radius: var(--radius-md);
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-
-    .btn:hover {
-      background: var(--accent-light);
-      transform: translateY(-2px);
-    }
-  </style>
-
+  
   <script>
     // Load navbar
     fetch('navbar.html')
@@ -153,382 +29,606 @@
         document.getElementById('navbar-container').innerHTML = data;
       });
   </script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .payment-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .payment-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 25px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      transition: all 0.3s ease;
+    }
+
+    .payment-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    }
+
+    .card-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .card-header h2 {
+      font-size: 2rem;
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .card-header p {
+      color: #666;
+      font-size: 1rem;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(45, 106, 79, 0.1);
+    }
+
+    .order-item:last-child {
+      border-bottom: none;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #2d6a4f;
+    }
+
+    .item-details {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .item-image {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      object-fit: cover;
+      background: #f0f0f0;
+    }
+
+    .item-info h4 {
+      font-size: 1rem;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .item-info p {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .item-price {
+      font-weight: 600;
+      color: #2d6a4f;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid rgba(45, 106, 79, 0.2);
+      border-radius: 15px;
+      font-size: 16px;
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #2d6a4f;
+      box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1);
+    }
+
+    .payment-methods {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .payment-method {
+      padding: 20px;
+      border: 2px solid rgba(45, 106, 79, 0.2);
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      background: rgba(255,255,255,0.5);
+    }
+
+    .payment-method.active {
+      border-color: #2d6a4f;
+      background: rgba(45, 106, 79, 0.1);
+    }
+
+    .payment-method:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .payment-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .payment-method h4 {
+      font-size: 1rem;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .payment-method p {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .payment-fields {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .payment-fields.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 15px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+      color: white;
+      border: none;
+      border-radius: 15px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .submit-btn:hover::before {
+      left: 100%;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(45, 106, 79, 0.4);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .location-display {
+      background: rgba(45, 106, 79, 0.1);
+      padding: 15px;
+      border-radius: 15px;
+      border: 2px solid rgba(45, 106, 79, 0.2);
+      margin-bottom: 25px;
+    }
+
+    .location-display h4 {
+      color: #2d6a4f;
+      margin-bottom: 5px;
+    }
+
+    .location-display p {
+      color: #666;
+      font-size: 1rem;
+    }
+
+    .security-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px;
+      background: rgba(34, 197, 94, 0.1);
+      border-radius: 15px;
+      margin-top: 20px;
+    }
+
+    .security-badge span {
+      color: #16a34a;
+      font-weight: 600;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 50px;
+      box-shadow: 0 8px 25px rgba(45, 106, 79, 0.3);
+      z-index: 9999;
+      font-weight: 600;
+      transform: translateY(100px);
+      transition: all 0.3s ease;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+    }
+
+    .toast.error {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    }
+
+    @media (max-width: 768px) {
+      .payment-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin: 20px auto;
+        padding: 15px;
+      }
+      
+      .payment-methods {
+        grid-template-columns: 1fr;
+      }
+      
+      .card-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div id="navbar-container"></div>
+  <header>
+    <div id="navbar-container"></div>
+  </header>
 
-  <!-- Order Summary Section -->
-  <section id="order-summary">
-    <h3>Order Summary</h3>
-    <ul id="order-items"></ul>
-  <p id="order-total" class="fw-bold"></p>
-  </section>
-
-  <!-- Payment Section -->
-  <section id="payment-section">
-    <h2>Payment Details</h2>
-    <form id="payment-form">
-      <div class="form-group">
-        <label for="payment-method">Payment Method</label>
-        <select id="payment-method" required>
-          <option value="mpesa">M-Pesa</option>
-          <option value="card">Credit/Debit Card</option>
-        </select>
+  <div class="payment-container">
+    <!-- Order Summary -->
+    <div class="payment-card">
+      <div class="card-header">
+        <h2>📋 Order Summary</h2>
+        <p>Review your items before payment</p>
       </div>
-      <!-- Removed location input field as location is set on location.html -->
-      <div class="form-group">
-        <label>Your Selected Location</label>
-  <p id="display-location" class="fw-bold p-8 bg-light rounded-sm"></p>
-      </div>
-      <div id="mpesa-fields" class="payment-fields">
-        <div class="form-group">
-          <label for="phone-number">M-Pesa Phone Number</label>
-          <input type="tel" id="phone-number" name="phone-number" placeholder="07XXXXXXXX" required>
-        </div>
-      </div>
-  <div id="card-fields" class="payment-fields d-none">
-        <div class="form-group">
-          <label for="card-number">Card Number</label>
-          <input type="text" id="card-number" name="card-number" placeholder="1234 5678 9012 3456" required>
-        </div>
-        <div class="form-group">
-          <label for="expiry-date">Expiry Date</label>
-          <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YY" required autocomplete="cc-exp">
-        </div>
-        <div class="form-group">
-          <label for="cvv">CVV</label>
-          <input type="text" id="cvv" name="cvv" placeholder="123" required autocomplete="cc-csc">
-        </div>
-        <div class="form-group">
-          <label for="card-name">Cardholder Name</label>
-          <input type="text" id="card-name" name="card-name" placeholder="John Doe" required autocomplete="cc-name">
-        </div>
-      </div>
-      <button type="submit" class="btn">Complete Payment</button>
-    </form>
-  </section>
-
-  <!-- Toast Notification -->
-  <div id="cart-toast"></div>
-
-  <!-- Chatbot Sidebar -->
-  <div id="chatbot-sidebar" class="chatbot-sidebar">
-    <div class="chatbot-header">
-      <span>TillieBot</span>
-      <button id="chatbot-close" class="chatbot-close">&times;</button>
-    </div>
-    <div id="chatbot-messages" class="chatbot-messages">
-      <div class="chatbot-message bot">
-        Hello! I'm TillieBot, your TillValle assistant. How can I help you today? You can ask me about our fresh products, delivery, or anything else!
+      
+      <div id="order-items"></div>
+      
+      <div class="location-display">
+        <h4>📍 Delivery Location</h4>
+        <p id="display-location">Loading...</p>
       </div>
     </div>
-    <div class="chatbot-input-area">
-      <div class="chatbot-input-container">
-        <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Type your message...">
-        <button id="chatbot-send" class="chatbot-send">➤</button>
+
+    <!-- Payment Form -->
+    <div class="payment-card">
+      <div class="card-header">
+        <h2>💳 Payment Details</h2>
+        <p>Choose your preferred payment method</p>
       </div>
+
+      <form id="payment-form">
+        <div class="payment-methods">
+          <div class="payment-method active" data-method="mpesa">
+            <span class="payment-icon">📱</span>
+            <h4>M-Pesa</h4>
+            <p>Mobile money payment</p>
+          </div>
+          <div class="payment-method" data-method="card">
+            <span class="payment-icon">💳</span>
+            <h4>Card Payment</h4>
+            <p>Credit/Debit card</p>
+          </div>
+        </div>
+
+        <!-- M-Pesa Fields -->
+        <div id="mpesa-fields" class="payment-fields active">
+          <div class="form-group">
+            <label for="phone-number">📱 M-Pesa Phone Number</label>
+            <input type="tel" id="phone-number" class="form-input" placeholder="0712345678" required>
+          </div>
+        </div>
+
+        <!-- Card Fields -->
+        <div id="card-fields" class="payment-fields">
+          <div class="form-group">
+            <label for="card-number">💳 Card Number</label>
+            <input type="text" id="card-number" class="form-input" placeholder="1234 5678 9012 3456" maxlength="19">
+          </div>
+          <div class="card-row">
+            <div class="form-group">
+              <label for="expiry-date">📅 Expiry Date</label>
+              <input type="text" id="expiry-date" class="form-input" placeholder="MM/YY" maxlength="5">
+            </div>
+            <div class="form-group">
+              <label for="cvv">🔒 CVV</label>
+              <input type="text" id="cvv" class="form-input" placeholder="123" maxlength="4">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="card-name">👤 Cardholder Name</label>
+            <input type="text" id="card-name" class="form-input" placeholder="John Doe">
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">
+          <span id="btn-text">Complete Payment</span>
+        </button>
+
+        <div class="security-badge">
+          <span>🔒</span>
+          <span>Your payment is secured with 256-bit SSL encryption</span>
+        </div>
+      </form>
     </div>
   </div>
 
-  <!-- Floating Chatbot Button -->
-  <div id="floating-chatbot-btn" class="floating-chatbot-btn">
-    <span class="chatbot-emoji">💬</span>
-  </div>
-
-  <!-- Floating Cart Button -->
-  <div id="floating-cart-btn" class="floating-cart-btn">
-    <span class="cart-emoji">🛒</span>
-    <span id="floating-cart-count" class="floating-cart-count">0</span>
-  </div>
-
-  <div class="particles" id="particles"></div>
-
-  <footer>
-    <p>&copy; 2025 TilleValle. All rights reserved.</p>
-  </footer>
+  <div id="toast" class="toast"></div>
 
   <script src="script.js" defer></script>
   <script>
-    // Chatbot functions
-    document.addEventListener('DOMContentLoaded', function() {
-      const floatingChatbotBtn = document.getElementById('floating-chatbot-btn');
-      const chatbotSidebar = document.getElementById('chatbot-sidebar');
-      const chatbotClose = document.getElementById('chatbot-close');
-      const chatbotSend = document.getElementById('chatbot-send');
-      const chatbotInput = document.getElementById('chatbot-input');
-      
-      if (floatingChatbotBtn) {
-        floatingChatbotBtn.addEventListener('click', () => {
-          if (chatbotSidebar) chatbotSidebar.classList.add('open');
-          floatingChatbotBtn.style.display = 'none';
-        });
-      }
-      if (chatbotClose) {
-        chatbotClose.addEventListener('click', () => {
-          if (chatbotSidebar) chatbotSidebar.classList.remove('open');
-          if (floatingChatbotBtn) floatingChatbotBtn.style.display = 'flex';
-        });
-      }
-      if (chatbotSend) {
-        chatbotSend.addEventListener('click', sendMessage);
-      }
-      if (chatbotInput) {
-        chatbotInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') sendMessage();
-        });
-      }
-      
-      async function sendMessage() {
-        const message = chatbotInput.value.trim();
-        if (!message) return;
-        
-  const messagesDiv = document.getElementById('chatbot-messages');
-  // Safely append user message
-  const userMessageDiv = document.createElement('div');
-  userMessageDiv.className = 'chatbot-message user';
-  userMessageDiv.textContent = message;
-  messagesDiv.appendChild(userMessageDiv);
-  chatbotInput.value = '';
-  const thinkingDiv = document.createElement('div');
-  thinkingDiv.className = 'chatbot-message bot';
-  thinkingDiv.textContent = 'Thinking...';
-  messagesDiv.appendChild(thinkingDiv);
-  const loadingMessage = messagesDiv.lastElementChild;
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        
-        try {
-          const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-          const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/.netlify/functions/chatbot';
-          const response = await fetch(chatbotUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message })
-          });
-          const data = await response.json();
-          if (loadingMessage) loadingMessage.remove();
-          const botReply = document.createElement('div');
-          botReply.className = 'chatbot-message bot';
-          botReply.textContent = data.message;
-          messagesDiv.appendChild(botReply);
-        } catch (error) {
-          if (loadingMessage) loadingMessage.remove();
-          const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-          const lowerMessage = message.toLowerCase();
-          const offlineResponses = {
-            en: {
-              human: "I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com.",
-              default: "Hello! I'm TillieBot from TillValle! 🌱 I can help you with product information, stock levels, and delivery details. What would you like to know?"
-            },
-            sw: {
-              human: "Nitakuunganisha na wakala wetu Angela Wanjiru kwa angelawanjiru@gmail.com.",
-              default: "Hujambo! Mimi ni TillieBot kutoka TillValle! 🌱 Ninaweza kukusaidia na habari za bidhaa na uongozaji. Unahitaji nini?"
-            },
-            fr: {
-              human: "Je vais vous connecter avec notre agent Angela Wanjiru à angelawanjiru@gmail.com.",
-              default: "Bonjour! Je suis TillieBot de TillValle! 🌱 Je peux vous aider avec les informations produits et la livraison. Que voulez-vous savoir?"
-            }
-          };
-          const responses = offlineResponses[currentLang] || offlineResponses.en;
-          const respDiv = document.createElement('div');
-          respDiv.className = 'chatbot-message bot';
-          respDiv.textContent = (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('live')) ? responses.human : responses.default;
-          messagesDiv.appendChild(respDiv);
-        }
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-      }
-    });
-  </script>
+    let selectedMethod = 'mpesa';
+    let cart = [];
+    let total = 0;
 
-  <script>
-    const paymentMethod = document.getElementById('payment-method');
-    const mpesaFields = document.getElementById('mpesa-fields');
-    const cardFields = document.getElementById('card-fields');
+    // Payment method selection
+    document.querySelectorAll('.payment-method').forEach(method => {
+      method.addEventListener('click', () => {
+        document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+        method.classList.add('active');
+        selectedMethod = method.dataset.method;
+        updatePaymentFields();
+      });
+    });
 
     function updatePaymentFields() {
-      if (paymentMethod.value === 'mpesa') {
-        mpesaFields.style.display = 'block';
-        cardFields.style.display = 'none';
-        document.getElementById('phone-number').required = true;
-        document.getElementById('card-number').required = false;
-        document.getElementById('expiry-date').required = false;
-        document.getElementById('cvv').required = false;
-        document.getElementById('card-name').required = false;
+      const mpesaFields = document.getElementById('mpesa-fields');
+      const cardFields = document.getElementById('card-fields');
+      
+      if (selectedMethod === 'mpesa') {
+        mpesaFields.classList.add('active');
+        cardFields.classList.remove('active');
       } else {
-        mpesaFields.style.display = 'none';
-        cardFields.style.display = 'block';
-        document.getElementById('phone-number').required = false;
-        document.getElementById('card-number').required = true;
-        document.getElementById('expiry-date').required = true;
-        document.getElementById('cvv').required = true;
-        document.getElementById('card-name').required = true;
+        mpesaFields.classList.remove('active');
+        cardFields.classList.add('active');
       }
     }
 
-    paymentMethod.addEventListener('change', updatePaymentFields);
+    // Load order summary
+    function loadOrderSummary() {
+      cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const orderItems = document.getElementById('order-items');
+      const displayLocation = document.getElementById('display-location');
+      
+      orderItems.innerHTML = '';
+      total = 0;
 
-    // Initialize on page load
-    updatePaymentFields();
-
-    // Payment form submission
-    const paymentForm = document.getElementById('payment-form');
-    paymentForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      // Use location from localStorage instead of input field
-      const location = localStorage.getItem('selectedLocation');
-      if (!location) {
-        showCartToast("Location not set. Please select your location.");
-        window.location.href = 'location.html';
+      if (cart.length === 0) {
+        orderItems.innerHTML = '<div class="order-item"><span>Your cart is empty</span></div>';
         return;
       }
 
-      if (paymentMethod.value === 'mpesa') {
-        const phoneNumber = document.getElementById('phone-number').value.trim();
-        if (!phoneNumber) {
-          showCartToast("Please enter your M-Pesa phone number.");
-          return;
-        }
-
-        // Get cart from localStorage
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        if (total === 0) {
-          showCartToast("Your cart is empty.");
-          return;
-        }
-
-        // Convert phone to international format if needed
-        let formattedPhone = phoneNumber;
-        if (formattedPhone.startsWith('0')) {
-          formattedPhone = '254' + formattedPhone.slice(1);
-        }
-
-        // Get user email for account reference
-        const user = JSON.parse(localStorage.getItem('user')) || {};
-        const accountReference = user.email ? `${user.email}_${Date.now()}` : `guest_${Date.now()}`;
-
-        showCartToast("Initiating M-Pesa payment... Please complete the payment on your phone.");
-
-        try {
-          const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-          const mpesaUrl = isLocal ? 'http://localhost:3001/mpesa' : '/.netlify/functions/mpesa-stkpush';
-
-          const response = await fetch(mpesaUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              phone: formattedPhone,
-              amount: total,
-              accountReference: accountReference,
-            }),
-          });
-
-          const data = await response.json();
-
-          if (data.success) {
-            showCartToast("M-Pesa STK Push sent! Please check your phone and complete the payment.");
-            // Clear cart on successful initiation
-            localStorage.removeItem('cart');
-            // Redirect after delay
-            setTimeout(() => {
-              window.location.href = 'index.html';
-            }, 10000); // Longer delay for user to complete payment
-          } else {
-            showCartToast(`Payment initiation failed: ${data.error}`);
-          }
-        } catch (error) {
-          console.error('Mpesa payment error:', error);
-          showCartToast("Payment failed. Please try again.");
-        }
-      } else if (paymentMethod.value === 'card') {
-        // Simulate card payment processing
-        const cardNumber = document.getElementById('card-number').value.trim();
-        const expiryDate = document.getElementById('expiry-date').value.trim();
-        const cvv = document.getElementById('cvv').value.trim();
-        const cardName = document.getElementById('card-name').value.trim();
-
-        // Basic validation for card fields
-        if (!cardNumber || !expiryDate || !cvv || !cardName) {
-          showCartToast("Please fill in all card details.");
-          return;
-        }
-
-        // Here you would integrate with a real payment gateway API
-        // For demonstration, simulate success after a delay
-        showCartToast("Processing card payment...");
-        setTimeout(() => {
-          showCartToast(`Card payment successful! Thank you for your purchase from ${location}.`);
-          setTimeout(() => {
-            window.location.href = 'index.html';
-          }, 3000);
-        }, 2000);
-      }
-    });
-
-    function updateCartCount() {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-      const cartCountElem = document.getElementById('cart-count');
-      if (cartCountElem) {
-        cartCountElem.textContent = totalQuantity;
-      }
-      const logoCartCount = document.getElementById('logo-cart-count');
-      if (logoCartCount) {
-        logoCartCount.textContent = totalQuantity;
-      }
-      const floatingCartCount = document.getElementById('floating-cart-count');
-      if (floatingCartCount) {
-        floatingCartCount.textContent = totalQuantity;
-      }
-      const floatingCartBtn = document.getElementById('floating-cart-btn');
-      if (floatingCartBtn) {
-        floatingCartBtn.style.display = 'flex';
-      }
-    }
-
-    // Display selected location and order summary on page load
-    document.addEventListener('DOMContentLoaded', () => {
-      const displayLocation = document.getElementById('display-location');
-      const location = localStorage.getItem('selectedLocation');
-      if (displayLocation && location) {
-        displayLocation.textContent = location;
-      }
-
-      // Load and display order summary
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const orderItems = document.getElementById('order-items');
-      const orderTotal = document.getElementById('order-total');
-      orderItems.innerHTML = '';
-      let total = 0;
-
       cart.forEach(item => {
-        total += item.price * item.quantity;
-        const li = document.createElement('li');
-        li.textContent = `${item.name} x${item.quantity} - KES ${item.price * item.quantity}`;
-        orderItems.appendChild(li);
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        
+        const orderItem = document.createElement('div');
+        orderItem.className = 'order-item';
+        orderItem.innerHTML = `
+          <div class="item-details">
+            <img src="${item.image || 'placeholder.jpg'}" alt="${item.name}" class="item-image">
+            <div class="item-info">
+              <h4>${item.name}</h4>
+              <p>Qty: ${item.quantity}</p>
+            </div>
+          </div>
+          <div class="item-price">KES ${itemTotal}</div>
+        `;
+        orderItems.appendChild(orderItem);
       });
 
-      orderTotal.textContent = `Total: KES ${total}`;
+      // Add total
+      const totalItem = document.createElement('div');
+      totalItem.className = 'order-item';
+      totalItem.innerHTML = `
+        <span><strong>Total Amount</strong></span>
+        <span><strong>KES ${total}</strong></span>
+      `;
+      orderItems.appendChild(totalItem);
 
-      // Update cart count
-      updateCartCount();
+      // Display location
+      const location = localStorage.getItem('selectedLocation') || localStorage.getItem('deliveryLocation') || 'Not set';
+      displayLocation.textContent = location;
+    }
+
+    // Form submission
+    document.getElementById('payment-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      if (cart.length === 0) {
+        showToast('Your cart is empty', true);
+        return;
+      }
+
+      const submitBtn = document.getElementById('submit-btn');
+      const btnText = document.getElementById('btn-text');
+      
+      submitBtn.disabled = true;
+      btnText.textContent = 'Processing...';
+
+      try {
+        if (selectedMethod === 'mpesa') {
+          await processMpesaPayment();
+        } else {
+          await processCardPayment();
+        }
+      } catch (error) {
+        showToast('Payment failed. Please try again.', true);
+      } finally {
+        submitBtn.disabled = false;
+        btnText.textContent = 'Complete Payment';
+      }
     });
 
-    function showCartToast(message) {
-      const toast = document.getElementById('cart-toast');
+    async function processMpesaPayment() {
+      const phoneNumber = document.getElementById('phone-number').value.trim();
+      
+      if (!phoneNumber) {
+        showToast('Please enter your M-Pesa phone number', true);
+        return;
+      }
+
+      // Format phone number
+      let formattedPhone = phoneNumber;
+      if (formattedPhone.startsWith('0')) {
+        formattedPhone = '254' + formattedPhone.slice(1);
+      }
+
+      showToast('Initiating M-Pesa payment...');
+
+      // Simulate M-Pesa STK push
+      setTimeout(() => {
+        showToast('M-Pesa STK Push sent! Check your phone to complete payment.');
+        
+        // Simulate successful payment after delay
+        setTimeout(() => {
+          showToast('Payment successful! Thank you for your order.');
+          localStorage.removeItem('cart');
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 2000);
+        }, 5000);
+      }, 2000);
+    }
+
+    async function processCardPayment() {
+      const cardNumber = document.getElementById('card-number').value.trim();
+      const expiryDate = document.getElementById('expiry-date').value.trim();
+      const cvv = document.getElementById('cvv').value.trim();
+      const cardName = document.getElementById('card-name').value.trim();
+
+      if (!cardNumber || !expiryDate || !cvv || !cardName) {
+        showToast('Please fill in all card details', true);
+        return;
+      }
+
+      showToast('Processing card payment...');
+
+      // Simulate card processing
+      setTimeout(() => {
+        showToast('Payment successful! Thank you for your order.');
+        localStorage.removeItem('cart');
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 2000);
+      }, 3000);
+    }
+
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toast');
       toast.textContent = message;
+      toast.className = `toast ${isError ? 'error' : ''}`;
       toast.classList.add('show');
+      
       setTimeout(() => {
         toast.classList.remove('show');
       }, 4000);
     }
-  </script>
-<script>
-(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="qec3elonJWqywDRATwocl";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
-</script>
 
+    // Card number formatting
+    document.getElementById('card-number').addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+      let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+      e.target.value = formattedValue;
+    });
+
+    // Expiry date formatting
+    document.getElementById('expiry-date').addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length >= 2) {
+        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+      }
+      e.target.value = value;
+    });
+
+    // CVV validation
+    document.getElementById('cvv').addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    // Phone number formatting
+    document.getElementById('phone-number').addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+      loadOrderSummary();
+      updatePaymentFields();
+    });
+  </script>
 </body>
 </html>
-

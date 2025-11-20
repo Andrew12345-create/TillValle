@@ -13,6 +13,10 @@
   <link rel="stylesheet" href="styles.css">
 
   <link rel="stylesheet" href="global-chat.css">
+  <link rel="stylesheet" href="auth-styles.css">
+  <link rel="stylesheet" href="shipping-widget.css">
+  <link rel="stylesheet" href="cookie-widget.css">
+  <script data-id="cmi7m0fwy0009kz04yac3babp" src="https://tinychat.ai/tinychat.js"></script>
   <!-- Hotjar Tracking Code -->
   <script>
     (function(h,o,t,j,a,r){
@@ -106,33 +110,92 @@
 
   :root {
     --brand-500:#40916c;
+    --brand-600:#2d6a4f;
+    --brand-700:#1e3a32;
     --muted:#64748b;
     --bg:#f6fbf7;
     --card:#ffffff;
     --glass:rgba(255,255,255,0.6);
-    --radius:10px;
-    --max-w:1100px;
+    --radius:15px;
+    --max-w:1200px;
   }
   *,*::before,*::after{box-sizing:border-box}
     html,body{height:100%;margin:0;font-family:'Poppins',Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),#e8f6ef);color:#072018}
 
     /* Page container */
     #navbar-container{width:100%;}
-    .shop-section{max-width:var(--max-w);margin:22px auto;padding:18px}
-    .shop-section h2{font-size:1.8rem;margin:0 0 12px;color:var(--brand-600);letter-spacing:0.2px}
+    .shop-section{max-width:var(--max-w);margin:40px auto;padding:25px}
+    .shop-section h2{font-size:3rem;margin:0 0 20px;color:var(--brand-600);letter-spacing:-0.5px;font-weight:900;background:linear-gradient(135deg,var(--brand-600) 0%,#22c55e 50%,#16a34a 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:0 4px 20px rgba(45,106,79,0.3);text-align:center;position:relative}
+    .shop-section h2::after{content:'';position:absolute;bottom:-15px;left:50%;transform:translateX(-50%);width:120px;height:6px;background:linear-gradient(135deg,var(--brand-600) 0%,#22c55e 50%,#16a34a 100%);border-radius:10px;box-shadow:0 4px 15px rgba(45,106,79,0.4)}
+
+    /* Enhanced Filters */
+    .filters-container{display:flex;justify-content:center;align-items:center;gap:30px;margin:30px 0 50px;flex-wrap:wrap;background:linear-gradient(145deg,rgba(255,255,255,0.9) 0%,rgba(255,255,255,0.7) 100%);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:25px;padding:25px;box-shadow:0 15px 35px rgba(0,0,0,0.1),0 0 0 1px rgba(255,255,255,0.2),inset 0 2px 0 rgba(255,255,255,0.3);border:1px solid rgba(255,255,255,0.3)}
+    .search-filter{display:flex;align-items:center;gap:15px}
+    .search-input-modern{padding:12px 20px;border:2px solid transparent;border-radius:25px;width:280px;font-size:16px;background:linear-gradient(135deg,#f8fafc 0%,#ffffff 100%);box-shadow:0 8px 20px rgba(0,0,0,0.1),inset 0 2px 0 rgba(255,255,255,0.3);transition:all .3s ease;font-weight:500}
+    .search-input-modern:focus{outline:none;border-color:var(--brand-600);box-shadow:0 12px 30px rgba(45,106,79,0.2),inset 0 2px 0 rgba(255,255,255,0.4);transform:translateY(-2px)}
+    .search-btn-modern{background:linear-gradient(135deg,var(--brand-600) 0%,#22c55e 100%);color:white;border:none;padding:12px 25px;border-radius:25px;font-size:16px;font-weight:700;cursor:pointer;transition:all .3s ease;box-shadow:0 8px 20px rgba(45,106,79,0.4),inset 0 2px 0 rgba(255,255,255,0.2);position:relative;overflow:hidden}
+    .search-btn-modern::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);transition:left .6s ease}
+    .search-btn-modern:hover::before{left:100%}
+    .search-btn-modern:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 12px 30px rgba(45,106,79,0.6),inset 0 2px 0 rgba(255,255,255,0.3)}
+    .price-filter{display:flex;align-items:center;gap:15px}
+    .filter-label{font-weight:700;color:var(--brand-600);font-size:16px;letter-spacing:0.3px}
+    .price-select-modern{padding:12px 20px;border:2px solid transparent;border-radius:20px;background:linear-gradient(135deg,#f8fafc 0%,#ffffff 100%);font-size:16px;font-weight:600;color:var(--brand-600);cursor:pointer;transition:all .3s ease;box-shadow:0 8px 20px rgba(0,0,0,0.1),inset 0 2px 0 rgba(255,255,255,0.3);min-width:180px}
+    .price-select-modern:focus{outline:none;border-color:var(--brand-600);box-shadow:0 12px 30px rgba(45,106,79,0.2),inset 0 2px 0 rgba(255,255,255,0.4);transform:translateY(-2px)}
+    .price-select-modern:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(0,0,0,0.15)}
+
+    @media (max-width:768px){.filters-container{flex-direction:column;gap:20px;padding:20px}.search-filter,.price-filter{width:100%;justify-content:center}.search-input-modern{width:100%;max-width:300px}.price-select-modern{width:100%;max-width:200px}}
+
+    /* Enhanced Shipping & Payment Section */
+    .shipping-payment-section{max-width:var(--max-w);margin:60px auto;padding:40px 25px;background:linear-gradient(145deg,rgba(255,255,255,0.9) 0%,rgba(255,255,255,0.7) 100%);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:30px;box-shadow:0 20px 50px rgba(0,0,0,0.15),0 0 0 1px rgba(255,255,255,0.2),inset 0 2px 0 rgba(255,255,255,0.3);border:1px solid rgba(255,255,255,0.3)}
+    .section-header{text-align:center;margin-bottom:40px}
+    .section-header h2{font-size:2.5rem;font-weight:900;color:var(--brand-600);background:linear-gradient(135deg,var(--brand-600) 0%,#22c55e 50%,#16a34a 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;letter-spacing:-0.5px}
+    .section-header p{font-size:1.2rem;color:var(--muted);font-weight:600}
+    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:40px}
+    .shipping-card,.payment-card{background:linear-gradient(145deg,rgba(255,255,255,0.95) 0%,rgba(255,255,255,0.85) 100%);border-radius:25px;padding:30px;box-shadow:0 15px 35px rgba(0,0,0,0.1),0 0 0 1px rgba(255,255,255,0.2),inset 0 2px 0 rgba(255,255,255,0.3);border:1px solid rgba(255,255,255,0.3);transition:all .3s ease}
+    .shipping-card:hover,.payment-card:hover{transform:translateY(-5px);box-shadow:0 20px 50px rgba(0,0,0,0.15),0 0 0 2px rgba(34,197,94,0.2),inset 0 2px 0 rgba(255,255,255,0.4)}
+    .card-header{display:flex;align-items:center;gap:15px;margin-bottom:25px;padding-bottom:15px;border-bottom:2px solid rgba(34,197,94,0.1)}
+    .card-icon{font-size:2rem;background:linear-gradient(135deg,var(--brand-600) 0%,#22c55e 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 2px 5px rgba(45,106,79,0.3))}
+    .card-header h3{font-size:1.5rem;font-weight:800;color:var(--brand-600);letter-spacing:0.3px}
+    .delivery-zones{display:flex;flex-direction:column;gap:15px;margin-bottom:25px}
+    .zone-card{background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%);border-radius:15px;padding:20px;border:2px solid rgba(22,163,74,0.1);transition:all .3s ease}
+    .zone-card:hover{transform:translateX(5px);border-color:rgba(22,163,74,0.3);box-shadow:0 8px 20px rgba(22,163,74,0.1)}
+    .zone-info h4{font-size:1.2rem;font-weight:700;color:var(--brand-600);margin-bottom:8px}
+    .zone-price{font-size:1.4rem;font-weight:900;color:#16a34a;margin-bottom:5px}
+    .zone-time{font-size:0.9rem;color:var(--muted);font-weight:600}
+    .free-delivery-banner{background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-radius:15px;padding:20px;text-align:center;border:2px solid rgba(245,158,11,0.2);position:relative;overflow:hidden}
+    .free-delivery-banner::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);transition:left .6s ease}
+    .free-delivery-banner:hover::before{left:100%}
+    .banner-icon{font-size:1.5rem;margin-right:10px}
+    .free-delivery-banner p{font-size:1.1rem;font-weight:700;color:#92400e;margin:0}
+    .payment-methods{display:flex;flex-direction:column;gap:15px}
+    .payment-method{display:flex;align-items:center;gap:20px;background:linear-gradient(135deg,#f8fafc 0%,#ffffff 100%);border-radius:15px;padding:20px;border:2px solid rgba(45,106,79,0.1);transition:all .3s ease;position:relative}
+    .payment-method:hover{transform:translateX(5px);border-color:rgba(45,106,79,0.3);box-shadow:0 8px 20px rgba(45,106,79,0.1)}
+    .payment-method .payment-icon{font-size:2rem;background:linear-gradient(135deg,var(--brand-600) 0%,#22c55e 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 2px 5px rgba(45,106,79,0.2))}
+    .payment-info{flex:1}
+    .payment-info h4{font-size:1.2rem;font-weight:700;color:var(--brand-600);margin-bottom:5px}
+    .payment-info p{font-size:0.95rem;color:var(--muted);margin:0;font-weight:500}
+    .payment-status{width:30px;height:30px;background:linear-gradient(135deg,#16a34a 0%,#22c55e 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:1.2rem;box-shadow:0 4px 15px rgba(22,197,94,0.3)}
+
+    @media (max-width:768px){.info-grid{grid-template-columns:1fr;gap:30px}.shipping-payment-section{margin:40px auto;padding:25px 20px}.section-header h2{font-size:2rem}.card-header{flex-direction:column;text-align:center;gap:10px}.payment-method{flex-direction:column;text-align:center;gap:15px}.zone-card,.payment-method{padding:15px}}
 
     /* Categories */
-    .category{margin:18px 0}
-    .category-title{font-weight:600;color:var(--brand-700);margin-bottom:8px}
+    .category{margin:40px 0}
+    .category-title{font-weight:800;color:var(--brand-700);margin-bottom:20px;font-size:1.6rem;padding-bottom:10px;border-bottom:3px solid var(--brand-600);position:relative}
+    .category-title::after{content:'';position:absolute;bottom:-3px;left:0;width:60px;height:3px;background:linear-gradient(135deg,#22c55e 0%,#16a34a 100%);border-radius:2px}
 
     /* Product grid */
-  .products{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-  .product{background:var(--card);border-radius:10px;padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;transition:transform .16s ease,box-shadow .16s ease;box-shadow:0 6px 18px rgba(3,8,6,0.06);min-height:180px}
-    .product:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(3,8,6,0.08)}
+  .products{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:25px;padding:30px 0}
+  .product{background:linear-gradient(145deg,rgba(255,255,255,0.95) 0%,rgba(255,255,255,0.85) 100%);border-radius:20px;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);box-shadow:0 15px 35px rgba(0,0,0,0.1),0 0 0 1px rgba(255,255,255,0.2),inset 0 2px 0 rgba(255,255,255,0.3);min-height:280px;border:1px solid rgba(255,255,255,0.3);position:relative;overflow:hidden;-webkit-backdrop-filter:blur(15px);backdrop-filter:blur(15px)}
+    .product::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(34,197,94,0.1),transparent);transition:left .7s ease}
+    .product:hover::before{left:100%}
+    .product:hover{transform:translateY(-15px) scale(1.05);box-shadow:0 25px 60px rgba(0,0,0,0.2),0 0 0 2px rgba(34,197,94,0.3),inset 0 2px 0 rgba(255,255,255,0.4);border-color:rgba(34,197,94,0.4)}
 
-  .product-image{width:100%;height:100px;object-fit:contain;border-radius:8px;background:linear-gradient(180deg,#fff,#f8fffb);padding:6px}
-  .product h4{font-size:0.95rem;margin:8px 0 6px;text-align:center;color:#072018}
-  .product .price{color:var(--muted);font-weight:700;margin-bottom:6px;font-size:0.95rem}
+  .product-image{width:100%;height:140px;object-fit:contain;border-radius:15px;background:linear-gradient(135deg,#f8fafc 0%,#ffffff 100%);padding:10px;margin-bottom:15px;transition:all .4s ease;box-shadow:0 8px 20px rgba(0,0,0,0.1)}
+  .product:hover .product-image{transform:scale(1.08) rotate(2deg);box-shadow:0 12px 30px rgba(0,0,0,0.15)}
+  .product h4{font-size:1.1rem;margin:10px 0 8px;text-align:center;color:#072018;font-weight:700;letter-spacing:0.3px}
+  .product .price{color:white;font-weight:800;margin-bottom:8px;font-size:1rem;padding:10px 15px;background:linear-gradient(135deg,#16a34a 0%,#22c55e 50%,#10b981 100%);border-radius:25px;text-shadow:0 2px 5px rgba(0,0,0,0.2);box-shadow:0 6px 20px rgba(22,197,94,0.3),inset 0 2px 0 rgba(255,255,255,0.2);position:relative;overflow:hidden}
+  .product .price::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transition:left .6s ease}
+  .product:hover .price::before{left:100%}
 
     /* Recently bought */
     .recent-section{margin:12px 0 20px;padding:8px 6px}
@@ -145,13 +208,32 @@
     .recent-buy-btn{background:transparent;border:1px solid var(--brand-600);color:var(--brand-600);padding:6px 10px;border-radius:999px;cursor:pointer;font-weight:700}
 
     .product-controls{display:flex;align-items:center;gap:6px}
-    .product-quantity{min-width:28px;text-align:center;font-weight:700}
+    .product-quantity{min-width:35px;text-align:center;font-weight:800;font-size:1.1rem;color:var(--brand-600);background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%);padding:6px 10px;border-radius:12px;border:2px solid rgba(22,163,74,0.2);box-shadow:0 3px 10px rgba(22,163,74,0.1)}
 
-    .product-btn{background:var(--brand-600);color:#fff;border:none;padding:6px 10px;border-radius:8px;cursor:pointer;font-size:14px;display:inline-flex;align-items:center;justify-content:center;transition:transform .12s ease}
-    .product-btn:active{transform:scale(.98)}
+    .product-btn{background:linear-gradient(135deg,var(--brand-600) 0%,#22c55e 100%);color:#fff;border:none;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:18px;font-weight:bold;display:inline-flex;align-items:center;justify-content:center;transition:all .3s ease;box-shadow:0 4px 15px rgba(45,106,79,0.4),inset 0 2px 0 rgba(255,255,255,0.2);position:relative;overflow:hidden}
+    .product-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);transition:left .5s ease}
+    .product-btn:hover::before{left:100%}
+    .product-btn:hover{transform:scale(1.15) rotate(5deg);box-shadow:0 8px 25px rgba(45,106,79,0.6),inset 0 2px 0 rgba(255,255,255,0.3)}
+    .product-btn:active{transform:scale(.95)}
 
     /* Improved product card look when clicked (visual focus) */
     .product:focus-within,.product:focus{outline:3px solid rgba(45,106,79,0.12);box-shadow:0 12px 30px rgba(16,24,40,0.06)}
+
+    /* Competitive E-commerce Features */
+    .stock-badge{position:absolute;top:10px;left:10px;padding:4px 8px;border-radius:12px;font-size:0.75rem;font-weight:700;z-index:5}
+    .stock-badge.in-stock{background:linear-gradient(135deg,#16a34a,#22c55e);color:white}
+    .stock-badge.low-stock{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:white}
+    .stock-badge.out-of-stock{background:linear-gradient(135deg,#ef4444,#f87171);color:white}
+    
+    .delivery-badge{position:absolute;top:10px;right:10px;padding:4px 8px;border-radius:12px;font-size:0.75rem;font-weight:600;background:linear-gradient(135deg,#3b82f6,#60a5fa);color:white;z-index:5}
+    
+    .bulk-discount{font-size:0.8rem;color:#16a34a;font-weight:600;margin:8px 0;padding:4px 8px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-radius:8px;text-align:center}
+    
+    .quick-add-btn{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#16a34a,#22c55e);color:white;border:none;padding:8px 16px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;opacity:0;transition:all 0.3s ease;z-index:10}
+    
+    .product:hover .quick-add-btn{opacity:1;transform:translateX(-50%) translateY(-5px)}
+    
+    .quick-add-btn:hover{background:linear-gradient(135deg,#22c55e,#16a34a);transform:translateX(-50%) translateY(-8px) scale(1.05)}
 
   /* Modal - upgraded popup styling */
   .modal{
@@ -198,7 +280,7 @@
     .loading-logo{width:74px;height:74px;border-radius:50%;background:url('logo.jpg') center/cover}
 
     /* Utility */
-    .hidden{display:none}
+    .hidden{display:none !important}
 
   /* Cookie consent banner */
   .cookie-banner{position:fixed;left:20px;right:20px;bottom:20px;background:linear-gradient(90deg,#ffffff,#f7fff7);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 18px 40px rgba(3,8,6,0.12);z-index:99999;max-width:1100px;margin:0 auto;justify-content:space-between}
@@ -219,7 +301,10 @@
   @media (max-width:480px){
     .products{grid-template-columns:repeat(2,1fr);gap:8px}
     .product-image{height:90px}
-    .product{min-height:180px;padding:8px}
+    .product{min-height:200px;padding:8px}
+    .stock-badge,.delivery-badge{font-size:0.65rem;padding:2px 6px}
+    .bulk-discount{font-size:0.7rem;margin:4px 0}
+    .quick-add-btn{font-size:0.75rem;padding:6px 12px}
     .product h4{font-size:0.85rem;margin:6px 0 4px}
     .product .price{font-size:0.9rem;margin-bottom:4px}
     .product-controls{gap:4px}
@@ -251,6 +336,23 @@
 
   <section class="shop-section">
     <h2>Fresh Farm Produce</h2>
+    <!-- Enhanced Filters -->
+    <div class="filters-container">
+      <div class="search-filter">
+        <input type="text" id="search-bar" placeholder="🔍 Search products..." class="search-input-modern">
+        <button id="search-btn" class="search-btn-modern">Search</button>
+      </div>
+      <div class="price-filter">
+        <label for="price-filter" class="filter-label">💰 Filter by Price:</label>
+        <select id="price-filter" class="price-select-modern">
+          <option value="all">All Prices</option>
+          <option value="under-50">Under KES 50</option>
+          <option value="50-100">KES 50 - 100</option>
+          <option value="100-200">KES 100 - 200</option>
+          <option value="over-200">Over KES 200</option>
+        </select>
+      </div>
+    </div>
     <!-- Recently bought (persisted in localStorage) -->
     <div class="recent-section">
       <h3 class="recent-title">Recently Bought</h3>
@@ -261,7 +363,7 @@
     <div class="category">
       <h3 class="category-title">Animal & Farm Produce</h3>
       <div class="products animal-farm">
-  <div class="product" data-name="Fresh Milk" data-description="Pure, fresh milk from our farm." data-image="milk.png" data-price="120"><img src="milk.png" alt="Fresh Milk" class="product-image"><h4>Fresh Milk</h4><p class="price" data-price="120">KES 120 / liter</p><div class="product-controls"><button class="product-btn" data-action="remove" data-name="Fresh Milk">−</button><span class="product-quantity" id="qty-Fresh-Milk">0</span><button class="product-btn" data-action="add" data-name="Fresh Milk" data-price="120" data-image="milk.png">+</button></div></div>
+  <div class="product" data-name="Fresh Milk" data-description="Pure, fresh milk from our farm." data-image="milk.png" data-price="120"><div class="stock-badge in-stock">✓ In Stock</div><div class="delivery-badge">🚚 Same Day</div><img src="milk.png" alt="Fresh Milk" class="product-image"><h4>Fresh Milk</h4><p class="price" data-price="120">KES 120 / liter</p><div class="bulk-discount">💰 Buy 5+ get 10% off</div><div class="product-controls"><button class="product-btn" data-action="remove" data-name="Fresh Milk">−</button><span class="product-quantity" id="qty-Fresh-Milk">0</span><button class="product-btn" data-action="add" data-name="Fresh Milk" data-price="120" data-image="milk.png">+</button></div><button class="quick-add-btn" onclick="quickAddToCart('Fresh Milk', 120, 'milk.png')">Quick Add</button></div>
   <div class="product" data-name="Free-Range Chicken" data-description="Healthy, free-range chicken." data-image="chicken.png" data-price="800"><img src="chicken.png" alt="Free-Range Chicken" class="product-image"><h4>Free-Range Chicken</h4><p class="price" data-price="800">KES 800 / kg</p><div class="product-controls"><button class="product-btn" data-action="remove" data-name="Free-Range Chicken">−</button><span class="product-quantity" id="qty-Free-Range-Chicken">0</span><button class="product-btn" data-action="add" data-name="Free-Range Chicken" data-price="800" data-image="chicken.png">+</button></div></div>
   <div class="product" data-name="Farm Fresh Eggs" data-description="Fresh eggs from free-range chickens." data-image="eggs.png" data-price="25"><img src="eggs.png" alt="Farm Fresh Eggs" class="product-image"><h4>Farm Fresh Eggs</h4><p class="price" data-price="25">KES 25 / piece</p><div class="product-controls"><button class="product-btn" data-action="remove" data-name="Farm Fresh Eggs">−</button><span class="product-quantity" id="qty-Farm-Fresh-Eggs">0</span><button class="product-btn" data-action="add" data-name="Farm Fresh Eggs" data-price="25" data-image="eggs.png">+</button></div></div>
   <div class="product" data-name="Pure Ghee" data-description="Traditional clarified butter." data-image="ghee.png" data-price="600"><img src="ghee.png" alt="Pure Ghee" class="product-image"><h4>Pure Ghee</h4><p class="price" data-price="600">KES 600 / 500g</p><div class="product-controls"><button class="product-btn" data-action="remove" data-name="Pure Ghee">−</button><span class="product-quantity" id="qty-Pure-Ghee">0</span><button class="product-btn" data-action="add" data-name="Pure Ghee" data-price="600" data-image="ghee.png">+</button></div></div>
@@ -273,7 +375,7 @@
     <div class="category">
       <h3 class="category-title">Fruits</h3>
       <div class="products">
-  <div class="product" data-name="Bananas" data-description="Fresh bananas, perfect for snacking." data-image="bananas-ripe.png" data-price="150"><img src="bananas-ripe.png" alt="Bananas" class="product-image"><h4>Bananas</h4><p class="price" data-price="150">KES 150 / bunch</p><div class="product-controls"><button class="product-btn" data-action="remove" data-name="Bananas">−</button><span class="product-quantity" id="qty-Bananas">0</span><button class="product-btn" data-action="add" data-name="Bananas" data-price="150" data-image="bananas-ripe.png">+</button></div></div>
+  <div class="product" data-name="Bananas" data-description="Fresh bananas, perfect for snacking." data-image="bananas-ripe.png" data-price="150"><div class="stock-badge in-stock">✓ In Stock</div><div class="delivery-badge">🚚 Same Day</div><img src="bananas-ripe.png" alt="Bananas" class="product-image"><h4>Bananas</h4><p class="price" data-price="150">KES 150 / bunch</p><div class="bulk-discount">💰 Buy 3+ get 5% off</div><div class="product-controls"><button class="product-btn" data-action="remove" data-name="Bananas">−</button><span class="product-quantity" id="qty-Bananas">0</span><button class="product-btn" data-action="add" data-name="Bananas" data-price="150" data-image="bananas-ripe.png">+</button></div><button class="quick-add-btn" onclick="quickAddToCart('Bananas', 150, 'bananas-ripe.png')">Quick Add</button></div>
   <div class="product" data-name="Oranges" data-description="Juicy oranges, rich in vitamin C." data-image="oranges.png" data-price="200"><img src="oranges.png" alt="Oranges" class="product-image"><h4>Oranges</h4><p class="price" data-price="200">KES 200 / kg</p><div class="product-controls"><button class="product-btn" data-action="remove" data-name="Oranges">−</button><span class="product-quantity" id="qty-Oranges">0</span><button class="product-btn" data-action="add" data-name="Oranges" data-price="200" data-image="oranges.png">+</button></div></div>
 
   <div class="product" data-name="Watermelon" data-description="Sweet watermelon, perfect for hot days." data-image="watermelon.png" data-price="250"><img src="watermelon.png" alt="Watermelon" class="product-image"><h4>Watermelon</h4><p class="price" data-price="250">KES 250 / piece</p><div class="product-controls"><button class="product-btn" data-action="remove" data-name="Watermelon">−</button><span class="product-quantity" id="qty-Watermelon">0</span><button class="product-btn" data-action="add" data-name="Watermelon" data-price="250" data-image="watermelon.png">+</button></div></div>
@@ -306,7 +408,7 @@
     <div class="category">
       <h3 class="category-title">Vegetables & Greens</h3>
       <div class="products">
-  <div class="product" data-name="Kales (Sukuma Wiki)" data-description="Nutritious kales, perfect for sukuma wiki." data-image="kales.png" data-price="30"><img src="kales.png" alt="Kales (Sukuma Wiki)" class="product-image"><h4>Kales (Sukuma Wiki)</h4><p class="price" data-price="30">KES 30 / bunch</p><div class="product-controls"><button class="product-btn" data-action="remove" data-name="Kales (Sukuma Wiki)">−</button><span class="product-quantity" id="qty-Kales-(Sukuma-Wiki)">0</span><button class="product-btn" data-action="add" data-name="Kales (Sukuma Wiki)" data-price="30" data-image="kales.png">+</button></div></div>
+  <div class="product" data-name="Kales (Sukuma Wiki)" data-description="Nutritious kales, perfect for sukuma wiki." data-image="kales.png" data-price="30"><div class="stock-badge low-stock">⚠️ Low Stock</div><div class="delivery-badge">🚚 Same Day</div><img src="kales.png" alt="Kales (Sukuma Wiki)" class="product-image"><h4>Kales (Sukuma Wiki)</h4><p class="price" data-price="30">KES 30 / bunch</p><div class="bulk-discount">💰 Buy 10+ get 15% off</div><div class="product-controls"><button class="product-btn" data-action="remove" data-name="Kales (Sukuma Wiki)">−</button><span class="product-quantity" id="qty-Kales-(Sukuma-Wiki)">0</span><button class="product-btn" data-action="add" data-name="Kales (Sukuma Wiki)" data-price="30" data-image="kales.png">+</button></div><button class="quick-add-btn" onclick="quickAddToCart('Kales (Sukuma Wiki)', 30, 'kales.png')">Quick Add</button></div>
   <div class="product" data-name="Lettuce" data-description="Fresh, crisp lettuce for salads." data-image="lettuce.png" data-price="80"><img src="lettuce.png" alt="Lettuce" class="product-image"><h4>Lettuce</h4><p class="price" data-price="80">KES 80 / head</p><div class="product-controls"><button class="product-btn" data-action="remove" data-name="Lettuce">−</button><span class="product-quantity" id="qty-Lettuce">0</span><button class="product-btn" data-action="add" data-name="Lettuce" data-price="80" data-image="lettuce.png">+</button></div></div>
   <div class="product" data-name="Managu" data-description="Traditional African vegetable." data-image="managu.png" data-price="40"><img src="managu.png" alt="Managu" class="product-image"><h4>Managu</h4><p class="price" data-price="40">KES 40 / bunch</p><div class="product-controls"><button class="product-btn" data-action="remove" data-name="Managu">−</button><span class="product-quantity" id="qty-Managu">0</span><button class="product-btn" data-action="add" data-name="Managu" data-price="40" data-image="managu.png">+</button></div></div>
   <div class="product" data-name="Terere" data-description="Fresh terere leaves for cooking." data-image="terere.png" data-price="40"><img src="terere.png" alt="Terere" class="product-image"><h4>Terere</h4><p class="price" data-price="40">KES 40 / bunch</p><div class="product-controls"><button class="product-btn" data-action="remove" data-name="Terere">−</button><span class="product-quantity" id="qty-Terere">0</span><button class="product-btn" data-action="add" data-name="Terere" data-price="40" data-image="terere.png">+</button></div></div>
@@ -319,49 +421,77 @@
     </div>
   </section>
 
-  <!-- Shipping & Payment Info -->
+  <!-- Enhanced Shipping & Payment Info -->
   <section class="shipping-payment-section">
-    <h2>Shipping & Payment</h2>
-    <div class="shipping-info">
-      <h3>Delivery Zones & Prices</h3>
-      <div class="delivery-zones">
-        <div class="zone">
-          <h4>Nairobi</h4>
-          <p>KES 200 (Same day delivery)</p>
+    <div class="section-header">
+      <h2>🚚 Shipping & Payment</h2>
+      <p>Fast delivery and secure payment options</p>
+    </div>
+    
+    <div class="info-grid">
+      <div class="shipping-card">
+        <div class="card-header">
+          <span class="card-icon">🚛</span>
+          <h3>Delivery Zones & Prices</h3>
         </div>
-        <div class="zone">
-          <h4>Kiambu</h4>
-          <p>KES 150 (Next day delivery)</p>
+        <div class="delivery-zones">
+          <div class="zone-card">
+            <div class="zone-info">
+              <h4>🏙️ Nairobi</h4>
+              <p class="zone-price">KES 200</p>
+              <span class="zone-time">Same day delivery</span>
+            </div>
+          </div>
+          <div class="zone-card">
+            <div class="zone-info">
+              <h4>🌆 Kiambu</h4>
+              <p class="zone-price">KES 150</p>
+              <span class="zone-time">Next day delivery</span>
+            </div>
+          </div>
+          <div class="zone-card">
+            <div class="zone-info">
+              <h4>🌍 Other Areas</h4>
+              <p class="zone-price">KES 300</p>
+              <span class="zone-time">2-3 days delivery</span>
+            </div>
+          </div>
         </div>
-        <div class="zone">
-          <h4>Other Areas</h4>
-          <p>KES 300 (2-3 days delivery)</p>
+        <div class="free-delivery-banner">
+          <span class="banner-icon">🎉</span>
+          <p>Free delivery on orders over KES 2000!</p>
         </div>
       </div>
-      <p class="free-delivery">Free delivery on orders over KES 2000!</p>
-    </div>
-    <div class="payment-options">
-      <h3>Payment Methods</h3>
-      <div class="payment-methods">
-        <div class="payment-method">
-          <span class="payment-icon">📱</span>
-          <div>
-            <h4>M-Pesa</h4>
-            <p>Pay with your mobile money</p>
-          </div>
+      
+      <div class="payment-card">
+        <div class="card-header">
+          <span class="card-icon">💳</span>
+          <h3>Payment Methods</h3>
         </div>
-        <div class="payment-method">
-          <span class="payment-icon">💳</span>
-          <div>
-            <h4>Credit/Debit Card</h4>
-            <p>Secure online payments</p>
+        <div class="payment-methods">
+          <div class="payment-method">
+            <span class="payment-icon">📱</span>
+            <div class="payment-info">
+              <h4>M-Pesa</h4>
+              <p>Pay with your mobile money</p>
+            </div>
+            <div class="payment-status">✓</div>
           </div>
-        </div>
-        <div class="payment-method">
-          <span class="payment-icon">🏦</span>
-          <div>
-            <h4>Bank Transfer</h4>
-            <p>Direct bank payments</p>
+          <div class="payment-method">
+            <span class="payment-icon">💳</span>
+            <div class="payment-info">
+              <h4>Credit/Debit Card</h4>
+              <p>Secure online payments</p>
+            </div>
+            <div class="payment-status">✓</div>
+          </div>
+          <div class="payment-method">
+            <span class="payment-icon">🏦</span>
+            <div class="payment-info">
+              <h4>Bank Transfer</h4>
+              <p>Direct bank payments</p>
+            </div>
+            <div class="payment-status">✓</div>
           </div>
         </div>
       </div>
@@ -548,11 +678,23 @@
           const action = control.dataset.action;
           const product = control.closest('.product');
           if (!product) return;
-          const qtySpan = product.querySelector('.product-quantity');
-          let cur = parseInt(qtySpan.textContent, 10) || 0;
-          if (action === 'add') cur++;
-          else if (action === 'remove' && cur > 0) cur--;
-          qtySpan.textContent = cur;
+          
+          // Check if user is logged in
+          if (!localStorage.getItem('email')) {
+            showToast('Please log in to add items to cart', true);
+            setTimeout(() => window.location.href = 'login.html', 2000);
+            return;
+          }
+          
+          const name = control.dataset.name || product.dataset.name;
+          const price = parseFloat(control.dataset.price || product.dataset.price || 0);
+          const image = control.dataset.image || product.dataset.image || '';
+          
+          if (action === 'add') {
+            addToCart(name, price, image);
+          } else if (action === 'remove') {
+            removeFromCart(name);
+          }
           return; // handled
         }
 
@@ -569,17 +711,87 @@
       });
     })();
     
+    // Cart management
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    function saveCart() {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+    
+    function addToCart(name, price, image) {
+      if (!localStorage.getItem('email')) {
+        showToast('Please log in to add items to cart', true);
+        setTimeout(() => window.location.href = 'login.html', 2000);
+        return;
+      }
+      
+      const existingItem = cart.find(item => item.name === name);
+      if (existingItem) {
+        existingItem.quantity++;
+      } else {
+        cart.push({ name, price, quantity: 1, image });
+      }
+      saveCart();
+      updateProductQuantityDisplay(name);
+      showToast(`${name} added to cart!`);
+    }
+    
+    function removeFromCart(name) {
+      if (!localStorage.getItem('email')) {
+        showToast('Please log in to manage cart', true);
+        return;
+      }
+      
+      const existingItem = cart.find(item => item.name === name);
+      if (existingItem) {
+        if (existingItem.quantity > 1) {
+          existingItem.quantity--;
+        } else {
+          cart = cart.filter(item => item.name !== name);
+        }
+        saveCart();
+        updateProductQuantityDisplay(name);
+        showToast(`${name} quantity decreased!`);
+      }
+    }
+    
+    function updateProductQuantityDisplay(name) {
+      const qtyElement = document.getElementById(`qty-${name.replace(/[^a-zA-Z0-9]+/g, '-')}`);
+      if (qtyElement) {
+        const existingItem = cart.find(item => item.name === name);
+        qtyElement.textContent = existingItem ? existingItem.quantity : 0;
+      }
+    }
+    
+    // Initialize cart display
+    function initCartDisplay() {
+      const products = document.querySelectorAll('.product');
+      products.forEach(product => {
+        const name = product.dataset.name;
+        if (name) updateProductQuantityDisplay(name);
+      });
+    }
+    
     // Add to cart functionality
     const addToCartBtn = document.getElementById('add-to-cart-btn');
     if (addToCartBtn) addToCartBtn.addEventListener('click', function() {
+      if (!localStorage.getItem('email')) {
+        showToast('Please log in to add items to cart', true);
+        setTimeout(() => window.location.href = 'login.html', 2000);
+        return;
+      }
+      
       const quantity = parseInt(document.getElementById('quantity').value);
       if (quantity > 0) {
+        for (let i = 0; i < quantity; i++) {
+          addToCart(modalCurrentProduct.name, modalCurrentProduct.price, modalCurrentProduct.image);
+        }
+        
         // Persist as a recent purchase
         try {
           saveRecentPurchase(modalCurrentProduct, quantity);
           renderRecentPurchases();
         } catch (e) {
-          // ignore storage errors (e.g., private mode)
           console.warn('Could not save recent purchase', e);
         }
 
@@ -593,9 +805,6 @@
           btn.textContent = '🛒 Add to Cart';
           closeModal();
         }, 1000);
-        
-        // Show toast notification
-        showToast(`Added ${quantity}x ${modalCurrentProduct.name} to cart!`);
       }
     });
 
@@ -669,15 +878,123 @@
 
     // render on load
     renderRecentPurchases();
+    initCartDisplay();
+
+    // Competitive E-commerce Features
+    function quickAddToCart(name, price, image) {
+      if (!localStorage.getItem('email')) {
+        showToast('Please log in to add items to cart', true);
+        setTimeout(() => window.location.href = 'login.html', 2000);
+        return;
+      }
+      
+      addToCart(name, price, image);
+      trackRecentlyViewed({ name, price, image });
+    }
     
+    function trackRecentlyViewed(product) {
+      let recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+      recentlyViewed = recentlyViewed.filter(item => item.name !== product.name);
+      recentlyViewed.unshift(product);
+      recentlyViewed = recentlyViewed.slice(0, 5);
+      localStorage.setItem('recentlyViewed', JSON.stringify(recentlyViewed));
+      renderRecentlyViewed();
+    }
+    
+    function renderRecentlyViewed() {
+      const recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+      if (recentlyViewed.length === 0) return;
+      
+      let widget = document.getElementById('recently-viewed-widget');
+      if (!widget) {
+        widget = document.createElement('div');
+        widget.id = 'recently-viewed-widget';
+        widget.className = 'recently-viewed';
+        document.body.appendChild(widget);
+      }
+      
+      widget.innerHTML = `
+        <h4>Recently Viewed</h4>
+        <div class="recently-viewed-items">
+          ${recentlyViewed.map(item => `
+            <div class="recently-viewed-item" onclick="openProductModal('${item.name}', '', '${item.image}', ${item.price})">
+              <img src="${item.image}" alt="${item.name}">
+              <span>KES ${item.price}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+    
+    // Make quickAddToCart global
+    window.quickAddToCart = quickAddToCart;
+    
+    // Render recently viewed on load
+    renderRecentlyViewed();
+
+    // Fixed Search and Filter functionality
+    const searchBar = document.getElementById('search-bar');
+    const searchBtn = document.getElementById('search-btn');
+    const priceFilter = document.getElementById('price-filter');
+
+    function applyFilters() {
+      const query = searchBar.value.trim().toLowerCase();
+      const filterValue = priceFilter.value;
+      const products = document.querySelectorAll('.product');
+      
+      products.forEach(product => {
+        let show = true;
+        
+        // Search filter
+        if (query) {
+          const name = (product.dataset.name || product.querySelector('h4')?.textContent || '').toLowerCase();
+          const description = (product.dataset.description || '').toLowerCase();
+          show = name.includes(query) || description.includes(query);
+        }
+        
+        // Price filter
+        if (show && filterValue !== 'all') {
+          const priceElement = product.querySelector('.price');
+          const priceText = priceElement ? priceElement.dataset.price || product.dataset.price || '0' : '0';
+          const price = parseInt(priceText);
+          
+          switch(filterValue) {
+            case 'under-50':
+              show = price < 50;
+              break;
+            case '50-100':
+              show = price >= 50 && price <= 100;
+              break;
+            case '100-200':
+              show = price >= 100 && price <= 200;
+              break;
+            case 'over-200':
+              show = price > 200;
+              break;
+          }
+        }
+        
+        product.style.display = show ? 'flex' : 'none';
+      });
+    }
+
+    // Event listeners
+    searchBtn.addEventListener('click', applyFilters);
+    searchBar.addEventListener('keyup', function(e) {
+      if (e.key === 'Enter') applyFilters();
+    });
+    searchBar.addEventListener('input', applyFilters);
+    priceFilter.addEventListener('change', applyFilters);
+
   // Toast notification
-    function showToast(message) {
+    function showToast(message, isError = false) {
       const toast = document.createElement('div');
+      const bgColor = isError ? 'linear-gradient(135deg, #ff6b6b, #ee5a52)' : 'linear-gradient(135deg, #00b894, #00cec9)';
       toast.style.cssText = `
         position: fixed;
         bottom: 30px;
         right: 30px;
-        background: linear-gradient(135deg, #00b894, #00cec9);
+        background: ${bgColor};
         color: white;
         padding: 15px 25px;
         border-radius: 50px;
@@ -700,11 +1017,12 @@
 
   <script src="maintenance.js"></script>
   <script src="navbar-universal.js"></script>
+  <script src="auth-cart.js"></script>
+  <script src="shipping-widget.js"></script>
+  <script src="cookie-widget.js"></script>
   <script src="script.js" defer></script>
   <script src="global-chat.js"></script>
-<script>
-(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="qec3elonJWqywDRATwocl";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
-</script>
+
   <!-- Structured data: ItemList of visible products for SEO -->
   <script>
     (function(){

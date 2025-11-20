@@ -1,22 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About TilleValle</title>
   <link rel="stylesheet" href="css/navbar.css">
-  <link rel="icon" href="logo.jpg" type="image/jpeg" />
-  <link rel="stylesheet" href="css/site.css" />
-  <link rel="stylesheet" href="css/styles.css" />
-  <link rel="stylesheet" href="enhanced-animations.css" />
-  <link rel="stylesheet" href="global-chat.css" />
-  <meta property="og:title" content="About TilleValle" />
-  <meta property="og:description" content="Learn about TilleValle, our mission, and our commitment to fresh, organic farm produce." />
-  <meta property="og:image" content="images/logo.jpg" />
-  <meta property="og:url" content="https://yourdomain.com/about.html" />
-  <meta name="twitter:card" content="summary_large_image" />
-
-  <!-- Hotjar Tracking Code for Tillvalle -->
+  <link rel="icon" href="logo.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="global-chat.css">
+  
+  <!-- Hotjar Tracking Code -->
   <script>
       (function(h,o,t,j,a,r){
           h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
@@ -27,17 +20,318 @@
           a.appendChild(r);
       })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
   </script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .about-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .hero-section {
+      text-align: center;
+      margin-bottom: 60px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 30px;
+      padding: 60px 40px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .hero-section h1 {
+      font-size: 3.5rem;
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 900;
+      margin-bottom: 20px;
+      letter-spacing: -1px;
+    }
+
+    .hero-section p {
+      font-size: 1.3rem;
+      color: #666;
+      font-weight: 500;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 60px;
+    }
+
+    .content-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 25px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      transition: all 0.3s ease;
+    }
+
+    .content-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+    }
+
+    .content-card h2 {
+      font-size: 2rem;
+      color: #2d6a4f;
+      margin-bottom: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .content-card .icon {
+      font-size: 2.5rem;
+    }
+
+    .content-card p {
+      color: #555;
+      line-height: 1.7;
+      font-size: 1rem;
+      margin-bottom: 15px;
+    }
+
+    .stats-section {
+      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 25px;
+      padding: 50px 40px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      margin-bottom: 60px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      text-align: center;
+    }
+
+    .stat-item {
+      padding: 20px;
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .stat-label {
+      font-size: 1.1rem;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .team-section {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .team-section h2 {
+      font-size: 2.5rem;
+      color: #2d6a4f;
+      margin-bottom: 40px;
+      font-weight: 800;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+    }
+
+    .team-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 25px;
+      padding: 30px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .team-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    }
+
+    .team-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 2rem;
+      color: white;
+      font-weight: bold;
+    }
+
+    .team-card h3 {
+      color: #2d6a4f;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .team-card p {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .about-container {
+        margin: 20px auto;
+        padding: 15px;
+      }
+      
+      .hero-section {
+        padding: 40px 20px;
+      }
+      
+      .hero-section h1 {
+        font-size: 2.5rem;
+      }
+      
+      .content-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .content-card {
+        padding: 30px 20px;
+      }
+      
+      .stats-section {
+        padding: 40px 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Loading Screen -->
-  <div id="loading-screen">
-    <img src="logo.jpg" alt="TilleValle" class="loading-logo">
-    <div class="loading-spinner"></div>
-  </div>
   <header>
     <div id="navbar-container"></div>
-    <hr />
   </header>
+
+  <div class="about-container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <h1>About TilleValle</h1>
+      <p>Cultivating fresh, organic produce with passion and dedication since 1985. From our family farm to your table, we bring you the finest quality fruits, vegetables, and herbs grown with love and care.</p>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="content-grid">
+      <div class="content-card">
+        <h2><span class="icon">🌱</span> Our Mission</h2>
+        <p>TilleValle is dedicated to providing fresh, organic produce to our community while promoting sustainable farming practices and healthy living.</p>
+        <p>We believe in transparency, quality, and community empowerment through responsible agriculture that respects both people and the environment.</p>
+      </div>
+
+      <div class="content-card">
+        <h2><span class="icon">🚜</span> Our Farm</h2>
+        <p>Located in the lush region of Gilgil, our farm benefits from ideal climate and soil conditions for growing nutrient-rich produce.</p>
+        <p>We use organic fertilizers and avoid harmful pesticides to ensure the health of our customers and the environment.</p>
+      </div>
+
+      <div class="content-card">
+        <h2><span class="icon">🤝</span> Community Impact</h2>
+        <p>We actively engage with local farmers to support sustainable agriculture and fair trade practices throughout Kenya.</p>
+        <p>Our educational programs and farm tours promote awareness about healthy eating and sustainable agriculture in local schools.</p>
+      </div>
+
+      <div class="content-card">
+        <h2><span class="icon">♻️</span> Sustainability</h2>
+        <p>Sustainability is at the core of everything we do. We prioritize water conservation, soil health, and biodiversity protection.</p>
+        <p>Our commitment extends to protecting the environment for future generations through innovative farming techniques.</p>
+      </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-section">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-number">39</span>
+          <span class="stat-label">Years of Experience</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">5000+</span>
+          <span class="stat-label">Happy Customers</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">50+</span>
+          <span class="stat-label">Product Varieties</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">100%</span>
+          <span class="stat-label">Organic Certified</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team Section -->
+    <div class="team-section">
+      <h2>Meet Our Team</h2>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-avatar">JK</div>
+          <h3>John Kamau</h3>
+          <p>Founder & Head Farmer</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">MW</div>
+          <h3>Mary Wanjiku</h3>
+          <p>Agricultural Specialist</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">PM</div>
+          <h3>Peter Mwangi</h3>
+          <p>Quality Control Manager</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2024 TilleValle. All rights reserved.</p>
+  </footer>
 
   <script>
     // Load navbar
@@ -45,105 +339,9 @@
       .then(response => response.text())
       .then(data => {
         document.getElementById('navbar-container').innerHTML = data;
-        // Initialize navbar functionality after navbar is loaded
-        if (typeof initNavbar === 'function') {
-          initNavbar();
-        } else {
-          // Load navbar-universal.js if not already loaded
-          const script = document.createElement('script');
-          script.src = 'navbar-universal.js';
-          script.onload = function() {
-            console.log('navbar-universal.js loaded successfully');
-            if (typeof initNavbar === 'function') {
-              initNavbar();
-            }
-          };
-          script.onerror = function() {
-            console.error('Failed to load navbar-universal.js');
-          };
-          document.head.appendChild(script);
-        }
-      })
-      .catch(error => {
-        console.error('Failed to load navbar.html:', error);
       });
   </script>
 
-  <main>
-    <section class="about">
-      <div class="about-container">
-        <h2>About TilleValle</h2>
-        <p>
-          TilleValle is a family-owned farm dedicated to providing fresh, organic produce to our community. Our mission is to promote sustainable farming and healthy living.
-        </p>
-        <p>
-          We grow a variety of fruits, vegetables, and herbs using environmentally friendly practices. Our products are harvested with care and delivered fresh to your doorstep.
-        </p>
-        <p>
-          Our commitment extends beyond just farming; we actively engage with local farmers to support sustainable agriculture and fair trade practices. We believe in transparency, quality, and community empowerment.
-        </p>
-        <p>
-          Our farm is located in the lush region of Gilgil, where the climate and soil conditions are ideal for growing nutrient-rich produce. We use organic fertilizers and avoid harmful pesticides to ensure the health of our customers and the environment.
-        </p>
-        <p>
-          Thank you for supporting local agriculture and choosing TilleValle for your fresh farm goods. We look forward to serving you with the best nature has to offer.
-        </p>
-        <p>
-          Founded in 1985, TilleValle has grown from a small family plot to a thriving farm that supplies fresh produce to thousands of customers annually. Our history is rooted in tradition and innovation.
-        </p>
-        <p>
-          Our dedicated team of farmers and agricultural experts work tirelessly to ensure the highest quality standards. We invest in continuous training and sustainable technologies to improve our farming practices.
-        </p>
-        <p>
-          Sustainability is at the core of everything we do. We prioritize water conservation, soil health, and biodiversity to protect the environment for future generations.
-        </p>
-        <p>
-          We also engage with the local community through educational programs, farm tours, and partnerships with schools to promote awareness about healthy eating and sustainable agriculture.
-        </p>
-        <p>
-          At TilleValle, we believe that good food starts with good farming. Our commitment to quality, sustainability, and community makes us a trusted source for fresh, organic farm goods.
-        </p>
-      </div>
-    </section>
-  </main>
-  <footer>
-    <p>&copy; 2025 TilleValle. All rights reserved.</p>
-  </footer>
-
-  <!-- Toast -->
-  <div id="cart-toast"></div>
-
-  <!-- Floating Chatbot Button -->
-  <div id="floating-chatbot-btn" class="floating-chatbot-btn">
-    <span class="chatbot-emoji">💬</span>
-  </div>
-
-  <!-- Floating Cart Button -->
-  <div id="floating-cart-btn" class="floating-cart-btn">
-    <span class="cart-emoji">🛒</span>
-    <span id="floating-cart-count" class="floating-cart-count">0</span>
-  </div>
-
-
-
-
-
-  <script src="maintenance.js"></script>
-  <script src="global-animations.js"></script>
-  <script src="global-chat.js"></script>
   <script src="script.js" defer></script>
-<script>
-(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="qec3elonJWqywDRATwocl";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
-</script>
-  <script>
-    // Hide loading screen when page loads
-    window.addEventListener('load', function() {
-      const loadingScreen = document.getElementById('loading-screen');
-      if (loadingScreen) {
-        loadingScreen.classList.add('hidden');
-        setTimeout(() => loadingScreen.remove(), 800);
-      }
-    });
-  </script>
 </body>
 </html>

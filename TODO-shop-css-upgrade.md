@@ -9,3 +9,4 @@
 
 ## Progress
 - Completed: Moved CSS and upgraded with modern features
+- Testing: Launching browser to verify appearance and functionality

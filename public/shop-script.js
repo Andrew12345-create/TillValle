@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const quantityInput = document.getElementById('quantity');
   const decreaseBtn = document.getElementById('decrease-qty');
   const increaseBtn = document.getElementById('increase-qty');
-  
+
   let currentProduct = null;
 
   // Create chatbot
@@ -116,21 +116,41 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     toast.textContent = message;
     document.body.appendChild(toast);
-    
+
     setTimeout(() => {
       toast.remove();
     }, 3000);
   }
 
-  // Search functionality
+  // Search and price filter functionality
   const searchInput = document.getElementById('search-bar');
   const searchBtn = document.getElementById('search-btn');
-  
+  const priceFilter = document.getElementById('price-filter');
+
   function filterProducts() {
     const searchTerm = searchInput ? (searchInput.value || '').toLowerCase() : '';
+    const priceRange = priceFilter ? priceFilter.value : 'all';
+
     products.forEach(product => {
       const productName = (product.dataset.name || '').toLowerCase();
-      product.style.display = productName.includes(searchTerm) ? 'block' : 'none';
+      const productPrice = parseFloat(product.dataset.price || 0);
+
+      let matchesSearch = productName.includes(searchTerm);
+      let matchesPrice = true;
+
+      if (priceRange !== 'all') {
+        if (priceRange === 'under-50') {
+          matchesPrice = productPrice < 50;
+        } else if (priceRange === '50-100') {
+          matchesPrice = productPrice >= 50 && productPrice < 100;
+        } else if (priceRange === '100-200') {
+          matchesPrice = productPrice >= 100 && productPrice < 200;
+        } else if (priceRange === 'over-200') {
+          matchesPrice = productPrice >= 200;
+        }
+      }
+
+      product.style.display = (matchesSearch && matchesPrice) ? 'block' : 'none';
     });
   }
 
@@ -141,6 +161,10 @@ document.addEventListener('DOMContentLoaded', function() {
         filterProducts();
       }
     });
+  }
+
+  if (priceFilter) {
+    priceFilter.addEventListener('change', filterProducts);
   }
 
   // Initialize cart count
