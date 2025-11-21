@@ -3,1154 +3,229 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Profile - TilleValle</title>
-  <link rel="stylesheet" href="css/navbar.css">
-  <link rel="icon" href="logo.jpg" type="image/jpeg" />
-  <link rel="stylesheet" href="css/site.css">
-  <link rel="stylesheet" href="enhanced-animations.css">
+  <title>Profile - TillValle</title>
+  <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="global-chat.css">
-  
-  <!-- Hotjar Tracking Code for Tillvalle -->
-  <script>
-      (function(h,o,t,j,a,r){
-          h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-          h._hjSettings={hjid:6534945,hjsv:6};
-          a=o.getElementsByTagName('head')[0];
-          r=o.createElement('script');r.async=1;
-          r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-          a.appendChild(r);
-      })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-  </script>
-  <script src="translations.js"></script>
-  <script src="global-animations.js"></script>
-  <script src="script.js" defer></script>
+  <link rel="stylesheet" href="creative-backgrounds.css">
   <style>
-    .profile-section h2 a {
-      color: inherit;
-      text-decoration: none;
-    }
-    .profile-section h2 a:hover {
-      color: #ffd166;
-    }
-  </style>
-  <script data-id="cmi7m0fwy0009kz04yac3babp" src="https://tinychat.ai/tinychat.js"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      min-height: 100vh;
-      margin: 0;
-      padding: 0;
-    }
-
     .profile-container {
-      max-width: 1200px;
+      max-width: 1000px;
       margin: 40px auto;
-      padding: 0 20px;
+      padding: 20px;
     }
 
     .profile-header {
       text-align: center;
-      margin-bottom: 50px;
-      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 30px;
+      margin-bottom: 40px;
+      background: rgba(255,255,255,0.9);
       padding: 40px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
 
     .profile-avatar {
-      width: 120px;
-      height: 120px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
       background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 25px;
-      font-size: 3rem;
-      font-weight: bold;
+      margin: 0 auto 20px;
+      font-size: 2.5rem;
       color: white;
-      box-shadow: 0 15px 35px rgba(45, 106, 79, 0.3);
-      transition: all 0.3s ease;
-    }
-
-    .profile-avatar:hover {
-      transform: scale(1.05) rotate(5deg);
-      box-shadow: 0 20px 45px rgba(45, 106, 79, 0.4);
-    }
-
-    .profile-header h1 {
-      font-size: 3rem;
-      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 15px;
-      font-weight: 800;
-    }
-
-    .profile-header p {
-      color: #666;
-      font-size: 1.2rem;
-      font-weight: 500;
+      font-weight: bold;
     }
 
     .profile-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 30px;
-      margin-bottom: 50px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
     }
 
     .profile-card {
-      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 25px;
-      padding: 35px;
+      background: rgba(255,255,255,0.9);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
       cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      border: 1px solid rgba(255,255,255,0.3);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .profile-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(45, 106, 79, 0.1), transparent);
-      transition: left 0.7s ease;
-    }
-
-    .profile-card:hover::before {
-      left: 100%;
+      transition: all 0.3s ease;
+      text-align: center;
     }
 
     .profile-card:hover {
-      transform: translateY(-10px) scale(1.02);
-      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-      border-color: rgba(45, 106, 79, 0.4);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     }
 
     .card-icon {
       font-size: 3rem;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       display: block;
-      transition: transform 0.3s ease;
-    }
-
-    .profile-card:hover .card-icon {
-      transform: scale(1.2) rotate(10deg);
     }
 
     .profile-card h3 {
       color: #2d6a4f;
-      font-size: 1.5rem;
-      margin-bottom: 15px;
-      font-weight: 700;
+      margin-bottom: 10px;
+      font-size: 1.3rem;
     }
 
     .profile-card p {
       color: #666;
-      line-height: 1.6;
-      margin-bottom: 20px;
-      font-size: 1rem;
-    }
-
-    .card-arrow {
-      position: absolute;
-      top: 25px;
-      right: 25px;
-      font-size: 1.5rem;
-      color: #2d6a4f;
-      transition: all 0.3s ease;
-    }
-
-    .profile-card:hover .card-arrow {
-      transform: translateX(5px);
-      color: #40916c;
+      font-size: 0.9rem;
     }
 
     .logout-card {
-      background: linear-gradient(145deg, rgba(255,107,107,0.15) 0%, rgba(238,90,82,0.1) 100%);
-      border-color: rgba(255,107,107,0.3);
-    }
-
-    .logout-card:hover {
-      border-color: rgba(255,107,107,0.5);
-      box-shadow: 0 25px 50px rgba(255,107,107,0.2);
+      background: rgba(255,107,107,0.1);
+      border: 2px solid rgba(255,107,107,0.3);
     }
 
     .logout-card h3 {
       color: #ff6b6b;
     }
-
-    .logout-card .card-arrow {
-      color: #ff6b6b;
-    }
-
-    footer {
-      text-align: center;
-      padding: 40px 20px;
-      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-top: 1px solid rgba(255,255,255,0.3);
-      margin-top: 50px;
-    }
-
-    footer p {
-      color: #666;
-      font-weight: 500;
-    }
-
-    @media (max-width: 768px) {
-      .profile-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-      
-      .profile-header {
-        padding: 30px 20px;
-      }
-      
-      .profile-header h1 {
-        font-size: 2.5rem;
-      }
-      
-      .profile-card {
-        padding: 25px;
-      }
-    }
-
-    .profile-section h2 a {
-      color: inherit;
-      text-decoration: none;
-    }
-    .profile-section h2 a:hover {
-      color: #ffd166;
-    }
-
-    /* Location Modal */
-    .location-modal {
-      display: none;
-      position: fixed;
-      z-index: 10000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(10px);
-    }
-
-    .location-modal-content {
-      background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
-      backdrop-filter: blur(20px);
-      margin: 5% auto;
-      padding: 30px;
-      border-radius: 25px;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-      border: 1px solid rgba(255,255,255,0.3);
-    }
-
-    .location-close {
-      color: #ff6b6b;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-      background: none;
-      border: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-    }
-
-    .location-close:hover {
-      background: rgba(255,107,107,0.1);
-      transform: rotate(90deg);
-    }
-
-    .location-form {
-      margin-top: 20px;
-    }
-
-    .location-input {
-      width: 100%;
-      padding: 15px;
-      border: 2px solid #2d6a4f;
-      border-radius: 15px;
-      font-size: 16px;
-      margin-bottom: 20px;
-      background: rgba(255,255,255,0.8);
-      backdrop-filter: blur(10px);
-    }
-
-    .location-btn {
-      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      border-radius: 25px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-right: 10px;
-    }
-
-    .location-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(45, 106, 79, 0.3);
-    }
-
-    /* Dark theme styles */
-    body.dark-theme {
-      background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-    }
-
-    body.dark-theme .profile-header,
-    body.dark-theme .profile-card,
-    body.dark-theme footer {
-      background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-      border-color: rgba(255,255,255,0.2);
-    }
-
-    body.dark-theme .profile-header h1,
-    body.dark-theme .profile-card h3 {
-      color: #40916c;
-    }
-
-    body.dark-theme .profile-header p,
-    body.dark-theme .profile-card p,
-    body.dark-theme footer p {
-      color: #ccc;
-    }
-
-    body.dark-theme .location-modal-content {
-      background: linear-gradient(145deg, rgba(40,40,40,0.95) 0%, rgba(30,30,30,0.9) 100%);
-    }
-
-    body.dark-theme .location-input {
-      background: rgba(40,40,40,0.8);
-      border-color: #40916c;
-      color: #fff;
-    }
   </style>
 </head>
 <body>
   <nav class="navbar">
-    <div class="nav-container">
-      <div class="nav-logo">
-        <img src="logo.jpg" alt="TilleValle Logo" class="logo-img">
-        <span class="logo-text">TilleValle</span>
-      </div>
-      <div class="nav-menu">
-        <a href="index.html" class="nav-link" data-translate="home">Home</a>
-        <a href="about.html" class="nav-link" data-translate="about">About</a>
-        <a href="contact.html" class="nav-link" data-translate="contact">Contact</a>
-        <a href="profile.html" class="nav-link active" data-translate="profile">Profile</a>
-        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-          <span class="theme-icon">🌙</span>
-        </button>
-        <div class="language-selector">
-          <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
-          <button class="lang-btn" onclick="changeLanguage('es')">ES</button>
-          <button class="lang-btn" onclick="changeLanguage('fr')">FR</button>
-        </div>
-      </div>
+    <div class="nav-left">
+      <a href="index.html" class="nav-link logo-link">
+        <img src="logo.jpg" alt="TillValle Logo" class="logo">
+      </a>
+      <a href="shop.html" class="nav-link">Shop</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <div class="nav-right">
+      <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
+      <div id="user-area"></div>
     </div>
   </nav>
 
   <div class="profile-container">
     <div class="profile-header">
-      <div class="profile-avatar">U</div>
-      <h1 data-translate="welcome_user">Welcome, User!</h1>
-      <p data-translate="profile_subtitle">Manage your TilleValle experience</p>
-    </div>
-
-    <div class="profile-grid">
-      <div class="profile-card" onclick="window.location.href='settings.html'">
-        <span class="card-icon">⚙️</span>
-        <h3 data-translate="account_settings">Account Settings</h3>
-        <p data-translate="manage_account">Manage your account preferences and personal information</p>
-        <span class="card-arrow">→</span>
-      </div>
-
-      <div class="profile-card" onclick="window.location.href='orders.html'">
-        <span class="card-icon">📦</span>
-        <h3 data-translate="order_history">Order History</h3>
-        <p data-translate="view_orders">View your past orders and track current deliveries</p>
-        <span class="card-arrow">→</span>
-      </div>
-
-      <div class="profile-card" onclick="window.location.href='favorites.html'">
-        <span class="card-icon">❤️</span>
-        <h3 data-translate="favorites">Favorites</h3>
-        <p data-translate="saved_items">Your saved items and wishlist</p>
-        <span class="card-arrow">→</span>
-      </div>
-
-      <div class="profile-card" onclick="window.location.href='cart.html'">
-        <span class="card-icon">🛒</span>
-        <h3 data-translate="cart">Shopping Cart</h3>
-        <p data-translate="view_cart">View and manage your cart items</p>
-        <span class="card-arrow">→</span>
-      </div>
-
-      <div class="profile-card" onclick="openLocationModal()">
-        <span class="card-icon">📍</span>
-        <h3 data-translate="location">Location</h3>
-        <p data-translate="manage_location">Update your delivery address and location preferences</p>
-        <span class="card-arrow">→</span>
-      </div>
-
-      <div class="profile-card" onclick="window.location.href='notifications.html'">
-        <span class="card-icon">🔔</span>
-        <h3 data-translate="notifications">Notifications</h3>
-        <p data-translate="notification_settings">Manage your notification preferences</p>
-        <span class="card-arrow">→</span>
-      </div>
-
-      <div class="profile-card logout-card" onclick="logout()">
-        <span class="card-icon">🚪</span>
-        <h3 data-translate="logout">Logout</h3>
-        <p data-translate="logout_description">Sign out of your account</p>
-        <span class="card-arrow">→</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Location Modal -->
-  <div id="locationModal" class="location-modal">
-    <div class="location-modal-content">
-      <button class="location-close" onclick="closeLocationModal()">&times;</button>
-      <h2 data-translate="update_location">Update Location</h2>
-      <div class="location-form">
-        <input type="text" id="locationInput" class="location-input" placeholder="Enter your address" data-translate-placeholder="enter_address">
-        <button class="location-btn" onclick="saveLocation()" data-translate="save">Save</button>
-        <button class="location-btn" onclick="getCurrentLocation()" data-translate="use_current">Use Current Location</button>
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    <p data-translate="footer_text">&copy; 2024 TilleValle. All rights reserved.</p>
-  </footer>
-
-  <script>
-    function openLocationModal() {
-      document.getElementById('locationModal').style.display = 'block';
-    }
-
-    function closeLocationModal() {
-      document.getElementById('locationModal').style.display = 'none';
-    }
-
-    function saveLocation() {
-      const location = document.getElementById('locationInput').value;
-      if (location.trim()) {
-        localStorage.setItem('userLocation', location);
-        alert('Location saved successfully!');
-        closeLocationModal();
-      } else {
-        alert('Please enter a valid location');
-      }
-    }
-
-    function getCurrentLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-          document.getElementById('locationInput').value = `${lat}, ${lon}`;
-        }, function(error) {
-          alert('Unable to get current location');
-        });
-      } else {
-        alert('Geolocation is not supported by this browser');
-      }
-    }
-
-    function logout() {
-      if (confirm('Are you sure you want to logout?')) {
-        localStorage.removeItem('email');
-        localStorage.removeItem('user');
-        localStorage.removeItem('userLocation');
-        window.location.href = 'login.html';
-      }
-    }
-
-    // Close modal when clicking outside
-    window.onclick = function(event) {
-      const modal = document.getElementById('locationModal');
-      if (event.target === modal) {
-        closeLocationModal();
-      }
-    }
-  </script>
-</body>
-</html>e footer p {
-      color: #ccc;
-    }
-
-    body.dark-theme .location-modal-content {
-      background: linear-gradient(145deg, rgba(40,40,40,0.95) 0%, rgba(30,30,30,0.9) 100%);
-    }
-
-    body.dark-theme .location-input {
-      background: rgba(40,40,40,0.8);
-      border-color: #40916c;
-      color: #fff;
-    }
-  </style>
-</head>
-<body>
-  <nav class="navbar">
-    <div class="nav-container">
-      <div class="nav-logo">
-        <img src="logo.jpg" alt="TilleValle Logo" class="logo-img">
-        <span class="logo-text">TilleValle</span>
-      </div>
-      <div class="nav-menu">
-        <a href="index.html" class="nav-link" data-translate="home">Home</a>
-        <a href="about.html" class="nav-link" data-translate="about">About</a>
-        <a href="contact.html" class="nav-link" data-translate="contact">Contact</a>
-        <a href="profile.html" class="nav-link active" data-translate="profile">Profile</a>
-        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-          <span class="theme-icon">🌙</span>
-        </button>
-        <div class="language-selector">
-          <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
-          <button class="lang-btn" onclick="changeLanguage('es')">ES</button>
-          <button class="lang-btn" onclick="changeLanguage('fr')">FR</button>
-        </div>
-      </div>
-    </div>
-  </nav>
-
-  <div class="profile-container">
-    <div class="profile-header">
-      <div class="profile-avatar">U</div>
-      <h1 data-translate="welcome_user">Welcome, User!</h1>
-      <p data-translate="profile_subtitle">Manage your TilleValle experience</p>
-    </div>
-
-    <div class="profile-grid">
-      <div class="profile-card" onclick="window.location.href='settings.html'">
-        <span class="card-icon">⚙️</span>
-        <h3 data-translate="account_settings">Account Settings</h3>
-        <p data-translate="manage_account">Manage your account preferences and personal information</p>
-        <span class="card-arrow">→</span>
-      </div>
-
-      <div class="profile-card" onclick="window.location.href='orders.html'">
-        <span class="card-icon">📦</span>
-        <h3 data-translate="order_history">Order History</h3>
-        <p data-translate="view_orders">View your past orders and track current deliveries</p>
-        <span class="card-arrow">→</span>
-      </div>
-
-      <div class="profile-card" onclick="window.location.href='favorites.html'">
-        <span class="card-icon">❤️</span>
-        <h3 data-translate="favorites">Favorites</h3>
-        <p data-translate="saved_items">Your saved items and wishlist</p>
-        <span class="card-arrow">→</span>
-      </div>
-
-      <div class="profile-card" onclick="openLocationModal()">
-        <span class="card-icon">📍</span>
-        <h3 data-translate="location">Location</h3>
-        <p data-translate="manage_location">Update your delivery address and location preferences</p>
-        <span class="card-arrow">→</span>
-      </div>
-
-      <div class="profile-card" onclick="window.location.href='cart.html'">
-        <span class="card-icon">🛒</span>
-        <h3 data-translate="cart">Shopping Cart</h3>
-        <p data-translate="view_cart">View and manage your cart items</p>
-        <span class="card-arrow">→</span>
-      </div>
-
-      <div class="profile-card" onclick="window.location.href='notifications.html'">
-        <span class="card-icon">🔔</span>
-        <h3 data-translate="notifications">Notifications</h3>
-        <p data-translate="notification_settings">Manage your notification preferences</p>
-        <span class="card-arrow">→</span>
-      </div>
-
-      <div class="profile-card logout-card" onclick="logout()">
-        <span class="card-icon">🚪</span>
-        <h3 data-translate="logout">Logout</h3>
-        <p data-translate="logout_description">Sign out of your account</p>
-        <span class="card-arrow">→</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Location Modal -->
-  <div id="locationModal" class="location-modal">
-    <div class="location-modal-content">
-      <button class="location-close" onclick="closeLocationModal()">&times;</button>
-      <h2 data-translate="update_location">Update Location</h2>
-      <div class="location-form">
-        <input type="text" id="locationInput" class="location-input" placeholder="Enter your address" data-translate-placeholder="enter_address">
-        <button class="location-btn" onclick="saveLocation()" data-translate="save">Save</button>
-        <button class="location-btn" onclick="getCurrentLocation()" data-translate="use_current">Use Current Location</button>
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    <p data-translate="footer_text">&copy; 2024 TilleValle. All rights reserved.</p>
-  </footer>
-
-  <script>
-    function openLocationModal() {
-      document.getElementById('locationModal').style.display = 'block';
-    }
-
-    function closeLocationModal() {
-      document.getElementById('locationModal').style.display = 'none';
-    }
-
-    function saveLocation() {
-      const location = document.getElementById('locationInput').value;
-      if (location.trim()) {
-        localStorage.setItem('userLocation', location);
-        alert('Location saved successfully!');
-        closeLocationModal();
-      } else {
-        alert('Please enter a valid location');
-      }
-    }
-
-    function getCurrentLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-          document.getElementById('locationInput').value = `${lat}, ${lon}`;
-        }, function(error) {
-          alert('Unable to get current location');
-        });
-      } else {
-        alert('Geolocation is not supported by this browser');
-      }
-    }
-
-    function logout() {
-      if (confirm('Are you sure you want to logout?')) {
-        localStorage.removeItem('userToken');
-        localStorage.removeItem('userLocation');
-        window.location.href = 'login.html';
-      }
-    }
-
-    // Close modal when clicking outside
-    window.onclick = function(event) {
-      const modal = document.getElementById('locationModal');
-      if (event.target === modal) {
-        closeLocationModal();
-      }
-    }
-  </script>
-</body>
-</html>e footer p {
-      color: #ccc;
-    }
-  </style>
-</head>
-<body>
-  <!-- Loading Screen -->
-  <div id="loading-screen">
-    <img src="logo.jpg" alt="TilleValle" class="loading-logo">
-    <div class="loading-spinner"></div>
-  </div>
-  <div id="navbar-container"></div>
-
-  <main class="profile-container">
-    <div class="profile-header">
-      <div class="profile-avatar">
-        <span id="user-initial">U</span>
-      </div>
-      <h1 id="profile-title" data-translate="myProfile">My Profile</h1>
-      <p id="user-email" data-translate="welcomeBack">Welcome back!</p>
+      <div class="profile-avatar" id="profile-avatar">U</div>
+      <h1 id="profile-name">Welcome, User!</h1>
+      <p id="profile-email">user@example.com</p>
     </div>
 
     <div class="profile-grid">
       <div class="profile-card" onclick="window.location.href='account.html'">
-        <div class="card-icon">👤</div>
-        <h3 data-translate="accountSettings">Account Settings</h3>
-        <p data-translate="managePersonalInfo">Manage your personal information and preferences</p>
-        <div class="card-arrow">→</div>
-      </div>
-
-      <div class="profile-card" onclick="openLocationModal()">
-        <div class="card-icon">🏠</div>
-        <h3>Home Location</h3>
-        <p id="home-location-display">No home location set</p>
-        <div class="card-arrow">→</div>
+        <span class="card-icon">⚙️</span>
+        <h3>Account Settings</h3>
+        <p>Manage your personal information</p>
       </div>
 
       <div class="profile-card" onclick="window.location.href='orderhistory.html'">
-        <div class="card-icon">📦</div>
-        <h3 data-translate="orderHistory">Order History</h3>
-        <p data-translate="viewPastOrders">View your past orders and track deliveries</p>
-        <div class="card-arrow">→</div>
+        <span class="card-icon">📦</span>
+        <h3>Order History</h3>
+        <p>View your past orders</p>
+      </div>
+
+      <div class="profile-card" onclick="window.location.href='cart.html'">
+        <span class="card-icon">🛒</span>
+        <h3>Shopping Cart</h3>
+        <p>View your cart items</p>
+      </div>
+
+      <div class="profile-card" onclick="window.location.href='location.html'">
+        <span class="card-icon">📍</span>
+        <h3>Delivery Address</h3>
+        <p>Manage your delivery locations</p>
       </div>
 
       <div class="profile-card" onclick="window.location.href='faq.html'">
-        <div class="card-icon">❓</div>
-        <h3 data-translate="helpFaq">Help & FAQ</h3>
-        <p data-translate="getFaqAnswers">Get answers to frequently asked questions</p>
-        <div class="card-arrow">→</div>
+        <span class="card-icon">❓</span>
+        <h3>Help & FAQ</h3>
+        <p>Get help and support</p>
       </div>
 
-      <div class="profile-card" onclick="window.location.href='language.html'">
-        <div class="card-icon">🌐</div>
-        <h3 data-translate="language">Language</h3>
-        <p data-translate="chooseLanguage">Choose your preferred language</p>
-        <div class="card-arrow">→</div>
-      </div>
-
-      <div class="profile-card" onclick="toggleTheme()" id="theme-card">
-        <div class="card-icon" id="theme-icon">🌙</div>
-        <h3>Theme</h3>
-        <p id="theme-description">Toggle between light and dark mode</p>
-        <div class="card-arrow">→</div>
-      </div>
-
-      <div class="profile-card logout-card" id="logout-card">
-        <div class="card-icon">🚪</div>
-        <h3 data-translate="logout">Logout</h3>
-        <p data-translate="signOut">Sign out of your account</p>
-        <div class="card-arrow">→</div>
-      </div>
-    </div>
-  </main>
-
-  <script>
-    // Load navbar
-    fetch('navbar.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('navbar-container').innerHTML = data;
-      });
-
-    // Hide loading screen when page loads
-    window.addEventListener('load', function() {
-      const loadingScreen = document.getElementById('loading-screen');
-      if (loadingScreen) {
-        loadingScreen.classList.add('hidden');
-        setTimeout(() => loadingScreen.remove(), 800);
-      }
-    });
-    
-    document.addEventListener('DOMContentLoaded', function() {
-      // Set user info
-      const userEmail = localStorage.getItem('email');
-      const userName = localStorage.getItem(`profileName_${userEmail}`) || 'User';
-      const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
-      
-      if (userEmail) {
-        const userInitialElem = document.getElementById('user-initial');
-        if (profilePicture) {
-          userInitialElem.innerHTML = `<img src="${profilePicture}" alt="Profile" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
-        } else {
-          userInitialElem.textContent = userName.charAt(0).toUpperCase();
-        }
-        document.getElementById('profile-title').textContent = `Hello, ${userName}`;
-        document.getElementById('user-email').textContent = userEmail;
-        
-        // Load and display home location
-        const savedLocations = JSON.parse(localStorage.getItem(`savedLocations_${userEmail}`)) || [];
-        const homeLocation = savedLocations.find(loc => loc.type === 'Home');
-        const homeLocationDisplay = document.getElementById('home-location-display');
-        if (homeLocation) {
-          homeLocationDisplay.textContent = homeLocation.address;
-        } else {
-          homeLocationDisplay.textContent = 'No home location set';
-        }
-      }
-      
-      // Manually populate navbar if renderUserArea doesn't work
-      const userArea = document.getElementById('user-area');
-      if (userArea && userEmail) {
-        const initial = userEmail.charAt(0).toUpperCase();
-        const profilePicture = localStorage.getItem(`profilePicture_${userEmail}`);
-        const userDisplay = profilePicture ? 
-          `<img src="${profilePicture}" alt="Profile" class="user-avatar">` : 
-          initial;
-        let adminLink = '';
-        if (userEmail === 'andrewmunamwangi@gmail.com') {
-          adminLink = `<a href="admin.html" class="nav-link" data-translate="admin">Admin</a>`;
-        }
-        userArea.innerHTML = `
-          <div class="user-dropdown-container">
-            <span class="user-initial" onclick="toggleUserDropdown()" title="${userEmail}">${userDisplay}</span>
-            <div class="user-dropdown" id="user-dropdown">
-              <a href="profile.html" data-translate="profile">Profile</a>
-              <a href="#" class="logout-btn" onclick="logout()" data-translate="logout">Logout</a>
-            </div>
-          </div>
-          ${adminLink}
-        `;
-      }
-      
-      // Ensure renderUserArea is called after script.js loads
-      setTimeout(() => {
-        if (typeof renderUserArea === 'function') {
-          renderUserArea();
-        }
-      }, 100);
-      
-      // Logout functionality
-      const logoutCard = document.getElementById('logout-card');
-
-      logoutCard.addEventListener('click', async function() {
-        try {
-          const isNetlify = window.location.hostname.includes('netlify') || window.location.href.includes('netlify');
-          const logoutUrl = isNetlify ? '/.netlify/functions/logout' : '/logout';
-
-          const response = await fetch(logoutUrl, {
-            method: 'POST',
-            credentials: 'include'
-          });
-
-          const result = await response.json();
-
-          if (result.ok) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('email');
-            sessionStorage.removeItem('token');
-            window.location.href = 'login.html';
-          } else {
-            localStorage.removeItem('token');
-            localStorage.removeItem('email');
-            sessionStorage.removeItem('token');
-            window.location.href = 'login.html';
-          }
-        } catch (error) {
-          console.error('Logout error:', error);
-          localStorage.removeItem('token');
-          localStorage.removeItem('email');
-          sessionStorage.removeItem('token');
-          window.location.href = 'login.html';
-        }
-      });
-
-      // Theme toggle functionality
-      const themeToggleCard = document.getElementById('theme-toggle-card');
-      themeToggleCard.addEventListener('click', function() {
-        const body = document.body;
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        body.classList.toggle('dark-theme');
-        localStorage.setItem('theme', newTheme);
-        // Update icon
-        const icon = themeToggleCard.querySelector('.card-icon');
-        icon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
-      });
-
-      // Apply saved theme on load
-      const savedTheme = localStorage.getItem('theme') || 'light';
-      if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-        const icon = themeToggleCard.querySelector('.card-icon');
-        icon.textContent = '☀️';
-      }
-
-      // Add dropdown toggle function
-      window.toggleUserDropdown = function() {
-        const dropdown = document.getElementById('user-dropdown');
-        if (dropdown) {
-          dropdown.classList.toggle('show');
-        }
-      };
-      
-      // Add logout function
-      window.logout = function() {
-        localStorage.removeItem('email');
-        localStorage.removeItem('user');
-        window.location.href = 'login.html';
-      };
-      
-      // Close dropdown when clicking outside
-      document.addEventListener('click', (event) => {
-        const dropdown = document.getElementById('user-dropdown');
-        const container = document.querySelector('.user-dropdown-container');
-        if (dropdown && container && !container.contains(event.target)) {
-          dropdown.classList.remove('show');
-        }
-      });
-      // Chatbot functions
-      const floatingChatbotBtn = document.getElementById('floating-chatbot-btn');
-      const chatbotSidebar = document.getElementById('chatbot-sidebar');
-      const chatbotClose = document.getElementById('chatbot-close');
-      const chatbotSend = document.getElementById('chatbot-send');
-      const chatbotInput = document.getElementById('chatbot-input');
-      
-      if (floatingChatbotBtn) {
-        floatingChatbotBtn.addEventListener('click', () => {
-          if (chatbotSidebar) chatbotSidebar.classList.add('open');
-          floatingChatbotBtn.style.display = 'none';
-        });
-      }
-      if (chatbotClose) {
-        chatbotClose.addEventListener('click', () => {
-          if (chatbotSidebar) chatbotSidebar.classList.remove('open');
-          if (floatingChatbotBtn) floatingChatbotBtn.style.display = 'flex';
-        });
-      }
-      if (chatbotSend) {
-        chatbotSend.addEventListener('click', sendMessage);
-      }
-      if (chatbotInput) {
-        chatbotInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') sendMessage();
-        });
-      }
-      
-      async function sendMessage() {
-        const message = chatbotInput.value.trim();
-        if (!message) return;
-        
-        const messagesDiv = document.getElementById('chatbot-messages');
-        // Safely append user message
-        const userMessageDiv = document.createElement('div');
-        userMessageDiv.className = 'chatbot-message user';
-        userMessageDiv.textContent = message;
-        messagesDiv.appendChild(userMessageDiv);
-        chatbotInput.value = '';
-        const thinkingDiv = document.createElement('div');
-        thinkingDiv.className = 'chatbot-message bot';
-        thinkingDiv.textContent = 'Thinking...';
-        messagesDiv.appendChild(thinkingDiv);
-        const loadingMessage = messagesDiv.lastElementChild;
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        
-        try {
-          const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-          const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/.netlify/functions/chatbot';
-          const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-          const response = await fetch(chatbotUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message, language: currentLang })
-          });
-          const data = await response.json();
-          if (loadingMessage) loadingMessage.remove();
-          const botReply = document.createElement('div');
-          botReply.className = 'chatbot-message bot';
-          botReply.textContent = data.message;
-          messagesDiv.appendChild(botReply);
-        } catch (error) {
-          if (loadingMessage) loadingMessage.remove();
-          const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-          const offlineResponses = {
-            en: { human: "I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com.", default: "Hello! Welcome to TilleValle! I'm running in offline mode." },
-            sw: { human: "Nitakuunganisha na wakala wetu Angela Wanjiru kwa angelawanjiru@gmail.com.", default: "Hujambo! Karibu TilleValle! Ninafanya kazi nje ya mtandao." },
-            fr: { human: "Je vais vous connecter avec notre agent Angela Wanjiru à angelawanjiru@gmail.com.", default: "Bonjour! Bienvenue chez TilleValle! Je fonctionne en mode hors ligne." },
-            zh: { human: "我将为您联系客服代表 Angela Wanjiru，邮箱：angelawanjiru@gmail.com。", default: "您好！欢迎来到 TilleValle！我正在离线模式下运行。" }
-          };
-          const responses = offlineResponses[currentLang] || offlineResponses.en;
-          const respDiv = document.createElement('div');
-          respDiv.className = 'chatbot-message bot';
-          respDiv.textContent = (message.toLowerCase().includes('human') || message.toLowerCase().includes('agent')) ? responses.human : responses.default;
-          messagesDiv.appendChild(respDiv);
-        }
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-      }
-    });
-  </script>
-
-  <!-- Toast -->
-  <div id="cart-toast"></div>
-
-  <!-- Chatbot Sidebar -->
-  <div id="chatbot-sidebar" class="chatbot-sidebar">
-    <div class="chatbot-header">
-      <span>TillieBot</span>
-      <button id="chatbot-close" class="chatbot-close">&times;</button>
-    </div>
-    <div id="chatbot-messages" class="chatbot-messages">
-      <div class="chatbot-message bot">
-        <span data-translate="chatbotWelcome">Hello! I'm TillieBot, your TillValle assistant. 🌱 I can help you with:</span><br><br>
-        <span data-translate="productInfo">• Product information & stock levels</span><br>
-        <span data-translate="deliveryPricing">• Delivery pricing for your location</span><br>
-        <span data-translate="orderAssistance">• Order assistance</span><br><br>
-        <span data-translate="liveChat">For live chat with a human agent, just ask! How can I help you today?</span>
-      </div>
-    </div>
-    <div class="chatbot-input-area">
-      <div class="chatbot-input-container">
-        <input type="text" id="chatbot-input" class="chatbot-input" data-translate-placeholder="typeMessage" placeholder="Type your message...">
-        <button id="chatbot-send" class="chatbot-send">➤</button>
+      <div class="profile-card logout-card" onclick="logout()">
+        <span class="card-icon">🚪</span>
+        <h3>Logout</h3>
+        <p>Sign out of your account</p>
       </div>
     </div>
   </div>
 
-  <!-- Floating Chatbot Button -->
-  <div id="floating-chatbot-btn" class="floating-chatbot-btn">
-    <span class="chatbot-emoji">💬</span>
-  </div>
-
-  <!-- Location Modal -->
-  <div id="location-modal" class="location-modal">
-    <div class="location-modal-content">
-      <button class="location-close" onclick="closeLocationModal()">&times;</button>
-      <h2 style="color: #2d6a4f; margin-bottom: 20px;">Set Home Location</h2>
-      <div class="location-form">
-        <input type="text" id="location-input" class="location-input" placeholder="Enter your home address...">
-        <button class="location-btn" onclick="saveLocation()">Save Location</button>
-        <button class="location-btn" onclick="getCurrentLocation()" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);">Use Current Location</button>
-      </div>
+  <!-- Chat Button -->
+  <div id="chat-btn">💬</div>
+  
+  <!-- Chat Window -->
+  <div id="chat-window">
+    <div id="chat-header">
+      <span>TillValle Chat</span>
+      <button id="chat-close">×</button>
+    </div>
+    <div id="chat-messages">
+      <div class="bot-msg">🌱 Hi! I'm TillieBot. How can I help you today?</div>
+    </div>
+    <div id="chat-input-area">
+      <input type="text" id="chat-input" placeholder="Type your message...">
+      <button id="chat-send">Send</button>
     </div>
   </div>
 
   <footer>
-    <p>&copy; 2025 TilleValle. <span data-translate="allRightsReserved">All rights reserved.</span></p>
+    <p>&copy; 2025 TillValle. All rights reserved.</p>
   </footer>
 
   <script>
-    // Location modal functions
-    function openLocationModal() {
-      document.getElementById('location-modal').style.display = 'block';
-      const userEmail = localStorage.getItem('email');
-      const savedLocations = JSON.parse(localStorage.getItem(`savedLocations_${userEmail}`)) || [];
-      const homeLocation = savedLocations.find(loc => loc.type === 'Home');
-      if (homeLocation) {
-        document.getElementById('location-input').value = homeLocation.address;
-      }
-    }
-
-    function closeLocationModal() {
-      document.getElementById('location-modal').style.display = 'none';
-    }
-
-    function saveLocation() {
-      const address = document.getElementById('location-input').value.trim();
-      if (!address) {
-        alert('Please enter an address');
-        return;
-      }
-      
-      const userEmail = localStorage.getItem('email');
-      let savedLocations = JSON.parse(localStorage.getItem(`savedLocations_${userEmail}`)) || [];
-      
-      // Remove existing home location
-      savedLocations = savedLocations.filter(loc => loc.type !== 'Home');
-      
-      // Add new home location
-      savedLocations.push({
-        type: 'Home',
-        address: address,
-        timestamp: new Date().toISOString()
-      });
-      
-      localStorage.setItem(`savedLocations_${userEmail}`, JSON.stringify(savedLocations));
-      document.getElementById('home-location-display').textContent = address;
-      closeLocationModal();
-      
-      // Show success toast
-      const toast = document.getElementById('cart-toast');
-      toast.textContent = 'Home location saved successfully!';
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-
-    function getCurrentLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          
-          // Use reverse geocoding (simplified)
-          fetch(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=YOUR_API_KEY`)
-            .then(response => response.json())
-            .then(data => {
-              if (data.results && data.results[0]) {
-                document.getElementById('location-input').value = data.results[0].formatted;
-              } else {
-                document.getElementById('location-input').value = `${lat}, ${lng}`;
-              }
-            })
-            .catch(() => {
-              document.getElementById('location-input').value = `${lat}, ${lng}`;
-            });
-        }, function() {
-          alert('Unable to get your location. Please enter manually.');
-        });
-      } else {
-        alert('Geolocation is not supported by this browser.');
-      }
-    }
-
-    // Theme toggle function
-    function toggleTheme() {
-      const body = document.body;
-      const isDark = body.classList.toggle('dark-theme');
-      const themeIcon = document.getElementById('theme-icon');
-      const themeDesc = document.getElementById('theme-description');
-      
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-      
-      if (isDark) {
-        themeIcon.textContent = '☀️';
-        themeDesc.textContent = 'Switch to light mode';
-      } else {
-        themeIcon.textContent = '🌙';
-        themeDesc.textContent = 'Switch to dark mode';
-      }
-      
-      // Show success toast
-      const toast = document.getElementById('cart-toast');
-      toast.textContent = `Switched to ${isDark ? 'dark' : 'light'} theme`;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2000);
-    }
-
-    // Apply saved theme on load
     document.addEventListener('DOMContentLoaded', function() {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-        document.getElementById('theme-icon').textContent = '☀️';
-        document.getElementById('theme-description').textContent = 'Switch to light mode';
+      // Load user info
+      const userEmail = localStorage.getItem('email');
+      if (userEmail) {
+        document.getElementById('profile-email').textContent = userEmail;
+        document.getElementById('profile-name').textContent = `Welcome, ${userEmail.split('@')[0]}!`;
+        document.getElementById('profile-avatar').textContent = userEmail.charAt(0).toUpperCase();
+      }
+
+      // Update cart count
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById('cart-count').textContent = totalQuantity;
+
+      // User area
+      const userArea = document.getElementById('user-area');
+      if (userEmail) {
+        const initial = userEmail.charAt(0).toUpperCase();
+        userArea.innerHTML = `
+          <div class="user-dropdown-container">
+            <span class="user-initial" onclick="toggleUserDropdown()">${initial}</span>
+            <div class="user-dropdown" id="user-dropdown">
+              <a href="profile.html">Profile</a>
+              <a href="#" onclick="logout()">Logout</a>
+            </div>
+          </div>
+        `;
+      } else {
+        userArea.innerHTML = `<a href="login.html" class="nav-link">Login</a>`;
       }
     });
 
-    // Close modal when clicking outside
-    window.onclick = function(event) {
-      const modal = document.getElementById('location-modal');
-      if (event.target === modal) {
-        closeLocationModal();
+    function toggleUserDropdown() {
+      const dropdown = document.getElementById('user-dropdown');
+      if (dropdown) dropdown.classList.toggle('show');
+    }
+
+    function logout() {
+      if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('email');
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
       }
     }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (event) => {
+      const dropdown = document.getElementById('user-dropdown');
+      const container = document.querySelector('.user-dropdown-container');
+      if (dropdown && container && !container.contains(event.target)) {
+        dropdown.classList.remove('show');
+      }
+    });
   </script>
 
+  <script src="global-chat.js"></script>
+  <script src="bg-init.js"></script>
 </body>
 </html>
-
