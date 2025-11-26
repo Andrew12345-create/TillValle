@@ -125,3 +125,55 @@ document.addEventListener('DOMContentLoaded', initNavbar);
 if (document.getElementById('hamburger-btn')) {
   initNavbar();
 }
+
+// Ensure Tinychat script is loaded once per page
+(function ensureTinychat(){
+  try {
+    if (document.querySelector('script[src="https://tinychat.ai/tinychat.js"]')) return;
+    const s = document.createElement('script');
+    s.src = 'https://tinychat.ai/tinychat.js';
+    s.async = true;
+    s.defer = true;
+    s.setAttribute('data-id','cmifhtukf001hky04ol11gf5g');
+    (document.body || document.head || document.documentElement).appendChild(s);
+  } catch(e) { /* no-op */ }
+})();
+
+document.addEventListener('DOMContentLoaded', function(){
+  try {
+    if (document.querySelector('script[src="https://tinychat.ai/tinychat.js"]')) return;
+    const s = document.createElement('script');
+    s.src = 'https://tinychat.ai/tinychat.js';
+    s.async = true;
+    s.defer = true;
+    s.setAttribute('data-id','cmifhtukf001hky04ol11gf5g');
+    (document.body || document.head || document.documentElement).appendChild(s);
+  } catch(e) { /* no-op */ }
+});
+
+// Chatbase embed: new universal loader
+(function(){
+  if(!window.chatbase || window.chatbase("getState") !== "initialized"){
+    window.chatbase = (...args) => {
+      if(!window.chatbase.q){ window.chatbase.q = []; }
+      window.chatbase.q.push(args);
+    };
+    window.chatbase = new Proxy(window.chatbase, {
+      get(target, prop){
+        if(prop === "q"){ return target.q; }
+        return (...args) => target(prop, ...args);
+      }
+    });
+  }
+  const onLoad = function(){
+    const exist = document.getElementById("qec3elonJWqywDRATwocl");
+    if (exist) return;
+    const script = document.createElement("script");
+    script.src = "https://www.chatbase.co/embed.min.js";
+    script.id = "qec3elonJWqywDRATwocl";
+    script.domain = "www.chatbase.co";
+    (document.body || document.head || document.documentElement).appendChild(script);
+  };
+  if(document.readyState === "complete"){ onLoad(); }
+  else { window.addEventListener("load", onLoad); }
+})();

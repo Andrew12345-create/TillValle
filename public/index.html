@@ -241,7 +241,7 @@
       transform: translateY(-2px);
     }
 
-    /* Popular Products Section - Enhanced */
+    /* Popular Products Section - Enhanced Glassmorphism */
     .popular-products-section {
       max-width: 1400px;
       margin: 80px auto;
@@ -289,97 +289,120 @@
 
     .popular-products-section .products {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 40px;
-      padding: 50px 0;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 30px 0;
     }
 
     .popular-products-section .product {
-      background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%);
-      border-radius: 30px;
-      padding: 30px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border-radius: 18px;
+      padding: 12px;
       text-align: center;
       box-shadow: 
-        0 20px 50px rgba(0, 0, 0, 0.15),
-        0 0 0 1px rgba(255,255,255,0.2),
-        inset 0 2px 0 rgba(255,255,255,0.3);
+        0 25px 60px rgba(0, 0, 0, 0.2),
+        0 0 0 2px rgba(255,255,255,0.1),
+        inset 0 2px 0 rgba(255,255,255,0.3),
+        0 0 40px rgba(255,255,255,0.05);
       cursor: pointer;
-      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 350px;
-      -webkit-backdrop-filter: blur(20px);
-      backdrop-filter: blur(20px);
+      min-height: 200px;
     }
 
     .popular-products-section .product::before {
       content: '';
       position: absolute;
       top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(34,197,94, 0.1), transparent);
-      transition: left 0.8s ease;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image:
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 226, 0.1) 0%, transparent 50%);
+      background-size: 200px 200px, 150px 150px, 100px 100px;
+      background-position: 0% 0%, 100% 100%, 50% 50%;
+      animation: backgroundFloat 20s ease-in-out infinite;
+      border-radius: 35px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.6s ease;
     }
 
     .popular-products-section .product:hover::before {
-      left: 100%;
+      opacity: 1;
     }
 
     .popular-products-section .product:hover {
-      transform: translateY(-20px) scale(1.08);
+      transform: translateY(-20px) scale(1.05);
       box-shadow: 
-        0 30px 80px rgba(0, 0, 0, 0.25),
-        0 0 0 2px rgba(34,197,94,0.3),
-        inset 0 2px 0 rgba(255,255,255,0.4);
-      border-color: rgba(34,197,94,0.4);
+        0 40px 100px rgba(0, 0, 0, 0.3),
+        0 0 0 2px rgba(255,255,255,0.15),
+        inset 0 2px 0 rgba(255,255,255,0.4),
+        0 0 60px rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.3);
     }
 
     .popular-products-section .product-image {
       width: 100%;
-      height: 160px;
+      height: 100px;
       object-fit: contain;
-      border-radius: 25px;
-      margin-bottom: 25px;
+      border-radius: 14px;
+      margin-bottom: 12px;
       transition: all 0.5s ease;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      box-shadow: 
+        0 15px 40px rgba(0,0,0,0.2),
+        0 0 0 1px rgba(255,255,255,0.1),
+        inset 0 2px 0 rgba(255,255,255,0.2);
+      background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       padding: 10px;
+      border: 1px solid rgba(255,255,255,0.2);
     }
 
     .popular-products-section .product:hover .product-image {
-      transform: scale(1.12) rotate(3deg);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+      transform: scale(1.08) rotate(2deg);
+      box-shadow: 
+        0 20px 50px rgba(0,0,0,0.3),
+        0 0 0 2px rgba(255,255,255,0.15),
+        inset 0 2px 0 rgba(255,255,255,0.3);
     }
 
     .popular-products-section .product h4 {
-      color: var(--text-primary);
-      margin-bottom: 15px;
-      font-size: 1.4rem;
+      color: #1f2937;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
       font-weight: 800;
       line-height: 1.3;
       letter-spacing: 0.3px;
+      text-shadow: none;
     }
 
     .popular-products-section .price {
       color: white;
       font-weight: 900;
-      font-size: 1.3rem;
+      font-size: 1.1rem;
       margin-top: auto;
-      padding: 15px 25px;
-      background: linear-gradient(135deg, #16a34a 0%, #22c55e 50%, #10b981 100%);
+      padding: 8px 14px;
+      background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%);
       border-radius: 50px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      text-shadow: 0 3px 8px rgba(0,0,0,0.4);
       box-shadow: 
-        0 8px 25px rgba(22,197,94,0.4),
+        0 8px 25px rgba(255,107,107,0.4),
+        0 0 0 2px rgba(255,255,255,0.1),
         inset 0 2px 0 rgba(255,255,255,0.2);
       position: relative;
       overflow: hidden;
+      letter-spacing: 0.5px;
     }
 
     .popular-products-section .price::before {
@@ -389,7 +412,7 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
       transition: left 0.6s ease;
     }
 
@@ -402,22 +425,23 @@
       align-items: center;
       justify-content: center;
       gap: 15px;
-      margin-top: 25px;
+      margin-top: 10px;
     }
 
     .popular-products-section .product-btn {
-      background: linear-gradient(135deg, var(--primary) 0%, #22c55e 100%);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
       color: white;
       border: none;
-      width: 50px;
-      height: 50px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 24px;
+      font-size: 20px;
       font-weight: bold;
-      transition: all 0.4s ease;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
       box-shadow: 
-        0 6px 20px rgba(45, 106, 79, 0.4),
+        0 6px 20px rgba(102,126,234,0.4),
+        0 0 0 1px rgba(255,255,255,0.1),
         inset 0 2px 0 rgba(255,255,255,0.2);
       position: relative;
       overflow: hidden;
@@ -439,9 +463,10 @@
     }
 
     .popular-products-section .product-btn:hover {
-      transform: scale(1.2) rotate(10deg);
+      transform: scale(1.15) translateY(-2px);
       box-shadow: 
-        0 10px 30px rgba(45, 106, 79, 0.6),
+        0 8px 25px rgba(102,126,234,0.5),
+        0 0 0 2px rgba(255,255,255,0.15),
         inset 0 2px 0 rgba(255,255,255,0.3);
     }
 
@@ -449,13 +474,32 @@
       min-width: 50px;
       text-align: center;
       font-weight: 900;
-      color: var(--primary);
+      color: #2c3e50;
       font-size: 1.4rem;
-      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
       padding: 8px 12px;
       border-radius: 15px;
-      border: 2px solid rgba(22,163,74,0.2);
-      box-shadow: 0 4px 15px rgba(22,163,74,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 
+        0 4px 15px rgba(0,0,0,0.1),
+        inset 0 2px 0 rgba(255,255,255,0.3);
+    }
+
+    @keyframes backgroundFloat {
+      0%, 100% {
+        background-position: 0% 0%, 100% 100%, 50% 50%;
+      }
+      25% {
+        background-position: 10% 10%, 90% 90%, 60% 40%;
+      }
+      50% {
+        background-position: 20% 20%, 80% 80%, 70% 30%;
+      }
+      75% {
+        background-position: 10% 10%, 90% 90%, 60% 40%;
+      }
     }
 
     @media (max-width: 768px) {
@@ -487,6 +531,50 @@
       .popular-products-section .product-image {
         height: 140px;
       }
+    }
+
+    /* Overlay add toggle and compact controls */
+    .popular-products-section .product { position: relative; }
+    .popular-products-section .add-toggle {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      color: #fff;
+      font-size: 22px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(34,197,94,0.35);
+      z-index: 3;
+      transition: transform 0.2s ease;
+    }
+    .popular-products-section .add-toggle:active { transform: scale(0.95); }
+
+    .popular-products-section .product .product-controls {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 9999px;
+      padding: 6px 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      opacity: 0;
+      transform: scale(0.9);
+      pointer-events: none;
+      transition: all 0.25s ease;
+      z-index: 3;
+    }
+    .popular-products-section .product.controls-open .product-controls {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
     }
 
     @media (max-width: 480px) {
@@ -647,10 +735,41 @@
     </div>
   </section>
 
+  <script>
+    // Create overlay "+" buttons and toggle compact controls on index cards
+    (function(){
+      try {
+        document.querySelectorAll('.popular-products-section .product').forEach(card => {
+          if (card.querySelector('.add-toggle')) return;
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'add-toggle';
+          btn.textContent = '+';
+          btn.addEventListener('click', function(e){
+            e.stopPropagation();
+            // Toggle controls visibility
+            const open = card.classList.toggle('controls-open');
+            // Optionally change icon
+            btn.textContent = open ? '×' : '+';
+          });
+          card.appendChild(btn);
+        });
+        // Close other controls when clicking outside
+        document.addEventListener('click', function(e){
+          document.querySelectorAll('.popular-products-section .product.controls-open').forEach(c => {
+            if (!c.contains(e.target)) {
+              const t = c.querySelector('.add-toggle');
+              if (t) t.textContent = '+';
+              c.classList.remove('controls-open');
+            }
+          });
+        });
+      } catch(err) { /* no-op */ }
+    })();
+  </script>
+
   <!-- Floating Chatbot Button -->
-  <button class="floating-chatbot-btn" id="floating-chatbot-btn" title="Chat with TillieBot">
-    💬
-  </button>
+ *****
 
   <!-- Chatbot Sidebar -->
   <div class="chatbot-sidebar" id="chatbot-sidebar">
@@ -684,5 +803,29 @@
   <script src="shipping-widget.js"></script>
   <script src="cookie-widget.js"></script>
   <script src="script.js" defer></script>
+<script>
+
+window.CHATBASE_CONFIG = {
+
+chatbotId: "qec3elonJWqywDRATwocl",
+
+button: {
+
+color: "#1E90FF", // Button color (change to your brand color)
+
+icon: "💬", // Emoji or icon
+
+position: "right", // "left" or "right"
+
+shape: "round" // "round" or "square"
+
+}
+
+};
+
+</script>
+
+<script src="https://www.chatbase.co/embed.min.js"></script>
+<script data-id="cmifhtukf001hky04ol11gf5g" src="https://tinychat.ai/tinychat.js" async defer></script>
 </body>
 </html>
