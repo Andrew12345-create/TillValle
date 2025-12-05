@@ -433,11 +433,10 @@
         populateStockTable(sampleData);
         document.getElementById('status-message').textContent = 'Sample stock data loaded - trying to fetch real data...';
         
-        // Try to fetch real data immediately
+        // Try to fetch real data immediately from Vercel API route
         setTimeout(async () => {
           try {
-            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
+            const stockUrl = '/api/stock';
             const response = await fetch(stockUrl);
             const data = await response.json();
             
@@ -452,7 +451,7 @@
           }
         }, 1000);
         
-        // Update stock function
+        // Update stock function (uses Vercel API route)
         window.updateStock = async function(productId, currentQuantity) {
           const newQuantity = prompt(`Enter new quantity for ${productId}:`, currentQuantity);
           if (newQuantity === null) return;
@@ -462,8 +461,7 @@
             return;
           }
           try {
-            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
+            const stockUrl = '/api/stock';
             const response = await fetch(stockUrl, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -490,15 +488,15 @@
             alert('Please enter a valid number (0 or greater)');
             return;
           }
-          
+
           try {
-            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
-            
+            const stockUrl = '/api/stock';
+
             const response = await fetch(stockUrl, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ product_id: productId, stock_quantity: quantity })
+              body: JSON.stringify({ product_id: productId, stock_quantity: quant
+            });ity })
             });
             
             if (response.ok) {
