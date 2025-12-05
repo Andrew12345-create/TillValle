@@ -1,750 +1,457 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TilleValle Admin - Manage Stock</title>
-  <link rel="stylesheet" href="css/navbar.css">
-  <link rel="stylesheet" href="css/site.css" />
-  <link rel="stylesheet" href="shop-styles.css" />
-  <link rel="stylesheet" href="global-chat.css" />
-  <link rel="stylesheet" href="creative-backgrounds.css" />
-  
-  <!-- Hotjar Tracking Code for Tillvalle -->
-  <script>
-      (function(h,o,t,j,a,r){
-          h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-          h._hjSettings={hjid:6534945,hjsv:6};
-          a=o.getElementsByTagName('head')[0];
-          r=o.createElement('script');r.async=1;
-          r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-          a.appendChild(r);
-      })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - TilleValle</title>
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="icon" href="logo.jpg" type="image/jpeg">
+
   <style>
-    body {
-      font-family: 'Poppins', 'Inter', sans-serif;
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
       min-height: 100vh;
+      color: #333;
     }
-    
-    h1, h2 {
-      color: #2d6a4f;
-      font-weight: 800;
+
+    .admin-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
     }
-    
-    h1 {
-      text-align: center;
-      margin-bottom: 40px;
-      font-size: 2.5rem;
-      background: linear-gradient(135deg, #2d6a4f 0%, #22c55e 50%, #16a34a 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-shadow: 0 4px 20px rgba(45, 106, 79, 0.3);
-    }
-    
-    #admin-content {
-      padding: 30px;
-      max-width: 1400px;
-      margin: 0 auto;
-      background: linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+
+    .login-section {
+      max-width: 400px;
+      margin: 100px auto;
+      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-radius: 25px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
       border: 1px solid rgba(255,255,255,0.3);
-      margin-top: 20px;
+      text-align: center;
     }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 2rem;
-      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    }
-    
-    th, td {
-      padding: 15px 20px;
-      text-align: left;
-      border-bottom: 1px solid rgba(45, 106, 79, 0.1);
-    }
-    
-    th {
+
+    .login-section h1 {
+      font-size: 2.5rem;
       background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
-      color: white;
-      font-weight: 700;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 900;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #2d6a4f;
+      font-weight: 600;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid rgba(45, 106, 79, 0.2);
+      border-radius: 12px;
       font-size: 1rem;
-      letter-spacing: 0.5px;
-    }
-    
-    tr:nth-child(even) {
-      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-    }
-    
-    tr:hover {
-      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-      transform: scale(1.01);
+      background: rgba(255,255,255,0.8);
       transition: all 0.3s ease;
     }
-    
-    button {
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #2d6a4f;
+      background: rgba(255,255,255,0.95);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 25px rgba(45, 106, 79, 0.3);
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px rgba(45, 106, 79, 0.4);
+    }
+
+    .dashboard-section {
+      display: none;
+    }
+
+    .dashboard-header {
+      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 25px;
+      padding: 30px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dashboard-header h2 {
+      color: #2d6a4f;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .add-product-btn {
       padding: 10px 20px;
       background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
       color: white;
       border: none;
       border-radius: 12px;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
-      font-weight: 700;
-      font-size: 0.9rem;
-      box-shadow: 0 6px 20px rgba(45, 106, 79, 0.3);
-      position: relative;
-      overflow: hidden;
     }
-    
-    button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: left 0.6s ease;
+
+    .add-product-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(45, 106, 79, 0.3);
     }
-    
-    button:hover::before {
-      left: 100%;
-    }
-    
-    button:hover {
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 10px 30px rgba(45, 106, 79, 0.5);
-    }
-    
-    .edit-btn {
-      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-      padding: 8px 16px;
-      font-weight: 700;
-      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
-    }
-    
-    .edit-btn:hover {
-      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.5);
-    }
-    
-    button.out-of-stock {
-      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
-    }
-    
-    #status-message {
-      margin-top: 20px;
-      font-weight: 700;
-      padding: 15px 20px;
-      background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+
+    .logout-btn {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
       color: white;
-      border-radius: 12px;
-      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
-    }
-    
-    #stock-toast {
-      position: fixed;
-      top: 30px;
-      right: 30px;
-      background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
-      color: white;
-      padding: 15px 25px;
-      border-radius: 15px;
-      opacity: 0;
-      transition: all 0.4s ease;
-      z-index: 10000;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
       font-weight: 600;
+      transition: all 0.3s ease;
     }
-    
-    #stock-toast.show {
-      opacity: 1;
-      transform: translateY(0);
+
+    .logout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(220, 53, 69, 0.3);
     }
-    
-    #login-section {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
     }
-    
-    #login-form {
+
+    .product-card {
       background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      padding: 40px;
       border-radius: 25px;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
-      text-align: center;
-      border: 1px solid rgba(255,255,255,0.3);
-      min-width: 350px;
-    }
-    
-    #login-form h2 {
-      margin-bottom: 25px;
-      font-size: 1.8rem;
-    }
-    
-    #login-form input {
-      padding: 15px 20px;
-      margin: 15px 0;
-      width: 100%;
-      border: 2px solid transparent;
-      border-radius: 15px;
-      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-      font-size: 1rem;
-      font-weight: 500;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
       transition: all 0.3s ease;
     }
-    
-    #login-form input:focus {
-      outline: none;
-      border-color: #2d6a4f;
-      box-shadow: 0 12px 30px rgba(45, 106, 79, 0.2);
-      transform: translateY(-2px);
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
     }
-    
-    #login-form button {
-      width: 100%;
-      padding: 15px;
-      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
-      color: white;
-      border: none;
-      border-radius: 15px;
-      cursor: pointer;
-      font-size: 1.1rem;
+
+    .product-card h3 {
+      color: #2d6a4f;
+      font-size: 1.5rem;
       font-weight: 700;
-      margin-top: 10px;
+      margin-bottom: 10px;
     }
-    
-    .search-container {
+
+    .product-card p {
+      margin-bottom: 8px;
+      color: #555;
+    }
+
+    .product-actions {
+      margin-top: 15px;
       display: flex;
-      justify-content: center;
-      margin: 30px 0;
-      gap: 15px;
+      gap: 10px;
     }
-    
-    .search-input {
-      padding: 12px 20px;
-      border: 2px solid transparent;
-      border-radius: 25px;
-      width: 300px;
-      font-size: 16px;
-      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+
+    .edit-btn, .delete-btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
       transition: all 0.3s ease;
     }
-    
-    .search-input:focus {
-      outline: none;
-      border-color: #2d6a4f;
-      box-shadow: 0 12px 30px rgba(45, 106, 79, 0.2);
-      transform: translateY(-2px);
-    }
-    
-    .search-btn {
-      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+
+    .edit-btn {
+      background: #ffc107;
       color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 25px;
-      cursor: pointer;
-      font-weight: 700;
     }
-    
-    #admin-content {
+
+    .edit-btn:hover {
+      background: #e0a800;
+      transform: translateY(-1px);
+    }
+
+    .delete-btn {
+      background: #dc3545;
+      color: white;
+    }
+
+    .delete-btn:hover {
+      background: #c82333;
+      transform: translateY(-1px);
+    }
+
+    .error-message {
+      color: #dc3545;
+      text-align: center;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+
+    .success-message {
+      color: #28a745;
+      text-align: center;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+
+    /* Modal Styles */
+    .modal {
       display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      backdrop-filter: blur(5px);
     }
-    
+
+    .modal-content {
+      background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      margin: 5% auto;
+      padding: 30px;
+      border-radius: 25px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #000;
+    }
+
     @media (max-width: 768px) {
-      #admin-content {
-        padding: 20px;
-        margin: 10px;
+      .admin-container {
+        margin: 20px auto;
+        padding: 15px;
       }
-      
-      h1 {
-        font-size: 2rem;
+
+      .dashboard-header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
       }
-      
-      table {
-        font-size: 0.9rem;
-      }
-      
-      th, td {
-        padding: 10px 12px;
-      }
-      
-      .search-input {
-        width: 100%;
-        max-width: 250px;
+
+      .products-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
-  <script data-id="cmi7m0fwy0009kz04yac3babp" src="https://tinychat.ai/tinychat.js"></script>
 </head>
 <body>
-  <div id="login-section">
-    <form id="login-form">
-      <h2>Admin Login</h2>
-      <input type="password" id="admin-password" placeholder="Enter password" required>
-      <button type="submit">Login</button>
-    </form>
-  </div>
+  <div class="admin-container">
+    <!-- Login Section -->
+    <div id="loginSection" class="login-section">
+      <h1>Admin Login</h1>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" id="password" required>
+        </div>
+        <button type="submit" class="login-btn">Login</button>
+        <div id="loginError" class="error-message"></div>
+      </form>
+    </div>
 
-  <div id="admin-content">
-    <nav class="navbar">
-      <div class="nav-left">
-        <a href="index.html" class="nav-link logo-link">
-          <img src="logo.jpg" alt="TilleValle Logo" class="logo" />
-        </a>
-        <a href="shop.html" class="nav-link">Shop</a>
-        <a href="about.html" class="nav-link">About</a>
-        <a href="contact.html" class="nav-link">Contact</a>
+    <!-- Dashboard Section -->
+    <div id="dashboardSection" class="dashboard-section">
+      <div class="dashboard-header">
+        <h2>Stock Management</h2>
+        <div>
+          <button class="add-product-btn" onclick="loadProducts()">Refresh Stock</button>
+          <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
       </div>
-      <div class="nav-right">
-        <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
-        <a href="login.html" class="nav-link" id="login-btn">Login</a>
-        <a href="profile.html" class="nav-link" id="profile-btn" style="display:none;">Profile</a>
-        <a href="admin.html" class="nav-link" id="admin-btn" style="display:none;">Admin</a>
-        <a href="#" class="nav-link" id="logout-btn" style="display:none;" onclick="logout()">Logout</a>
-      </div>
-      <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu">
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-      </button>
-    </nav>
-    <div class="mobile-menu" id="mobile-menu">
-      <button class="mobile-close-btn" id="mobile-close-btn" aria-label="Close menu">&times;</button>
-      <a href="shop.html" class="mobile-nav-link">Shop</a>
-      <a href="about.html" class="mobile-nav-link">About</a>
-      <a href="contact.html" class="mobile-nav-link">Contact</a>
-      <a href="cart.html" class="mobile-nav-link">🛒 Cart (<span id="mobile-cart-count">0</span>)</a>
-      <div id="mobile-user-area"></div>
-    </div>
-    <hr />
-
-    <h1>Manage Product Stock</h1>
-    <button id="toggle-all-stock-btn" style="margin-bottom: 1rem; padding: 0.5rem 1rem; background-color: #c0392b; color: white; border: none; border-radius: 4px; cursor: pointer;">
-      Update All Stock Quantities
-    </button>
-    <!-- Maintenance controls -->
-    <button id="activate-maintenance-btn" style="margin-left:12px; margin-bottom: 1rem; padding: 0.5rem 1rem; background-color: #8b0000; color: white; border: none; border-radius: 4px; cursor: pointer;">
-      Activate Maintenance Mode
-    </button>
-    <button id="deactivate-maintenance-btn" style="margin-left:12px; margin-bottom: 1rem; padding: 0.5rem 1rem; background-color: #2d6a4f; color: white; border: none; border-radius: 4px; cursor: pointer; display:none;">
-      Deactivate Maintenance Mode
-    </button>
-    <div class="search-container">
-      <input type="text" id="admin-search-bar" placeholder="Search products..." class="search-input" />
-      <button id="admin-search-btn" class="search-btn">🔍</button>
-    </div>
-    <table id="stock-table">
-      <thead>
-        <tr>
-          <th>Product ID</th>
-          <th>Product Name</th>
-          <th>Stock Quantity</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Rows will be populated by JavaScript -->
-      </tbody>
-    </table>
-    <div id="status-message"></div>
-
-    <!-- Toast -->
-    <div id="stock-toast"></div>
-  </div>
-
-
-
-  <!-- Chatbot Sidebar -->
-  <div id="chatbot-sidebar" class="chatbot-sidebar">
-    <div class="chatbot-header">
-      <span>TillieBot</span>
-      <button id="chatbot-close" class="chatbot-close">&times;</button>
-    </div>
-    <div id="chatbot-messages" class="chatbot-messages">
-      <div class="chatbot-message bot">
-        Hello! I'm TillieBot, your TillValle assistant. How can I help you today? You can ask me about our fresh products, delivery, or anything else!
-      </div>
-    </div>
-    <div class="chatbot-input-area">
-      <div class="chatbot-input-container">
-        <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Type your message...">
-        <button id="chatbot-send" class="chatbot-send">➤</button>
+      <div class="products-grid" id="productsGrid">
+        <!-- Products will be loaded here -->
       </div>
     </div>
   </div>
 
-  <!-- Floating Chatbot Button -->
-  <div id="floating-chatbot-btn" class="floating-chatbot-btn">
-    <span class="chatbot-emoji">💬</span>
-  </div>
 
-  <!-- Floating Cart Button -->
-  <div id="floating-cart-btn" class="floating-cart-btn">
-    <span class="cart-emoji">🛒</span>
-    <span id="floating-cart-count" class="floating-cart-count">0</span>
-  </div>
 
   <script>
-    // Password protection
-    // Removed duplicate login form event listeners and fetchStock call
-
-    const loginForm = document.getElementById('login-form');
-    const loginSection = document.getElementById('login-section');
-    const adminContent = document.getElementById('admin-content');
-
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const password = document.getElementById('admin-password').value;
-      if (password === 'Stock101') {
-        localStorage.setItem('isAdmin', 'true');
-        loginSection.style.display = 'none';
-        adminContent.style.display = 'block';
-        
-        // Always show sample data immediately
-        const sampleData = [
-          {product_id: 'milk', product_name: 'Milk', stock_quantity: 10},
-          {product_id: 'eggs', product_name: 'Eggs', stock_quantity: 5},
-          {product_id: 'butter', product_name: 'Butter', stock_quantity: 8},
-          {product_id: 'kales', product_name: 'Kales', stock_quantity: 15},
-          {product_id: 'spinach', product_name: 'Spinach', stock_quantity: 0},
-          {product_id: 'mangoes', product_name: 'Mangoes', stock_quantity: 12}
-        ];
-        
-        populateStockTable(sampleData);
-        document.getElementById('status-message').textContent = 'Sample stock data loaded - trying to fetch real data...';
-        
-        // Try to fetch real data immediately from Vercel API route
-        setTimeout(async () => {
-          try {
-            const stockUrl = '/api/stock';
-            const response = await fetch(stockUrl);
-            const data = await response.json();
-            
-            if (response.ok && data.length > 0) {
-              populateStockTable(data);
-              document.getElementById('status-message').textContent = `Real stock data loaded (${data.length} items)`;
-            } else {
-              document.getElementById('status-message').textContent = 'Error: ' + (data.details || data.error || 'No data');
-            }
-          } catch (error) {
-            document.getElementById('status-message').textContent = 'Fetch error: ' + error.message;
-          }
-        }, 1000);
-        
-        // Update stock function (uses Vercel API route)
-        window.updateStock = async function(productId, currentQuantity) {
-          const newQuantity = prompt(`Enter new quantity for ${productId}:`, currentQuantity);
-          if (newQuantity === null) return;
-          const quantity = parseInt(newQuantity);
-          if (isNaN(quantity) || quantity < 0) {
-            alert('Invalid quantity');
-            return;
-          }
-          try {
-            const stockUrl = '/api/stock';
-            const response = await fetch(stockUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ product_id: productId, stock_quantity: quantity })
-            });
-            if (response.ok) {
-              alert('Stock updated successfully');
-              location.reload();
-            } else {
-              alert('Failed to update stock');
-            }
-          } catch (error) {
-            alert('Error: ' + error.message);
-          }
-        };
-        
-        // Edit stock function
-        window.editStock = async function(productId, currentQuantity) {
-          const newQuantity = prompt(`Enter new stock quantity for ${productId}:`, currentQuantity);
-          if (newQuantity === null) return;
-          
-          const quantity = parseInt(newQuantity);
-          if (isNaN(quantity) || quantity < 0) {
-            alert('Please enter a valid number (0 or greater)');
-            return;
-          }
-
-          try {
-            const stockUrl = '/api/stock';
-
-            const response = await fetch(stockUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ product_id: productId, stock_quantity: quant
-            });ity })
-            });
-            
-            if (response.ok) {
-              const stockCell = document.getElementById(`stock-${productId}`);
-              const stockStatus = quantity > 0 ? `${quantity} in stock` : 'Out of stock';
-              stockCell.textContent = stockStatus;
-              stockCell.style.color = quantity > 0 ? '#27ae60' : '#c0392b';
-              document.getElementById('status-message').textContent = `Updated ${productId} to ${quantity}`;
-            } else {
-              alert('Failed to update stock');
-            }
-          } catch (error) {
-            alert('Error: ' + error.message);
-          }
-        };
-        
-        function populateStockTable(stockData) {
-          const tbody = document.querySelector('#stock-table tbody');
-          if (!tbody) return;
-          tbody.innerHTML = '';
-          stockData.forEach(item => {
-            const tr = document.createElement('tr');
-            const stockStatus = item.stock_quantity > 0 ? `${item.stock_quantity} in stock` : 'Out of stock';
-            tr.innerHTML = `
-              <td>${item.product_id}</td>
-              <td>${item.product_name}</td>
-              <td id="stock-${item.product_id}">${stockStatus}</td>
-              <td>
-                <button class="edit-btn" onclick="editStock('${item.product_id}', ${item.stock_quantity || 0})">
-                  Edit
-                </button>
-              </td>
-            `;
-            tbody.appendChild(tr);
-          });
-        }
-      } else {
-        alert('Incorrect password');
+    // Check if admin is logged in on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const isLoggedIn = localStorage.getItem('tillevalle_admin_logged_in');
+      if (isLoggedIn === 'true') {
+        showDashboard();
       }
     });
 
-    // Maintenance mode handling
-    const activateMaintenanceBtn = document.getElementById('activate-maintenance-btn');
-    const deactivateMaintenanceBtn = document.getElementById('deactivate-maintenance-btn');
-    const maintenanceOverlay = document.getElementById('maintenance-overlay');
-    const maintenanceDeactivateInline = document.getElementById('maintenance-deactivate-inline');
+    // Login functionality
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const password = document.getElementById('password').value;
+      const errorDiv = document.getElementById('loginError');
 
-    function showMaintenanceOverlay() {
-      if (maintenanceOverlay) {
-        maintenanceOverlay.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+      // Simple password check for admin123
+      if (password === 'admin123') {
+        localStorage.setItem('tillevalle_admin_logged_in', 'true');
+        showDashboard();
+        errorDiv.textContent = '';
+      } else {
+        errorDiv.textContent = 'Invalid password. Please try again.';
       }
-      if (activateMaintenanceBtn) activateMaintenanceBtn.style.display = 'none';
-      if (deactivateMaintenanceBtn) deactivateMaintenanceBtn.style.display = 'inline-block';
+    });
+
+    // Show dashboard
+    function showDashboard() {
+      document.getElementById('loginSection').style.display = 'none';
+      document.getElementById('dashboardSection').style.display = 'block';
+      loadProducts();
     }
 
-    function hideMaintenanceOverlay() {
-      if (maintenanceOverlay) {
-        maintenanceOverlay.style.display = 'none';
-        document.body.style.overflow = '';
-      }
-      if (activateMaintenanceBtn) activateMaintenanceBtn.style.display = 'inline-block';
-      if (deactivateMaintenanceBtn) deactivateMaintenanceBtn.style.display = 'none';
+    // Logout functionality
+    function logout() {
+      localStorage.removeItem('tillevalle_admin_logged_in');
+      document.getElementById('loginSection').style.display = 'block';
+      document.getElementById('dashboardSection').style.display = 'none';
+      document.getElementById('password').value = '';
     }
 
-    function isMaintenanceActive() {
-      try { return localStorage.getItem('tillvalle_maintenance') === '1'; } catch (e) { return false; }
-    }
-
-    async function setMaintenanceActive(on) {
+    // Load products from database
+    async function loadProducts() {
+      const productsGrid = document.getElementById('productsGrid');
+      
       try {
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const maintenanceUrl = isLocal ? 'http://localhost:3001/maintenance' : '/.netlify/functions/maintenance';
-        await fetch(maintenanceUrl, {
+        const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
+        
+        const response = await fetch(stockUrl);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        // Check if response has error property
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        
+        // Ensure data is an array
+        const products = Array.isArray(data) ? data : [];
+
+        if (products.length === 0) {
+          productsGrid.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1/-1;">No products found in database.</p>';
+        } else {
+          productsGrid.innerHTML = products.map(product => `
+            <div class="product-card">
+              <h3>${product.product_name || product.name}</h3>
+              <p><strong>Product ID:</strong> ${product.product_id}</p>
+              <p><strong>Stock Quantity:</strong> ${product.stock_quantity || product.quantity} units</p>
+              <p><strong>Status:</strong> ${(product.stock_quantity || product.quantity) > 0 ? 'In Stock' : 'Out of Stock'}</p>
+              <div class="product-actions">
+                <button class="edit-btn" onclick="updateStock('${product.product_id}', ${product.stock_quantity || product.quantity})">Update Stock</button>
+              </div>
+            </div>
+          `).join('');
+        }
+      } catch (error) {
+        console.error('Error loading products:', error);
+        productsGrid.innerHTML = `<p style="text-align: center; color: #dc3545; grid-column: 1/-1;">Error loading products: ${error.message}</p>`;
+      }
+    }
+
+
+
+    // Update stock quantity
+    async function updateStock(productId, currentStock) {
+      const newStock = prompt(`Enter new stock quantity for product ID ${productId}:`, currentStock);
+      
+      if (newStock === null) return; // User cancelled
+      
+      const quantity = parseInt(newStock);
+      if (isNaN(quantity) || quantity < 0) {
+        alert('Please enter a valid non-negative number.');
+        return;
+      }
+
+      try {
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
+        
+        const response = await fetch(stockUrl, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ active: on })
-        });
-        // Fallback to localStorage
-        if (on) localStorage.setItem('tillvalle_maintenance', '1');
-        else localStorage.removeItem('tillvalle_maintenance');
-      } catch (e) { /* ignore */ }
-    }
-
-    // Confirm admin action before toggling maintenance
-    async function confirmAdminAction(action) {
-      const pass = prompt('Enter admin password to confirm:');
-      if (pass === null) return false;
-      if (pass === 'Stock101') return true;
-      alert('Incorrect password');
-      return false;
-    }
-
-    if (activateMaintenanceBtn) {
-      activateMaintenanceBtn.addEventListener('click', async function() {
-        const ok = await confirmAdminAction('activate');
-        if (!ok) return;
-        setMaintenanceActive(true);
-        showMaintenanceOverlay();
-      });
-    }
-
-    if (deactivateMaintenanceBtn) {
-      deactivateMaintenanceBtn.addEventListener('click', async function() {
-        const ok = await confirmAdminAction('deactivate');
-        if (!ok) return;
-        setMaintenanceActive(false);
-        hideMaintenanceOverlay();
-      });
-    }
-
-    // maintenanceDeactivateInline removed as overlay was removed
-
-    // Show overlay on load if maintenance active
-    (async () => {
-      const maintenanceActive = await isMaintenanceActive();
-      if (maintenanceActive) showMaintenanceOverlay();
-    })();
-  </script>
-
-  <script>
-    // Hamburger menu functionality for admin.html
-    (function() {
-      const hamburgerBtn = document.getElementById('hamburger-btn');
-      const mobileMenu = document.getElementById('mobile-menu');
-      const mobileCloseBtn = document.getElementById('mobile-close-btn');
-      const mobileUserArea = document.getElementById('mobile-user-area');
-
-      if (hamburgerBtn && mobileMenu) {
-        hamburgerBtn.addEventListener('click', function() {
-          mobileMenu.classList.toggle('open');
-          hamburgerBtn.classList.toggle('open');
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            product_id: productId,
+            stock_quantity: quantity
+          })
         });
 
-        // Close mobile menu when clicking the close button
-        if (mobileCloseBtn) {
-          mobileCloseBtn.addEventListener('click', function() {
-            mobileMenu.classList.remove('open');
-            hamburgerBtn.classList.remove('open');
-          });
-        }
-
-        // Close mobile menu when clicking on a link
-        const mobileLinks = mobileMenu.querySelectorAll('a');
-        mobileLinks.forEach(link => {
-          link.addEventListener('click', function() {
-            mobileMenu.classList.remove('open');
-            hamburgerBtn.classList.remove('open');
-          });
-        });
-      }
-    })();
-  </script>
-  <script src="maintenance.js"></script>
-  <script src="navbar-auth.js"></script>
-  <script src="script.js" defer></script>
-  <script src="global-chat.js"></script>
-  <script src="bg-init.js"></script>
-  <script>
-    // Chatbot functions
-    document.addEventListener('DOMContentLoaded', function() {
-      const floatingChatbotBtn = document.getElementById('floating-chatbot-btn');
-      const chatbotSidebar = document.getElementById('chatbot-sidebar');
-      const chatbotClose = document.getElementById('chatbot-close');
-      const chatbotSend = document.getElementById('chatbot-send');
-      const chatbotInput = document.getElementById('chatbot-input');
-      
-      if (floatingChatbotBtn) {
-        floatingChatbotBtn.addEventListener('click', () => {
-          if (chatbotSidebar) chatbotSidebar.classList.add('open');
-          floatingChatbotBtn.style.display = 'none';
-        });
-      }
-      if (chatbotClose) {
-        chatbotClose.addEventListener('click', () => {
-          if (chatbotSidebar) chatbotSidebar.classList.remove('open');
-          if (floatingChatbotBtn) floatingChatbotBtn.style.display = 'flex';
-        });
-      }
-      if (chatbotSend) {
-        chatbotSend.addEventListener('click', sendMessage);
-      }
-      if (chatbotInput) {
-        chatbotInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') sendMessage();
-        });
-      }
-      
-      async function sendMessage() {
-        const message = chatbotInput.value.trim();
-        if (!message) return;
+        const result = await response.json();
         
-  const messagesDiv = document.getElementById('chatbot-messages');
-  // Safely append user message
-  const userMessageDiv = document.createElement('div');
-  userMessageDiv.className = 'chatbot-message user';
-  userMessageDiv.textContent = message;
-  messagesDiv.appendChild(userMessageDiv);
-  chatbotInput.value = '';
-  const thinkingDiv = document.createElement('div');
-  thinkingDiv.className = 'chatbot-message bot';
-  thinkingDiv.textContent = 'Thinking...';
-  messagesDiv.appendChild(thinkingDiv);
-  const loadingMessage = messagesDiv.lastElementChild;
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        
-        try {
-          const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-          const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/.netlify/functions/chatbot';
-          const response = await fetch(chatbotUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message })
-          });
-          const data = await response.json();
-          if (loadingMessage) loadingMessage.remove();
-          const botReply = document.createElement('div');
-          botReply.className = 'chatbot-message bot';
-          botReply.textContent = data.message;
-          messagesDiv.appendChild(botReply);
-        } catch (error) {
-          if (loadingMessage) loadingMessage.remove();
-          const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-          const lowerMessage = message.toLowerCase();
-          const offlineResponses = {
-            en: {
-              human: "I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com.",
-              default: "Hello! I'm TillieBot from TillValle! 🌱 I can help you with product information, stock levels, and delivery details. What would you like to know?"
-            },
-            sw: {
-              human: "Nitakuunganisha na wakala wetu Angela Wanjiru kwa angelawanjiru@gmail.com.",
-              default: "Hujambo! Mimi ni TillieBot kutoka TillValle! 🌱 Ninaweza kukusaidia na habari za bidhaa na uongozaji. Unahitaji nini?"
-            },
-            fr: {
-              human: "Je vais vous connecter avec notre agent Angela Wanjiru à angelawanjiru@gmail.com.",
-              default: "Bonjour! Je suis TillieBot de TillValle! 🌱 Je peux vous aider avec les informations produits et la livraison. Que voulez-vous savoir?"
-            }
-          };
-          const responses = offlineResponses[currentLang] || offlineResponses.en;
-          const respDiv = document.createElement('div');
-          respDiv.className = 'chatbot-message bot';
-          respDiv.textContent = (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('live')) ? responses.human : responses.default;
-          messagesDiv.appendChild(respDiv);
+        if (response.ok) {
+          alert(`Stock updated successfully! Product ID ${productId} now has ${quantity} units.`);
+          loadProducts(); // Reload the products
+        } else {
+          alert(`Error updating stock: ${result.error || 'Unknown error'}`);
         }
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      } catch (error) {
+        console.error('Error updating stock:', error);
+        alert('Failed to update stock. Please check your connection.');
       }
-    });
-  </script>
+    }
 
+    // Remove the product form submission since we're only managing stock now
+    // The database already has the products, we just update quantities
+
+
+  </script>
 </body>
 </html>

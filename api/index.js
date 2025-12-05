@@ -8,6 +8,8 @@ const path = require('path');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const fetch = require('node-fetch');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 
 // App setup
 const app = express();
@@ -25,7 +27,7 @@ app.use(cors({
   optionsSuccessStatus: 200
 }));
 
-app.set('trust proxy', 1); // trust first proxy if behind one
+app.set('trust proxy', 1);
 
 // Request logging middleware
 app.use((req, res, next) => {
@@ -47,12 +49,12 @@ app.use(session({
 
 // Database setup
 const pool = new Pool({
-  connectionString: process.env.NEON_DATABASE_URL,
+  connectionString: process.env.NEON_DATABASE_URL || 'postgresql://neondb_owner:npg_plFDm9xtOM3y@ep-purple-mud-adelt7ne-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
   ssl: { rejectUnauthorized: false },
 });
 
 const stockPool = new Pool({
-  connectionString: 'postgresql://neondb_owner:npg_qn6wAlZJavf3@SCRAMBLED_Longtoken(32+)_3b568c4b14986e27.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
+  connectionString: 'postgresql://neondb_owner:npg_qn6wAlZJavf3@ep-billowing-mode-adkbmnzk-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
   ssl: { rejectUnauthorized: false },
 });
 
@@ -65,9 +67,36 @@ const generateToken = (user) => {
   );
 };
 
+// In-memory OTP store: { email: { otp: '123456', expiresAt: Date } }
+const otpStore = {};
+
+// Configure nodemailer transporter (using Gmail SMTP)
+const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+// Helper to send OTP email
+async function sendOtpEmail(email, otp) {
+  const mailOptions = {
+    from: '"TillValle Support" <' + process.env.EMAIL_USER + '>',
+    to: email,
+    subject: 'Your OTP for Password Reset',
+    text: `Your OTP for password reset is: ${otp}. It is valid for 10 minutes.`,
+  };
+  await transporter.sendMail(mailOptions);
+}
+
 // ==========================
+// AUTHENTICATION ENDPOINTS
+// ==========================
+
 // SIGNUP
-// ==========================
 app.post('/signup', async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -97,9 +126,7 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-// ==========================
 // LOGIN
-// ==========================
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -126,9 +153,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// ==========================
 // LOGOUT
-// ==========================
 app.post('/logout', (req, res) => {
   try {
     console.log('Logout endpoint hit');
@@ -136,7 +161,6 @@ app.post('/logout', (req, res) => {
       console.log('No session found on request');
       return res.status(400).json({ ok: false, error: 'No session found' });
     }
-    // Destroy the session if using session-based auth
     req.session.destroy((err) => {
       if (err) {
         console.error('Logout error:', err);
@@ -150,216 +174,168 @@ app.post('/logout', (req, res) => {
   }
 });
 
-// ==========================
-// PING
-// ==========================
-app.get('/ping', (req, res) => {
-  res.json({ ok: true, message: 'Server is running' });
-});
+// DELETE ACCOUNT
+app.delete('/delete-account', async (req, res) => {
+  const { email, password } = req.body;
 
-// ==========================
-// DATABASE TEST
-// ==========================
-app.get('/db-test', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT NOW()');
-    res.json({ ok: true, message: 'Database connected', time: result.rows[0].now });
-  } catch (error) {
-    console.error('Database test error:', error);
-    res.status(500).json({ ok: false, error: error.message });
-  }
-});
-
-// ==========================
-// STOCK TEST
-// ==========================
-app.get('/stock-test', async (req, res) => {
-  try {
-    const result = await stockPool.query('SELECT NOW()');
-    res.json({ ok: true, message: 'Stock database connected', time: result.rows[0].now });
-  } catch (error) {
-    console.error('Stock database test error:', error);
-    res.status(500).json({ ok: false, error: error.message });
-  }
-});
-
-// ==========================
-// TABLE STRUCTURE TEST
-// ==========================
-app.get('/table-info', async (req, res) => {
-  try {
-    const result = await stockPool.query("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'product_stock'");
-    res.json({ columns: result.rows });
-  } catch (error) {
-    console.error('Table info error:', error);
-    res.status(500).json({ ok: false, error: error.message });
-  }
-});
-
-// ==========================
-// MPESA
-// ==========================
-app.post('/mpesa', async (req, res) => {
-  const { phone, amount, accountReference } = req.body;
-
-  // Validate required fields
-  if (!phone || !amount || !accountReference) {
-    return res.status(400).json({ success: false, error: 'Missing required fields: phone, amount, accountReference' });
+  if (!email || !password) {
+    return res.json({ ok: false, error: 'Email and password required' });
   }
 
   try {
-    // Mpesa STK Push API credentials
-    const consumerKey = process.env.MPESA_CONSUMER_KEY;
-    const consumerSecret = process.env.MPESA_CONSUMER_SECRET;
-    const shortcode = process.env.MPESA_SHORTCODE || '174379'; // Default sandbox shortcode
-    const passkey = process.env.MPESA_PASSKEY;
-
-    if (!consumerKey || !consumerSecret || !passkey) {
-      return res.status(500).json({
-        success: false,
-        error: 'Mpesa credentials not configured. Please set MPESA_CONSUMER_KEY, MPESA_CONSUMER_SECRET, and MPESA_PASSKEY environment variables.'
-      });
+    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (result.rows.length === 0) {
+      return res.json({ ok: false, error: 'Account not found' });
     }
 
-    // Get access token
-    const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
-    const tokenResponse = await fetch('https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Basic ${auth}`,
-      },
-    });
+    const user = result.rows[0];
+    const isValid = await bcrypt.compare(password, user.password_hash);
 
-    if (!tokenResponse.ok) {
-      throw new Error('Failed to get Mpesa access token');
+    if (!isValid) {
+      return res.json({ ok: false, error: 'Invalid password' });
     }
 
-    const tokenData = await tokenResponse.json();
-    const accessToken = tokenData.access_token;
+    await pool.query('DELETE FROM users WHERE email = $1', [email]);
 
-    // Generate timestamp and password
-    const timestamp = new Date().toISOString().replace(/[^0-9]/g, '').slice(0, -3);
-    const password = Buffer.from(`${shortcode}${passkey}${timestamp}`).toString('base64');
+    req.session.destroy();
+    res.json({ ok: true, message: 'Account deleted successfully' });
+  } catch (error) {
+    console.error('Delete account error:', error);
+    res.json({ ok: false, error: 'Failed to delete account' });
+  }
+});
 
-    // Prepare STK push request
-    const stkPushData = {
-      BusinessShortCode: shortcode,
-      Password: password,
-      Timestamp: timestamp,
-      TransactionType: 'CustomerPayBillOnline',
-      Amount: amount,
-      PartyA: phone,
-      PartyB: shortcode,
-      PhoneNumber: phone,
-      CallBackURL: `${process.env.SITE_URL || 'http://localhost:3001'}/mpesa-callback`,
-      AccountReference: accountReference,
-      TransactionDesc: 'Payment for goods',
+// ==========================
+// ADMIN ENDPOINTS
+// ==========================
+
+// ADMIN LOGIN
+app.post('/api/admin/login', (req, res) => {
+  const { password } = req.body;
+  const ADMIN_PASSWORD = 'tillevalle2024';
+
+  if (password === ADMIN_PASSWORD) {
+    res.json({ success: true, message: 'Login successful' });
+  } else {
+    res.status(401).json({ success: false, message: 'Invalid password' });
+  }
+});
+
+// ==========================
+// PASSWORD RESET ENDPOINTS
+// ==========================
+
+// REQUEST OTP
+app.post('/request-otp', async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ error: 'Email is required' });
+  }
+  try {
+    const userResult = await pool.query('SELECT id FROM users WHERE email = $1', [email.toLowerCase()]);
+    if (userResult.rowCount === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const otp = crypto.randomInt(100000, 999999).toString();
+    otpStore[email.toLowerCase()] = {
+      otp,
+      expiresAt: Date.now() + 10 * 60 * 1000,
+      verified: false
     };
 
-    // Make STK push request
-    const stkResponse = await fetch('https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(stkPushData),
-    });
-
-    if (!stkResponse.ok) {
-      const errorData = await stkResponse.text();
-      throw new Error(`STK Push failed: ${errorData}`);
-    }
-
-    const stkData = await stkResponse.json();
-
-    console.log(`Mpesa STK Push initiated to ${phone} for amount ${amount}`);
-
-    res.json({
-      success: true,
-      message: 'STK Push initiated successfully',
-      data: stkData,
-    });
-
+    await sendOtpEmail(email, otp);
+    res.json({ message: 'OTP sent to email' });
   } catch (error) {
-    console.error('Mpesa STK Push error:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message,
-    });
+    console.error('Request OTP error:', error);
+    res.status(500).json({ error: 'Failed to send OTP' });
   }
 });
 
-// ==========================
-// MPESA CALLBACK
-// ==========================
-app.post('/mpesa-callback', async (req, res) => {
+// VERIFY OTP
+app.post('/verify-otp', (req, res) => {
+  const { email, otp } = req.body;
+  if (!email || !otp) {
+    return res.status(400).json({ error: 'Email and OTP are required' });
+  }
+  const record = otpStore[email.toLowerCase()];
+  if (!record) {
+    return res.status(400).json({ error: 'No OTP requested for this email' });
+  }
+  if (Date.now() > record.expiresAt) {
+    delete otpStore[email.toLowerCase()];
+    return res.status(400).json({ error: 'OTP expired' });
+  }
+  if (record.otp !== otp) {
+    return res.status(400).json({ error: 'Invalid OTP' });
+  }
+  record.verified = true;
+  res.json({ message: 'OTP verified' });
+});
+
+// RESET PASSWORD
+app.post('/reset-password', async (req, res) => {
+  const { email, newPassword } = req.body;
+  if (!email || !newPassword) {
+    return res.status(400).json({ error: 'Email and new password are required' });
+  }
   try {
-    const callbackData = req.body;
-
-    // Log the callback data for debugging
-    console.log('Mpesa Callback received:', JSON.stringify(callbackData, null, 2));
-
-    // Process the callback data
-    if (callbackData.Body && callbackData.Body.stkCallback) {
-      const stkCallback = callbackData.Body.stkCallback;
-
-      // Check the result code
-      if (stkCallback.ResultCode === 0) {
-        // Payment successful
-        console.log('Payment successful for CheckoutRequestID:', stkCallback.CheckoutRequestID);
-
-        // Here you would typically:
-        // 1. Update the order status in your database
-        // 2. Send confirmation email to customer
-        // 3. Update inventory
-        // 4. Send notifications
-
-        // For now, just log success
-        const callbackMetadata = stkCallback.CallbackMetadata;
-        if (callbackMetadata && callbackMetadata.Item) {
-          callbackMetadata.Item.forEach(item => {
-            if (item.Name === 'Amount') {
-              console.log('Amount paid:', item.Value);
-            }
-            if (item.Name === 'MpesaReceiptNumber') {
-              console.log('Mpesa Receipt Number:', item.Value);
-            }
-            if (item.Name === 'TransactionDate') {
-              console.log('Transaction Date:', item.Value);
-            }
-            if (item.Name === 'PhoneNumber') {
-              console.log('Phone Number:', item.Value);
-            }
-          });
-        }
-      } else {
-        // Payment failed
-        console.log('Payment failed for CheckoutRequestID:', stkCallback.CheckoutRequestID);
-        console.log('Result Code:', stkCallback.ResultCode);
-        console.log('Result Desc:', stkCallback.ResultDesc);
-      }
+    const password_hash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
+    const result = await pool.query(
+      'UPDATE users SET password_hash = $1 WHERE email = $2 RETURNING id',
+      [password_hash, email.toLowerCase()]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'User not found' });
     }
-
-    // Always return success to acknowledge receipt of callback
-    res.json({ success: true });
-
+    res.json({ message: 'Password reset successful' });
   } catch (error) {
-    console.error('Mpesa callback processing error:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message,
-    });
+    console.error('Reset password error:', error);
+    res.status(500).json({ error: 'Failed to reset password' });
   }
 });
 
 // ==========================
-// STOCK MANAGEMENT
+// STOCK MANAGEMENT ENDPOINTS
 // ==========================
+
+// GET STOCK
 app.get('/stock', async (req, res) => {
   console.log('Stock endpoint hit');
   try {
     console.log('Attempting stock database query...');
+    
+    // Create table if it doesn't exist
+    await stockPool.query(`
+      CREATE TABLE IF NOT EXISTS product_stock (
+        product_id SERIAL PRIMARY KEY,
+        product_name VARCHAR(255) NOT NULL,
+        stock_quantity INTEGER DEFAULT 0,
+        in_stock BOOLEAN DEFAULT false,
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    
+    // Check if table has data, if not insert sample data
+    const countResult = await stockPool.query('SELECT COUNT(*) FROM product_stock');
+    if (parseInt(countResult.rows[0].count) === 0) {
+      await stockPool.query(`
+        INSERT INTO product_stock (product_name, stock_quantity, in_stock) VALUES
+        ('Fresh Milk', 25, true),
+        ('Farm Fresh Eggs', 50, true),
+        ('Apples', 30, true),
+        ('Bananas', 15, true),
+        ('Mangoes', 20, true),
+        ('Avocados', 12, true),
+        ('Kales', 18, true),
+        ('Spinach', 22, true),
+        ('Lettuce', 8, true),
+        ('Basil', 10, true),
+        ('Mint', 14, true),
+        ('Free-Range Chicken', 5, true)
+      `);
+    }
+    
     const result = await stockPool.query('SELECT * FROM product_stock ORDER BY product_name');
     console.log('Query successful, rows:', result.rows.length);
     res.json(result.rows);
@@ -369,6 +345,7 @@ app.get('/stock', async (req, res) => {
   }
 });
 
+// UPDATE STOCK
 app.post('/stock', async (req, res) => {
   const { product_id, stock_quantity } = req.body;
   if (!product_id || typeof stock_quantity !== 'number' || stock_quantity < 0) {
@@ -390,149 +367,143 @@ app.post('/stock', async (req, res) => {
 });
 
 // ==========================
-// OTP and Password Reset
+// MPESA ENDPOINTS
 // ==========================
 
-const crypto = require('crypto');
-const nodemailer = require('nodemailer');
+// MPESA STK PUSH
+app.post('/mpesa', async (req, res) => {
+  const { phone, amount, accountReference } = req.body;
 
-// In-memory OTP store: { email: { otp: '123456', expiresAt: Date } }
-const otpStore = {};
-
-// Configure nodemailer transporter (using Gmail SMTP)
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
+  if (!phone || !amount || !accountReference) {
+    return res.status(400).json({ success: false, error: 'Missing required fields: phone, amount, accountReference' });
   }
-});
 
-// Helper to send OTP email
-async function sendOtpEmail(email, otp) {
-  const mailOptions = {
-    from: '"TillValle Support" <' + process.env.EMAIL_USER + '>',
-    to: email,
-    subject: 'Your OTP for Password Reset',
-    text: `Your OTP for password reset is: ${otp}. It is valid for 10 minutes.`,
-  };
-  await transporter.sendMail(mailOptions);
-}
-
-// POST /request-otp
-app.post('/request-otp', async (req, res) => {
-  const { email } = req.body;
-  if (!email) {
-    return res.status(400).json({ error: 'Email is required' });
-  }
   try {
-    // Check if user exists
-    const userResult = await pool.query('SELECT id FROM users WHERE email = $1', [email.toLowerCase()]);
-    if (userResult.rowCount === 0) {
-      return res.status(404).json({ error: 'User not found' });
+    const consumerKey = process.env.MPESA_CONSUMER_KEY;
+    const consumerSecret = process.env.MPESA_CONSUMER_SECRET;
+    const shortcode = process.env.MPESA_SHORTCODE || '174379';
+    const passkey = process.env.MPESA_PASSKEY;
+
+    if (!consumerKey || !consumerSecret || !passkey) {
+      return res.status(500).json({
+        success: false,
+        error: 'Mpesa credentials not configured. Please set MPESA_CONSUMER_KEY, MPESA_CONSUMER_SECRET, and MPESA_PASSKEY environment variables.'
+      });
     }
 
-    // Generate 6-digit OTP
-    const otp = crypto.randomInt(100000, 999999).toString();
+    const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
+    const tokenResponse = await fetch('https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Basic ${auth}`,
+      },
+    });
 
-    // Store OTP with expiry 10 minutes
-    otpStore[email.toLowerCase()] = {
-      otp,
-      expiresAt: Date.now() + 10 * 60 * 1000,
-      verified: false
+    if (!tokenResponse.ok) {
+      throw new Error('Failed to get Mpesa access token');
+    }
+
+    const tokenData = await tokenResponse.json();
+    const accessToken = tokenData.access_token;
+
+    const timestamp = new Date().toISOString().replace(/[^0-9]/g, '').slice(0, -3);
+    const password = Buffer.from(`${shortcode}${passkey}${timestamp}`).toString('base64');
+
+    const stkPushData = {
+      BusinessShortCode: shortcode,
+      Password: password,
+      Timestamp: timestamp,
+      TransactionType: 'CustomerPayBillOnline',
+      Amount: amount,
+      PartyA: phone,
+      PartyB: shortcode,
+      PhoneNumber: phone,
+      CallBackURL: `${process.env.SITE_URL || 'http://localhost:3001'}/mpesa-callback`,
+      AccountReference: accountReference,
+      TransactionDesc: 'Payment for goods',
     };
 
-    // Send OTP email
-    await sendOtpEmail(email, otp);
+    const stkResponse = await fetch('https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(stkPushData),
+    });
 
-    res.json({ message: 'OTP sent to email' });
-  } catch (error) {
-    console.error('Request OTP error:', error);
-    res.status(500).json({ error: 'Failed to send OTP' });
-  }
-});
-
-// POST /verify-otp
-app.post('/verify-otp', (req, res) => {
-  const { email, otp } = req.body;
-  if (!email || !otp) {
-    return res.status(400).json({ error: 'Email and OTP are required' });
-  }
-  const record = otpStore[email.toLowerCase()];
-  if (!record) {
-    return res.status(400).json({ error: 'No OTP requested for this email' });
-  }
-  if (Date.now() > record.expiresAt) {
-    delete otpStore[email.toLowerCase()];
-    return res.status(400).json({ error: 'OTP expired' });
-  }
-  if (record.otp !== otp) {
-    return res.status(400).json({ error: 'Invalid OTP' });
-  }
-  // OTP verified, mark as verified
-  record.verified = true;
-  res.json({ message: 'OTP verified' });
-});
-
-// POST /reset-password
-app.post('/reset-password', async (req, res) => {
-  const { email, newPassword } = req.body;
-  if (!email || !newPassword) {
-    return res.status(400).json({ error: 'Email and new password are required' });
-  }
-  try {
-    // Hash new password
-    const password_hash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
-
-    // Update password in DB
-    const result = await pool.query(
-      'UPDATE users SET password_hash = $1 WHERE email = $2 RETURNING id',
-      [password_hash, email.toLowerCase()]
-    );
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: 'User not found' });
+    if (!stkResponse.ok) {
+      const errorData = await stkResponse.text();
+      throw new Error(`STK Push failed: ${errorData}`);
     }
-    res.json({ message: 'Password reset successful' });
+
+    const stkData = await stkResponse.json();
+
+    console.log(`Mpesa STK Push initiated to ${phone} for amount ${amount}`);
+    res.json({
+      success: true,
+      message: 'STK Push initiated successfully',
+      data: stkData,
+    });
+
   } catch (error) {
-    console.error('Reset password error:', error);
-    res.status(500).json({ error: 'Failed to reset password' });
+    console.error('Mpesa STK Push error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
+// MPESA CALLBACK
+app.post('/mpesa-callback', async (req, res) => {
+  try {
+    const callbackData = req.body;
+    console.log('Mpesa Callback received:', JSON.stringify(callbackData, null, 2));
+
+    if (callbackData.Body && callbackData.Body.stkCallback) {
+      const stkCallback = callbackData.Body.stkCallback;
+
+      if (stkCallback.ResultCode === 0) {
+        console.log('Payment successful for CheckoutRequestID:', stkCallback.CheckoutRequestID);
+
+        const callbackMetadata = stkCallback.CallbackMetadata;
+        if (callbackMetadata && callbackMetadata.Item) {
+          callbackMetadata.Item.forEach(item => {
+            if (item.Name === 'Amount') {
+              console.log('Amount paid:', item.Value);
+            }
+            if (item.Name === 'MpesaReceiptNumber') {
+              console.log('Mpesa Receipt Number:', item.Value);
+            }
+            if (item.Name === 'TransactionDate') {
+              console.log('Transaction Date:', item.Value);
+            }
+            if (item.Name === 'PhoneNumber') {
+              console.log('Phone Number:', item.Value);
+            }
+          });
+        }
+      } else {
+        console.log('Payment failed for CheckoutRequestID:', stkCallback.CheckoutRequestID);
+        console.log('Result Code:', stkCallback.ResultCode);
+        console.log('Result Desc:', stkCallback.ResultDesc);
+      }
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Mpesa callback processing error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
   }
 });
 
 // ==========================
-// DELETE ACCOUNT
+// CHATBOT ENDPOINT
 // ==========================
-app.delete('/delete-account', async (req, res) => {
-  const { email, password } = req.body;
-  
-  if (!email || !password) {
-    return res.json({ ok: false, error: 'Email and password required' });
-  }
-  
-  try {
-    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    if (result.rows.length === 0) {
-      return res.json({ ok: false, error: 'Account not found' });
-    }
-    
-    const user = result.rows[0];
-    const isValid = await bcrypt.compare(password, user.password_hash);
-    
-    if (!isValid) {
-      return res.json({ ok: false, error: 'Invalid password' });
-    }
-    
-    await pool.query('DELETE FROM users WHERE email = $1', [email]);
-    
-    req.session.destroy();
-    res.json({ ok: true, message: 'Account deleted successfully' });
-  } catch (error) {
-    console.error('Delete account error:', error);
-    res.json({ ok: false, error: 'Failed to delete account' });
-  }
-});
 
 const responses = {
   greeting: "Hello! Welcome to TillValle! How can I help you today?",
@@ -550,14 +521,12 @@ async function getStockInfo(query) {
 
     let stockData;
     if (isAllStockQuery) {
-      // Return all stock
       const result = await stockPool.query('SELECT product_name, stock_quantity FROM product_stock ORDER BY product_name');
       stockData = result.rows.map(row => ({
         name: row.product_name,
         quantity: row.stock_quantity || 0
       }));
     } else {
-      // Search for specific products
       const result = await stockPool.query(
         'SELECT product_name, stock_quantity FROM product_stock WHERE LOWER(product_name) LIKE $1',
         [`%${query}%`]
@@ -602,9 +571,6 @@ async function getResponse(message) {
   return responses.default;
 }
 
-// ==========================
-// CHATBOT
-// ==========================
 app.post('/chatbot', async (req, res) => {
   const { message } = req.body;
   if (!message) {
@@ -613,7 +579,6 @@ app.post('/chatbot', async (req, res) => {
 
   try {
     const response = await getResponse(message);
-
     return res.json({ message: response });
   } catch (error) {
     console.error('Chatbot error:', error);
@@ -622,8 +587,9 @@ app.post('/chatbot', async (req, res) => {
 });
 
 // ==========================
-// MAINTENANCE ENDPOINT
+// MAINTENANCE ENDPOINTS
 // ==========================
+
 app.get('/maintenance', async (req, res) => {
   try {
     const result = await pool.query('SELECT active FROM site_maintenance LIMIT 1');
@@ -643,16 +609,13 @@ app.post('/maintenance', async (req, res) => {
   }
 
   try {
-    // Verify admin email
     const adminResult = await pool.query('SELECT email FROM maintenance_admins WHERE email = $1', [adminEmail.toLowerCase()]);
     if (adminResult.rows.length === 0) {
       return res.status(403).json({ error: 'Unauthorized admin email' });
     }
 
-    // Update maintenance status
     await pool.query('UPDATE site_maintenance SET active = $1, last_updated = CURRENT_TIMESTAMP', [active]);
 
-    // Log the action
     await pool.query(
       'INSERT INTO maintenance_logs (admin_email, action, timestamp) VALUES ($1, $2, CURRENT_TIMESTAMP)',
       [adminEmail.toLowerCase(), active ? 'activated' : 'deactivated']
@@ -666,24 +629,63 @@ app.post('/maintenance', async (req, res) => {
 });
 
 // ==========================
+// UTILITY ENDPOINTS
+// ==========================
+
+// PING
+app.get('/ping', (req, res) => {
+  res.json({ ok: true, message: 'Server is running' });
+});
+
+// DATABASE TEST
+app.get('/db-test', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT NOW()');
+    res.json({ ok: true, message: 'Database connected', time: result.rows[0].now });
+  } catch (error) {
+    console.error('Database test error:', error);
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// STOCK TEST
+app.get('/stock-test', async (req, res) => {
+  try {
+    const result = await stockPool.query('SELECT NOW()');
+    res.json({ ok: true, message: 'Stock database connected', time: result.rows[0].now });
+  } catch (error) {
+    console.error('Stock database test error:', error);
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// TABLE STRUCTURE TEST
+app.get('/table-info', async (req, res) => {
+  try {
+    const result = await stockPool.query("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'product_stock'");
+    res.json({ columns: result.rows });
+  } catch (error) {
+    console.error('Table info error:', error);
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// ==========================
 // MAINTENANCE CHECK MIDDLEWARE
 // ==========================
+
 async function checkMaintenance(req, res, next) {
   try {
-    // Check if maintenance mode is active
     const maintenanceResult = await pool.query('SELECT active FROM site_maintenance LIMIT 1');
     const isMaintenanceActive = maintenanceResult.rows.length > 0 && maintenanceResult.rows[0].active;
 
     if (isMaintenanceActive) {
-      // Allow admin.html to be always accessible
       if (req.path === '/admin.html') {
         return next();
       }
 
-      // Check if user is admin by email (from session, JWT token, or auth header)
       let userEmail = req.session?.user?.email || req.headers['x-user-email'];
 
-      // Check for JWT token in cookies or Authorization header
       if (!userEmail) {
         const token = req.cookies?.token || req.headers.authorization?.replace('Bearer ', '');
         if (token) {
@@ -697,42 +699,39 @@ async function checkMaintenance(req, res, next) {
       }
 
       if (userEmail) {
-        // Check if email is in maintenance_admins table
         const adminResult = await pool.query('SELECT email FROM maintenance_admins WHERE email = $1', [userEmail.toLowerCase()]);
         const isAdmin = adminResult.rows.length > 0;
 
         if (isAdmin) {
-          // Admin user - allow access
           return next();
         }
       }
 
-      // Not an admin - allow access but add maintenance header for frontend to handle
       res.set('X-Maintenance-Mode', 'true');
       return next();
     }
 
-    // Maintenance not active - proceed normally
     next();
   } catch (error) {
     console.error('Maintenance check error:', error);
-    // On error, allow access to prevent blocking users
     next();
   }
 }
 
 // ==========================
-// Start server
+// STATIC FILE SERVING
 // ==========================
-// ==========================
-// Catch-all (serve frontend) - MUST BE LAST
-// ==========================
+
 app.all('*', checkMaintenance, (req, res) => {
   if (req.method !== 'GET') {
     return res.status(404).send('Not Found');
   }
   res.sendFile(path.join(__dirname, '..', 'public', req.path === '/' ? 'index.html' : req.path));
 });
+
+// ==========================
+// START SERVER
+// ==========================
 
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
