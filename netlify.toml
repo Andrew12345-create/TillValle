@@ -11,5 +11,9 @@
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"  
+    X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
+
+[build.environment]
+  DATABASE_URL = "postgresql://neondb_owner:npg_qn6wAlZJavf3@ep-billowing-mode-adkbmnzk-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+  NODE_ENV = "production"
