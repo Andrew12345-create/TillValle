@@ -11,12 +11,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-// Add request logging
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
-  next();
-});
-
 // Database connection using your Neon database
 const pool = new Pool({
   connectionString: 'postgresql://neondb_owner:npg_qn6wAlZJavf3@ep-billowing-mode-adkbmnzk-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
@@ -39,7 +33,18 @@ async function testConnection() {
 // Initialize database table
 async function initializeDatabase() {
   try {
-    await pool.query(`\n      CREATE TABLE IF NOT EXISTS products (\n        id SERIAL PRIMARY KEY,\n        name VARCHAR(255) NOT NULL,\n        price DECIMAL(10,2) NOT NULL,\n        category VARCHAR(100) NOT NULL,\n        description TEXT,\n        stock INTEGER NOT NULL DEFAULT 0,\n        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n      )\n    `);
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS products (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        price DECIMAL(10,2) NOT NULL,
+        category VARCHAR(100) NOT NULL,
+        description TEXT,
+        stock INTEGER NOT NULL DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
 
     // Check if we have any products, if not, insert sample data
     const result = await pool.query('SELECT COUNT(*) FROM products');
@@ -73,22 +78,18 @@ async function initializeDatabase() {
 
 // Admin authentication endpoint
 app.post('/api/admin/login', (req, res) => {
-  console.log('🔐 Login attempt received:', req.body);
   const { password } = req.body;
-  const ADMIN_PASSWORD = 'tillevalle2024';
+  const ADMIN_PASSWORD = 'tillevalle2024'; // Change this to a secure password
 
   if (password === ADMIN_PASSWORD) {
-    console.log('✅ Login successful');
     res.json({ success: true, message: 'Login successful' });
   } else {
-    console.log('❌ Login failed - wrong password');
     res.status(401).json({ success: false, message: 'Invalid password' });
   }
 });
 
 // Get all products
 app.get('/api/products', async (req, res) => {
-  console.log('📦 Products request received');
   try {
     const result = await pool.query('SELECT * FROM products ORDER BY id');
     console.log(`📦 Fetched ${result.rows.length} products from database`);
