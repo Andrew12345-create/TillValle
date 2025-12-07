@@ -323,9 +323,14 @@
   <script>
     // Check if admin is logged in on page load
     document.addEventListener('DOMContentLoaded', function() {
-      const isLoggedIn = localStorage.getItem('tillevalle_admin_logged_in');
-      if (isLoggedIn === 'true') {
-        showDashboard();
+      try {
+        const isLoggedIn = localStorage.getItem('tillevalle_admin_logged_in');
+        if (isLoggedIn === 'true') {
+          showDashboard();
+        }
+      } catch (error) {
+        console.warn('localStorage access denied, showing login form');
+        // localStorage not available, show login form
       }
     });
 
@@ -337,7 +342,11 @@
 
       // Simple password check for admin123
       if (password === 'admin123') {
-        localStorage.setItem('tillevalle_admin_logged_in', 'true');
+        try {
+          localStorage.setItem('tillevalle_admin_logged_in', 'true');
+        } catch (error) {
+          console.warn('localStorage access denied during login');
+        }
         showDashboard();
         errorDiv.textContent = '';
       } else {
