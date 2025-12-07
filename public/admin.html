@@ -363,10 +363,10 @@
     // Load products from database
     async function loadProducts() {
       const productsGrid = document.getElementById('productsGrid');
-      
+
       try {
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
+        const stockUrl = isLocal ? 'http://localhost:3001/api/products' : '/.netlify/functions/stock';
         
         const response = await fetch(stockUrl);
         
@@ -390,11 +390,11 @@
           productsGrid.innerHTML = products.map(product => `
             <div class="product-card">
               <h3>${product.product_name || product.name}</h3>
-              <p><strong>Product ID:</strong> ${product.product_id}</p>
-              <p><strong>Stock Quantity:</strong> ${product.stock_quantity || product.quantity} units</p>
-              <p><strong>Status:</strong> ${(product.stock_quantity || product.quantity) > 0 ? 'In Stock' : 'Out of Stock'}</p>
+              <p><strong>Product ID:</strong> ${product.product_id || product.id}</p>
+              <p><strong>Stock Quantity:</strong> ${product.stock_quantity || product.stock || product.quantity} units</p>
+              <p><strong>Status:</strong> ${(product.stock_quantity || product.stock || product.quantity) > 0 ? 'In Stock' : 'Out of Stock'}</p>
               <div class="product-actions">
-                <button class="edit-btn" onclick="updateStock('${product.product_id}', ${product.stock_quantity || product.quantity})">Update Stock</button>
+                <button class="edit-btn" onclick="updateStock('${product.product_id || product.id}', ${product.stock_quantity || product.stock || product.quantity})">Update Stock</button>
               </div>
             </div>
           `).join('');
@@ -421,17 +421,24 @@
 
       try {
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/.netlify/functions/stock';
-        
-        const response = await fetch(stockUrl, {
-          method: 'POST',
+        const stockUrl = isLocal ? 'http://localhost:3001/api/products' : '/.netlify/functions/stock';
+
+        let requestBody;
+        let method;
+        if (isLocal) {
+          requestBody = { stock: quantity };
+          method = 'PUT';
+        } else {
+          requestBody = { product_id: productId, stock_quantity: quantity };
+          method = 'POST';
+        }
+
+        const response = await fetch(isLocal ? `${stockUrl}/${productId}` : stockUrl, {
+          method: method,
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            product_id: productId,
-            stock_quantity: quantity
-          })
+          body: JSON.stringify(requestBody)
         });
 
         const result = await response.json();
