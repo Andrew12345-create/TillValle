@@ -1,4 +1,4 @@
-/* Index-only overrides and hero polish */
+b/* Index-only overrides and hero polish */
 :root {
   --index-hero-min-height: 68vh;
 }
@@ -16,7 +16,7 @@ body.homepage {
 
 /* Navbar override for homepage - make it green */
 body.homepage .navbar {
-  background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-green-light) 100%);
+  background: var(--accent-green);
   box-shadow: 0 6px 16px rgba(22,163,74,0.18);
   border-bottom: 1px solid rgba(0,0,0,0.06);
 }

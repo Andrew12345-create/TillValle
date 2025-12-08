@@ -11,6 +11,10 @@ const fetch = require('node-fetch');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
+// Neon API configuration
+const NEON_API_URL = 'https://ep-billowing-mode-adkbmnzk.apirest.c-2.us-east-1.aws.neon.tech/neondb/rest/v1';
+const PRODUCTS_URL = `${NEON_API_URL}/products`;
+
 // App setup
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -209,10 +213,92 @@ app.delete('/delete-account', async (req, res) => {
 // ADMIN ENDPOINTS
 // ==========================
 
+// INIT TABLES
+app.post('/api/init-tables', async (req, res) => {
+  try {
+    // Create products table (drop if exists to ensure correct structure)
+    await stockPool.query(`DROP TABLE IF EXISTS products`);
+    await stockPool.query(`
+      CREATE TABLE products (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        price DECIMAL(10,2) NOT NULL,
+        category VARCHAR(100) NOT NULL,
+        description TEXT NOT NULL,
+        stock INTEGER DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Create product_stock table if it doesn't exist
+    await stockPool.query(`
+      CREATE TABLE IF NOT EXISTS product_stock (
+        product_id SERIAL PRIMARY KEY,
+        product_name VARCHAR(255) NOT NULL,
+        stock_quantity INTEGER DEFAULT 0,
+        in_stock BOOLEAN DEFAULT false,
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Create users table if it doesn't exist
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        password_hash VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Create site_maintenance table if it doesn't exist
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS site_maintenance (
+        id SERIAL PRIMARY KEY,
+        active BOOLEAN DEFAULT false,
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Create maintenance_admins table if it doesn't exist
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS maintenance_admins (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Create maintenance_logs table if it doesn't exist
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS maintenance_logs (
+        id SERIAL PRIMARY KEY,
+        admin_email VARCHAR(255) NOT NULL,
+        action VARCHAR(50) NOT NULL,
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Insert default maintenance status if not exists
+    await pool.query(`
+      INSERT INTO site_maintenance (active)
+      SELECT false
+      WHERE NOT EXISTS (SELECT 1 FROM site_maintenance)
+    `);
+
+    console.log('✅ Database tables initialized successfully');
+    res.json({ success: true, message: 'Database tables initialized successfully' });
+  } catch (error) {
+    console.error('❌ Error initializing tables:', error);
+    res.status(500).json({ success: false, error: 'Failed to initialize database tables' });
+  }
+});
+
 // ADMIN LOGIN
 app.post('/api/admin/login', (req, res) => {
   const { password } = req.body;
-  const ADMIN_PASSWORD = 'tillevalle2024';
+  const ADMIN_PASSWORD = 'admin123';
 
   if (password === ADMIN_PASSWORD) {
     res.json({ success: true, message: 'Login successful' });
@@ -363,6 +449,123 @@ app.post('/stock', async (req, res) => {
   } catch (error) {
     console.error('Stock update error:', error);
     res.status(500).json({ error: 'Failed to update stock', details: error.message });
+  }
+});
+
+// GET PRODUCTS
+app.get('/api/products', async (req, res) => {
+  try {
+    // Ensure products table exists with correct structure
+    await stockPool.query(`
+      CREATE TABLE IF NOT EXISTS products (
+        product_id VARCHAR(50) PRIMARY KEY,
+        product_name VARCHAR(100) NOT NULL,
+        stock_quantity INTEGER NOT NULL DEFAULT 100,
+        last_updated TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    const result = await stockPool.query('SELECT * FROM products ORDER BY product_name');
+    console.log(`📦 Fetched ${result.rows.length} products from database`);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('❌ Error fetching products:', err);
+    res.status(500).json({ error: 'Failed to fetch products' });
+  }
+});
+
+// GET SINGLE PRODUCT
+app.get('/api/products/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await stockPool.query('SELECT * FROM products WHERE id = $1', [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    console.log(`📦 Fetched product: ${result.rows[0].name}`);
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('❌ Error fetching product:', err);
+    res.status(500).json({ error: 'Failed to fetch product' });
+  }
+});
+
+// CREATE NEW PRODUCT
+app.post('/api/products', async (req, res) => {
+  try {
+    const { name, price, category, description, stock } = req.body;
+
+    // Validation
+    if (!name || !price || !category || !description || stock === undefined) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    if (price <= 0 || stock < 0) {
+      return res.status(400).json({ error: 'Price must be positive and stock cannot be negative' });
+    }
+
+    const result = await stockPool.query(
+      'INSERT INTO products (name, price, category, description, stock) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [name, price, category, description, stock]
+    );
+
+    console.log(`✅ Created new product: ${result.rows[0].name}`);
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('❌ Error creating product:', err);
+    res.status(500).json({ error: 'Failed to create product' });
+  }
+});
+
+// UPDATE PRODUCT
+app.put('/api/products/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, price, category, description, stock } = req.body;
+
+    // Validation
+    if (!name || !price || !category || !description || stock === undefined) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    if (price <= 0 || stock < 0) {
+      return res.status(400).json({ error: 'Price must be positive and stock cannot be negative' });
+    }
+
+    const result = await stockPool.query(
+      'UPDATE products SET name = $1, price = $2, category = $3, description = $4, stock = $5, updated_at = CURRENT_TIMESTAMP WHERE id = $6 RETURNING *',
+      [name, price, category, description, stock, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    console.log(`✅ Updated product: ${result.rows[0].name}`);
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('❌ Error updating product:', err);
+    res.status(500).json({ error: 'Failed to update product' });
+  }
+});
+
+// DELETE PRODUCT
+app.delete('/api/products/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await stockPool.query('DELETE FROM products WHERE id = $1 RETURNING *', [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    console.log(`🗑️ Deleted product: ${result.rows[0].name}`);
+    res.json({ message: 'Product deleted successfully' });
+  } catch (err) {
+    console.error('❌ Error deleting product:', err);
+    res.status(500).json({ error: 'Failed to delete product' });
   }
 });
 
@@ -717,6 +920,20 @@ async function checkMaintenance(req, res, next) {
     next();
   }
 }
+
+// ==========================
+// ADMIN ROUTES
+// ==========================
+
+// Serve admin page
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'admin.html'));
+});
+
+// Serve admin.html directly
+app.get('/admin.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'admin.html'));
+});
 
 // ==========================
 // STATIC FILE SERVING
