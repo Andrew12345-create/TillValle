@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment - TilleValle App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f9fa;
+      padding-bottom: 80px;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .mobile-header {
+      background: #2d6a4f;
+      color: white;
+      padding: 12px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .header-btn {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background 0.2s;
+    }
+
+    .header-btn:hover {
+      background: rgba(255,255,255,0.25);
+    }
+
+    /* Main Content */
+    .main-content {
+      padding: 16px;
+      min-height: calc(100vh - 160px);
+    }
+
+    /* Section */
+    .section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #2d6a4f;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Order Summary */
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .order-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-info {
+      flex: 1;
+    }
+
+    .item-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2d6a4f;
+      margin-bottom: 4px;
+    }
+
+    .item-qty {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .item-price {
+      font-size: 14px;
+      font-weight: 700;
+      color: #2d6a4f;
+      text-align: right;
+    }
+
+    /* Summary Row */
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      font-size: 14px;
+    }
+
+    .summary-row.total {
+      border-top: 2px solid #e5e7eb;
+      padding-top: 16px;
+      margin-top: 16px;
+      font-weight: 700;
+      font-size: 16px;
+      color: #2d6a4f;
+    }
+
+    .summary-label {
+      color: #666;
+    }
+
+    .summary-value {
+      color: #2d6a4f;
+      font-weight: 600;
+    }
+
+    /* Payment Method Selection */
+    .payment-methods {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .payment-option {
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .payment-option:active {
+      border-color: #2d6a4f;
+      background: rgba(45, 106, 79, 0.05);
+      transform: scale(0.98);
+    }
+
+    .payment-option.selected {
+      border-color: #2d6a4f;
+      background: rgba(45, 106, 79, 0.1);
+    }
+
+    .payment-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .payment-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #2d6a4f;
+    }
+
+    /* Form Group */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #2d6a4f;
+      margin-bottom: 6px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border 0.2s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #2d6a4f;
+      box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1);
+    }
+
+    /* Card Input Grid */
+    .card-inputs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .card-inputs .form-group {
+      grid-column: span 2;
+    }
+
+    .card-inputs .form-group:nth-child(3),
+    .card-inputs .form-group:nth-child(4) {
+      grid-column: span 1;
+    }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2d6a4f 0%, #16a34a 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #2d6a4f;
+      margin-top: 8px;
+    }
+
+    .btn-secondary:active {
+      background: #e0e0e0;
+    }
+
+    /* Security Badge */
+    .security-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px;
+      background: #f0f0f0;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #666;
+      margin-top: 12px;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      z-index: 1000;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #6b7280;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      min-width: 60px;
+    }
+
+    .nav-item.active {
+      color: #2d6a4f;
+      background: rgba(45, 106, 79, 0.1);
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2d6a4f;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 25px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 2001;
+      animation: slideUp 0.3s ease;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    /* Hidden */
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="mobile-header">
+    <div class="header-content">
+      <div class="header-title">Payment</div>
+      <div style="display: flex; gap: 8px;">
+        <button class="header-btn" onclick="window.location.href='app-cart.html'">←</button>
+        <button class="header-btn" onclick="toggleSettings()">⚙️</button>
+      </div>
+    </div>
+
+    <!-- Settings Menu -->
+    <div id="settings-menu" style="display:none; background: rgba(0,0,0,0.1); padding: 8px; border-radius: 8px; margin-top: 8px;">
+      <button style="background: rgba(255,255,255,0.1); border: none; color: white; width: 100%; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 12px;" onclick="switchToDesktop()">
+        📱 Switch to Desktop
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Order Summary -->
+    <div class="section">
+      <div class="section-title">📦 Order Summary</div>
+      <div id="order-items">
+        <!-- Populated by JavaScript -->
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Subtotal</span>
+        <span class="summary-value" id="subtotal">KES 0</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Tax (16%)</span>
+        <span class="summary-value" id="tax">KES 0</span>
+      </div>
+      <div class="summary-row total">
+        <span>Total</span>
+        <span id="total">KES 0</span>
+      </div>
+    </div>
+
+    <!-- Delivery Address -->
+    <div class="section">
+      <div class="section-title">📍 Delivery Address</div>
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" id="delivery-location" placeholder="Enter delivery location" value="">
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" id="phone-number" placeholder="+254 7XX XXX XXX">
+      </div>
+      <div class="form-group">
+        <label>Special Instructions (Optional)</label>
+        <textarea style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px; font-family: inherit;" placeholder="e.g., Ring doorbell, leave at gate" rows="3"></textarea>
+      </div>
+    </div>
+
+    <!-- Payment Method -->
+    <div class="section">
+      <div class="section-title">💳 Payment Method</div>
+      <div class="payment-methods">
+        <div class="payment-option selected" onclick="selectPaymentMethod('card', this)">
+          <div class="payment-icon">💳</div>
+          <div class="payment-label">Card</div>
+        </div>
+        <div class="payment-option" onclick="selectPaymentMethod('mobile', this)">
+          <div class="payment-icon">📱</div>
+          <div class="payment-label">Mobile Money</div>
+        </div>
+        <div class="payment-option" onclick="selectPaymentMethod('bank', this)">
+          <div class="payment-icon">🏦</div>
+          <div class="payment-label">Bank Transfer</div>
+        </div>
+        <div class="payment-option" onclick="selectPaymentMethod('cash', this)">
+          <div class="payment-icon">💵</div>
+          <div class="payment-label">Cash on Delivery</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Payment Section -->
+    <div class="section" id="card-section">
+      <div class="section-title">Card Details</div>
+      <div class="form-group">
+        <label>Cardholder Name</label>
+        <input type="text" id="card-name" placeholder="John Doe">
+      </div>
+      <div class="form-group">
+        <label>Card Number</label>
+        <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNumber(this)">
+      </div>
+      <div class="card-inputs">
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input type="text" id="card-expiry" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)">
+        </div>
+        <div class="form-group">
+          <label>CVV</label>
+          <input type="text" id="card-cvv" placeholder="123" maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        </div>
+      </div>
+      <div class="security-badge">
+        🔒 Your payment is secure and encrypted
+      </div>
+    </div>
+
+    <!-- Mobile Money Section -->
+    <div class="section hidden" id="mobile-section">
+      <div class="section-title">Mobile Money</div>
+      <div class="form-group">
+        <label>Provider</label>
+        <select>
+          <option>Safaricom M-Pesa</option>
+          <option>Airtel Money</option>
+          <option>Equity Bank</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" placeholder="+254 7XX XXX XXX">
+      </div>
+      <p style="font-size: 12px; color: #999; margin-top: 12px;">You'll receive a prompt on your phone to complete the payment.</p>
+    </div>
+
+    <!-- Bank Section -->
+    <div class="section hidden" id="bank-section">
+      <div class="section-title">Bank Transfer</div>
+      <div style="background: #f0f0f0; padding: 16px; border-radius: 10px; margin-bottom: 16px;">
+        <p style="font-size: 12px; color: #666; margin-bottom: 8px;">Transfer Details:</p>
+        <p style="font-size: 13px; font-weight: 600; color: #2d6a4f; margin-bottom: 4px;">Account: TilleValle Limited</p>
+        <p style="font-size: 13px; color: #2d6a4f; margin-bottom: 4px;">Bank: Equity Bank Kenya</p>
+        <p style="font-size: 13px; color: #2d6a4f;">Account #: 0123456789</p>
+      </div>
+      <p style="font-size: 12px; color: #999;">Please use your order number as reference for the transfer.</p>
+    </div>
+
+    <!-- Cash Section -->
+    <div class="section hidden" id="cash-section">
+      <div style="text-align: center; padding: 20px;">
+        <div style="font-size: 48px; margin-bottom: 12px;">💵</div>
+        <p style="font-size: 14px; font-weight: 600; color: #2d6a4f; margin-bottom: 8px;">Cash on Delivery</p>
+        <p style="font-size: 12px; color: #666;">You can pay the delivery person when your order arrives. Make sure you have exact change.</p>
+      </div>
+    </div>
+
+    <!-- Pay Button -->
+    <div class="section">
+      <button class="btn btn-primary" onclick="processPayment()">
+        Complete Payment
+      </button>
+      <button class="btn btn-secondary" onclick="window.location.href='app-cart.html'">
+        Back to Cart
+      </button>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="app.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="app-shop.html" class="nav-item">
+      <span class="nav-icon">🛍️</span>
+      <span>Shop</span>
+    </a>
+    <a href="app-cart.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span>Cart</span>
+    </a>
+    <a href="app-about.html" class="nav-item">
+      <span class="nav-icon">ℹ️</span>
+      <span>About</span>
+    </a>
+    <a href="app-profile.html" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script>
+    let selectedPaymentMethod = 'card';
+
+    // Initialize page
+    function initPage() {
+      loadOrderSummary();
+      loadDeliveryLocation();
+    }
+
+    // Load order summary from cart
+    function loadOrderSummary() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const itemsContainer = document.getElementById('order-items');
+      
+      if (cart.length === 0) {
+        itemsContainer.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">No items in cart</p>';
+        return;
+      }
+
+      let subtotal = 0;
+      const itemsHTML = cart.map(item => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        return `
+          <div class="order-item">
+            <div class="item-info">
+              <div class="item-name">${item.name}</div>
+              <div class="item-qty">Qty: ${item.quantity}</div>
+            </div>
+            <div class="item-price">KES ${itemTotal.toLocaleString()}</div>
+          </div>
+        `;
+      }).join('');
+
+      itemsContainer.innerHTML = itemsHTML;
+
+      // Update totals
+      const tax = Math.round(subtotal * 0.16);
+      const total = subtotal + tax;
+
+      document.getElementById('subtotal').textContent = `KES ${subtotal.toLocaleString()}`;
+      document.getElementById('tax').textContent = `KES ${tax.toLocaleString()}`;
+      document.getElementById('total').textContent = `KES ${total.toLocaleString()}`;
+    }
+
+    // Load saved delivery location
+    function loadDeliveryLocation() {
+      const location = localStorage.getItem('deliveryLocation') || '';
+      document.getElementById('delivery-location').value = location;
+    }
+
+    // Select payment method
+    function selectPaymentMethod(method, element) {
+      selectedPaymentMethod = method;
+      
+      // Remove selected class from all options
+      document.querySelectorAll('.payment-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      
+      // Add selected class to clicked option
+      element.classList.add('selected');
+      
+      // Show/hide payment sections
+      document.getElementById('card-section').classList.add('hidden');
+      document.getElementById('mobile-section').classList.add('hidden');
+      document.getElementById('bank-section').classList.add('hidden');
+      document.getElementById('cash-section').classList.add('hidden');
+      
+      if (method === 'card') {
+        document.getElementById('card-section').classList.remove('hidden');
+      } else if (method === 'mobile') {
+        document.getElementById('mobile-section').classList.remove('hidden');
+      } else if (method === 'bank') {
+        document.getElementById('bank-section').classList.remove('hidden');
+      } else if (method === 'cash') {
+        document.getElementById('cash-section').classList.remove('hidden');
+      }
+    }
+
+    // Format card number
+    function formatCardNumber(input) {
+      let value = input.value.replace(/\s/g, '');
+      value = value.replace(/(.{4})/g, '$1 ').trim();
+      input.value = value;
+    }
+
+    // Format expiry date
+    function formatExpiry(input) {
+      let value = input.value.replace(/\D/g, '');
+      if (value.length >= 2) {
+        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+      }
+      input.value = value;
+    }
+
+    // Process payment
+    function processPayment() {
+      // Validate delivery location
+      const location = document.getElementById('delivery-location').value.trim();
+      if (!location) {
+        showToast('Please enter a delivery location');
+        return;
+      }
+
+      // Validate phone number
+      const phone = document.getElementById('phone-number').value.trim();
+      if (!phone) {
+        showToast('Please enter a phone number');
+        return;
+      }
+
+      // Validate payment method specific fields
+      if (selectedPaymentMethod === 'card') {
+        const cardName = document.getElementById('card-name').value.trim();
+        const cardNumber = document.getElementById('card-number').value.trim();
+        const expiry = document.getElementById('card-expiry').value.trim();
+        const cvv = document.getElementById('card-cvv').value.trim();
+
+        if (!cardName || !cardNumber || !expiry || !cvv) {
+          showToast('Please fill in all card details');
+          return;
+        }
+
+        if (cardNumber.replace(/\s/g, '').length !== 16) {
+          showToast('Card number must be 16 digits');
+          return;
+        }
+      }
+
+      // Save delivery info
+      localStorage.setItem('deliveryLocation', location);
+      localStorage.setItem('phoneNumber', phone);
+
+      // Process based on payment method
+      if (selectedPaymentMethod === 'card') {
+        processCardPayment();
+      } else if (selectedPaymentMethod === 'mobile') {
+        processMobilePayment();
+      } else if (selectedPaymentMethod === 'bank') {
+        showToast('Please complete the bank transfer and contact support');
+      } else if (selectedPaymentMethod === 'cash') {
+        processOrderConfirmation();
+      }
+    }
+
+    function processCardPayment() {
+      showToast('Processing card payment...');
+      setTimeout(() => {
+        processOrderConfirmation();
+      }, 2000);
+    }
+
+    function processMobilePayment() {
+      showToast('Mobile money prompt sent to your phone...');
+      setTimeout(() => {
+        processOrderConfirmation();
+      }, 3000);
+    }
+
+    function processOrderConfirmation() {
+      // Clear cart
+      localStorage.removeItem('cart');
+      
+      // Generate order number
+      const orderNumber = 'ORD-' + Date.now();
+      localStorage.setItem('lastOrder', orderNumber);
+      
+      showToast('✅ Payment successful! Order confirmed.');
+      
+      // Redirect after delay
+      setTimeout(() => {
+        window.location.href = 'app.html';
+      }, 1500);
+    }
+
+    function showToast(message) {
+      const existingToast = document.querySelector('.toast');
+      if (existingToast) existingToast.remove();
+
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Settings menu toggle
+    function toggleSettings() {
+      const menu = document.getElementById('settings-menu');
+      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Switch to desktop mode
+    function switchToDesktop() {
+      sessionStorage.setItem('desktopMode', 'true');
+      window.location.href = 'index.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', initPage);
+  </script>
+</body>
+</html>
