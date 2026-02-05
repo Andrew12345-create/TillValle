@@ -126,7 +126,9 @@
       padding: 50px 40px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.1);
       border: 1px solid rgba(255,255,255,0.3);
-      margin-bottom: 60px;
+    .content-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.15);
     }
 
     .stats-grid {
@@ -138,11 +140,11 @@
 
     .stat-item {
       padding: 20px;
-    }
-
-    .stat-number {
-      font-size: 3rem;
-      font-weight: 900;
+    .content-card h2 {
+      font-size: 2rem;
+      color: #2d6a4f;
+      margin-bottom: 20px;
+      font-weight: 700;
       background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -151,7 +153,7 @@
       margin-bottom: 10px;
     }
 
-    .stat-label {
+      gap: 15px;
       font-size: 1.1rem;
       color: #666;
       font-weight: 600;
@@ -160,37 +162,37 @@
     .team-section {
       text-align: center;
       margin-bottom: 60px;
-    }
-
+    .content-card .icon {
+      font-size: 2.5rem;
     .team-section h2 {
       font-size: 2.5rem;
       color: #2d6a4f;
       margin-bottom: 40px;
-      font-weight: 800;
-    }
-
-    .team-grid {
-      display: grid;
+    .content-card p {
+      color: #555;
+      line-height: 1.7;
+      font-size: 1rem;
+      margin-bottom: 15px;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 30px;
     }
 
-    .team-card {
+    .stats-section {
       background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-radius: 25px;
-      padding: 30px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      padding: 50px 40px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
       border: 1px solid rgba(255,255,255,0.3);
-      transition: all 0.3s ease;
+      margin-bottom: 60px;
       text-align: center;
     }
 
     .team-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-    }
+    .stats-grid {
 
     .team-avatar {
       width: 80px;
@@ -225,15 +227,15 @@
       
       .hero-section {
         padding: 40px 20px;
-      }
-      
-      .hero-section h1 {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      text-align: center;
         font-size: 2.5rem;
       }
       
       .content-grid {
         grid-template-columns: 1fr;
-        gap: 20px;
+    .stat-item {
       }
       
       .content-card {
@@ -241,23 +243,23 @@
       }
       
       .stats-section {
-        padding: 40px 20px;
-      }
-    }
-  </style>
-  <script data-id="cmifhtukf001hky04ol11gf5g" src="https://tinychat.ai/tinychat.js" async defer></script>
-</head>
-<body>
-  <header>
-
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+      margin-bottom: 10px;
   <div class="about-container">
     <!-- Hero Section -->
     <div class="hero-section">
       <h1>About TilleValle</h1>
       <p>Cultivating fresh, organic produce with passion and dedication since 1985. From our family farm to your table, we bring you the finest quality fruits, vegetables, and herbs grown with love and care.</p>
-    </div>
-
-    <!-- Content Grid -->
+    .stat-label {
+      font-size: 1.1rem;
+      color: #666;
     <div class="content-grid">
       <div class="content-card">
         <h2><span class="icon">🌱</span> Our Mission</h2>
@@ -265,16 +267,16 @@
         <p>We believe in transparency, quality, and community empowerment through responsible agriculture that respects both people and the environment.</p>
       </div>
 
-      <div class="content-card">
-        <h2><span class="icon">🚜</span> Our Farm</h2>
-        <p>Located in the lush region of Gilgil, our farm benefits from ideal climate and soil conditions for growing nutrient-rich produce.</p>
+    .team-section {
+      text-align: center;
+      margin-bottom: 60px;
         <p>We use organic fertilizers and avoid harmful pesticides to ensure the health of our customers and the environment.</p>
       </div>
 
       <div class="content-card">
         <h2><span class="icon">🤝</span> Community Impact</h2>
-        <p>We actively engage with local farmers to support sustainable agriculture and fair trade practices throughout Kenya.</p>
-        <p>Our educational programs and farm tours promote awareness about healthy eating and sustainable agriculture in local schools.</p>
+    .team-section h2 {
+      font-size: 2.5rem;
       </div>
 
       <div class="content-card">
@@ -304,37 +306,37 @@
           <span class="stat-label">Organic Certified</span>
         </div>
       </div>
-    </div>
-
+      margin-bottom: 40px;
+      font-weight: 800;
     <!-- Team Section -->
     <div class="team-section">
       <h2>Meet Our Team</h2>
-      <div class="team-grid">
-        <div class="team-card">
-          <div class="team-avatar">JK</div>
-          <h3>John Kamau</h3>
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
           <p>Founder & Head Farmer</p>
         </div>
         <div class="team-card">
           <div class="team-avatar">MW</div>
-          <h3>Mary Wanjiku</h3>
-          <p>Agricultural Specialist</p>
-        </div>
-        <div class="team-card">
-          <div class="team-avatar">PM</div>
-          <h3>Peter Mwangi</h3>
-          <p>Quality Control Manager</p>
-        </div>
-      </div>
-    </div>
+    .team-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 25px;
+      padding: 30px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      transition: all 0.3s ease;
+      text-align: center;
   </div>
 
   <footer>
     <p>&copy; 2024 TilleValle. All rights reserved.</p>
   </footer>
-
-  <script>
-    // Load navbar
+    .team-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
     fetch('navbar.html')
       .then(response => response.text())
       .then(data => {
@@ -347,3 +349,411 @@
 <script data-id="cmifhtukf001hky04ol11gf5g" src="https://tinychat.ai/tinychat.js" async defer></script>
 </body>
 </html>
+            })
+    .team-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+        },
+        function(error) {
+          let defaultLocation = 'Nairobi, Kenya';
+          input.value = defaultLocation;
+          showToast('Using default location: Nairobi, Kenya');
+        },
+        options
+      );
+    }
+
+    function selectLocation(location) {
+      localStorage.setItem('deliveryLocation', location);
+      updateLocationDisplay(location);
+      closeLocationSelector();
+      showToast(`Location set to ${location}!`);
+    }
+
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 2rem;
+        showToast('Please enter a delivery location');
+        return;
+      }
+      
+      localStorage.setItem('deliveryLocation', location);
+      updateLocationDisplay(location);
+      closeLocationSelector();
+      showToast('Delivery location saved!');
+    }
+
+    function updateLocationDisplay(location) {
+      const currentLocationEl = document.getElementById('current-location');
+      const displayText = location.length > 25 ? location.substring(0, 25) + '...' : location;
+      if (currentLocationEl) {
+        currentLocationEl.textContent = displayText;
+      }
+    }
+
+    function loadSavedLocation() {
+      const savedLocation = localStorage.getItem('deliveryLocation');
+      if (savedLocation) {
+        updateLocationDisplay(savedLocation);
+      }
+    }
+
+    function showToast(message) {
+      // Remove existing toast
+      const existingToast = document.querySelector('.toast');
+      if (existingToast) {
+        existingToast.remove();
+      }
+
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toast.parentNode.removeChild(toast);
+        }
+      }, 3000);
+    }
+
+    // Bottom navigation active state
+    function setActiveNavItem() {
+      const currentPage = window.location.pathname.split('/').pop() || 'about.html';
+      const navItems = document.querySelectorAll('.nav-item');
+      
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('href') === currentPage) {
+          item.classList.add('active');
+        }
+    // Load navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+      font-weight: bold;
+
+    .team-card h3 {
+      margin-bottom: 10px;
+      font-weight: 700;
+    .team-card p {
+      color: #666;
+      font-size: 0.9rem;
+    @media (max-width: 768px) {
+      .about-container {
+        margin: 20px auto;
+        padding: 15px;
+      .hero-section {
+        padding: 40px 20px;
+      .hero-section h1 {
+        font-size: 2.5rem;
+      
+      .content-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .content-card {
+        padding: 30px 20px;
+      }
+      
+      .stats-section {
+        padding: 40px 20px;
+      }
+  <script data-id="cmifhtukf001hky04ol11gf5g" src="https://tinychat.ai/tinychat.js" async defer></script>
+  <header>
+
+  <div class="about-container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <h1>About TilleValle</h1>
+      <p>Cultivating fresh, organic produce with passion and dedication since 1985. From our family farm to your table, we bring you the finest quality fruits, vegetables, and herbs grown with love and care.</p>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="content-grid">
+      <div class="content-card">
+        <h2><span class="icon">🌱</span> Our Mission</h2>
+        <p>TilleValle is dedicated to providing fresh, organic produce to our community while promoting sustainable farming practices and healthy living.</p>
+        <p>We believe in transparency, quality, and community empowerment through responsible agriculture that respects both people and the environment.</p>
+
+      <div class="content-card">
+        <h2><span class="icon">🚜</span> Our Farm</h2>
+        <p>Located in the lush region of Gilgil, our farm benefits from ideal climate and soil conditions for growing nutrient-rich produce.</p>
+        <p>We use organic fertilizers and avoid harmful pesticides to ensure the health of our customers and the environment.</p>
+
+      <div class="content-card">
+        <h2><span class="icon">🤝</span> Community Impact</h2>
+        <p>We actively engage with local farmers to support sustainable agriculture and fair trade practices throughout Kenya.</p>
+        <p>Our educational programs and farm tours promote awareness about healthy eating and sustainable agriculture in local schools.</p>
+      </div>
+
+      <div class="content-card">
+        <h2><span class="icon">♻️</span> Sustainability</h2>
+        <p>Sustainability is at the core of everything we do. We prioritize water conservation, soil health, and biodiversity protection.</p>
+        <p>Our commitment extends to protecting the environment for future generations through innovative farming techniques.</p>
+      </div>
+    <!-- Stats Section -->
+    <div class="stats-section">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-number">39</span>
+          <span class="stat-label">Years of Experience</span>
+        <div class="stat-item">
+          <span class="stat-number">5000+</span>
+          <span class="stat-label">Happy Customers</span>
+        <div class="stat-item">
+          <span class="stat-number">50+</span>
+          <span class="stat-label">Product Varieties</span>
+        <div class="stat-item">
+          <span class="stat-number">100%</span>
+          <span class="stat-label">Organic Certified</span>
+    <a href="cart.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span>Cart</span>
+    </a>
+    <a href="about.html" class="nav-item active">
+      <span class="nav-icon">ℹ️</span>
+      <span>About</span>
+    </a>
+    <a href="contact.html" class="nav-item">
+      <span class="nav-icon">📞</span>
+      <span>Contact</span>
+    </a>
+  </nav>
+
+  <!-- Location Selector Modal -->
+  <div id="location-selector-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Select Delivery Location</h2>
+        <button class="close-btn" onclick="closeLocationSelector()">&times;</button>
+      </div>
+      
+      <div class="location-input-section">
+        <input 
+          type="text" 
+          id="location-input" 
+          class="location-input" 
+          placeholder="Enter your delivery address..."
+        />
+        <div class="location-buttons">
+          <button class="btn btn-secondary" onclick="useCurrentLocation()">
+            📍 Use Current Location
+          </button>
+          <button class="btn btn-primary" onclick="saveDeliveryLocation()">
+            Save Location
+          </button>
+      </div>
+
+      <div class="popular-locations">
+        <h3 class="popular-title">Popular Locations</h3>
+        <div class="location-option" onclick="selectLocation('Nairobi CBD, Kenya')">
+          <span class="location-option-icon">🏢</span>
+          <span class="location-option-text">Nairobi CBD, Kenya</span>
+        <div class="team-card">
+          <div class="team-avatar">MW</div>
+          <h3>Mary Wanjiku</h3>
+          <p>Agricultural Specialist</p>
+        <div class="location-option" onclick="selectLocation('Westlands, Nairobi')">
+          <span class="location-option-icon">🏘️</span>
+          <span class="location-option-text">Westlands, Nairobi</span>
+        <div class="team-card">
+          <div class="team-avatar">PM</div>
+          <h3>Peter Mwangi</h3>
+          <p>Quality Control Manager</p>
+        <div class="location-option" onclick="selectLocation('Karen, Nairobi')">
+          <span class="location-option-icon">🌳</span>
+          <span class="location-option-text">Karen, Nairobi</span>
+        </div>
+        <div class="location-option" onclick="selectLocation('Kilimani, Nairobi')">
+          <span class="location-option-icon">🏠</span>
+          <span class="location-option-text">Kilimani, Nairobi</span>
+        </div>
+        <div class="location-option" onclick="selectLocation('Kileleshwa, Nairobi')">
+          <span class="location-option-icon">🏘️</span>
+          <span class="location-option-text">Kileleshwa, Nairobi</span>
+        </div>
+  <footer>
+    <p>&copy; 2024 TilleValle. All rights reserved.</p>
+  </footer>
+
+    // Initialize app
+    function initApp() {
+      initUserProfile();
+      loadSavedLocation();
+    }
+
+    // User profile management
+    function initUserProfile() {
+      const profileBtn = document.getElementById('profile-btn');
+      const userEmail = localStorage.getItem('email');
+      
+      if (userEmail) {
+        profileBtn.onclick = () => window.location.href = 'profile.html';
+      } else {
+        profileBtn.onclick = () => window.location.href = 'login.html';
+      }
+    }
+
+    // Logout function
+    window.logout = function() {
+      localStorage.removeItem('email');
+      localStorage.removeItem('user');
+      window.location.href = 'login.html';
+    };
+
+    // Location functions
+    function openLocationSelector() {
+      document.getElementById('location-selector-modal').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLocationSelector() {
+      document.getElementById('location-selector-modal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    function useCurrentLocation() {
+      const input = document.getElementById('location-input');
+      if (!input) return;
+      
+      if (!navigator.geolocation) {
+        input.value = 'Nairobi, Kenya';
+        showToast('Geolocation not supported. Using default location.');
+        return;
+      }
+      
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000
+      };
+      
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          const lat = position.coords.latitude.toFixed(6);
+          const lng = position.coords.longitude.toFixed(6);
+          
+          fetch(`https://ipapi.co/json/`)
+            .then(response => response.json())
+            .then(data => {
+              if (data.city && data.country) {
+                input.value = `${data.city}, ${data.region}, ${data.country}`;
+              } else {
+                input.value = `${lat}, ${lng}`;
+              }
+            })
+            .catch(() => {
+              input.value = `${lat}, ${lng}`;
+            });
+          
+          showToast('Location detected successfully!');
+        },
+        function(error) {
+          let defaultLocation = 'Nairobi, Kenya';
+          input.value = defaultLocation;
+          showToast('Using default location: Nairobi, Kenya');
+        },
+        options
+      );
+    }
+
+    function selectLocation(location) {
+      localStorage.setItem('deliveryLocation', location);
+      updateLocationDisplay(location);
+      closeLocationSelector();
+      showToast(`Location set to ${location}!`);
+    }
+
+    function saveDeliveryLocation() {
+      const location = document.getElementById('location-input').value.trim();
+      if (!location) {
+        showToast('Please enter a delivery location');
+        return;
+      }
+      
+      localStorage.setItem('deliveryLocation', location);
+      updateLocationDisplay(location);
+      closeLocationSelector();
+      showToast('Delivery location saved!');
+    }
+
+    function updateLocationDisplay(location) {
+      const currentLocationEl = document.getElementById('current-location');
+      const displayText = location.length > 25 ? location.substring(0, 25) + '...' : location;
+      if (currentLocationEl) {
+        currentLocationEl.textContent = displayText;
+      }
+    }
+
+    function loadSavedLocation() {
+      const savedLocation = localStorage.getItem('deliveryLocation');
+      if (savedLocation) {
+        updateLocationDisplay(savedLocation);
+      }
+    }
+
+    function showToast(message) {
+      // Remove existing toast
+      const existingToast = document.querySelector('.toast');
+      if (existingToast) {
+        existingToast.remove();
+      }
+
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toast.parentNode.removeChild(toast);
+        }
+      }, 3000);
+    }
+
+    // Bottom navigation active state
+    function setActiveNavItem() {
+      const currentPage = window.location.pathname.split('/').pop() || 'about.html';
+      const navItems = document.querySelectorAll('.nav-item');
+      
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('href') === currentPage) {
+          item.classList.add('active');
+        }
+    // Load navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('navbar-container').innerHTML = data;
+    }
+  </script>
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+      const modal = document.getElementById('location-selector-modal');
+      if (event.target === modal) {
+        closeLocationSelector();
+      }
+    });
+
+    // Initialize app when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      initApp();
+      setActiveNavItem();
+    });
+
+    // Handle back button for modal
+    window.addEventListener('popstate', function() {
+      const modal = document.getElementById('location-selector-modal');
+      if (modal.style.display === 'block') {
+        closeLocationSelector();
+      }
+    });
+  </script>
+  <script src="script.js" defer></script>
+  <script src="bg-init.js"></script>
+<script data-id="cmifhtukf001hky04ol11gf5g" src="https://tinychat.ai/tinychat.js" async defer></script>

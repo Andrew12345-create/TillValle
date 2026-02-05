@@ -1,104 +1,154 @@
-<link rel="stylesheet" href="css/site.css">
-<link rel="stylesheet" href="css/navbar.css">
+<style>
+/* ========== MASTER NAVBAR STYLES - OVERRIDE ALL OTHERS ========== */
+* { --navbar-bg: #2d6a4f !important; }
+
+.navbar {
+  background: #2d6a4f !important;
+  background-color: #2d6a4f !important;
+  color: white !important;
+  padding: 12px 20px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 20px !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15) !important;
+  border: none !important;
+  border-bottom: none !important;
+}
+
+.navbar * {
+  color: white !important;
+}
+
+.navbar a {
+  color: white !important;
+  text-decoration: none !important;
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  transition: background 0.2s !important;
+  display: inline-block !important;
+}
+
+.navbar a:hover {
+  background: rgba(255,255,255,0.15) !important;
+  color: white !important;
+}
+
+.navbar a:hover::after {
+  display: none !important;
+}
+
+.nav-left {
+  display: flex !important;
+  gap: 15px !important;
+  align-items: center !important;
+  flex: 1 !important;
+}
+
+.nav-right {
+  display: flex !important;
+  gap: 15px !important;
+  align-items: center !important;
+}
+
+.logo {
+  height: 40px !important;
+  border-radius: 6px !important;
+}
+
+.hamburger {
+  display: none !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 5px !important;
+}
+
+.hamburger span {
+  width: 25px !important;
+  height: 3px !important;
+  background: white !important;
+  border-radius: 2px !important;
+}
+
+#user-area {
+  display: flex !important;
+  gap: 10px !important;
+  align-items: center !important;
+}
+
+#user-area a {
+  color: white !important;
+  margin: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .nav-left a:not(:first-child),
+  .nav-right { 
+    display: none !important; 
+  }
+  
+  .hamburger { 
+    display: flex !important; 
+  }
+}
+</style>
+
 <nav class="navbar">
   <div class="nav-left">
-    <a href="index.html" class="nav-link logo-link">
+    <a href="index.html">
       <img src="./logo.jpg" alt="TilleValle Logo" class="logo" />
     </a>
-    <a href="shop.html" class="nav-link">Products</a>
-    <a href="about.html" class="nav-link">About</a>
-    <a href="contact.html" class="nav-link">Contact</a>
+    <a href="shop.html">Products</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
   </div>
   <div class="nav-right">
-    <div id="delivery-location" style="display:inline-flex;align-items:center;margin-right:12px;background:rgba(255,255,255,0.9);backdrop-filter:blur(10px);border-radius:20px;padding:8px 15px;border:1px solid rgba(45,106,79,0.2);">
-      <span style="margin-right:8px;font-size:16px;">📍</span>
-      <span id="current-location" style="color:#2d6a4f;font-weight:600;cursor:pointer;" onclick="openLocationSelector()">Select Location</span>
-    </div>
-
-    <div id="compare-widget" style="display:none;margin-right:12px;background:rgba(255,255,255,0.9);backdrop-filter:blur(10px);border-radius:20px;padding:8px 15px;border:1px solid rgba(45,106,79,0.2);cursor:pointer;" onclick="openCompareModal()">
-      <span style="margin-right:8px;font-size:16px;">⚖️</span>
-      <span style="color:#2d6a4f;font-weight:600;">Compare (<span id="compare-count">0</span>)</span>
-    </div>
-    <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
+    <a href="cart.html">🛒 Cart</a>
     <span id="user-area"></span>
   </div>
-  <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu">
-    <span class="hamburger-line"></span>
-    <span class="hamburger-line"></span>
-    <span class="hamburger-line"></span>
+  <button class="hamburger" id="hamburger-btn">
+    <span></span>
+    <span></span>
+    <span></span>
   </button>
 </nav>
 
-<!-- Location Selector Modal -->
-<div id="location-selector-modal" style="display:none;position:fixed;z-index:10000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);">
-  <div style="background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);margin:5% auto;padding:30px;border-radius:25px;width:90%;max-width:500px;box-shadow:0 25px 50px rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.3);">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-      <h2 style="color:#2d6a4f;margin:0;">📍 Select Delivery Location</h2>
-      <button onclick="closeLocationSelector()" style="background:none;border:none;font-size:24px;cursor:pointer;color:#ff6b6b;">&times;</button>
-    </div>
-    <div style="margin-bottom:20px;">
-      <div style="margin-bottom:15px;">
-        <h3 style="color:#2d6a4f;margin-bottom:10px;font-size:1.1rem;">Popular Locations</h3>
-        <div style="display:grid;gap:8px;">
-          <button onclick="selectLocation('Nairobi CBD')" style="background:rgba(45,106,79,0.1);border:1px solid #2d6a4f;color:#2d6a4f;padding:10px 15px;border-radius:12px;cursor:pointer;text-align:left;font-weight:600;">🏙️ Nairobi CBD</button>
-          <button onclick="selectLocation('Westlands')" style="background:rgba(45,106,79,0.1);border:1px solid #2d6a4f;color:#2d6a4f;padding:10px 15px;border-radius:12px;cursor:pointer;text-align:left;font-weight:600;">🏢 Westlands</button>
-          <button onclick="selectLocation('Karen')" style="background:rgba(45,106,79,0.1);border:1px solid #2d6a4f;color:#2d6a4f;padding:10px 15px;border-radius:12px;cursor:pointer;text-align:left;font-weight:600;">🏡 Karen</button>
-          <button onclick="selectLocation('Kiambu')" style="background:rgba(45,106,79,0.1);border:1px solid #2d6a4f;color:#2d6a4f;padding:10px 15px;border-radius:12px;cursor:pointer;text-align:left;font-weight:600;">🌆 Kiambu</button>
-          <button onclick="selectLocation('Thika')" style="background:rgba(45,106,79,0.1);border:1px solid #2d6a4f;color:#2d6a4f;padding:10px 15px;border-radius:12px;cursor:pointer;text-align:left;font-weight:600;">🏭 Thika</button>
-        </div>
-      </div>
-      <div style="border-top:1px solid rgba(45,106,79,0.2);padding-top:15px;">
-        <h3 style="color:#2d6a4f;margin-bottom:10px;font-size:1.1rem;">Custom Location</h3>
-        <input type="text" id="location-input" placeholder="Enter your delivery address..." style="width:100%;padding:15px;border:2px solid #2d6a4f;border-radius:15px;font-size:16px;margin-bottom:15px;">
-        <button onclick="useCurrentLocation()" style="background:#2d6a4f;color:white;border:none;padding:12px 20px;border-radius:20px;cursor:pointer;margin-right:10px;font-weight:600;">📍 Use Current Location</button>
-        <button onclick="saveDeliveryLocation()" style="background:#16a34a;color:white;border:none;padding:12px 20px;border-radius:20px;cursor:pointer;font-weight:600;">Save Location</button>
-      </div>
-    </div>
-    <div style="font-size:14px;color:#666;">
-      <p><strong>Delivery Zones:</strong></p>
-      <p>🏙️ Nairobi - KES 200 (Same day)</p>
-      <p>🌆 Kiambu - KES 150 (Next day)</p>
-      <p>🌍 Other Areas - KES 300 (2-3 days)</p>
-    </div>
-  </div>
-</div>
-
-<!-- Cookie Consent Banner -->
-<div id="cookie-consent-banner" class="cookie-consent-banner hidden">
-  <div class="cookie-consent-content">
-    <div class="cookie-consent-text">
-      <p>🍪 We use cookies to enhance your experience on TillValle. By continuing to browse, you agree to our use of cookies.</p>
-    </div>
-    <div class="cookie-consent-buttons">
-      <button id="cookie-accept" class="cookie-btn accept">Accept All</button>
-      <button id="cookie-decline" class="cookie-btn decline">Decline</button>
-    </div>
-  </div>
-</div>
-
-<div class="mobile-menu" id="mobile-menu">
-  <button class="mobile-close-btn" id="mobile-close-btn" aria-label="Close menu">&times;</button>
-  <a href="shop.html" class="mobile-nav-link">Shop</a>
-  <a href="about.html" class="mobile-nav-link">About</a>
-  <a href="contact.html" class="mobile-nav-link">Contact</a>
-  <a href="cart.html" class="mobile-nav-link">🛒 Cart (<span id="mobile-cart-count">0</span>)</a>
-  <div id="mobile-user-area"></div>
-  <div style="padding:10px;border-top:1px solid rgba(45,106,79,0.2);">
-    <div onclick="openLocationSelector()" style="display:flex;align-items:center;gap:8px;padding:8px;background:rgba(45,106,79,0.1);border-radius:15px;cursor:pointer;">
-      <span>📍</span>
-      <span id="mobile-current-location" style="color:#2d6a4f;font-weight:600;">Select Location</span>
-    </div>
-  </div>
-</div>
-
 <script>
+function initNavbar() {
+  const userArea = document.getElementById('user-area');
+  const userEmail = localStorage.getItem('email');
+  
+  if (userEmail && userArea) {
+    const initial = userEmail.charAt(0).toUpperCase();
+    userArea.innerHTML = `
+      <a href="profile.html">Profile</a>
+      <a href="#" onclick="logout();return false;">Logout</a>
+    `;
+  } else if (userArea) {
+    userArea.innerHTML = `<a href="login.html">Login</a>`;
+  }
+}
+
+window.logout = function() {
+  localStorage.removeItem('email');
+  localStorage.removeItem('user');
+  window.location.href = 'login.html';
+};
+
+document.addEventListener('DOMContentLoaded', initNavbar);
+
 // Delivery Location Functions
 function openLocationSelector() {
   document.getElementById('location-selector-modal').style.display = 'block';
-  const savedLocation = localStorage.getItem('deliveryLocation');
-  if (savedLocation) {
-    document.getElementById('location-input').value = savedLocation;
-  }
 }
 
 function closeLocationSelector() {
@@ -152,7 +202,7 @@ function useCurrentLocation() {
 
 function showToast(message) {
   const toast = document.createElement('div');
-  toast.style.Text = 'position:fixed;bottom:30px;right:30px;background:linear-gradient(135deg,#16a34a,#22c55e);color:white;padding:15px 25px;border-radius:25px;z-index:999999;font-weight:600;';
+  toast.style.cssText = 'position:fixed;bottom:30px;right:30px;background:linear-gradient(135deg,#16a34a,#22c55e);color:white;padding:15px 25px;border-radius:25px;z-index:999999;font-weight:600;';
   toast.textContent = message;
   document.body.appendChild(toast);
   setTimeout(() => document.body.removeChild(toast), 3000);

@@ -14,13 +14,6 @@ body.homepage {
   background-attachment: fixed;
 }
 
-/* Navbar override for homepage - make it green */
-body.homepage .navbar {
-  background: var(--accent-green);
-  box-shadow: 0 6px 16px rgba(22,163,74,0.18);
-  border-bottom: 1px solid rgba(0,0,0,0.06);
-}
-
 /* Hero override */
 .home-hero {
   padding: 90px 20px;
@@ -71,29 +64,6 @@ body.homepage .navbar {
   background: linear-gradient(135deg, #ffb74d 0%, #ff9f1a 100%);
   transform: translateY(-3px);
   box-shadow: 0 12px 35px rgba(255,209,102,0.4);
-}
-
-/* Homepage navbar links - ensure high contrast on green hero */
-body.homepage .nav-left .nav-link,
-body.homepage .nav-right .nav-link,
-body.homepage .nav-center .nav-link {
-  color: white;
-  background: transparent;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: background 0.18s ease, transform 0.18s ease;
-}
-
-body.homepage .nav-left .nav-link:hover,
-body.homepage .nav-right .nav-link:hover,
-body.homepage .nav-center .nav-link:hover {
-  background: rgba(255,255,255,0.08);
-  transform: translateY(-2px);
-}
-
-body.homepage .nav-link:focus {
-  outline: 3px solid rgba(255,255,255,0.18);
-  outline-offset: 2px;
 }
 
 /* Floating chatbot button styling for homepage */

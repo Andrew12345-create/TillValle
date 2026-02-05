@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TilleValle - Mobile App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f9fa;
+      padding-bottom: 80px;
+      overflow-x: hidden;
+    }
+
+    /* Mobile Header */
+    .mobile-header {
+      background: #2d6a4f;
+      color: white;
+      padding: 12px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      height: 32px;
+      width: 32px;
+      border-radius: 6px;
+      object-fit: cover;
+    }
+
+    .app-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .cart-btn, .profile-btn, .settings-btn {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background 0.2s;
+    }
+
+    .cart-btn:hover, .profile-btn:hover, .settings-btn:hover {
+      background: rgba(255,255,255,0.25);
+    }
+
+    /* Location Bar */
+    .location-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.1);
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .location-bar:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .location-icon {
+      font-size: 16px;
+    }
+
+    .location-text {
+      flex: 1;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .location-arrow {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    /* Main Content */
+    .main-content {
+      padding: 16px;
+      min-height: calc(100vh - 160px);
+      max-width: 100%;
+    }
+
+    /* Search Bar */
+    .search-section {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 16px;
+      background: white;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: #2d6a4f;
+      box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1);
+    }
+
+    .filter-btn {
+      background: #2d6a4f;
+      color: white;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background 0.2s;
+    }
+
+    .filter-btn:active {
+      background: #1b4332;
+    }
+
+    /* Products Grid */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      min-height: 240px;
+    }
+
+    .product-card:active {
+      transform: scale(0.98);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 140px;
+      background: linear-gradient(135deg, #f0f0f0, #e5e5e5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      overflow: hidden;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-info {
+      padding: 12px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2d6a4f;
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+
+    .product-price {
+      font-size: 16px;
+      font-weight: 700;
+      color: #16a34a;
+      margin-bottom: 8px;
+    }
+
+    .product-footer {
+      display: flex;
+      gap: 6px;
+      margin-top: auto;
+    }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #f0f0f0;
+      border-radius: 6px;
+      padding: 2px;
+      flex: 1;
+    }
+
+    .qty-btn {
+      width: 24px;
+      height: 24px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-weight: bold;
+      color: #2d6a4f;
+      padding: 0;
+    }
+
+    .qty-display {
+      font-size: 12px;
+      font-weight: 600;
+      flex: 1;
+      text-align: center;
+    }
+
+    .add-btn {
+      background: #2d6a4f;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .add-btn:active {
+      background: #1b4332;
+    }
+
+    .welcome-section {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .welcome-title {
+      font-size: 22px;
+      color: #2d6a4f;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .welcome-subtitle {
+      color: #666;
+      font-size: 14px;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2d6a4f;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 25px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 2001;
+      animation: slideUp 0.3s ease;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* Loading State */
+    .loading {
+      text-align: center;
+      padding: 40px 20px;
+      color: #2d6a4f;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f0f0f0;
+      border-top-color: #2d6a4f;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      z-index: 1000;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #6b7280;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      min-width: 60px;
+    }
+
+    .nav-item.active {
+      color: #2d6a4f;
+      background: rgba(45, 106, 79, 0.1);
+    }
+
+    .nav-item:hover {
+      color: #2d6a4f;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    /* Location Selector Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: 20px 20px 0 0;
+      padding: 24px;
+      max-height: 80vh;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #2d6a4f;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #6b7280;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .location-input-section {
+      margin-bottom: 20px;
+    }
+
+    .location-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .location-input:focus {
+      outline: none;
+      border-color: #2d6a4f;
+    }
+
+    .location-buttons {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #2d6a4f;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #1e4a35;
+    }
+
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #d1d5db;
+    }
+
+    .btn-secondary:hover {
+      background: #e5e7eb;
+    }
+
+    .popular-locations {
+      margin-top: 20px;
+    }
+
+    .popular-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #374151;
+    }
+
+    .location-option {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      background: #f9fafb;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .location-option:hover {
+      background: #f3f4f6;
+    }
+
+    .location-option-icon {
+      margin-right: 12px;
+      font-size: 16px;
+      color: #2d6a4f;
+    }
+
+    .location-option-text {
+      flex: 1;
+      font-size: 14px;
+      color: #374151;
+    }
+
+    /* Toast Notifications */
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 16px;
+      right: 16px;
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      color: white;
+      padding: 16px 20px;
+      border-radius: 12px;
+      z-index: 999999;
+      font-weight: 600;
+      text-align: center;
+      animation: slideUp 0.3s ease;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 375px) {
+      .header-actions {
+        gap: 12px;
+      }
+      
+      .main-content {
+        padding: 16px 12px;
+      }
+      
+      .modal-content {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Mobile Header -->
+  <header class="mobile-header">
+    <div class="header-top">
+      <div class="logo-section">
+        <img src="./logo.jpg" alt="TilleValle Logo" class="logo" />
+        <span class="app-title">TilleValle</span>
+      </div>
+      <div class="header-actions">
+        <button class="cart-btn" onclick="window.location.href='cart.html'">
+          🛒
+        </button>
+        <button class="profile-btn" id="profile-btn">
+          👤
+        </button>
+        <button class="settings-btn" onclick="toggleSettings()">
+          ⚙️
+        </button>
+      </div>
+    </div>
+
+    <!-- Settings Menu -->
+    <div id="settings-menu" style="display:none; background: rgba(0,0,0,0.1); padding: 8px; border-radius: 8px; margin-top: 8px;">
+      <button style="background: rgba(255,255,255,0.1); border: none; color: white; width: 100%; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-bottom: 4px;" onclick="switchToDesktop()">
+        📱 Switch to Desktop
+      </button>
+    </div>
+    
+    <div class="location-bar" onclick="openLocationSelector()">
+      <span class="location-icon">📍</span>
+      <span class="location-text" id="current-location">Select delivery location</span>
+      <span class="location-arrow">▼</span>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="welcome-section">
+      <h1 class="welcome-title">Fresh Produce</h1>
+      <p class="welcome-subtitle">From Farm to Your Doorstep</p>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="search-section">
+      <input 
+        type="text" 
+        class="search-input" 
+        id="search-input" 
+        placeholder="Search products..." 
+      />
+      <button class="filter-btn" id="filter-btn">⚙️</button>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="products-grid" id="products-grid">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Loading products...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item active">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="shop.html" class="nav-item">
+      <span class="nav-icon">🛍️</span>
+      <span>Shop</span>
+    </a>
+    <a href="cart.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span>Cart</span>
+    </a>
+    <a href="about.html" class="nav-item">
+      <span class="nav-icon">ℹ️</span>
+      <span>About</span>
+    </a>
+    <a href="contact.html" class="nav-item">
+      <span class="nav-icon">📞</span>
+      <span>Contact</span>
+    </a>
+  </nav>
+
+  <!-- Location Selector Modal -->
+  <div id="location-selector-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Select Delivery Location</h2>
+        <button class="close-btn" onclick="closeLocationSelector()">&times;</button>
+      </div>
+      
+      <div class="location-input-section">
+        <input 
+          type="text" 
+          id="location-input" 
+          class="location-input" 
+          placeholder="Enter your delivery address..."
+        />
+        <div class="location-buttons">
+          <button class="btn btn-secondary" onclick="useCurrentLocation()">
+            📍 Use Current Location
+          </button>
+          <button class="btn btn-primary" onclick="saveDeliveryLocation()">
+            Save Location
+          </button>
+        </div>
+      </div>
+
+      <div class="popular-locations">
+        <h3 class="popular-title">Popular Locations</h3>
+        <div class="location-option" onclick="selectLocation('Nairobi CBD, Kenya')">
+          <span class="location-option-icon">🏢</span>
+          <span class="location-option-text">Nairobi CBD, Kenya</span>
+        </div>
+        <div class="location-option" onclick="selectLocation('Westlands, Nairobi')">
+          <span class="location-option-icon">🏘️</span>
+          <span class="location-option-text">Westlands, Nairobi</span>
+        </div>
+        <div class="location-option" onclick="selectLocation('Karen, Nairobi')">
+          <span class="location-option-icon">🌳</span>
+          <span class="location-option-text">Karen, Nairobi</span>
+        </div>
+        <div class="location-option" onclick="selectLocation('Kilimani, Nairobi')">
+          <span class="location-option-icon">🏠</span>
+          <span class="location-option-text">Kilimani, Nairobi</span>
+        </div>
+        <div class="location-option" onclick="selectLocation('Kileleshwa, Nairobi')">
+          <span class="location-option-icon">🏘️</span>
+          <span class="location-option-text">Kileleshwa, Nairobi</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // App State
+    let products = [];
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let allProducts = [];
+
+    // Sample Products Data (fallback)
+    const sampleProducts = [
+      { id: 1, name: 'Fresh Tomatoes', price: 150, icon: '🍅', stock: 25 },
+      { id: 2, name: 'Carrots', price: 80, icon: '🥕', stock: 30 },
+      { id: 3, name: 'Lettuce', price: 60, icon: '🥬', stock: 20 },
+      { id: 4, name: 'Onions', price: 50, icon: '🧅', stock: 40 },
+      { id: 5, name: 'Potatoes', price: 100, icon: '🥔', stock: 35 },
+      { id: 6, name: 'Bell Peppers', price: 120, icon: '🫑', stock: 18 },
+      { id: 7, name: 'Cabbage', price: 90, icon: '🥬', stock: 22 },
+      { id: 8, name: 'Cucumbers', price: 70, icon: '🥒', stock: 28 },
+    ];
+
+    // Initialize app
+    function initApp() {
+      initUserProfile();
+      loadSavedLocation();
+      loadProducts();
+      updateCartCount();
+      setActiveNavItem();
+      attachEventListeners();
+    }
+
+    // Attach event listeners
+    function attachEventListeners() {
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) {
+        searchInput.addEventListener('input', filterProducts);
+      }
+
+      const filterBtn = document.getElementById('filter-btn');
+      if (filterBtn) {
+        filterBtn.addEventListener('click', openLocationSelector);
+      }
+    }
+
+    // Load products
+    async function loadProducts() {
+      try {
+        const response = await fetch('/api/products');
+        if (response.ok) {
+          const data = await response.json();
+          products = data.map(p => ({
+            id: p.product_id || p.id,
+            name: p.product_name || p.name,
+            price: p.price || 0,
+            icon: getProductIcon(p.product_name || p.name || ''),
+            stock: p.stock_quantity || p.stock || 0
+          }));
+        } else {
+          products = sampleProducts;
+        }
+      } catch (error) {
+        console.log('Using sample products:', error);
+        products = sampleProducts;
+      }
+      
+      allProducts = [...products];
+      displayProducts(products);
+    }
+
+    // Get emoji icon based on product name
+    function getProductIcon(name) {
+      const icons = {
+        'tomato': '🍅', 'carrot': '🥕', 'lettuce': '🥬', 'onion': '🧅',
+        'potato': '🥔', 'pepper': '🫑', 'cabbage': '🥬', 'cucumber': '🥒',
+        'apple': '🍎', 'banana': '🍌', 'orange': '🍊', 'strawberry': '🍓',
+        'mango': '🥭', 'avocado': '🥑', 'broccoli': '🥦', 'corn': '🌽'
+      };
+      
+      const lowerName = name.toLowerCase();
+      for (let key in icons) {
+        if (lowerName.includes(key)) return icons[key];
+      }
+      return '🌱';
+    }
+
+    // Display products
+    function displayProducts(productsToShow) {
+      const grid = document.getElementById('products-grid');
+      if (!grid) return;
+
+      if (productsToShow.length === 0) {
+        grid.innerHTML = '<div class="loading"><p>No products found</p></div>';
+        return;
+      }
+
+      grid.innerHTML = productsToShow.map(product => {
+        const cartItem = cart.find(item => item.id === product.id);
+        const quantity = cartItem ? cartItem.quantity : 0;
+        
+        return `
+          <div class="product-card">
+            <div class="product-image">${product.icon}</div>
+            <div class="product-info">
+              <div class="product-name">${product.name}</div>
+              <div class="product-price">KES ${product.price}</div>
+              <div class="product-footer">
+                ${quantity > 0 ? `
+                  <div class="qty-control">
+                    <button class="qty-btn" onclick="updateQuantity(${product.id}, ${quantity - 1})">−</button>
+                    <div class="qty-display">${quantity}</div>
+                    <button class="qty-btn" onclick="updateQuantity(${product.id}, ${quantity + 1})">+</button>
+                  </div>
+                ` : `
+                  <button class="add-btn" onclick="addToCart(${product.id}, '${product.name}', ${product.price})">Add</button>
+                `}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Filter products
+    function filterProducts() {
+      const searchValue = document.getElementById('search-input').value.toLowerCase();
+      const filtered = allProducts.filter(product => 
+        product.name.toLowerCase().includes(searchValue)
+      );
+      displayProducts(filtered);
+    }
+
+    // Add to cart
+    function addToCart(id, name, price) {
+      const existingItem = cart.find(item => item.id === id);
+      
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({ id, name, price, quantity: 1 });
+      }
+      
+      saveCart();
+      updateCartCount();
+      displayProducts(products);
+      showToast(`${name} added to cart!`);
+    }
+
+    // Update quantity
+    function updateQuantity(id, newQuantity) {
+      if (newQuantity <= 0) {
+        cart = cart.filter(item => item.id !== id);
+      } else {
+        const item = cart.find(item => item.id === id);
+        if (item) item.quantity = newQuantity;
+      }
+      
+      saveCart();
+      updateCartCount();
+      displayProducts(products);
+    }
+
+    // Save cart to localStorage
+    function saveCart() {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    // Update cart count
+    function updateCartCount() {
+      const cartBtn = document.getElementById('cart-btn');
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      
+      if (cartBtn && totalItems > 0) {
+        cartBtn.style.position = 'relative';
+        if (!cartBtn.querySelector('.cart-badge')) {
+          const badge = document.createElement('span');
+          badge.className = 'cart-badge';
+          badge.style.cssText = 'position:absolute;top:-8px;right:-8px;background:#ff6b6b;color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;';
+          cartBtn.appendChild(badge);
+        }
+        cartBtn.querySelector('.cart-badge').textContent = totalItems;
+      } else if (cartBtn?.querySelector('.cart-badge')) {
+        cartBtn.querySelector('.cart-badge').remove();
+      }
+    }
+
+    // User profile management
+    function initUserProfile() {
+      const profileBtn = document.getElementById('profile-btn');
+      const userEmail = localStorage.getItem('email');
+      
+      if (userEmail) {
+        profileBtn.onclick = () => window.location.href = 'profile.html';
+      } else {
+        profileBtn.onclick = () => window.location.href = 'login.html';
+      }
+    }
+
+    // Logout function
+    window.logout = function() {
+      localStorage.removeItem('email');
+      localStorage.removeItem('user');
+      window.location.href = 'login.html';
+    };
+
+    // Location functions
+    function openLocationSelector() {
+      document.getElementById('location-selector-modal').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLocationSelector() {
+      document.getElementById('location-selector-modal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    function useCurrentLocation() {
+      const input = document.getElementById('location-input');
+      if (!input) return;
+      
+      if (!navigator.geolocation) {
+        input.value = 'Nairobi, Kenya';
+        showToast('Geolocation not supported. Using default location.');
+        return;
+      }
+      
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000
+      };
+      
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          const lat = position.coords.latitude.toFixed(6);
+          const lng = position.coords.longitude.toFixed(6);
+          
+          fetch(`https://ipapi.co/json/`)
+            .then(response => response.json())
+            .then(data => {
+              if (data.city && data.country) {
+                input.value = `${data.city}, ${data.region}, ${data.country}`;
+              } else {
+                input.value = `${lat}, ${lng}`;
+              }
+            })
+            .catch(() => {
+              input.value = `${lat}, ${lng}`;
+            });
+          
+          showToast('Location detected successfully!');
+        },
+        function(error) {
+          let defaultLocation = 'Nairobi, Kenya';
+          input.value = defaultLocation;
+          showToast('Using default location: Nairobi, Kenya');
+        },
+        options
+      );
+    }
+
+    function selectLocation(location) {
+      localStorage.setItem('deliveryLocation', location);
+      updateLocationDisplay(location);
+      closeLocationSelector();
+      showToast(`Location set to ${location}!`);
+    }
+
+    function saveDeliveryLocation() {
+      const location = document.getElementById('location-input').value.trim();
+      if (!location) {
+        showToast('Please enter a delivery location');
+        return;
+      }
+      
+      localStorage.setItem('deliveryLocation', location);
+      updateLocationDisplay(location);
+      closeLocationSelector();
+      showToast('Delivery location saved!');
+    }
+
+    function updateLocationDisplay(location) {
+      const currentLocationEl = document.getElementById('current-location');
+      const displayText = location.length > 25 ? location.substring(0, 25) + '...' : location;
+      if (currentLocationEl) {
+        currentLocationEl.textContent = displayText;
+      }
+    }
+
+    function loadSavedLocation() {
+      const savedLocation = localStorage.getItem('deliveryLocation');
+      if (savedLocation) {
+        updateLocationDisplay(savedLocation);
+      }
+    }
+
+    function showToast(message) {
+      const existingToast = document.querySelector('.toast');
+      if (existingToast) {
+        existingToast.remove();
+      }
+
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toast.parentNode.removeChild(toast);
+        }
+      }, 3000);
+    }
+
+    // Bottom navigation active state
+    function setActiveNavItem() {
+      const currentPage = window.location.pathname.split('/').pop() || 'app.html';
+      const navItems = document.querySelectorAll('.nav-item');
+      
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        const href = item.getAttribute('href');
+        if (href === currentPage || (currentPage === 'app.html' && href === 'index.html')) {
+          item.classList.add('active');
+        }
+      });
+    }
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+      const modal = document.getElementById('location-selector-modal');
+      if (event.target === modal) {
+        closeLocationSelector();
+      }
+    });
+
+    // Initialize app when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      initApp();
+    });
+
+    // Handle back button for modal
+    window.addEventListener('popstate', function() {
+      const modal = document.getElementById('location-selector-modal');
+      if (modal.style.display === 'block') {
+        closeLocationSelector();
+      }
+    });
+
+    // Settings menu toggle
+    function toggleSettings() {
+      const menu = document.getElementById('settings-menu');
+      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Switch to desktop mode
+    function switchToDesktop() {
+      sessionStorage.setItem('desktopMode', 'true');
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>

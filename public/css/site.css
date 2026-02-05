@@ -37,8 +37,8 @@ main,section{display:block}
 .navbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:#2d6a4f;border-bottom:1px solid rgba(15,23,42,0.04);box-shadow: 0 6px 16px rgba(15,23,42,0.04);position:sticky;top:0;z-index:1000}
 .nav-left,.nav-right{display:flex;gap:14px;align-items:center}
 .logo{height:44px;border-radius:8px;object-fit:cover}
-.nav-link{color:var(--text-primary);text-decoration:none;padding:8px 10px;border-radius:8px;font-weight:600;opacity:0.95}
-.nav-link:hover{background:rgba(6,95,70,0.06);color:var(--accent)}
+.nav-link{color:white;text-decoration:none;padding:8px 10px;border-radius:8px;font-weight:600;opacity:0.95}
+.nav-link:hover{background:rgba(255,255,255,0.08);color:white}
 
 .user-initial{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:linear-gradient(180deg,var(--accent),var(--accent-2));color:white;font-weight:700;cursor:pointer}
 
@@ -119,7 +119,54 @@ footer{padding:18px;text-align:center;color:var(--muted);border-top:1px solid rg
 
 /* Responsive tweaks */
 @media(min-width:900px){.container{padding:32px}}
-@media(max-width:600px){.product-image{height:90px}.modal-body{flex-direction:column}.nav-left .nav-link{display:none}.logo{height:38px}}
+@media(max-width:768px){
+  /* Tablet and mobile adjustments */
+  .container{padding:16px}
+  .shop-section{padding:20px 12px}
+  .shop-section h2{font-size:24px}
+  .products{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+  .product{padding:10px}
+  .product-image{height:80px}
+  .product h4{font-size:14px}
+  .modal-body{flex-direction:column}
+  .modal-image{width:180px;height:180px}
+  .hero{padding:60px 20px;min-height:50vh}
+  .hero h1{font-size:2rem}
+  .hero p{font-size:1rem}
+  .profile-container{padding:20px}
+  .profile-grid{grid-template-columns:1fr;gap:16px}
+  .cart-section{padding:20px 12px}
+  .cart-container{padding:16px}
+  .cookie-consent-content{flex-direction:column;text-align:center;gap:16px}
+  .cookie-consent-buttons{width:100%;justify-content:center}
+  .cookie-btn{flex:1;max-width:120px}
+}
+@media(max-width:600px){
+  /* Mobile specific adjustments */
+  .nav-left .nav-link{display:none}
+  .logo{height:36px}
+  .product-image{height:70px}
+  .modal-content{padding:16px;max-width:95vw}
+  .modal-image{width:150px;height:150px}
+  .hero h1{font-size:1.8rem}
+  .hero p{font-size:0.95rem}
+  .profile-header h1{font-size:28px}
+  .profile-avatar{width:80px;height:80px;font-size:28px}
+  .floating-chatbot-btn{bottom:16px !important;right:16px !important;width:56px;height:56px;font-size:20px}
+  .floating-cart-btn{bottom:16px !important;right:78px !important;width:56px;height:56px;font-size:20px}
+  .chatbot-sidebar{width:100vw}
+}
+@media(max-width:480px){
+  /* Small mobile adjustments */
+  .products{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+  .product{padding:8px}
+  .product h4{font-size:13px;margin:4px 0 2px}
+  .price{font-size:14px}
+  .hero h1{font-size:1.6rem}
+  .hero p{font-size:0.9rem}
+  .modal-content{padding:12px}
+  .modal-image{width:120px;height:120px}
+}
 
 /* ========= CHATBOT STYLES ========= */
 

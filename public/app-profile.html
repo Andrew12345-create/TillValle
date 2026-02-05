@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - TilleValle App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f9fa;
+      padding-bottom: 80px;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .mobile-header {
+      background: #2d6a4f;
+      color: white;
+      padding: 12px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    /* Main Content */
+    .main-content {
+      padding: 16px;
+      min-height: calc(100vh - 160px);
+    }
+
+    /* Profile Card */
+    .profile-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2d6a4f, #16a34a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin: 0 auto 16px;
+      color: white;
+    }
+
+    .profile-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #2d6a4f;
+      margin-bottom: 4px;
+    }
+
+    .profile-email {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 12px;
+      word-break: break-all;
+    }
+
+    .profile-status {
+      display: inline-block;
+      background: #d4edda;
+      color: #155724;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #2d6a4f;
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+
+    /* Menu Item */
+    .menu-item {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .menu-item:active {
+      background: #f8f9fa;
+      transform: scale(0.98);
+    }
+
+    .menu-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .menu-icon {
+      font-size: 24px;
+    }
+
+    .menu-text {
+      text-align: left;
+    }
+
+    .menu-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #2d6a4f;
+      margin-bottom: 2px;
+    }
+
+    .menu-subtitle {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .menu-arrow {
+      font-size: 20px;
+      color: #ccc;
+    }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: #2d6a4f;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    /* Buttons */
+    .btn-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background: #2d6a4f;
+      color: white;
+      grid-column: 1 / -1;
+    }
+
+    .btn-primary:active {
+      background: #1b4332;
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #2d6a4f;
+      border: 2px solid #2d6a4f;
+    }
+
+    .btn-secondary:active {
+      background: #f8f9fa;
+    }
+
+    .btn-danger {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .btn-danger:active {
+      background: #ff4444;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      z-index: 1000;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #6b7280;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      min-width: 60px;
+    }
+
+    .nav-item.active {
+      color: #2d6a4f;
+      background: rgba(45, 106, 79, 0.1);
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2d6a4f;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 25px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 2001;
+      animation: slideUp 0.3s ease;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    /* Not Logged In */
+    .not-logged-in {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .not-logged-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .not-logged-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #2d6a4f;
+      margin-bottom: 12px;
+    }
+
+    .not-logged-subtitle {
+      color: #666;
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="mobile-header">
+    <div class="header-content">
+      <div class="header-title">Profile</div>
+      <div style="display: flex; gap: 8px;">
+        <button onclick="window.location.href='app.html'" style="background: rgba(255,255,255,0.15); border: none; color: white; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 18px;">←</button>
+        <button class="header-btn" onclick="toggleSettings()">⚙️</button>
+      </div>
+    </div>
+
+    <!-- Settings Menu -->
+    <div id="settings-menu" style="display:none; background: rgba(0,0,0,0.1); padding: 8px; border-radius: 8px; margin-top: 8px;">
+      <button style="background: rgba(255,255,255,0.1); border: none; color: white; width: 100%; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 12px;" onclick="switchToDesktop()">
+        📱 Switch to Desktop
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content" id="profile-content">
+    <div class="not-logged-in">
+      <div class="not-logged-icon">👤</div>
+      <div class="not-logged-title">Not Logged In</div>
+      <div class="not-logged-subtitle">Sign in to access your profile and order history</div>
+      <button class="btn btn-primary" onclick="window.location.href='login.html'">Sign In</button>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="app.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="app-shop.html" class="nav-item">
+      <span class="nav-icon">🛍️</span>
+      <span>Shop</span>
+    </a>
+    <a href="app-cart.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span>Cart</span>
+    </a>
+    <a href="app-about.html" class="nav-item">
+      <span class="nav-icon">ℹ️</span>
+      <span>About</span>
+    </a>
+    <a href="app-profile.html" class="nav-item active">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script>
+    function initPage() {
+      const userEmail = localStorage.getItem('email');
+      const content = document.getElementById('profile-content');
+
+      if (!userEmail) {
+        content.innerHTML = `
+          <div class="not-logged-in">
+            <div class="not-logged-icon">👤</div>
+            <div class="not-logged-title">Not Logged In</div>
+            <div class="not-logged-subtitle">Sign in to access your profile and order history</div>
+            <button class="btn btn-primary" onclick="window.location.href='login.html'">Sign In</button>
+          </div>
+        `;
+        return;
+      }
+
+      const initial = userEmail.charAt(0).toUpperCase();
+
+      content.innerHTML = `
+        <div class="profile-card">
+          <div class="profile-avatar">${initial}</div>
+          <div class="profile-name">${userEmail.split('@')[0]}</div>
+          <div class="profile-email">${userEmail}</div>
+          <div class="profile-status">✓ Verified</div>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Orders</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Total Spent</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Account</div>
+          <div class="menu-item" onclick="window.location.href='profile.html'">
+            <div class="menu-item-left">
+              <div class="menu-icon">📋</div>
+              <div class="menu-text">
+                <div class="menu-title">Order History</div>
+                <div class="menu-subtitle">View your past orders</div>
+              </div>
+            </div>
+            <div class="menu-arrow">›</div>
+          </div>
+          <div class="menu-item" onclick="editProfile()">
+            <div class="menu-item-left">
+              <div class="menu-icon">✏️</div>
+              <div class="menu-text">
+                <div class="menu-title">Edit Profile</div>
+                <div class="menu-subtitle">Update your information</div>
+              </div>
+            </div>
+            <div class="menu-arrow">›</div>
+          </div>
+          <div class="menu-item" onclick="editProfile()">
+            <div class="menu-item-left">
+              <div class="menu-icon">🔑</div>
+              <div class="menu-text">
+                <div class="menu-title">Change Password</div>
+                <div class="menu-subtitle">Update your security</div>
+              </div>
+            </div>
+            <div class="menu-arrow">›</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Preferences</div>
+          <div class="menu-item" onclick="editProfile()">
+            <div class="menu-item-left">
+              <div class="menu-icon">📍</div>
+              <div class="menu-text">
+                <div class="menu-title">Delivery Address</div>
+                <div class="menu-subtitle">Manage your addresses</div>
+              </div>
+            </div>
+            <div class="menu-arrow">›</div>
+          </div>
+          <div class="menu-item" onclick="editProfile()">
+            <div class="menu-item-left">
+              <div class="menu-icon">💳</div>
+              <div class="menu-text">
+                <div class="menu-title">Payment Methods</div>
+                <div class="menu-subtitle">Manage payment options</div>
+              </div>
+            </div>
+            <div class="menu-arrow">›</div>
+          </div>
+          <div class="menu-item" onclick="editProfile()">
+            <div class="menu-item-left">
+              <div class="menu-icon">🔔</div>
+              <div class="menu-text">
+                <div class="menu-title">Notifications</div>
+                <div class="menu-subtitle">Manage your alerts</div>
+              </div>
+            </div>
+            <div class="menu-arrow">›</div>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-secondary" onclick="contactSupport()">📞 Contact Support</button>
+          <button class="btn btn-secondary" onclick="shareApp()">📤 Share App</button>
+        </div>
+
+        <button class="btn btn-danger" onclick="logout()">Sign Out</button>
+      `;
+    }
+
+    function editProfile() {
+      showToast('Feature coming soon!');
+    }
+
+    function contactSupport() {
+      window.location.href = 'app-contact.html';
+    }
+
+    function shareApp() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'TilleValle',
+          text: 'Get fresh farm produce delivered to your door!',
+          url: window.location.href
+        });
+      } else {
+        showToast('Sharing not supported on this device');
+      }
+    }
+
+    function logout() {
+      if (confirm('Are you sure you want to sign out?')) {
+        localStorage.removeItem('email');
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
+      }
+    }
+
+    function showToast(message) {
+      const existingToast = document.querySelector('.toast');
+      if (existingToast) existingToast.remove();
+
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Settings menu toggle
+    function toggleSettings() {
+      const menu = document.getElementById('settings-menu');
+      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Switch to desktop mode
+    function switchToDesktop() {
+      sessionStorage.setItem('desktopMode', 'true');
+      window.location.href = 'index.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', initPage);
+  </script>
+</body>
+</html>

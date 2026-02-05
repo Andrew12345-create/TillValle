@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - TilleValle App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f9fa;
+      padding-bottom: 80px;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .mobile-header {
+      background: #2d6a4f;
+      color: white;
+      padding: 12px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .back-btn {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    /* Main Content */
+    .main-content {
+      padding: 16px;
+      min-height: calc(100vh - 160px);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #2d6a4f 0%, #16a34a 100%);
+      border-radius: 16px;
+      padding: 32px 20px;
+      text-align: center;
+      color: white;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 16px rgba(45, 106, 79, 0.2);
+    }
+
+    .hero-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
+
+    /* Section */
+    .section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2d6a4f;
+      margin-bottom: 16px;
+    }
+
+    .section-text {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .section-text:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Values Grid */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .value-item {
+      background: #f8f9fa;
+      padding: 16px;
+      border-radius: 10px;
+      text-align: center;
+      border: 2px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .value-item:active {
+      transform: scale(0.98);
+      border-color: #2d6a4f;
+      background: rgba(45, 106, 79, 0.05);
+    }
+
+    .value-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .value-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #2d6a4f;
+      margin-bottom: 4px;
+    }
+
+    .value-desc {
+      font-size: 12px;
+      color: #999;
+    }
+
+    /* Team Section */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .team-card {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .team-avatar {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #2d6a4f 0%, #16a34a 100%);
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .team-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #2d6a4f;
+      margin-bottom: 4px;
+    }
+
+    .team-role {
+      font-size: 11px;
+      color: #999;
+    }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-item {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: #2d6a4f;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #999;
+      font-weight: 500;
+    }
+
+    /* Features */
+    .feature-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: flex-start;
+    }
+
+    .feature-icon {
+      font-size: 24px;
+      min-width: 40px;
+    }
+
+    .feature-text {
+      flex: 1;
+    }
+
+    .feature-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2d6a4f;
+      margin-bottom: 2px;
+    }
+
+    .feature-desc {
+      font-size: 13px;
+      color: #666;
+    }
+
+    /* Button */
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #2d6a4f 0%, #16a34a 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
+      transition: all 0.2s;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      z-index: 1000;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #6b7280;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      min-width: 60px;
+    }
+
+    .nav-item.active {
+      color: #2d6a4f;
+      background: rgba(45, 106, 79, 0.1);
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="mobile-header">
+    <div class="header-content">
+      <div class="header-title">About TilleValle</div>
+      <button class="back-btn" onclick="window.location.href='app-profile.html'">←</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Hero Section -->
+    <div class="hero">
+      <div class="hero-icon">🌱</div>
+      <div class="hero-title">TilleValle</div>
+      <div class="hero-subtitle">Fresh. Local. Sustainable. Delivered to Your Door</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-item">
+        <div class="stat-number">2K+</div>
+        <div class="stat-label">Customers</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">500+</div>
+        <div class="stat-label">Products</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">4.8★</div>
+        <div class="stat-label">Rating</div>
+      </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="section">
+      <div class="section-title">Our Story</div>
+      <div class="section-text">
+        TilleValle was born from a simple idea: make fresh, locally-sourced produce accessible to everyone. We partner directly with local farmers to bring you the freshest fruits, vegetables, and organic products.
+      </div>
+      <div class="section-text">
+        Since 2020, we've been committed to supporting local agriculture while ensuring you get the best quality products at fair prices.
+      </div>
+    </div>
+
+    <!-- Mission & Values -->
+    <div class="section">
+      <div class="section-title">Our Mission</div>
+      <div class="section-text">
+        To empower local farmers, support sustainable agriculture, and deliver nutritious fresh produce to your doorstep while building a stronger, healthier community.
+      </div>
+    </div>
+
+    <!-- Values -->
+    <div class="section">
+      <div class="section-title">Our Values</div>
+      <div class="values-grid">
+        <div class="value-item">
+          <div class="value-icon">🌍</div>
+          <div class="value-title">Sustainability</div>
+          <div class="value-desc">Eco-friendly practices</div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">👥</div>
+          <div class="value-title">Community</div>
+          <div class="value-desc">Support local farmers</div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">✅</div>
+          <div class="value-title">Quality</div>
+          <div class="value-desc">Best produce always</div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">💚</div>
+          <div class="value-title">Health</div>
+          <div class="value-desc">Nutritious & organic</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Why Choose Us -->
+    <div class="section">
+      <div class="section-title">Why Choose Us?</div>
+      <div class="feature-item">
+        <div class="feature-icon">🚚</div>
+        <div class="feature-text">
+          <div class="feature-title">Fast Delivery</div>
+          <div class="feature-desc">Same-day delivery available</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🥬</div>
+        <div class="feature-text">
+          <div class="feature-title">Fresh & Organic</div>
+          <div class="feature-desc">Direct from farms to you</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">💰</div>
+        <div class="feature-text">
+          <div class="feature-title">Great Prices</div>
+          <div class="feature-desc">Fair pricing for all</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🛡️</div>
+        <div class="feature-text">
+          <div class="feature-title">100% Guarantee</div>
+          <div class="feature-desc">Quality assured delivery</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team -->
+    <div class="section">
+      <div class="section-title">Meet Our Team</div>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-avatar">AK</div>
+          <div class="team-name">Alice Kipchoge</div>
+          <div class="team-role">Founder & CEO</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">JM</div>
+          <div class="team-name">James Mwangi</div>
+          <div class="team-role">Operations</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">SK</div>
+          <div class="team-name">Sarah Kariuki</div>
+          <div class="team-role">Marketing</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">PN</div>
+          <div class="team-name">Peter Ndiati</div>
+          <div class="team-role">Tech Lead</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sustainability -->
+    <div class="section">
+      <div class="section-title">Sustainability Commitment</div>
+      <div class="section-text">
+        We reduce carbon footprint through local sourcing, use eco-friendly packaging, and support sustainable farming practices. Every purchase helps us plant more trees in your community.
+      </div>
+      <button class="btn" onclick="showToast('Thank you for caring about sustainability!')">Learn More</button>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="app.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="app-shop.html" class="nav-item">
+      <span class="nav-icon">🛍️</span>
+      <span>Shop</span>
+    </a>
+    <a href="app-cart.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span>Cart</span>
+    </a>
+    <a href="app-about.html" class="nav-item active">
+      <span class="nav-icon">ℹ️</span>
+      <span>About</span>
+    </a>
+    <a href="app-profile.html" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script>
+    function showToast(message) {
+      const existingToast = document.querySelector('.toast');
+      if (existingToast) existingToast.remove();
+
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      toast.style.cssText = `
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #2d6a4f;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 25px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 2001;
+        animation: slideUp 0.3s ease;
+        font-size: 14px;
+        font-weight: 600;
+      `;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Settings menu toggle
+    function toggleSettings() {
+      const menu = document.getElementById('settings-menu');
+      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Switch to desktop mode
+    function switchToDesktop() {
+      sessionStorage.setItem('desktopMode', 'true');
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>

@@ -34,11 +34,23 @@ function initNavbar() {
     const dropdown = document.getElementById('user-dropdown');
     if (dropdown) dropdown.classList.toggle('show');
   };
-  
+
   window.logout = function() {
     localStorage.removeItem('email');
     localStorage.removeItem('user');
     window.location.href = 'login.html';
+  };
+
+  window.openCompareModal = function() {
+    // Basic compare modal implementation - can be expanded later
+    const compareItems = JSON.parse(localStorage.getItem('compareItems')) || [];
+    if (compareItems.length === 0) {
+      alert('No items to compare. Add some products to compare first.');
+      return;
+    }
+    // For now, just redirect to a compare page or show an alert
+    // This can be expanded to show a proper modal
+    alert(`Compare ${compareItems.length} items`);
   };
   
   // Close dropdown when clicking outside
@@ -59,6 +71,24 @@ function initNavbar() {
   // Update mobile cart counter
   const mobileCartCountElem = document.getElementById('mobile-cart-count');
   if (mobileCartCountElem) mobileCartCountElem.textContent = totalQuantity;
+
+  // Update compare widget visibility and count
+  const compareItems = JSON.parse(localStorage.getItem('compareItems')) || [];
+  const compareWidget = document.getElementById('compare-widget');
+  const mobileCompareWidget = document.getElementById('mobile-compare-widget');
+  const compareCountElem = document.getElementById('compare-count');
+  const mobileCompareCountElem = document.getElementById('mobile-compare-count');
+
+  if (compareItems.length > 0) {
+    if (compareWidget) compareWidget.style.display = 'inline-flex';
+    if (mobileCompareWidget) mobileCompareWidget.style.display = 'block';
+  } else {
+    if (compareWidget) compareWidget.style.display = 'none';
+    if (mobileCompareWidget) mobileCompareWidget.style.display = 'none';
+  }
+
+  if (compareCountElem) compareCountElem.textContent = compareItems.length;
+  if (mobileCompareCountElem) mobileCompareCountElem.textContent = compareItems.length;
 
   // Hamburger menu functionality
   const hamburgerBtn = document.getElementById('hamburger-btn');

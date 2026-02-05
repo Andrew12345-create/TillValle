@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop - TilleValle App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f9fa;
+      padding-bottom: 80px;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .mobile-header {
+      background: #2d6a4f;
+      color: white;
+      padding: 12px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .header-btn {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background 0.2s;
+      position: relative;
+    }
+
+    .header-btn:active {
+      background: rgba(255,255,255,0.25);
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #ff6b6b;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    /* Category Filter */
+    .category-filter {
+      padding: 12px 16px;
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+      overflow-x: auto;
+      display: flex;
+      gap: 10px;
+    }
+
+    .category-tag {
+      padding: 8px 16px;
+      background: #f0f0f0;
+      border: 2px solid transparent;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      transition: all 0.2s;
+    }
+
+    .category-tag.active {
+      background: #2d6a4f;
+      color: white;
+      border-color: #2d6a4f;
+    }
+
+    .category-tag:active {
+      transform: scale(0.95);
+    }
+
+    /* Main Content */
+    .main-content {
+      padding: 16px;
+      min-height: calc(100vh - 160px);
+    }
+
+    .search-section {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 16px;
+      background: white;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: #2d6a4f;
+      box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1);
+    }
+
+    /* Products Grid */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      min-height: 240px;
+      position: relative;
+    }
+
+    .product-card:active {
+      transform: scale(0.98);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 140px;
+      background: linear-gradient(135deg, #f0f0f0, #e5e5e5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .product-stock {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(45, 106, 79, 0.9);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .product-stock.low {
+      background: #ff6b6b;
+    }
+
+    .product-info {
+      padding: 12px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2d6a4f;
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+
+    .product-price {
+      font-size: 16px;
+      font-weight: 700;
+      color: #16a34a;
+      margin-bottom: 8px;
+    }
+
+    .product-footer {
+      display: flex;
+      gap: 6px;
+      margin-top: auto;
+    }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #f0f0f0;
+      border-radius: 6px;
+      padding: 2px;
+      flex: 1;
+    }
+
+    .qty-btn {
+      width: 24px;
+      height: 24px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-weight: bold;
+      color: #2d6a4f;
+      padding: 0;
+      font-size: 16px;
+    }
+
+    .qty-display {
+      font-size: 12px;
+      font-weight: 600;
+      flex: 1;
+      text-align: center;
+    }
+
+    .add-btn {
+      background: #2d6a4f;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: background 0.2s;
+      flex: 1;
+    }
+
+    .add-btn:active {
+      background: #1b4332;
+    }
+
+    /* Loading State */
+    .loading {
+      text-align: center;
+      padding: 40px 20px;
+      color: #2d6a4f;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f0f0f0;
+      border-top-color: #2d6a4f;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      z-index: 1000;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #6b7280;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      min-width: 60px;
+    }
+
+    .nav-item.active {
+      color: #2d6a4f;
+      background: rgba(45, 106, 79, 0.1);
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2d6a4f;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 25px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 2001;
+      animation: slideUp 0.3s ease;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    /* No Results */
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+
+    .no-results-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="mobile-header">
+    <div class="header-content">
+      <div class="header-title">Shop</div>
+      <div class="header-actions">
+        <button class="header-btn" id="cart-btn" onclick="window.location.href='app-cart.html'">
+          🛒
+        </button>
+        <button class="header-btn" id="profile-btn">👤</button>
+        <button class="header-btn" onclick="toggleSettings()">⚙️</button>
+      </div>
+    </div>
+
+    <!-- Settings Menu -->
+    <div id="settings-menu" style="display:none; background: rgba(0,0,0,0.1); padding: 8px; border-radius: 8px; margin-top: 8px;">
+      <button style="background: rgba(255,255,255,0.1); border: none; color: white; width: 100%; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 12px;" onclick="switchToDesktop()">
+        📱 Switch to Desktop
+      </button>
+    </div>
+  </header>
+
+  <!-- Category Filter -->
+  <div class="category-filter">
+    <div class="category-tag active" onclick="filterCategory('all')">All</div>
+    <div class="category-tag" onclick="filterCategory('vegetables')">Vegetables</div>
+    <div class="category-tag" onclick="filterCategory('fruits')">Fruits</div>
+    <div class="category-tag" onclick="filterCategory('organic')">Organic</div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Search Bar -->
+    <div class="search-section">
+      <input 
+        type="text" 
+        class="search-input" 
+        id="search-input" 
+        placeholder="Search products..." 
+      />
+    </div>
+
+    <!-- Products Grid -->
+    <div class="products-grid" id="products-grid">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Loading products...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="app.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="app-shop.html" class="nav-item active">
+      <span class="nav-icon">🛍️</span>
+      <span>Shop</span>
+    </a>
+    <a href="app-cart.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span>Cart</span>
+    </a>
+    <a href="app-about.html" class="nav-item">
+      <span class="nav-icon">ℹ️</span>
+      <span>About</span>
+    </a>
+    <a href="app-profile.html" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script>
+    let products = [];
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let currentCategory = 'all';
+
+    const sampleProducts = [
+      { id: 1, name: 'Fresh Tomatoes', price: 150, icon: '🍅', stock: 25, category: 'vegetables' },
+      { id: 2, name: 'Carrots', price: 80, icon: '🥕', stock: 30, category: 'vegetables' },
+      { id: 3, name: 'Lettuce', price: 60, icon: '🥬', stock: 20, category: 'vegetables' },
+      { id: 4, name: 'Onions', price: 50, icon: '🧅', stock: 40, category: 'vegetables' },
+      { id: 5, name: 'Potatoes', price: 100, icon: '🥔', stock: 35, category: 'vegetables' },
+      { id: 6, name: 'Bell Peppers', price: 120, icon: '🫑', stock: 18, category: 'vegetables' },
+      { id: 7, name: 'Apples', price: 200, icon: '🍎', stock: 25, category: 'fruits' },
+      { id: 8, name: 'Bananas', price: 90, icon: '🍌', stock: 40, category: 'fruits' },
+      { id: 9, name: 'Oranges', price: 180, icon: '🍊', stock: 22, category: 'fruits' },
+      { id: 10, name: 'Strawberries', price: 250, icon: '🍓', stock: 15, category: 'fruits' },
+      { id: 11, name: 'Organic Spinach', price: 120, icon: '🥬', stock: 16, category: 'organic' },
+      { id: 12, name: 'Organic Broccoli', price: 150, icon: '🥦', stock: 19, category: 'organic' },
+    ];
+
+    function initPage() {
+      loadProducts();
+      updateCartBadge();
+      attachEventListeners();
+      initProfile();
+    }
+
+    function attachEventListeners() {
+      document.getElementById('search-input').addEventListener('input', filterProducts);
+    }
+
+    async function loadProducts() {
+      try {
+        const response = await fetch('/api/products');
+        if (response.ok) {
+          const data = await response.json();
+          products = data.map(p => ({
+            id: p.product_id || p.id,
+            name: p.product_name || p.name,
+            price: p.price || 0,
+            icon: getProductIcon(p.product_name || p.name || ''),
+            stock: p.stock_quantity || p.stock || 0,
+            category: 'vegetables'
+          }));
+        } else {
+          products = sampleProducts;
+        }
+      } catch (error) {
+        products = sampleProducts;
+      }
+      displayProducts();
+    }
+
+    function getProductIcon(name) {
+      const icons = {
+        'tomato': '🍅', 'carrot': '🥕', 'lettuce': '🥬', 'onion': '🧅',
+        'potato': '🥔', 'pepper': '🫑', 'cabbage': '🥬', 'cucumber': '🥒',
+        'apple': '🍎', 'banana': '🍌', 'orange': '🍊', 'strawberry': '🍓',
+        'mango': '🥭', 'avocado': '🥑', 'broccoli': '🥦', 'corn': '🌽',
+        'spinach': '🥬'
+      };
+      const lowerName = name.toLowerCase();
+      for (let key in icons) {
+        if (lowerName.includes(key)) return icons[key];
+      }
+      return '🌱';
+    }
+
+    function filterCategory(category) {
+      currentCategory = category;
+      document.querySelectorAll('.category-tag').forEach(tag => tag.classList.remove('active'));
+      event.target.classList.add('active');
+      filterProducts();
+    }
+
+    function filterProducts() {
+      const searchValue = document.getElementById('search-input').value.toLowerCase();
+      let filtered = products.filter(product => {
+        const matchesSearch = product.name.toLowerCase().includes(searchValue);
+        const matchesCategory = currentCategory === 'all' || product.category === currentCategory;
+        return matchesSearch && matchesCategory;
+      });
+      displayProducts(filtered);
+    }
+
+    function displayProducts(productsToShow = products) {
+      const grid = document.getElementById('products-grid');
+      
+      if (productsToShow.length === 0) {
+        grid.innerHTML = '<div class="no-results" style="grid-column: 1/-1;"><div class="no-results-icon">🔍</div><p>No products found</p></div>';
+        return;
+      }
+
+      grid.innerHTML = productsToShow.map(product => {
+        const cartItem = cart.find(item => item.id === product.id);
+        const quantity = cartItem ? cartItem.quantity : 0;
+        const stockClass = product.stock < 10 ? 'low' : '';
+        
+        return `
+          <div class="product-card">
+            <div class="product-image">
+              ${product.icon}
+              <div class="product-stock ${stockClass}">${product.stock} left</div>
+            </div>
+            <div class="product-info">
+              <div class="product-name">${product.name}</div>
+              <div class="product-price">KES ${product.price}</div>
+              <div class="product-footer">
+                ${quantity > 0 ? `
+                  <div class="qty-control">
+                    <button class="qty-btn" onclick="updateQuantity(${product.id}, ${quantity - 1})">−</button>
+                    <div class="qty-display">${quantity}</div>
+                    <button class="qty-btn" onclick="updateQuantity(${product.id}, ${quantity + 1})">+</button>
+                  </div>
+                ` : `
+                  <button class="add-btn" onclick="addToCart(${product.id}, '${product.name}', ${product.price})">Add</button>
+                `}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addToCart(id, name, price) {
+      const existingItem = cart.find(item => item.id === id);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({ id, name, price, quantity: 1 });
+      }
+      saveCart();
+      updateCartBadge();
+      displayProducts();
+      showToast(`${name} added!`);
+    }
+
+    function updateQuantity(id, newQuantity) {
+      if (newQuantity <= 0) {
+        cart = cart.filter(item => item.id !== id);
+      } else {
+        const item = cart.find(item => item.id === id);
+        if (item) item.quantity = newQuantity;
+      }
+      saveCart();
+      updateCartBadge();
+      displayProducts();
+    }
+
+    function saveCart() {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function updateCartBadge() {
+      const badge = document.querySelector('.cart-badge');
+      const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+      
+      if (total > 0) {
+        if (!badge) {
+          const btn = document.getElementById('cart-btn');
+          const newBadge = document.createElement('span');
+          newBadge.className = 'cart-badge';
+          newBadge.textContent = total;
+          btn.appendChild(newBadge);
+        } else {
+          badge.textContent = total;
+        }
+      } else if (badge) {
+        badge.remove();
+      }
+    }
+
+    function showToast(message) {
+      const existingToast = document.querySelector('.toast');
+      if (existingToast) existingToast.remove();
+
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    function initProfile() {
+      const profileBtn = document.getElementById('profile-btn');
+      const userEmail = localStorage.getItem('email');
+      
+      if (userEmail) {
+        profileBtn.onclick = () => window.location.href = 'app-profile.html';
+      } else {
+        profileBtn.onclick = () => window.location.href = 'login.html';
+      }
+    }
+
+    // Settings menu toggle
+    function toggleSettings() {
+      const menu = document.getElementById('settings-menu');
+      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Switch to desktop mode
+    function switchToDesktop() {
+      sessionStorage.setItem('desktopMode', 'true');
+      window.location.href = 'index.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', initPage);
+  </script>
+</body>
+</html>

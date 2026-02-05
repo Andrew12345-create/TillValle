@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart - TilleValle App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f9fa;
+      padding-bottom: 80px;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .mobile-header {
+      background: #2d6a4f;
+      color: white;
+      padding: 12px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .header-btn {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    /* Main Content */
+    .main-content {
+      padding: 16px;
+      min-height: calc(100vh - 160px);
+    }
+
+    /* Cart Items */
+    .cart-item {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      align-items: center;
+    }
+
+    .item-icon {
+      font-size: 40px;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f0f0f0;
+      border-radius: 10px;
+    }
+
+    .item-info {
+      flex: 1;
+    }
+
+    .item-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #2d6a4f;
+      margin-bottom: 4px;
+    }
+
+    .item-price {
+      font-size: 14px;
+      color: #16a34a;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f0f0f0;
+      border-radius: 8px;
+      padding: 4px;
+      width: fit-content;
+    }
+
+    .qty-btn {
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-weight: bold;
+      color: #2d6a4f;
+      font-size: 18px;
+    }
+
+    .qty-display {
+      min-width: 30px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .item-total {
+      text-align: right;
+    }
+
+    .item-total-price {
+      font-size: 16px;
+      font-weight: 700;
+      color: #2d6a4f;
+    }
+
+    .remove-btn {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-top: 8px;
+      width: 100%;
+    }
+
+    /* Empty Cart */
+    .empty-cart {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .empty-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #2d6a4f;
+    }
+
+    .empty-subtitle {
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .empty-btn {
+      background: #2d6a4f;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* Summary */
+    .summary {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    .summary-row.total {
+      border-top: 2px solid #e5e7eb;
+      padding-top: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #2d6a4f;
+      margin-bottom: 0;
+    }
+
+    .summary-label {
+      color: #666;
+    }
+
+    .summary-value {
+      font-weight: 600;
+      color: #2d6a4f;
+    }
+
+    .summary-value.green {
+      color: #16a34a;
+    }
+
+    /* Checkout Button */
+    .checkout-btn {
+      background: linear-gradient(135deg, #2d6a4f 0%, #16a34a 100%);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
+      transition: transform 0.2s;
+      margin-bottom: 16px;
+    }
+
+    .checkout-btn:active {
+      transform: scale(0.98);
+    }
+
+    .checkout-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      z-index: 1000;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #6b7280;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      min-width: 60px;
+    }
+
+    .nav-item.active {
+      color: #2d6a4f;
+      background: rgba(45, 106, 79, 0.1);
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2d6a4f;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 25px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 2001;
+      animation: slideUp 0.3s ease;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="mobile-header">
+    <div class="header-content">
+      <div class="header-title">Your Cart</div>
+      <div style="display: flex; gap: 8px;">
+        <button class="header-btn" id="profile-btn">👤</button>
+        <button class="header-btn" onclick="toggleSettings()">⚙️</button>
+      </div>
+    </div>
+
+    <!-- Settings Menu -->
+    <div id="settings-menu" style="display:none; background: rgba(0,0,0,0.1); padding: 8px; border-radius: 8px; margin-top: 8px;">
+      <button style="background: rgba(255,255,255,0.1); border: none; color: white; width: 100%; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 12px;" onclick="switchToDesktop()">
+        📱 Switch to Desktop
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div id="cart-content">
+      <div class="empty-cart">
+        <div class="empty-icon">🛒</div>
+        <div class="empty-title">Your cart is empty</div>
+        <div class="empty-subtitle">Add some fresh products to get started</div>
+        <button class="empty-btn" onclick="window.location.href='app-shop.html'">Start Shopping</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="app.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="app-shop.html" class="nav-item">
+      <span class="nav-icon">🛍️</span>
+      <span>Shop</span>
+    </a>
+    <a href="app-cart.html" class="nav-item active">
+      <span class="nav-icon">🛒</span>
+      <span>Cart</span>
+    </a>
+    <a href="app-about.html" class="nav-item">
+      <span class="nav-icon">ℹ️</span>
+      <span>About</span>
+    </a>
+    <a href="app-profile.html" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script>
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    function initPage() {
+      displayCart();
+      initProfile();
+    }
+
+    function displayCart() {
+      const content = document.getElementById('cart-content');
+      
+      if (cart.length === 0) {
+        content.innerHTML = `
+          <div class="empty-cart">
+            <div class="empty-icon">🛒</div>
+            <div class="empty-title">Your cart is empty</div>
+            <div class="empty-subtitle">Add some fresh products to get started</div>
+            <button class="empty-btn" onclick="window.location.href='app-shop.html'">Start Shopping</button>
+          </div>
+        `;
+        return;
+      }
+
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const tax = Math.round(subtotal * 0.16);
+      const total = subtotal + tax;
+
+      let html = '';
+      
+      cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        html += `
+          <div class="cart-item">
+            <div class="item-icon">🌱</div>
+            <div class="item-info">
+              <div class="item-name">${item.name}</div>
+              <div class="item-price">KES ${item.price} each</div>
+              <div class="qty-control">
+                <button class="qty-btn" onclick="updateQuantity(${item.id}, ${item.quantity - 1})">−</button>
+                <div class="qty-display">${item.quantity}</div>
+                <button class="qty-btn" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+              </div>
+            </div>
+            <div class="item-total">
+              <div class="item-total-price">KES ${itemTotal}</div>
+              <button class="remove-btn" onclick="removeItem(${item.id})">Remove</button>
+            </div>
+          </div>
+        `;
+      });
+
+      html += `
+        <div class="summary">
+          <div class="summary-row">
+            <span class="summary-label">Subtotal</span>
+            <span class="summary-value">KES ${subtotal}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Tax (16%)</span>
+            <span class="summary-value green">KES ${tax}</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total</span>
+            <span>KES ${total}</span>
+          </div>
+        </div>
+        <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+        <button class="checkout-btn" style="background: white; color: #2d6a4f; border: 2px solid #2d6a4f; box-shadow: none;" onclick="window.location.href='app-shop.html'">Continue Shopping</button>
+      `;
+
+      content.innerHTML = html;
+    }
+
+    function updateQuantity(id, newQuantity) {
+      if (newQuantity <= 0) {
+        cart = cart.filter(item => item.id !== id);
+      } else {
+        const item = cart.find(item => item.id === id);
+        if (item) item.quantity = newQuantity;
+      }
+      saveCart();
+      displayCart();
+    }
+
+    function removeItem(id) {
+      cart = cart.filter(item => item.id !== id);
+      saveCart();
+      displayCart();
+      showToast('Item removed from cart');
+    }
+
+    function saveCart() {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function checkout() {
+      if (cart.length === 0) {
+        showToast('Your cart is empty');
+        return;
+      }
+      
+      const userEmail = localStorage.getItem('email');
+      if (!userEmail) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      window.location.href = 'payment.html';
+    }
+
+    function showToast(message) {
+      const existingToast = document.querySelector('.toast');
+      if (existingToast) existingToast.remove();
+
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    function initProfile() {
+      const profileBtn = document.getElementById('profile-btn');
+      const userEmail = localStorage.getItem('email');
+      
+      if (userEmail) {
+        profileBtn.onclick = () => window.location.href = 'app-profile.html';
+      } else {
+        profileBtn.onclick = () => window.location.href = 'login.html';
+      }
+    }
+
+    // Settings menu toggle
+    function toggleSettings() {
+      const menu = document.getElementById('settings-menu');
+      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Switch to desktop mode
+    function switchToDesktop() {
+      sessionStorage.setItem('desktopMode', 'true');
+      window.location.href = 'index.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', initPage);
+  </script>
+</body>
+</html>

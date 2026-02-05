@@ -4,7 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TillValle - Fresh Farm Produce from Kenya</title>
-  <link rel="stylesheet" href="css/navbar.css">
+  <script>
+    // Mobile detection and redirect
+    function isMobileDevice() {
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      
+      // Check for mobile user agents
+      const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
+      const isMobile = mobileRegex.test(userAgent.toLowerCase());
+      
+      // Also check screen width as fallback
+      const isSmallScreen = window.innerWidth <= 768;
+      
+      return isMobile || isSmallScreen;
+    }
+    
+    // Redirect to app version if mobile detected
+    if (isMobileDevice() && !sessionStorage.getItem('desktopMode')) {
+      window.location.replace('app.html');
+    }
+  </script>
   <link rel="icon" href="logo.jpg" type="image/jpeg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,11 +34,8 @@
   <link rel="stylesheet" href="shipping-widget.css">
   <link rel="stylesheet" href="cookie-widget.css">
   <script data-id="cmi7m0fwy0009kz04yac3babp" src="https://tinychat.ai/tinychat.js"></script>
+  <title>TilleValle - Home</title>
   <style>
-    :root {
-      --primary: #2d6a4f;
-      --primary-dark: #1b4332;
-      --primary-light: #40916c;
       --accent: #ff6b6b;
       --accent-light: #ff9999;
       --text-primary: #0f172a;
