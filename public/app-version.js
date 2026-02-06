@@ -2,7 +2,7 @@
 async function loadAndDisplayVersion() {
   try {
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const versionUrl = isLocal ? 'http://localhost:3001/api/version' : '/.netlify/functions/version';
+    const versionUrl = isLocal ? 'http://localhost:3000/api/version' : '/.netlify/functions/version';
     
     const response = await fetch(versionUrl);
     const data = await response.json();

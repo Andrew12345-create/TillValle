@@ -38,7 +38,7 @@
             updateStep('step1', 'pending', 'Testing login functionality...');
             
             try {
-                const response = await fetch('http://localhost:3000/login', {
+                const response = await fetch('http://localhost:3001/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: 'test@example.com', password: 'password123' })

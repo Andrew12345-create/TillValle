@@ -27,7 +27,7 @@
 
             try {
                 // Test if server is reachable first
-                const pingResponse = await fetch('http://localhost:3000/ping');
+                const pingResponse = await fetch('http://localhost:3001/ping');
                 if (!pingResponse.ok) {
                     throw new Error(`Server ping failed: ${pingResponse.status}`);
                 }
@@ -37,7 +37,7 @@
                 resultDiv.appendChild(okLine);
                 
                 // Test login endpoint
-                const loginResponse = await fetch('http://localhost:3000/login', {
+                const loginResponse = await fetch('http://localhost:3001/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

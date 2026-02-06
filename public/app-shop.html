@@ -496,7 +496,7 @@
     async function loadVersion() {
       try {
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const versionUrl = isLocal ? 'http://localhost:3001/api/version' : '/.netlify/functions/version';
+        const versionUrl = isLocal ? 'http://localhost:3000/api/version' : '/.netlify/functions/version';
         const response = await fetch(versionUrl);
         const data = await response.json();
         const versionElement = document.getElementById('app-version');
@@ -511,7 +511,7 @@
     async function loadProducts() {
       try {
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const productsUrl = isLocal ? 'http://localhost:3001/api/products' : '/.netlify/functions/products';
+        const productsUrl = isLocal ? 'http://localhost:3000/api/products' : '/.netlify/functions/products';
         
         console.log('Fetching products from:', productsUrl);
         const response = await fetch(productsUrl);
@@ -532,7 +532,6 @@
             id: p.id || p.product_id,
             name: p.name || p.product_name,
             price: parseFloat(p.price) || 0,
-            icon: getProductIcon(p.name || p.product_name || ''),
             stock: parseInt(p.stock || p.stock_quantity || 0),
             category: getCategoryFromName(p.name || p.product_name || ''),
             image: p.image
@@ -610,7 +609,7 @@
         return `
           <div class="product-card">
             <div class="product-image">
-              ${product.image ? `<img src="${product.image}" alt="${product.name}">` : '<span style="font-size:48px;">🌱</span>'}
+              ${product.image ? `<img src="${product.image}" alt="${product.name}" style="width:100%; height:100%; object-fit:cover;">` : `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#f0f0f0; color:#999; font-size:14px;">No image</div>`}
               <div class="product-stock ${stockClass}">${product.stock} left</div>
             </div>
             <div class="product-info">
