@@ -547,6 +547,19 @@
         padding: 20px;
       }
     }
+
+    .version-badge {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(45, 106, 79, 0.8);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      z-index: 100;
+    }
   </style>
 </head>
 <body>
@@ -587,26 +600,72 @@
   <!-- Main Content -->
   <main class="main-content">
     <div class="welcome-section">
-      <h1 class="welcome-title">Fresh Produce</h1>
-      <p class="welcome-subtitle">From Farm to Your Doorstep</p>
+      <h1 class="welcome-title">🌾 Welcome to TillValle</h1>
+      <p class="welcome-subtitle">Fresh Farm Produce Delivered to Your Doorstep</p>
     </div>
 
-    <!-- Search and Filter -->
-    <div class="search-section">
-      <input 
-        type="text" 
-        class="search-input" 
-        id="search-input" 
-        placeholder="Search products..." 
-      />
-      <button class="filter-btn" id="filter-btn">⚙️</button>
+    <!-- About Section -->
+    <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+      <h2 style="color: #2d6a4f; font-size: 18px; margin-bottom: 12px; font-weight: 600;">🚜 15+ Years of Excellence</h2>
+      <p style="color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 12px;">
+        Since 2008, TillValle has been Kenya's trusted partner in delivering farm-fresh produce directly from local farmers to your home. We've served over 50,000 families across Nairobi with premium quality fruits, vegetables, dairy, and herbs.
+      </p>
+      <p style="color: #666; font-size: 14px; line-height: 1.6;">
+        Our commitment to quality, sustainability, and supporting local farmers has made us the #1 choice for fresh produce in Kenya.
+      </p>
     </div>
 
-    <!-- Products Grid -->
-    <div class="products-grid" id="products-grid">
-      <div class="loading">
-        <div class="spinner"></div>
-        <p>Loading products...</p>
+    <!-- Why Choose Us -->
+    <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+      <h2 style="color: #2d6a4f; font-size: 18px; margin-bottom: 16px; font-weight: 600;">✨ Why Choose TillValle?</h2>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; align-items: start; gap: 12px;">
+          <span style="font-size: 24px;">🌱</span>
+          <div>
+            <h3 style="color: #2d6a4f; font-size: 14px; font-weight: 600; margin-bottom: 4px;">Farm Fresh Quality</h3>
+            <p style="color: #666; font-size: 13px; line-height: 1.5;">Handpicked produce delivered within 24 hours of harvest</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: start; gap: 12px;">
+          <span style="font-size: 24px;">🚚</span>
+          <div>
+            <h3 style="color: #2d6a4f; font-size: 14px; font-weight: 600; margin-bottom: 4px;">Same-Day Delivery</h3>
+            <p style="color: #666; font-size: 13px; line-height: 1.5;">Order before 2 PM for same-day delivery across Nairobi</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: start; gap: 12px;">
+          <span style="font-size: 24px;">💚</span>
+          <div>
+            <h3 style="color: #2d6a4f; font-size: 14px; font-weight: 600; margin-bottom: 4px;">Supporting Local Farmers</h3>
+            <p style="color: #666; font-size: 13px; line-height: 1.5;">Direct partnerships with 200+ Kenyan farmers</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: start; gap: 12px;">
+          <span style="font-size: 24px;">💳</span>
+          <div>
+            <h3 style="color: #2d6a4f; font-size: 14px; font-weight: 600; margin-bottom: 4px;">Easy Payment</h3>
+            <p style="color: #666; font-size: 13px; line-height: 1.5;">M-Pesa and card payments accepted</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+      <h2 style="color: #2d6a4f; font-size: 18px; margin-bottom: 16px; font-weight: 600;">🔗 Quick Links</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <a href="app-shop.html" style="background: linear-gradient(135deg, #2d6a4f, #1b4332); color: white; padding: 16px; border-radius: 12px; text-decoration: none; text-align: center; font-weight: 600; font-size: 14px; box-shadow: 0 2px 8px rgba(45,106,79,0.3);">
+          🛍️ Shop Now
+        </a>
+        <a href="app-about.html" style="background: linear-gradient(135deg, #16a34a, #22c55e); color: white; padding: 16px; border-radius: 12px; text-decoration: none; text-align: center; font-weight: 600; font-size: 14px; box-shadow: 0 2px 8px rgba(22,163,74,0.3);">
+          ℹ️ About Us
+        </a>
+        <a href="app-contact.html" style="background: linear-gradient(135deg, #0891b2, #06b6d4); color: white; padding: 16px; border-radius: 12px; text-decoration: none; text-align: center; font-weight: 600; font-size: 14px; box-shadow: 0 2px 8px rgba(8,145,178,0.3);">
+          📞 Contact
+        </a>
+        <a href="app-cart.html" style="background: linear-gradient(135deg, #dc2626, #ef4444); color: white; padding: 16px; border-radius: 12px; text-decoration: none; text-align: center; font-weight: 600; font-size: 14px; box-shadow: 0 2px 8px rgba(220,38,38,0.3);">
+          🛒 My Cart
+        </a>
       </div>
     </div>
   </main>
@@ -692,156 +751,12 @@
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     let allProducts = [];
 
-    // Sample Products Data (fallback)
-    const sampleProducts = [
-      { id: 1, name: 'Fresh Tomatoes', price: 150, icon: '🍅', stock: 25 },
-      { id: 2, name: 'Carrots', price: 80, icon: '🥕', stock: 30 },
-      { id: 3, name: 'Lettuce', price: 60, icon: '🥬', stock: 20 },
-      { id: 4, name: 'Onions', price: 50, icon: '🧅', stock: 40 },
-      { id: 5, name: 'Potatoes', price: 100, icon: '🥔', stock: 35 },
-      { id: 6, name: 'Bell Peppers', price: 120, icon: '🫑', stock: 18 },
-      { id: 7, name: 'Cabbage', price: 90, icon: '🥬', stock: 22 },
-      { id: 8, name: 'Cucumbers', price: 70, icon: '🥒', stock: 28 },
-    ];
-
     // Initialize app
     function initApp() {
       initUserProfile();
       loadSavedLocation();
-      loadProducts();
       updateCartCount();
       setActiveNavItem();
-      attachEventListeners();
-    }
-
-    // Attach event listeners
-    function attachEventListeners() {
-      const searchInput = document.getElementById('search-input');
-      if (searchInput) {
-        searchInput.addEventListener('input', filterProducts);
-      }
-
-      const filterBtn = document.getElementById('filter-btn');
-      if (filterBtn) {
-        filterBtn.addEventListener('click', openLocationSelector);
-      }
-    }
-
-    // Load products
-    async function loadProducts() {
-      try {
-        const response = await fetch('/api/products');
-        if (response.ok) {
-          const data = await response.json();
-          products = data.map(p => ({
-            id: p.product_id || p.id,
-            name: p.product_name || p.name,
-            price: p.price || 0,
-            icon: getProductIcon(p.product_name || p.name || ''),
-            stock: p.stock_quantity || p.stock || 0
-          }));
-        } else {
-          products = sampleProducts;
-        }
-      } catch (error) {
-        console.log('Using sample products:', error);
-        products = sampleProducts;
-      }
-      
-      allProducts = [...products];
-      displayProducts(products);
-    }
-
-    // Get emoji icon based on product name
-    function getProductIcon(name) {
-      const icons = {
-        'tomato': '🍅', 'carrot': '🥕', 'lettuce': '🥬', 'onion': '🧅',
-        'potato': '🥔', 'pepper': '🫑', 'cabbage': '🥬', 'cucumber': '🥒',
-        'apple': '🍎', 'banana': '🍌', 'orange': '🍊', 'strawberry': '🍓',
-        'mango': '🥭', 'avocado': '🥑', 'broccoli': '🥦', 'corn': '🌽'
-      };
-      
-      const lowerName = name.toLowerCase();
-      for (let key in icons) {
-        if (lowerName.includes(key)) return icons[key];
-      }
-      return '🌱';
-    }
-
-    // Display products
-    function displayProducts(productsToShow) {
-      const grid = document.getElementById('products-grid');
-      if (!grid) return;
-
-      if (productsToShow.length === 0) {
-        grid.innerHTML = '<div class="loading"><p>No products found</p></div>';
-        return;
-      }
-
-      grid.innerHTML = productsToShow.map(product => {
-        const cartItem = cart.find(item => item.id === product.id);
-        const quantity = cartItem ? cartItem.quantity : 0;
-        
-        return `
-          <div class="product-card">
-            <div class="product-image">${product.icon}</div>
-            <div class="product-info">
-              <div class="product-name">${product.name}</div>
-              <div class="product-price">KES ${product.price}</div>
-              <div class="product-footer">
-                ${quantity > 0 ? `
-                  <div class="qty-control">
-                    <button class="qty-btn" onclick="updateQuantity(${product.id}, ${quantity - 1})">−</button>
-                    <div class="qty-display">${quantity}</div>
-                    <button class="qty-btn" onclick="updateQuantity(${product.id}, ${quantity + 1})">+</button>
-                  </div>
-                ` : `
-                  <button class="add-btn" onclick="addToCart(${product.id}, '${product.name}', ${product.price})">Add</button>
-                `}
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    // Filter products
-    function filterProducts() {
-      const searchValue = document.getElementById('search-input').value.toLowerCase();
-      const filtered = allProducts.filter(product => 
-        product.name.toLowerCase().includes(searchValue)
-      );
-      displayProducts(filtered);
-    }
-
-    // Add to cart
-    function addToCart(id, name, price) {
-      const existingItem = cart.find(item => item.id === id);
-      
-      if (existingItem) {
-        existingItem.quantity += 1;
-      } else {
-        cart.push({ id, name, price, quantity: 1 });
-      }
-      
-      saveCart();
-      updateCartCount();
-      displayProducts(products);
-      showToast(`${name} added to cart!`);
-    }
-
-    // Update quantity
-    function updateQuantity(id, newQuantity) {
-      if (newQuantity <= 0) {
-        cart = cart.filter(item => item.id !== id);
-      } else {
-        const item = cart.find(item => item.id === id);
-        if (item) item.quantity = newQuantity;
-      }
-      
-      saveCart();
-      updateCartCount();
-      displayProducts(products);
     }
 
     // Save cart to localStorage
@@ -1043,5 +958,13 @@
       window.location.href = 'index.html';
     }
   </script>
+
+  <!-- Version Badge -->
+  <div class="version-badge">
+    <span id="app-version">v1.0.0</span>
+  </div>
+
+  <!-- Load app version -->
+  <script src="app-version.js"></script>
 </body>
 </html>

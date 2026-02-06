@@ -79,7 +79,7 @@ async function initializeDatabase() {
 // Admin authentication endpoint
 app.post('/api/admin/login', (req, res) => {
   const { password } = req.body;
-  const ADMIN_PASSWORD = 'tillevalle2024'; // Change this to a secure password
+  const ADMIN_PASSWORD = 'coder123';
 
   if (password === ADMIN_PASSWORD) {
     res.json({ success: true, message: 'Login successful' });
@@ -221,7 +221,7 @@ async function startServer() {
     console.log(`🚀 Server running on port ${port}`);
     console.log(`🔗 Admin panel: http://localhost:${port}/admin`);
     console.log(`🔗 API endpoint: http://localhost:${port}/api/products`);
-    console.log(`🔑 Admin password: tillevalle2024`);
+    console.log(`🔑 Admin password: coder123`);
   });
 }
 

@@ -53,12 +53,12 @@ app.use(session({
 
 // Database setup
 const pool = new Pool({
-  connectionString: process.env.NEON_DATABASE_URL || 'postgresql://neondb_owner:npg_plFDm9xtOM3y@ep-purple-mud-adelt7ne-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
+  connectionString: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_qn6wAlZJavf3@ep-billowing-mode-adkbmnzk-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
   ssl: { rejectUnauthorized: false },
 });
 
 const stockPool = new Pool({
-  connectionString: 'postgresql://neondb_owner:npg_qn6wAlZJavf3@ep-billowing-mode-adkbmnzk-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
+  connectionString: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_qn6wAlZJavf3@ep-billowing-mode-adkbmnzk-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
   ssl: { rejectUnauthorized: false },
 });
 
@@ -117,13 +117,13 @@ app.post('/signup', async (req, res) => {
 
     const password_hash = await bcrypt.hash(password, BCRYPT_ROUNDS);
     const insert = await pool.query(
-      'INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING id',
+      'INSERT INTO users (email, password_hash, is_admin, is_superadmin) VALUES ($1, $2, false, false) RETURNING id, email, is_admin, is_superadmin',
       [lowerEmail, password_hash]
     );
 
     const newUser = insert.rows[0];
     const token = generateToken({ id: newUser.id, email: lowerEmail });
-    res.json({ ok: true, message: 'Signup successful', token });
+    res.json({ ok: true, message: 'Signup successful', token, user: newUser });
   } catch (err) {
     console.error('Signup error:', err);
     res.status(500).json({ ok: false, error: 'Server error' });
@@ -140,7 +140,7 @@ app.post('/login', async (req, res) => {
   const lowerEmail = email.toLowerCase();
 
   try {
-    const result = await pool.query('SELECT id, password_hash FROM users WHERE email = $1', [lowerEmail]);
+    const result = await pool.query('SELECT id, password_hash, is_admin, is_superadmin FROM users WHERE email = $1', [lowerEmail]);
     if (result.rowCount === 0) {
       return res.status(401).json({ ok: false, error: 'User not found' });
     }
@@ -150,7 +150,7 @@ app.post('/login', async (req, res) => {
     if (!match) return res.status(401).json({ ok: false, error: 'Invalid password' });
 
     const token = generateToken({ id: user.id, email: lowerEmail });
-    res.json({ ok: true, message: 'Login successful', token });
+    res.json({ ok: true, message: 'Login successful', token, user: { id: user.id, email: lowerEmail, is_admin: user.is_admin, is_superadmin: user.is_superadmin } });
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ ok: false, error: 'Server error' });
@@ -210,6 +210,15 @@ app.delete('/delete-account', async (req, res) => {
 });
 
 // ==========================
+// VERSION ENDPOINT
+// ==========================
+
+// GET APP VERSION
+app.get('/api/version', (req, res) => {
+  res.json({ version: '1.0.0', name: 'TilleValle' });
+});
+
+// ==========================
 // ADMIN ENDPOINTS
 // ==========================
 
@@ -225,6 +234,7 @@ app.post('/api/init-tables', async (req, res) => {
         price DECIMAL(10,2) NOT NULL,
         category VARCHAR(100) NOT NULL,
         description TEXT NOT NULL,
+        image VARCHAR(255),
         stock INTEGER DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -248,7 +258,10 @@ app.post('/api/init-tables', async (req, res) => {
         id SERIAL PRIMARY KEY,
         email VARCHAR(255) UNIQUE NOT NULL,
         password_hash VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        is_admin BOOLEAN DEFAULT false,
+        is_superadmin BOOLEAN DEFAULT false,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
 
@@ -296,14 +309,56 @@ app.post('/api/init-tables', async (req, res) => {
 });
 
 // ADMIN LOGIN
-app.post('/api/admin/login', (req, res) => {
-  const { password } = req.body;
-  const ADMIN_PASSWORD = 'admin123';
+app.post('/api/admin/login', async (req, res) => {
+  const { email, password } = req.body;
+  
+  if (password && !email) {
+    if (password === 'coder123') {
+      req.session.isAdmin = true;
+      req.session.isSuperAdmin = true;
+      return res.json({ success: true, message: 'Login successful' });
+    }
+    return res.status(401).json({ success: false, message: 'Invalid password' });
+  }
+  
+  if (!email || !password) {
+    return res.status(400).json({ success: false, message: 'Email and password required' });
+  }
 
-  if (password === ADMIN_PASSWORD) {
-    res.json({ success: true, message: 'Login successful' });
+  try {
+    const result = await pool.query('SELECT id, password_hash, is_admin, is_superadmin FROM users WHERE email = $1', [email.toLowerCase()]);
+    if (result.rowCount === 0) {
+      return res.status(401).json({ success: false, message: 'User not found' });
+    }
+
+    const user = result.rows[0];
+    if (!user.is_admin) {
+      return res.status(403).json({ success: false, message: 'Access denied: Not an admin' });
+    }
+
+    const match = await bcrypt.compare(password, user.password_hash);
+    if (!match) {
+      return res.status(401).json({ success: false, message: 'Invalid password' });
+    }
+
+    req.session.isAdmin = true;
+    req.session.isSuperAdmin = user.is_superadmin;
+    req.session.userId = user.id;
+    req.session.userEmail = email.toLowerCase();
+    
+    res.json({ success: true, message: 'Login successful', is_superadmin: user.is_superadmin });
+  } catch (err) {
+    console.error('Admin login error:', err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// ADMIN VERIFY
+app.post('/api/admin/verify', (req, res) => {
+  if (req.session.isAdmin) {
+    res.json({ success: true, isAdmin: true, isSuperAdmin: req.session.isSuperAdmin || false });
   } else {
-    res.status(401).json({ success: false, message: 'Invalid password' });
+    res.status(401).json({ success: false, isAdmin: false });
   }
 });
 
@@ -455,17 +510,7 @@ app.post('/stock', async (req, res) => {
 // GET PRODUCTS
 app.get('/api/products', async (req, res) => {
   try {
-    // Ensure products table exists with correct structure
-    await stockPool.query(`
-      CREATE TABLE IF NOT EXISTS products (
-        product_id VARCHAR(50) PRIMARY KEY,
-        product_name VARCHAR(100) NOT NULL,
-        stock_quantity INTEGER NOT NULL DEFAULT 100,
-        last_updated TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    const result = await stockPool.query('SELECT * FROM products ORDER BY product_name');
+    const result = await pool.query('SELECT * FROM products ORDER BY name');
     console.log(`📦 Fetched ${result.rows.length} products from database`);
     res.json(result.rows);
   } catch (err) {
@@ -495,9 +540,8 @@ app.get('/api/products/:id', async (req, res) => {
 // CREATE NEW PRODUCT
 app.post('/api/products', async (req, res) => {
   try {
-    const { name, price, category, description, stock } = req.body;
+    const { name, price, category, description, stock, image } = req.body;
 
-    // Validation
     if (!name || !price || !category || !description || stock === undefined) {
       return res.status(400).json({ error: 'All fields are required' });
     }
@@ -506,9 +550,14 @@ app.post('/api/products', async (req, res) => {
       return res.status(400).json({ error: 'Price must be positive and stock cannot be negative' });
     }
 
-    const result = await stockPool.query(
-      'INSERT INTO products (name, price, category, description, stock) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [name, price, category, description, stock]
+    const result = await pool.query(
+      'INSERT INTO products (name, price, category, description, stock, image) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [name, price, category, description, stock, image || null]
+    );
+
+    await pool.query(
+      'INSERT INTO product_stock (product_name, stock_quantity, in_stock) VALUES ($1, $2, $3)',
+      [name, stock, stock > 0]
     );
 
     console.log(`✅ Created new product: ${result.rows[0].name}`);
@@ -523,9 +572,8 @@ app.post('/api/products', async (req, res) => {
 app.put('/api/products/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, price, category, description, stock } = req.body;
+    const { name, price, category, description, stock, image } = req.body;
 
-    // Validation
     if (!name || !price || !category || !description || stock === undefined) {
       return res.status(400).json({ error: 'All fields are required' });
     }
@@ -534,14 +582,19 @@ app.put('/api/products/:id', async (req, res) => {
       return res.status(400).json({ error: 'Price must be positive and stock cannot be negative' });
     }
 
-    const result = await stockPool.query(
-      'UPDATE products SET name = $1, price = $2, category = $3, description = $4, stock = $5, updated_at = CURRENT_TIMESTAMP WHERE id = $6 RETURNING *',
-      [name, price, category, description, stock, id]
+    const result = await pool.query(
+      'UPDATE products SET name = $1, price = $2, category = $3, description = $4, stock = $5, image = $6, updated_at = CURRENT_TIMESTAMP WHERE id = $7 RETURNING *',
+      [name, price, category, description, stock, image || null, id]
     );
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Product not found' });
     }
+
+    await pool.query(
+      'UPDATE product_stock SET stock_quantity = $1, in_stock = $2, last_updated = CURRENT_TIMESTAMP WHERE product_name = $3',
+      [stock, stock > 0, name]
+    );
 
     console.log(`✅ Updated product: ${result.rows[0].name}`);
     res.json(result.rows[0]);
@@ -555,17 +608,108 @@ app.put('/api/products/:id', async (req, res) => {
 app.delete('/api/products/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await stockPool.query('DELETE FROM products WHERE id = $1 RETURNING *', [id]);
-
-    if (result.rows.length === 0) {
+    const product = await pool.query('SELECT name FROM products WHERE id = $1', [id]);
+    
+    if (product.rows.length === 0) {
       return res.status(404).json({ error: 'Product not found' });
     }
 
-    console.log(`🗑️ Deleted product: ${result.rows[0].name}`);
+    const productName = product.rows[0].name;
+    await pool.query('DELETE FROM products WHERE id = $1', [id]);
+    await pool.query('DELETE FROM product_stock WHERE product_name = $1', [productName]);
+
+    console.log(`🗑️ Deleted product: ${productName}`);
     res.json({ message: 'Product deleted successfully' });
   } catch (err) {
     console.error('❌ Error deleting product:', err);
     res.status(500).json({ error: 'Failed to delete product' });
+  }
+});
+
+// ==========================
+// ORDER MANAGEMENT ENDPOINTS
+// ==========================
+
+// CREATE ORDER
+app.post('/api/orders', async (req, res) => {
+  const { user_id, items, total_amount } = req.body;
+  
+  if (!items || !Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ error: 'Order items required' });
+  }
+
+  try {
+    const orderResult = await pool.query(
+      'INSERT INTO orders (user_id, total_amount, status) VALUES ($1, $2, $3) RETURNING *',
+      [user_id || null, total_amount, 'pending']
+    );
+    
+    const order = orderResult.rows[0];
+    
+    for (const item of items) {
+      await pool.query(
+        'INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($1, $2, $3, $4)',
+        [order.id, item.product_id, item.quantity, item.price]
+      );
+      
+      await pool.query(
+        'UPDATE products SET stock = stock - $1 WHERE id = $2',
+        [item.quantity, item.product_id]
+      );
+    }
+    
+    console.log(`✅ Order created: #${order.id}`);
+    res.status(201).json({ success: true, order });
+  } catch (err) {
+    console.error('❌ Error creating order:', err);
+    res.status(500).json({ error: 'Failed to create order' });
+  }
+});
+
+// GET USER ORDERS
+app.get('/api/orders/:user_id', async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const orders = await pool.query(
+      'SELECT * FROM orders WHERE user_id = $1 ORDER BY created_at DESC',
+      [user_id]
+    );
+    
+    for (let order of orders.rows) {
+      const items = await pool.query(
+        'SELECT oi.*, p.name FROM order_items oi JOIN products p ON oi.product_id = p.id WHERE oi.order_id = $1',
+        [order.id]
+      );
+      order.items = items.rows;
+    }
+    
+    res.json(orders.rows);
+  } catch (err) {
+    console.error('❌ Error fetching orders:', err);
+    res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+});
+
+// UPDATE ORDER STATUS
+app.put('/api/orders/:id/status', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    
+    const result = await pool.query(
+      'UPDATE orders SET status = $1 WHERE id = $2 RETURNING *',
+      [status, id]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    
+    console.log(`✅ Order #${id} status updated to ${status}`);
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('❌ Error updating order:', err);
+    res.status(500).json({ error: 'Failed to update order' });
   }
 });
 

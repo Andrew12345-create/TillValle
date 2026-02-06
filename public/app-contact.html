@@ -292,6 +292,19 @@
         transform: translateX(-50%) translateY(0);
       }
     }
+
+    .version-badge {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(45, 106, 79, 0.8);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      z-index: 100;
+    }
   </style>
 </head>
 <body>
@@ -441,5 +454,13 @@
       window.location.href = 'index.html';
     }
   </script>
+
+  <!-- Version Badge -->
+  <div class="version-badge">
+    <span id="app-version">v1.0.0</span>
+  </div>
+
+  <!-- Load app version -->
+  <script src="app-version.js"></script>
 </body>
 </html>

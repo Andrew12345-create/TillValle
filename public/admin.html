@@ -359,6 +359,7 @@
     <script>
         let products = [];
         let isLoggedIn = false;
+        let verifyInterval;
 
         // Initialize tables on page load
         window.addEventListener('load', async () => {
@@ -369,6 +370,35 @@
                 console.error('Failed to initialize tables:', error);
             }
         });
+
+        async function verifyAdmin() {
+            try {
+                const response = await fetch('/api/admin/verify', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                if (!data.success || !data.isAdmin) {
+                    console.log('Admin verification failed - logging out');
+                    forceLogout();
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                console.error('Admin verification error:', error);
+                forceLogout();
+                return false;
+            }
+        }
+
+        function forceLogout() {
+            clearInterval(verifyInterval);
+            isLoggedIn = false;
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('adminPassword').value = '';
+            alert('Session expired or unauthorized access detected. Please login again.');
+        }
 
         async function adminLogin() {
             const password = document.getElementById('adminPassword').value;
@@ -383,6 +413,7 @@
                 const response = await fetch('/api/admin/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ password })
                 });
 
@@ -393,6 +424,7 @@
                     document.getElementById('loginSection').style.display = 'none';
                     document.getElementById('dashboard').style.display = 'block';
                     showDashboard();
+                    verifyInterval = setInterval(verifyAdmin, 5000);
                 } else {
                     showMessage(messageDiv, data.message, 'error');
                 }
@@ -406,8 +438,9 @@
             updateStats();
         }
 
-        function showTab(tabName) {
-            // Hide all tabs
+        async function showTab(tabName) {
+            if (!await verifyAdmin()) return;
+            
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
@@ -415,7 +448,6 @@
                 tab.classList.remove('active');
             });
 
-            // Show selected tab
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
 
@@ -425,6 +457,8 @@
         }
 
         async function loadProducts() {
+            if (!await verifyAdmin()) return;
+            
             const container = document.getElementById('productsContainer');
             container.innerHTML = '<div class="loading">Loading products...</div>';
 
@@ -436,10 +470,8 @@
 
                 const data = await response.json();
                 
-                // Handle both array and object responses
                 const productsArray = Array.isArray(data) ? data : (data.products || data.rows || []);
                 
-                // Transform API response to expected format
                 products = productsArray.map(item => ({
                     id: item.product_id || item.id || item.product_name,
                     name: item.product_name || item.name || 'Unknown',
@@ -453,7 +485,6 @@
                 updateStats();
             } catch (error) {
                 console.error('Error loading products:', error);
-                // Use mock data if API fails
                 products = [
                     { id: 'tomato', name: 'Fresh Tomatoes', price: 120, category: 'Vegetables', description: 'Ripe red tomatoes', stock: 50 },
                     { id: 'banana', name: 'Bananas', price: 80, category: 'Fruits', description: 'Yellow bananas', stock: 75 },
@@ -507,6 +538,8 @@
         }
 
         async function addProduct() {
+            if (!await verifyAdmin()) return;
+            
             const name = document.getElementById('productName').value;
             const price = parseFloat(document.getElementById('productPrice').value);
             const category = document.getElementById('productCategory').value;
@@ -539,6 +572,7 @@
         }
 
         async function deleteProduct(id) {
+            if (!await verifyAdmin()) return;
             if (!confirm('Are you sure you want to delete this product?')) return;
 
             try {
@@ -557,27 +591,25 @@
         }
 
         function editProduct(id) {
-            // Find the product
             const product = products.find(p => p.id === id);
             if (!product) return;
 
-            // Fill the form with existing data
             document.getElementById('productName').value = product.name;
             document.getElementById('productPrice').value = product.price;
             document.getElementById('productCategory').value = product.category;
             document.getElementById('productDescription').value = product.description;
             document.getElementById('productStock').value = product.stock;
 
-            // Show the form
             showAddProductForm();
 
-            // Change the add button to update button
             const addButton = document.querySelector('#addProductForm button[onclick="addProduct()"]');
             addButton.textContent = 'Update Product';
             addButton.onclick = () => updateProduct(id);
         }
 
         async function updateProduct(id) {
+            if (!await verifyAdmin()) return;
+            
             const name = document.getElementById('productName').value;
             const price = parseFloat(document.getElementById('productPrice').value);
             const category = document.getElementById('productCategory').value;
@@ -601,7 +633,6 @@
                     loadProducts();
                     alert('Product updated successfully!');
                     
-                    // Reset the button
                     const addButton = document.querySelector('#addProductForm button[onclick^="updateProduct"]');
                     if (addButton) {
                         addButton.textContent = 'Add Product';
@@ -617,6 +648,8 @@
         }
 
         async function toggleMaintenance(active) {
+            if (!await verifyAdmin()) return;
+            
             const adminEmail = document.getElementById('adminEmail').value;
             const messageDiv = document.getElementById('maintenanceMessage');
 
@@ -662,6 +695,7 @@
         }
 
         function logout() {
+            clearInterval(verifyInterval);
             isLoggedIn = false;
             document.getElementById('loginSection').style.display = 'block';
             document.getElementById('dashboard').style.display = 'none';

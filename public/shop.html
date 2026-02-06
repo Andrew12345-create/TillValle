@@ -1121,6 +1121,63 @@
     renderRecentPurchases();
     initCartDisplay();
 
+    // Load products from database
+    async function loadProductsFromDatabase() {
+      try {
+        const response = await fetch('/api/products');
+        if (!response.ok) return;
+        
+        const products = await response.json();
+        if (!products || products.length === 0) return;
+        
+        // Clear existing products
+        document.querySelectorAll('.products').forEach(container => {
+          container.innerHTML = '';
+        });
+        
+        // Group by category
+        const categories = {
+          'Dairy': document.querySelector('.animal-farm'),
+          'Meat': document.querySelector('.animal-farm'),
+          'Fruits': document.querySelectorAll('.products')[0],
+          'Herbs': document.querySelectorAll('.products')[1],
+          'Vegetables': document.querySelectorAll('.products')[2]
+        };
+        
+        products.forEach(product => {
+          const container = categories[product.category];
+          if (!container) return;
+          
+          const productDiv = document.createElement('div');
+          productDiv.className = 'product';
+          productDiv.dataset.name = product.name;
+          productDiv.dataset.description = product.description;
+          productDiv.dataset.image = product.image;
+          productDiv.dataset.price = product.price;
+          
+          productDiv.innerHTML = `
+            <img src="${product.image}" alt="${product.name}" class="product-image">
+            <h4>${product.name}</h4>
+            <p class="price" data-price="${product.price}">KES ${product.price}</p>
+            <button class="add-to-cart-toggle">Add to Cart</button>
+            <div class="quantity-controls-inline">
+              <button class="qty-btn" data-action="remove">−</button>
+              <span class="qty-display">0</span>
+              <button class="qty-btn" data-action="add">+</button>
+            </div>
+          `;
+          
+          container.appendChild(productDiv);
+        });
+        
+        initCartDisplay();
+      } catch (error) {
+        console.error('Error loading products:', error);
+      }
+    }
+    
+    loadProductsFromDatabase();
+
     // Competitive E-commerce Features
     function quickAddToCart(name, price, image) {
       if (!localStorage.getItem('email')) {
