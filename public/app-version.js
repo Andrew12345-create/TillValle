@@ -1,21 +1,32 @@
 // app-version.js - Display app version on all pages
 async function loadAndDisplayVersion() {
   try {
-    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const versionUrl = isLocal ? 'http://localhost:3000/api/version' : '/.netlify/functions/version';
-    
-    const response = await fetch(versionUrl);
-    const data = await response.json();
-    
+    const candidates = ['/api/version', '/.netlify/functions/version'];
+    let data = null;
+    for (const url of candidates) {
+      try {
+        const resp = await fetch(url, { cache: 'no-store' });
+        const contentType = resp.headers.get('content-type') || '';
+        if (!resp.ok || contentType.includes('text/html')) {
+          continue;
+        }
+        data = await resp.json();
+        break;
+      } catch (e) {
+        continue;
+      }
+    }
+
+    if (!data) throw new Error('No version endpoint available');
+
     // Display version in page (optional - can be in footer, header, etc)
     const versionElement = document.getElementById('app-version');
     if (versionElement) {
       versionElement.textContent = `v${data.version}`;
     }
-    
+
     // Store version in sessionStorage for access throughout the app
     sessionStorage.setItem('appVersion', data.version);
-    
   } catch (error) {
     console.log('Could not load app version:', error);
     sessionStorage.setItem('appVersion', '1.0.0');
