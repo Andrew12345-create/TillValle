@@ -299,6 +299,11 @@
 
     <form id="login-form">
       <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="John Doe" required>
+      </div>
+
+      <div class="form-group">
         <label for="email">Email Address</label>
         <input type="email" id="email" name="email" placeholder="your@email.com" required>
       </div>
@@ -335,15 +340,15 @@
     document.getElementById('login-form').addEventListener('submit', async (event) => {
       event.preventDefault();
 
+      const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
-      if (!email || !password) {
+      if (!name || !email || !password) {
         showOutput('Please fill in all fields', 'error');
         return;
       }
 
-      // Determine login URL based on environment
       const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
       const loginUrl = isLocal ? 'http://localhost:3001/login' : '/.netlify/functions/login';
 
@@ -353,27 +358,20 @@
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ email, password, name }),
         });
 
         const data = await response.json();
 
         if (data.ok) {
-          // Successful login
           localStorage.setItem('token', data.token);
           localStorage.setItem('email', email);
+          localStorage.setItem('userName', name);
           showOutput('Login successful! Redirecting...', 'success');
 
-          // Check if admin user
-          if (email === 'andrewmunamwangi@gmail.com') {
-            setTimeout(() => {
-              window.location.href = 'admin.html';
-            }, 1500);
-          } else {
-            setTimeout(() => {
-              window.location.href = 'app-shop.html';
-            }, 1500);
-          }
+          setTimeout(() => {
+            window.location.href = 'app-shop.html';
+          }, 1500);
         } else {
           showOutput(data.error || 'Login failed. Please try again.', 'error');
         }

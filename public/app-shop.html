@@ -56,6 +56,25 @@
       font-size: 18px;
       transition: background 0.2s;
       position: relative;
+      min-width: 36px;
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .profile-initials {
+      background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
     }
 
     .header-btn:active {
@@ -854,12 +873,17 @@
 
     function initProfile() {
       const profileBtn = document.getElementById('profile-btn');
+      const userName = localStorage.getItem('userName');
       const userEmail = localStorage.getItem('email');
       
-      if (userEmail) {
+      if (userEmail && userName) {
+        const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+        profileBtn.innerHTML = `<div class="profile-initials">${initials}</div>`;
+        profileBtn.onclick = () => window.location.href = 'app-profile.html';
+      } else if (userEmail) {
         profileBtn.onclick = () => window.location.href = 'app-profile.html';
       } else {
-        profileBtn.onclick = () => window.location.href = 'login.html';
+        profileBtn.onclick = () => window.location.href = 'app-login.html';
       }
     }
 

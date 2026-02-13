@@ -385,7 +385,7 @@
             <div class="not-logged-icon">👤</div>
             <div class="not-logged-title">Not Logged In</div>
             <div class="not-logged-subtitle">Sign in to access your profile and order history</div>
-            <button class="btn btn-primary" onclick="window.location.href='login.html'">Sign In</button>
+            <button class="btn btn-primary" onclick="window.location.href='app-login.html'">Sign In</button>
           </div>
         `;
         return;
@@ -512,8 +512,10 @@
     function logout() {
       if (confirm('Are you sure you want to sign out?')) {
         localStorage.removeItem('email');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('token');
         localStorage.removeItem('user');
-        window.location.href = 'login.html';
+        window.location.href = 'app-login.html';
       }
     }
 
