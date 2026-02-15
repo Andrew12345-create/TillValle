@@ -409,9 +409,13 @@
       
       cart.forEach(item => {
         const itemTotal = item.price * item.quantity;
+        const imageHtml = item.image
+          ? `<img src="${item.image}" alt="${escapeHtml(item.name)}" loading="lazy" decoding="async" style="width:60px;height:60px;object-fit:cover;border-radius:10px;"/>`
+          : `<div class="item-icon">🌱</div>`;
+
         html += `
           <div class="cart-item">
-            <div class="item-icon">🌱</div>
+            ${imageHtml}
             <div class="item-info">
               <div class="item-name">${item.name}</div>
               <div class="item-price">KES ${item.price} each</div>

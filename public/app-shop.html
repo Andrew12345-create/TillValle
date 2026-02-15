@@ -184,9 +184,10 @@
       box-shadow: 0 8px 20px rgba(45, 106, 79, 0.2);
     }
 
+    /* Adjusted product image styling for better positioning */
     .product-image {
       width: 100%;
-      height: 120px;
+      height: 140px; /* Increased height for better visibility */
       background: linear-gradient(135deg, #f0f9f4 0%, #e8f5e9 100%);
       display: flex;
       align-items: center;
@@ -195,12 +196,13 @@
       overflow: hidden;
       position: relative;
       border-bottom: 2px solid rgba(45, 106, 79, 0.1);
+      border-radius: 8px; /* Added rounded corners */
     }
 
     .product-image img {
-      width: 100%;
+      width: auto; /* Maintain aspect ratio */
       height: 100%;
-      object-fit: cover;
+      object-fit: contain; /* Ensure the entire image is visible */
       transition: transform 0.3s ease;
     }
 
@@ -312,100 +314,6 @@
       border: none;
       padding: 8px 12px;
       border-radius: 8px;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 700;
-      transition: all 0.2s;
-      flex: 1;
-      box-shadow: 0 2px 8px rgba(45, 106, 79, 0.3);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .add-btn:active {
-      transform: scale(0.95);
-      box-shadow: 0 1px 4px rgba(45, 106, 79, 0.4);
-    }
-
-    @media (max-width: 375px) {
-      .products-grid {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-        gap: 8px;
-      }
-      
-      .product-card {
-        min-height: 200px;
-      }
-      
-      .product-image {
-        height: 100px;
-      }
-      
-      .product-info {
-        padding: 8px;
-      }
-      
-      .product-name {
-        font-size: 12px;
-      }
-      
-      .product-price {
-        font-size: 14px;
-      }
-    }
-    async function loadProducts() {
-      // Try the relative API first (works when API is on same origin),
-      // fall back to Netlify functions path if necessary.
-      const candidates = ['/api/products', '/.netlify/functions/products'];
-      let data = null;
-
-      for (const url of candidates) {
-        try {
-          console.log('Attempting to fetch products from:', url);
-          const resp = await fetch(url, { cache: 'no-store' });
-          // If we get HTML back (e.g. a 404 page), treat as failure
-          const contentType = resp.headers.get('content-type') || '';
-          if (!resp.ok || contentType.includes('text/html')) {
-            console.warn('Bad response from', url, resp.status, contentType);
-            continue;
-          }
-          data = await resp.json();
-          if (!Array.isArray(data) || data.length === 0) {
-            console.warn('Empty product list from', url);
-            continue;
-          }
-          console.log('✅ Loaded', data.length, 'products from', url);
-          break;
-        } catch (err) {
-          console.warn('Fetch failed for', url, err.message);
-          continue;
-        }
-      }
-
-      if (!data) {
-        console.error('❌ Error fetching products: no valid responses');
-        products = sampleProducts;
-      } else {
-        products = data.map(p => {
-          const rawImage = p.image || p.product_image || p.image_url || null;
-          const image = rawImage
-            ? (rawImage.startsWith('http') || rawImage.startsWith('/') ? rawImage : `/${rawImage}`)
-            : mapLocalImage(p.name || p.product_name || '');
-          return {
-            id: p.id || p.product_id,
-            name: p.name || p.product_name,
-            price: parseFloat(p.price) || 0,
-            icon: getProductIcon(p.name || p.product_name || ''),
-            stock: parseInt(p.stock || p.stock_quantity || 0),
-            category: getCategoryFromName(p.name || p.product_name || ''),
-            image
-          };
-        });
-      }
-
-      displayProducts();
-    }
-      border-radius: 6px;
       cursor: pointer;
       font-size: 12px;
       font-weight: 600;
@@ -752,7 +660,7 @@
         const stockClass = product.stock < 10 ? 'low' : '';
         const iconToShow = product.icon || getProductIcon(product.name || '');
         const imageHtml = product.image
-          ? `<img src="${product.image}" alt="${escapeHtml(product.name)}" style="width:100%;height:100%;object-fit:cover;display:block;"/>`
+          ? `<img src="${product.image}" alt="${escapeHtml(product.name)}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;"/>`
           : `<div style="font-size:40px">${iconToShow}</div>`;
 
         return `

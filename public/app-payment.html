@@ -688,11 +688,15 @@
         subtotal += itemTotal;
         return `
           <div class="order-item">
+            ${item.image
+              ? `<img src="${item.image}" alt="${escapeHtml(item.name)}" loading="lazy" decoding="async" style="width:40px;height:40px;object-fit:cover;border-radius:8px;margin-right:8px;"/>`
+              : `<div style="width:40px;height:40px;background:#f0f0f0;border-radius:8px;display:flex;align-items:center;justify-content:center;">🌱</div>`}
+
             <div class="item-info">
               <div class="item-name">${item.name}</div>
               <div class="item-qty">Qty: ${item.quantity}</div>
             </div>
-            <div class="item-price">KES ${itemTotal.toLocaleString()}</div>
+            <div class="item-price">KES ${itemTotal}</div>
           </div>
         `;
       }).join('');
