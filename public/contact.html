@@ -3,421 +3,371 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact TilleValle</title>
-
+  <title>Contact - TillValle</title>
   <link rel="icon" href="logo.jpg" type="image/jpeg">
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="global-chat.css">
-  
-  <!-- Hotjar Tracking Code -->
-  <script>
-      (function(h,o,t,j,a,r){
-          h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-          h._hjSettings={hjid:6534945,hjsv:6};
-          a=o.getElementsByTagName('head')[0];
-          r=o.createElement('script');r.async=1;
-          r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-          a.appendChild(r);
-      })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-  </script>
-  
+  <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root {
+      --primary: #2d6a4f;
+      --primary-light: #40916c;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
     }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
       min-height: 100vh;
-      color: #333;
+      color: var(--text-primary);
     }
 
-    .contact-container {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 20px;
-    }
-
-    .hero-section {
-      text-align: center;
-      margin-bottom: 60px;
-      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 30px;
-      padding: 60px 40px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.3);
-    }
-
-    .hero-section h1 {
-      font-size: 3.5rem;
-      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-weight: 900;
-      margin-bottom: 20px;
-      letter-spacing: -1px;
-    }
-
-    .hero-section p {
-      font-size: 1.3rem;
-      color: #666;
-      font-weight: 500;
-      max-width: 600px;
+    .page-wrapper {
+      max-width: 1100px;
       margin: 0 auto;
-      line-height: 1.6;
+      padding: 40px 24px 80px;
     }
 
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      margin-bottom: 60px;
-    }
-
-    .contact-form-card {
-      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 25px;
-      padding: 40px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.3);
-    }
-
-    .contact-info-card {
-      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 25px;
-      padding: 40px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.3);
-    }
-
-    .card-header {
+    /* Hero */
+    .hero-banner {
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 60%, #52b788 100%);
+      border-radius: 28px;
+      padding: 64px 48px;
       text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .card-header h2 {
-      font-size: 2rem;
-      color: #2d6a4f;
-      font-weight: 700;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-    }
-
-    .card-header .icon {
-      font-size: 2.5rem;
-    }
-
-    .card-header p {
-      color: #666;
-      font-size: 1rem;
-    }
-
-    .form-group {
-      margin-bottom: 25px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #333;
-    }
-
-    .form-input {
-      width: 100%;
-      padding: 15px;
-      border: 2px solid rgba(45, 106, 79, 0.2);
-      border-radius: 15px;
-      font-size: 16px;
-      background: rgba(255,255,255,0.8);
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
-      font-family: inherit;
-    }
-
-    .form-input:focus {
-      outline: none;
-      border-color: #2d6a4f;
-      box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1);
-    }
-
-    textarea.form-input {
-      min-height: 120px;
-      resize: vertical;
-    }
-
-    .submit-btn {
-      width: 100%;
-      padding: 18px;
-      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
       color: white;
-      border: none;
-      border-radius: 15px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      margin-bottom: 32px;
+      box-shadow: 0 20px 56px rgba(45,106,79,0.35);
       position: relative;
       overflow: hidden;
     }
-
-    .submit-btn::before {
+    .hero-banner::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: left 0.6s ease;
+      top: -40%; right: -15%;
+      width: 500px; height: 500px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+    }
+    .hero-icon { font-size: 3.5rem; margin-bottom: 16px; position: relative; z-index: 1; }
+    .hero-banner h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-banner p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
     }
 
-    .submit-btn:hover::before {
-      left: 100%;
+    /* Contact Grid */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
     }
 
-    .submit-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(45, 106, 79, 0.4);
+    /* Glass card */
+    .glass-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.75) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 36px 32px;
+      border: 1px solid rgba(255,255,255,0.6);
+      box-shadow: 0 8px 32px rgba(45,106,79,0.10);
+      position: relative;
+      overflow: hidden;
+    }
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
     }
 
-    .contact-info {
-      display: flex;
-      flex-direction: column;
-      gap: 25px;
-    }
-
-    .info-item {
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 6px;
       display: flex;
       align-items: center;
-      gap: 20px;
-      padding: 20px;
-      background: rgba(45, 106, 79, 0.1);
-      border-radius: 15px;
-      border: 2px solid rgba(45, 106, 79, 0.2);
-      transition: all 0.3s ease;
+      gap: 10px;
+    }
+    .card-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
     }
 
-    .info-item:hover {
-      transform: translateX(5px);
-      border-color: rgba(45, 106, 79, 0.4);
+    /* Form */
+    .form-group { margin-bottom: 18px; }
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--text-primary);
+      background: #f9fafb;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
+      background: white;
+    }
+    .form-input::placeholder { color: #9ca3af; }
+    textarea.form-input {
+      min-height: 130px;
+      resize: vertical;
     }
 
-    .info-icon {
-      font-size: 2rem;
-      color: #2d6a4f;
-      min-width: 50px;
-      text-align: center;
-    }
-
-    .info-content h3 {
-      color: #2d6a4f;
-      font-weight: 700;
-      margin-bottom: 5px;
-    }
-
-    .info-content p {
-      color: #666;
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
       font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(45,106,79,0.3);
+      position: relative;
+      overflow: hidden;
     }
+    .btn-submit::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    .btn-submit:hover::before { left: 100%; }
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(45,106,79,0.4);
+    }
+    .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
     .form-message {
-      margin-top: 15px;
-      padding: 15px;
+      margin-top: 14px;
+      padding: 12px 16px;
       border-radius: 10px;
+      font-size: 0.88rem;
       font-weight: 600;
       text-align: center;
     }
+    .form-message.success { background: #d1fae5; color: #065f46; }
+    .form-message.error { background: #fee2e2; color: #991b1b; }
 
-    .form-message.success {
-      background: rgba(34, 197, 94, 0.1);
-      color: #16a34a;
-      border: 2px solid rgba(34, 197, 94, 0.2);
+    /* Contact Info */
+    .info-list { display: flex; flex-direction: column; gap: 14px; }
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: rgba(45,106,79,0.06);
+      border-radius: 14px;
+      border: 1px solid rgba(45,106,79,0.12);
+      transition: all 0.2s ease;
+    }
+    .info-item:hover {
+      background: rgba(45,106,79,0.1);
+      transform: translateX(4px);
+    }
+    .info-icon-box {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .info-content h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 3px;
+    }
+    .info-content p {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
     }
 
-    .form-message.error {
-      background: rgba(239, 68, 68, 0.1);
-      color: #dc2626;
-      border: 2px solid rgba(239, 68, 68, 0.2);
-    }
-
-    .map-section {
-      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+    /* Map */
+    .map-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.92), rgba(255,255,255,0.75));
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-radius: 25px;
-      padding: 40px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.3);
-      text-align: center;
+      border-radius: 24px;
+      padding: 32px;
+      border: 1px solid rgba(255,255,255,0.6);
+      box-shadow: 0 8px 32px rgba(45,106,79,0.10);
+      margin-bottom: 24px;
     }
-
-    .map-section h2 {
-      font-size: 2rem;
-      color: #2d6a4f;
-      margin-bottom: 20px;
+    .map-card h2 {
+      font-size: 1.3rem;
       font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-
     .map-container {
       width: 100%;
-      height: 300px;
-      border-radius: 15px;
+      height: 280px;
+      border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      border: 2px solid rgba(45, 106, 79, 0.2);
-      transition: all 0.3s ease;
+      border: 2px solid rgba(45,106,79,0.15);
+    }
+    .map-container iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
     }
 
-    .map-container:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-secondary);
+      font-size: 0.88rem;
     }
 
+    /* Responsive */
     @media (max-width: 768px) {
-      .contact-container {
-        margin: 20px auto;
-        padding: 15px;
-      }
-      
-      .hero-section {
-        padding: 40px 20px;
-      }
-      
-      .hero-section h1 {
-        font-size: 2.5rem;
-      }
-      
-      .contact-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-      
-      .contact-form-card,
-      .contact-info-card {
-        padding: 30px 20px;
-      }
-      
-      .info-item {
-        flex-direction: column;
-        text-align: center;
-      }
+      .contact-grid { grid-template-columns: 1fr; }
+      .page-wrapper { padding: 20px 16px 60px; }
+      .hero-banner { padding: 48px 24px; }
+      .hero-banner h1 { font-size: 2rem; }
     }
   </style>
-  <link rel="stylesheet" href="creative-backgrounds.css">
 </head>
 <body>
-  <header>
-    <div id="navbar-container"></div>
-  </header>
+  <div id="navbar-container"></div>
 
-  <div class="contact-container">
-    <!-- Hero Section -->
-    <div class="hero-section">
+  <div class="page-wrapper">
+    <!-- Hero -->
+    <div class="hero-banner">
+      <div class="hero-icon">📞</div>
       <h1>Contact Us</h1>
       <p>Get in touch with our team. We're here to help with any questions about our fresh farm produce and services.</p>
     </div>
 
     <!-- Contact Grid -->
     <div class="contact-grid">
-      <!-- Contact Form -->
-      <div class="contact-form-card">
-        <div class="card-header">
-          <h2><span class="icon">📧</span> Send Message</h2>
-          <p>Fill out the form below and we'll get back to you soon</p>
-        </div>
-        
+      <!-- Form -->
+      <div class="glass-card">
+        <div class="card-title">📧 Send a Message</div>
+        <div class="card-subtitle">Fill out the form and we'll get back to you within 24 hours</div>
+
         <form id="contactForm">
           <div class="form-group">
-            <label for="name">Your Name</label>
-            <input type="text" id="name" name="from_name" class="form-input" placeholder="Enter your full name" required>
+            <label class="form-label" for="name">Your Name</label>
+            <input class="form-input" type="text" id="name" name="from_name" placeholder="Enter your full name" required>
           </div>
-          
           <div class="form-group">
-            <label for="email">Your Email</label>
-            <input type="email" id="email" name="from_email" class="form-input" placeholder="Enter your email address" required>
+            <label class="form-label" for="email">Email Address</label>
+            <input class="form-input" type="email" id="email" name="from_email" placeholder="you@example.com" required>
           </div>
-          
           <div class="form-group">
-            <label for="message">Your Message</label>
-            <textarea id="message" name="message" class="form-input" placeholder="Tell us how we can help you..." required></textarea>
+            <label class="form-label" for="message">Your Message</label>
+            <textarea class="form-input" id="message" name="message" placeholder="Tell us how we can help you..." required></textarea>
           </div>
-          
-          <button type="submit" class="submit-btn">
-            <span id="btn-text">Send Message</span>
+          <button type="submit" class="btn-submit" id="submit-btn">
+            <span id="btn-text">📤 Send Message</span>
           </button>
-          
-          <div id="formMessage" class="form-message" style="display: none;"></div>
+          <div id="formMessage" class="form-message" style="display:none;"></div>
         </form>
       </div>
 
-      <!-- Contact Info -->
-      <div class="contact-info-card">
-        <div class="card-header">
-          <h2><span class="icon">📍</span> Get In Touch</h2>
-          <p>Visit us, call us, or reach out through any of these channels</p>
-        </div>
-        
-        <div class="contact-info">
+      <!-- Info -->
+      <div class="glass-card">
+        <div class="card-title">📍 Get In Touch</div>
+        <div class="card-subtitle">Visit us, call us, or reach out through any channel</div>
+
+        <div class="info-list">
           <div class="info-item">
-            <div class="info-icon">📍</div>
+            <div class="info-icon-box">📍</div>
             <div class="info-content">
               <h3>Visit Our Farm</h3>
               <p>Gilgil, Nakuru County<br>Kenya</p>
             </div>
           </div>
-          
           <div class="info-item">
-            <div class="info-icon">📞</div>
+            <div class="info-icon-box">📞</div>
             <div class="info-content">
               <h3>Call Us</h3>
               <p>+254 712 345 678<br>+254 734 567 890</p>
             </div>
           </div>
-          
           <div class="info-item">
-            <div class="info-icon">📧</div>
+            <div class="info-icon-box">📧</div>
             <div class="info-content">
               <h3>Email Us</h3>
               <p>info@tillvalle.com<br>support@tillvalle.com</p>
             </div>
           </div>
-          
           <div class="info-item">
-            <div class="info-icon">🕒</div>
+            <div class="info-icon-box">🕒</div>
             <div class="info-content">
               <h3>Business Hours</h3>
-              <p>Mon - Fri: 8:00 AM - 6:00 PM<br>Sat - Sun: 9:00 AM - 4:00 PM</p>
+              <p>Mon – Fri: 8:00 AM – 6:00 PM<br>Sat – Sun: 9:00 AM – 4:00 PM</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon-box">🚚</div>
+            <div class="info-content">
+              <h3>Delivery Areas</h3>
+              <p>Nairobi, Nakuru, Gilgil<br>& surrounding areas</p>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Map Section -->
-    <div class="map-section">
-      <h2>📍 Find Us</h2>
+    <!-- Map -->
+    <div class="map-card">
+      <h2>📍 Find Us on the Map</h2>
       <div class="map-container">
-        <iframe 
+        <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15958.234567890123!2d36.3167!3d-0.5167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1829573b3b3b3b3b%3A0x1234567890abcdef!2sGilgil%2C%20Kenya!5e0!3m2!1sen!2ske!4v1234567890123!5m2!1sen!2ske"
-          width="100%" 
-          height="300" 
-          style="border:0; border-radius: 15px;" 
-          allowfullscreen="" 
-          loading="lazy" 
+          allowfullscreen=""
+          loading="lazy"
           referrerpolicy="no-referrer-when-downgrade">
         </iframe>
       </div>
@@ -425,57 +375,45 @@
   </div>
 
   <footer>
-    <p>&copy; 2024 TilleValle. All rights reserved.</p>
+    <p>&copy; 2025 TillValle. All rights reserved. | Fresh from farm to table 🌱</p>
   </footer>
 
-  <!-- EmailJS SDK -->
-  <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
-  
   <script>
-    // Load navbar
     fetch('navbar.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('navbar-container').innerHTML = data;
-      });
+      .then(r => r.text())
+      .then(html => { document.getElementById('navbar-container').innerHTML = html; })
+      .catch(() => {});
 
-    // Initialize EmailJS
-    (function(){
-      emailjs.init('_pUabf9crvtbxpcgX');
-    })();
+    // EmailJS
+    (function(){ emailjs.init('_pUabf9crvtbxpcgX'); })();
 
-    // Form submission
-    const form = document.getElementById('contactForm');
-    const formMessage = document.getElementById('formMessage');
-    const btnText = document.getElementById('btn-text');
-
-    form.addEventListener('submit', function(e){
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      
-      // Show loading state
+      const btn = document.getElementById('submit-btn');
+      const btnText = document.getElementById('btn-text');
+      const msg = document.getElementById('formMessage');
+
       btnText.textContent = 'Sending...';
-      form.querySelector('.submit-btn').disabled = true;
-      
+      btn.disabled = true;
+
       emailjs.sendForm('service_0ths8yr', 'template_5ozpuzs', this)
         .then(() => {
-          formMessage.textContent = "✅ Message sent successfully! We'll get back to you soon.";
-          formMessage.className = "form-message success";
-          formMessage.style.display = "block";
-          form.reset();
+          msg.textContent = '✅ Message sent! We\'ll get back to you soon.';
+          msg.className = 'form-message success';
+          msg.style.display = 'block';
+          this.reset();
         }, (error) => {
-          console.error('EmailJS Error:', error);
-          formMessage.textContent = "❌ Failed to send message. Please try again or contact us directly.";
-          formMessage.className = "form-message error";
-          formMessage.style.display = "block";
+          msg.textContent = '❌ Failed to send. Please email us directly at info@tillvalle.com';
+          msg.className = 'form-message error';
+          msg.style.display = 'block';
         })
         .finally(() => {
-          btnText.textContent = 'Send Message';
-          form.querySelector('.submit-btn').disabled = false;
+          btnText.textContent = '📤 Send Message';
+          btn.disabled = false;
         });
     });
   </script>
-
-  <script src="script.js" defer></script>
+  <script src="global-chat.js"></script>
   <script src="bg-init.js"></script>
 </body>
 </html>

@@ -3,415 +3,435 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - TilleValle</title>
+  <title>Login - TillValle</title>
   <link rel="icon" href="logo.jpg" type="image/jpeg">
-  <link rel="stylesheet" href="css/site.css">
-  <link rel="stylesheet" href="shop-styles.css">
-  <link rel="stylesheet" href="global-chat.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="maintenance.js"></script>
-  <script src="navbar-universal.js"></script>
-
-  <!-- Hotjar Tracking Code for Tillvalle -->
-  <script>
-      (function(h,o,t,j,a,r){
-          h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-          h._hjSettings={hjid:6534945,hjsv:6};
-          a=o.getElementsByTagName('head')[0];
-          r=o.createElement('script');r.async=1;
-          r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-          a.appendChild(r);
-      })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-  </script>
   <style>
-    .signup-container {
-      max-width: 400px;
-      margin: 60px auto;
-      background: #fff;
-      padding: 35px 30px;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      animation: fadeIn 1s ease-out;
-    }
-    .signup-container h1 {
-      text-align: center;
-      font-size: 28px;
-      color: #2d6a4f;
-      margin-bottom: 25px;
-    }
-    .signup-container input {
-      width: 100%;
-      padding: 12px 15px;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-      transition: border 0.3s ease;
-    }
-    .signup-container input:focus {
-      border-color: #2d6a4f;
-      outline: none;
-    }
-    .signup-container button {
-      width: 100%;
-      padding: 12px;
-      background: #2d6a4f;
-      color: #fff;
-      font-size: 16px;
-      font-weight: bold;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease;
-    }
-    .signup-container button:hover {
-      background: #40916c;
-      transform: scale(1.05);
-    }
-    #output {
-      margin-top: 15px;
-      text-align: center;
-      font-weight: bold;
-      color: #2d6a4f;
-    }
-    .signup-container a {
-      display: block;
-      margin-top: 15px;
-      text-align: center;
-      color: #2d6a4f;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-    .signup-container a:hover {
-      color: #40916c;
-    }
-    .password-container {
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 50%, #52b788 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
       position: relative;
-      margin-bottom: 15px;
+      overflow: hidden;
     }
-    .password-container input {
+
+    /* Background decorations */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -20%; right: -10%;
+      width: 500px; height: 500px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -20%; left: -10%;
+      width: 400px; height: 400px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    /* Top nav bar */
+    .top-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+      background: rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .top-bar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: white;
+    }
+    .top-bar-logo img {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .top-bar-logo span {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .top-bar-link {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .top-bar-link:hover { color: white; }
+
+    /* Login Card */
+    .login-card {
       width: 100%;
-      padding: 12px 45px 12px 15px; /* Add padding right for button */
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-      transition: border 0.3s ease;
+      max-width: 440px;
+      background: rgba(255,255,255,0.97);
+      border-radius: 28px;
+      padding: 44px 40px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.3);
+      animation: slideUp 0.5s ease-out;
+      position: relative;
+      z-index: 10;
     }
-    .password-container input:focus {
-      border-color: #2d6a4f;
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Logo section */
+    .logo-section {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .logo-section img {
+      width: 64px; height: 64px;
+      border-radius: 16px;
+      object-fit: cover;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 24px rgba(45,106,79,0.25);
+    }
+    .logo-section h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #2d6a4f;
+      margin-bottom: 6px;
+    }
+    .logo-section p {
+      font-size: 0.88rem;
+      color: #64748b;
+    }
+
+    /* Form */
+    .form-group { margin-bottom: 18px; }
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: #0f172a;
+      background: #f9fafb;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .form-input:focus {
       outline: none;
+      border-color: #2d6a4f;
+      box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
+      background: white;
     }
-    .password-container button {
+    .form-input::placeholder { color: #9ca3af; }
+
+    /* Password field */
+    .password-wrap {
+      position: relative;
+    }
+    .password-wrap .form-input {
+      padding-right: 52px;
+    }
+    .toggle-password {
       position: absolute;
-      right: 10px;
+      right: 14px;
       top: 50%;
       transform: translateY(-50%);
       background: none;
       border: none;
-      cursor: pointer;
-      font-size: 16px;
       color: #2d6a4f;
-      padding: 0;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 4px;
+      font-family: inherit;
     }
-    .password-container button:hover {
-      color: #40916c;
+    .toggle-password:hover { opacity: 0.7; }
+
+    /* Forgot password */
+    .forgot-link {
+      display: block;
+      text-align: right;
+      font-size: 0.82rem;
+      color: #2d6a4f;
+      text-decoration: none;
+      margin-top: -10px;
+      margin-bottom: 20px;
+      font-weight: 500;
     }
+    .forgot-link:hover { text-decoration: underline; }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(45,106,79,0.3);
+      margin-bottom: 20px;
+    }
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(45,106,79,0.4);
+    }
+    .btn-submit:active { transform: scale(0.98); }
+    .btn-submit:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+    .divider span {
+      font-size: 0.8rem;
+      color: #9ca3af;
+      font-weight: 500;
+    }
+
+    /* Google sign in */
+    .google-btn-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    /* Output message */
+    #output {
+      text-align: center;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      min-height: 20px;
+    }
+    #output.success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    #output.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* Links */
+    .auth-links {
+      text-align: center;
+      margin-top: 8px;
+    }
+    .auth-links a {
+      color: #2d6a4f;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+    .auth-links a:hover { text-decoration: underline; }
+    .auth-links .separator {
+      color: #d1d5db;
+      margin: 0 8px;
+    }
+
+    /* Loading spinner in button */
+    .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
-  <script data-id="cmi7m0fwy0009kz04yac3babp" src="https://tinychat.ai/tinychat.js"></script>^  <link rel="stylesheet" href="creative-backgrounds.css">
 </head>
 <body>
-  <!-- Include navbar -->
-  <div id="navbar-container"></div>
+  <!-- Top bar -->
+  <div class="top-bar">
+    <a href="index.html" class="top-bar-logo">
+      <img src="logo.jpg" alt="TillValle">
+      <span>TillValle</span>
+    </a>
+    <a href="signup.html" class="top-bar-link">Create Account →</a>
+  </div>
 
-  <div class="signup-container">
-    <h1>Login</h1>
+  <!-- Login Card -->
+  <div class="login-card">
+    <div class="logo-section">
+      <img src="logo.jpg" alt="TillValle Logo">
+      <h1>Welcome Back</h1>
+      <p>Sign in to your TillValle account</p>
+    </div>
+
     <form id="login-form">
-      <input type="email" id="email" placeholder="Email Address" required>
-      <div class="password-container">
-        <input type="password" id="password" placeholder="Password" required>
-        <button type="button" id="toggle-password" aria-label="Show password">Show</button>
+      <div class="form-group">
+        <label class="form-label" for="email">Email Address</label>
+        <input class="form-input" type="email" id="email" placeholder="you@example.com" required autocomplete="email">
       </div>
-      <button type="submit">Login</button>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <div class="password-wrap">
+          <input class="form-input" type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+          <button type="button" id="toggle-password" class="toggle-password">Show</button>
+        </div>
+      </div>
+
+      <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
+
+      <div id="output"></div>
+
+      <button type="submit" class="btn-submit" id="login-btn">Sign In</button>
     </form>
-  <div class="divider-or">OR</div>
-    <div id="g_id_onload"
-         data-client_id="239408882803-mstdl0a10q9f0u43h9171kqqg58hoc3b.apps.googleusercontent.com"
-         data-callback="handleCredentialResponse">
-    </div>
-    <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
-    <div id="output"></div>
-  <a href="forgot-password.html" class="link-muted">Forgot Password?</a>
-    <a href="signup.html">Don’t have an account? Sign up here</a>
-  </div>
 
-  <!-- Toast -->
-  <div id="cart-toast"></div>
+    <div class="divider"><span>OR</span></div>
 
-  <!-- Chatbot Sidebar -->
-  <div id="chatbot-sidebar" class="chatbot-sidebar">
-    <div class="chatbot-header">
-      <span>TillieBot</span>
-      <button id="chatbot-close" class="chatbot-close">&times;</button>
-    </div>
-    <div id="chatbot-messages" class="chatbot-messages">
-      <div class="chatbot-message bot">
-        Hello! I'm TillieBot, your TillValle assistant. How can I help you today? You can ask me about our fresh products, delivery, or anything else!
+    <div class="google-btn-wrap">
+      <div id="g_id_onload"
+           data-client_id="239408882803-mstdl0a10q9f0u43h9171kqqg58hoc3b.apps.googleusercontent.com"
+           data-callback="handleCredentialResponse">
+      </div>
+      <div class="g_id_signin"
+           data-type="standard"
+           data-size="large"
+           data-theme="outline"
+           data-text="sign_in_with"
+           data-shape="rectangular"
+           data-logo_alignment="left">
       </div>
     </div>
-    <div class="chatbot-input-area">
-      <div class="chatbot-input-container">
-        <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Type your message...">
-        <button id="chatbot-send" class="chatbot-send">➤</button>
-      </div>
+
+    <div class="auth-links">
+      <a href="signup.html">Don't have an account? Sign up</a>
     </div>
   </div>
-
-  <!-- Floating Chatbot Button -->
-  <div id="floating-chatbot-btn" class="floating-chatbot-btn">
-    <span class="chatbot-emoji">💬</span>
-  </div>
-
-  <!-- Floating Cart Button -->
-  <div id="floating-cart-btn" class="floating-cart-btn">
-    <span class="cart-emoji">🛒</span>
-    <span id="floating-cart-count" class="floating-cart-count">0</span>
-  </div>
-
-  <footer>
-    <p>&copy; 2025 TilleValle. All rights reserved.</p>
-  </footer>
 
   <script>
-    // Load navbar
-    fetch('navbar.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('navbar-container').innerHTML = data;
-        const script = document.createElement('script');
-        script.src = 'script.js';
-        document.body.appendChild(script);
-      });
-
-    // Chatbot functions
-    document.addEventListener('DOMContentLoaded', function() {
-      const floatingChatbotBtn = document.getElementById('floating-chatbot-btn');
-      const chatbotSidebar = document.getElementById('chatbot-sidebar');
-      const chatbotClose = document.getElementById('chatbot-close');
-      const chatbotSend = document.getElementById('chatbot-send');
-      const chatbotInput = document.getElementById('chatbot-input');
-      
-      if (floatingChatbotBtn) {
-        floatingChatbotBtn.addEventListener('click', () => {
-          if (chatbotSidebar) chatbotSidebar.classList.add('open');
-          floatingChatbotBtn.style.display = 'none';
-        });
-      }
-      if (chatbotClose) {
-        chatbotClose.addEventListener('click', () => {
-          if (chatbotSidebar) chatbotSidebar.classList.remove('open');
-          if (floatingChatbotBtn) floatingChatbotBtn.style.display = 'flex';
-        });
-      }
-      if (chatbotSend) {
-        chatbotSend.addEventListener('click', sendMessage);
-      }
-      if (chatbotInput) {
-        chatbotInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') sendMessage();
-        });
-      }
-      
-      async function sendMessage() {
-        const message = chatbotInput.value.trim();
-        if (!message) return;
-        
-        const messagesDiv = document.getElementById('chatbot-messages');
-        // Safely append user message
-        const userMessageDiv = document.createElement('div');
-        userMessageDiv.className = 'chatbot-message user';
-        userMessageDiv.textContent = message;
-        messagesDiv.appendChild(userMessageDiv);
-        chatbotInput.value = '';
-        const thinkingDiv = document.createElement('div');
-        thinkingDiv.className = 'chatbot-message bot';
-        thinkingDiv.textContent = 'Thinking...';
-        messagesDiv.appendChild(thinkingDiv);
-        const loadingMessage = messagesDiv.lastElementChild;
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        
-        try {
-          const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-          const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/.netlify/functions/chatbot';
-          const response = await fetch(chatbotUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message })
-          });
-          const data = await response.json();
-          if (loadingMessage) loadingMessage.remove();
-          const botReply = document.createElement('div');
-          botReply.className = 'chatbot-message bot';
-          botReply.textContent = data.message;
-          messagesDiv.appendChild(botReply);
-        } catch (error) {
-          if (loadingMessage) loadingMessage.remove();
-          const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-          const lowerMessage = message.toLowerCase();
-          const offlineResponses = {
-            en: {
-              human: "I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com.",
-              default: "Hello! I'm TillieBot from TillValle! 🌱 I can help you with product information, stock levels, and delivery details. What would you like to know?"
-            },
-            sw: {
-              human: "Nitakuunganisha na wakala wetu Angela Wanjiru kwa angelawanjiru@gmail.com.",
-              default: "Hujambo! Mimi ni TillieBot kutoka TillValle! 🌱 Ninaweza kukusaidia na habari za bidhaa na uongozaji. Unahitaji nini?"
-            },
-            fr: {
-              human: "Je vais vous connecter avec notre agent Angela Wanjiru à angelawanjiru@gmail.com.",
-              default: "Bonjour! Je suis TillieBot de TillValle! 🌱 Je peux vous aider avec les informations produits et la livraison. Que voulez-vous savoir?"
-            }
-          };
-          const responses = offlineResponses[currentLang] || offlineResponses.en;
-          const respDiv = document.createElement('div');
-          respDiv.className = 'chatbot-message bot';
-          respDiv.textContent = (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('live')) ? responses.human : responses.default;
-          messagesDiv.appendChild(respDiv);
-        }
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    // Toggle password visibility
+    document.getElementById('toggle-password').addEventListener('click', function() {
+      const input = document.getElementById('password');
+      if (input.type === 'password') {
+        input.type = 'text';
+        this.textContent = 'Hide';
+      } else {
+        input.type = 'password';
+        this.textContent = 'Show';
       }
     });
 
-    // Login form handling
-    document.getElementById('login-form').addEventListener('submit', async (event) => {
-      event.preventDefault();
-
-      const email = document.getElementById('email').value;
+    // Login form
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
+      const btn = document.getElementById('login-btn');
+      const output = document.getElementById('output');
 
-      // Determine login URL based on environment
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>Signing in...';
+      output.className = '';
+      output.textContent = '';
+
       const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
       const loginUrl = isLocal ? 'http://localhost:3001/login' : '/.netlify/functions/login';
 
       try {
         const response = await fetch(loginUrl, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password }),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
         });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
 
         const data = await response.json();
 
         if (data.ok) {
-          // Successful login
           localStorage.setItem('token', data.token);
           localStorage.setItem('email', email);
-          document.getElementById('output').textContent = 'Login successful! Redirecting...';
-          document.getElementById('output').style.color = '#2d6a4f';
-
-          // Check if admin user
-          if (email === 'andrewmunamwangi@gmail.com') {
-            setTimeout(() => {
+          output.className = 'success';
+          output.textContent = '✓ Login successful! Redirecting...';
+          setTimeout(() => {
+            if (email === 'andrewmunamwangi@gmail.com') {
               window.location.href = 'admin.html';
-            }, 1500);
-          } else {
-            setTimeout(() => {
+            } else {
               window.location.href = 'shop.html';
-            }, 1500);
-          }
+            }
+          }, 1200);
         } else {
-          document.getElementById('output').textContent = data.error || 'Login failed. Please try again.';
-          document.getElementById('output').style.color = 'red';
+          output.className = 'error';
+          output.textContent = data.error || 'Login failed. Please check your credentials.';
+          btn.disabled = false;
+          btn.textContent = 'Sign In';
         }
       } catch (error) {
-        document.getElementById('output').textContent = 'Network error. Please check if the server is running.';
-        document.getElementById('output').style.color = 'red';
-        console.error('Login error:', error);
+        output.className = 'error';
+        output.textContent = 'Connection error. Please try again.';
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
       }
     });
 
-    // Toggle password visibility
-    document.getElementById('toggle-password').addEventListener('click', function() {
-      const passwordInput = document.getElementById('password');
-      const toggleBtn = this;
-      if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        toggleBtn.textContent = 'Hide';
-        toggleBtn.setAttribute('aria-label', 'Hide password');
-      } else {
-        passwordInput.type = 'password';
-        toggleBtn.textContent = 'Show';
-        toggleBtn.setAttribute('aria-label', 'Show password');
-      }
-    });
-
-    // Google Sign-In callback
-    window.handleCredentialResponse = async function(response) {
-      // Decode the JWT token to get user info
-      const responsePayload = decodeJwtResponse(response.credential);
-      
-      // Save to database
+    // Google Sign In handler
+    function handleCredentialResponse(response) {
+      const output = document.getElementById('output');
       try {
-        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const signupUrl = isLocal ? 'http://localhost:3001/signup' : '/.netlify/functions/signup';
-        
-        await fetch(signupUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: responsePayload.email,
-            password: 'google_oauth_' + responsePayload.sub,
-            name: responsePayload.name,
-            google_login: true
-          }),
-        });
-      } catch (error) {
-        console.log('User may already exist in database:', error);
+        const payload = JSON.parse(atob(response.credential.split('.')[1]));
+        localStorage.setItem('email', payload.email);
+        localStorage.setItem('userName', payload.name);
+        output.className = 'success';
+        output.textContent = '✓ Google sign-in successful! Redirecting...';
+        setTimeout(() => { window.location.href = 'shop.html'; }, 1200);
+      } catch (e) {
+        output.className = 'error';
+        output.textContent = 'Google sign-in failed. Please try again.';
       }
-      
-      // Store user info
-      localStorage.setItem('email', responsePayload.email);
-      localStorage.setItem('token', response.credential);
-      localStorage.setItem(`profileName_${responsePayload.email}`, responsePayload.name);
-      if (responsePayload.picture) {
-        localStorage.setItem(`profilePicture_${responsePayload.email}`, responsePayload.picture);
-      }
-      
-      document.getElementById('output').textContent = 'Google login successful! Redirecting...';
-      document.getElementById('output').style.color = '#2d6a4f';
-      
-      // Check if admin user
-      if (responsePayload.email === 'andrewmunamwangi@gmail.com') {
-        setTimeout(() => {
-          window.location.href = 'admin.html';
-        }, 1500);
-      } else {
-        setTimeout(() => {
-          window.location.href = 'shop.html';
-        }, 1500);
-      }
-    };
-
-    // Function to decode JWT token
-    function decodeJwtResponse(token) {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      return JSON.parse(jsonPayload);
     }
-  </script> 
-
-
-  <script src="bg-init.js"></script>
+  </script>
 </body>
 </html>
-

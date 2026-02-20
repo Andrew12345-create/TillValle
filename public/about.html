@@ -3,757 +3,490 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About TilleValle</title>
-  <link rel="stylesheet" href="css/navbar.css">
+  <title>About - TillValle</title>
   <link rel="icon" href="logo.jpg" type="image/jpeg">
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="global-chat.css">
-  <link rel="stylesheet" href="creative-backgrounds.css">
-  
-  <!-- Hotjar Tracking Code -->
-  <script>
-      (function(h,o,t,j,a,r){
-          h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-          h._hjSettings={hjid:6534945,hjsv:6};
-          a=o.getElementsByTagName('head')[0];
-          r=o.createElement('script');r.async=1;
-          r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-          a.appendChild(r);
-      })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-  </script>
-  
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root {
+      --primary: #2d6a4f;
+      --primary-light: #40916c;
+      --primary-xlight: #52b788;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
     }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
       min-height: 100vh;
-      color: #333;
+      color: var(--text-primary);
     }
 
-    .about-container {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 20px;
+    .page-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
     }
 
-    .hero-section {
-      text-align: center;
-      margin-bottom: 60px;
-      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+    /* Glass card base */
+    .glass {
+      background: linear-gradient(145deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.75) 100%);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-radius: 30px;
-      padding: 60px 40px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.6);
+      box-shadow: 0 8px 32px rgba(45,106,79,0.10), 0 0 0 1px rgba(255,255,255,0.5);
     }
 
-    .hero-section h1 {
-      font-size: 3.5rem;
-      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+    /* Hero Banner */
+    .hero-banner {
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 60%, #52b788 100%);
+      border-radius: 28px;
+      padding: 72px 48px;
+      text-align: center;
+      color: white;
+      margin-bottom: 32px;
+      box-shadow: 0 20px 56px rgba(45,106,79,0.35);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      top: -40%; right: -15%;
+      width: 500px; height: 500px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+    }
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      bottom: -30%; left: -10%;
+      width: 350px; height: 350px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+    }
+    .hero-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-banner h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+      letter-spacing: -1px;
+    }
+    .hero-banner p {
+      font-size: 1.15rem;
+      opacity: 0.9;
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Stats Row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .stat-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.92), rgba(255,255,255,0.75));
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 28px 16px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.6);
+      box-shadow: 0 8px 24px rgba(45,106,79,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(45,106,79,0.15);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      font-weight: 900;
-      margin-bottom: 20px;
-      letter-spacing: -1px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
 
-    .hero-section p {
-      font-size: 1.3rem;
-      color: #666;
-      font-weight: 500;
-      max-width: 800px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
+    /* Content Grid */
     .content-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      margin-bottom: 60px;
+      gap: 20px;
+      margin-bottom: 32px;
     }
 
     .content-card {
-      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+      background: linear-gradient(145deg, rgba(255,255,255,0.92), rgba(255,255,255,0.75));
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-radius: 25px;
-      padding: 40px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.3);
-      transition: all 0.3s ease;
+      border-radius: 24px;
+      padding: 36px 32px;
+      border: 1px solid rgba(255,255,255,0.6);
+      box-shadow: 0 8px 24px rgba(45,106,79,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
     }
-
+    .content-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    }
     .content-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(45,106,79,0.15);
     }
-
-    .content-card h2 {
-      font-size: 2rem;
-      color: #2d6a4f;
-      margin-bottom: 20px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .content-card .icon {
+    .card-icon {
       font-size: 2.5rem;
+      margin-bottom: 16px;
+      display: block;
     }
-
-    .content-card p {
-      color: #555;
-      line-height: 1.7;
-      font-size: 1rem;
-      margin-bottom: 15px;
-    }
-
-    .stats-section {
-      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 25px;
-      padding: 50px 40px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.3);
-    .content-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 30px 60px rgba(0,0,0,0.15);
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 30px;
-      text-align: center;
-    }
-
-    .stat-item {
-      padding: 20px;
     .content-card h2 {
-      font-size: 2rem;
-      color: #2d6a4f;
-      margin-bottom: 20px;
+      font-size: 1.4rem;
       font-weight: 700;
-      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+      color: var(--primary);
+      margin-bottom: 14px;
+    }
+    .content-card p {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+    }
+    .content-card p:last-child { margin-bottom: 0; }
+
+    /* Values list */
+    .values-list {
+      list-style: none;
+      margin-top: 12px;
+    }
+    .values-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    .values-list li:last-child { border-bottom: none; }
+    .values-list li::before {
+      content: '✓';
+      color: var(--primary);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Team Section */
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      display: block;
-      margin-bottom: 10px;
-    }
-
-      gap: 15px;
-      font-size: 1.1rem;
-      color: #666;
-      font-weight: 600;
-    }
-
-    .team-section {
+      margin-bottom: 20px;
       text-align: center;
-      margin-bottom: 60px;
-    .content-card .icon {
-      font-size: 2.5rem;
-    .team-section h2 {
-      font-size: 2.5rem;
-      color: #2d6a4f;
-      margin-bottom: 40px;
-    .content-card p {
-      color: #555;
-      line-height: 1.7;
-      font-size: 1rem;
-      margin-bottom: 15px;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
     }
 
-    .stats-section {
-      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    .team-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.92), rgba(255,255,255,0.75));
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-radius: 25px;
-      padding: 50px 40px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.3);
-      margin-bottom: 60px;
+      border-radius: 24px;
+      padding: 32px 24px;
       text-align: center;
+      border: 1px solid rgba(255,255,255,0.6);
+      box-shadow: 0 8px 24px rgba(45,106,79,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-
     .team-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-    .stats-grid {
-
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(45,106,79,0.15);
+    }
     .team-avatar {
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 20px;
-      font-size: 2rem;
+      margin: 0 auto 16px;
+      font-size: 1.8rem;
       color: white;
-      font-weight: bold;
-    }
-
-    .team-card h3 {
-      color: #2d6a4f;
-      margin-bottom: 10px;
       font-weight: 700;
+      box-shadow: 0 8px 20px rgba(45,106,79,0.25);
     }
-
+    .team-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
     .team-card p {
-      color: #666;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
     }
 
-    @media (max-width: 768px) {
-      .about-container {
-        margin: 20px auto;
-        padding: 15px;
-      }
-      
-      .hero-section {
-        padding: 40px 20px;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 30px;
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      border-radius: 28px;
+      padding: 56px 40px;
       text-align: center;
-        font-size: 2.5rem;
-      }
-      
-      .content-grid {
-        grid-template-columns: 1fr;
-    .stat-item {
-      }
-      
-      .content-card {
-        padding: 30px 20px;
-      }
-      
-      .stats-section {
-    .stat-number {
-      font-size: 3rem;
-      font-weight: 900;
-      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      display: block;
-      margin-bottom: 10px;
-  <div class="about-container">
-    <!-- Hero Section -->
-    <div class="hero-section">
-      <h1>About TilleValle</h1>
+      color: white;
+      box-shadow: 0 16px 48px rgba(45,106,79,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -30%; right: -10%;
+      width: 300px; height: 300px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+    }
+    .cta-section h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .cta-section p {
+      font-size: 1rem;
+      opacity: 0.9;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+    }
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+    .btn-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: white;
+      color: var(--primary);
+      border: none;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+    .btn-white:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .btn-outline-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: rgba(255,255,255,0.15);
+      color: white;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-outline-white:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      margin-top: 20px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .content-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .page-wrapper { padding: 20px 16px 60px; }
+      .hero-banner { padding: 48px 24px; }
+      .hero-banner h1 { font-size: 2rem; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .team-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div id="navbar-container"></div>
+
+  <div class="page-wrapper">
+    <!-- Hero -->
+    <div class="hero-banner">
+      <div class="hero-icon">🌱</div>
+      <h1>About TillValle</h1>
       <p>Cultivating fresh, organic produce with passion and dedication since 1985. From our family farm to your table, we bring you the finest quality fruits, vegetables, and herbs grown with love and care.</p>
-    .stat-label {
-      font-size: 1.1rem;
-      color: #666;
-    <div class="content-grid">
-      <div class="content-card">
-        <h2><span class="icon">🌱</span> Our Mission</h2>
-        <p>TilleValle is dedicated to providing fresh, organic produce to our community while promoting sustainable farming practices and healthy living.</p>
-        <p>We believe in transparency, quality, and community empowerment through responsible agriculture that respects both people and the environment.</p>
-      </div>
+    </div>
 
-    .team-section {
-      text-align: center;
-      margin-bottom: 60px;
-        <p>We use organic fertilizers and avoid harmful pesticides to ensure the health of our customers and the environment.</p>
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-number">39</div>
+        <div class="stat-label">Years of Experience</div>
       </div>
-
-      <div class="content-card">
-        <h2><span class="icon">🤝</span> Community Impact</h2>
-    .team-section h2 {
-      font-size: 2.5rem;
+      <div class="stat-card">
+        <div class="stat-number">5,000+</div>
+        <div class="stat-label">Happy Customers</div>
       </div>
-
-      <div class="content-card">
-        <h2><span class="icon">♻️</span> Sustainability</h2>
-        <p>Sustainability is at the core of everything we do. We prioritize water conservation, soil health, and biodiversity protection.</p>
-        <p>Our commitment extends to protecting the environment for future generations through innovative farming techniques.</p>
+      <div class="stat-card">
+        <div class="stat-number">50+</div>
+        <div class="stat-label">Product Varieties</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Organic Certified</div>
       </div>
     </div>
 
-    <!-- Stats Section -->
-    <div class="stats-section">
-      <div class="stats-grid">
-        <div class="stat-item">
-          <span class="stat-number">39</span>
-          <span class="stat-label">Years of Experience</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">5000+</span>
-          <span class="stat-label">Happy Customers</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">50+</span>
-          <span class="stat-label">Product Varieties</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">100%</span>
-          <span class="stat-label">Organic Certified</span>
-        </div>
+    <!-- Content Cards -->
+    <div class="content-grid">
+      <div class="content-card">
+        <span class="card-icon">🎯</span>
+        <h2>Our Mission</h2>
+        <p>TillValle is dedicated to providing fresh, organic produce to our community while promoting sustainable farming practices and healthy living.</p>
+        <p>We believe in transparency, quality, and community empowerment through responsible agriculture that respects both people and the environment.</p>
       </div>
-      margin-bottom: 40px;
-      font-weight: 800;
-    <!-- Team Section -->
-    <div class="team-section">
-      <h2>Meet Our Team</h2>
-    .team-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-          <p>Founder & Head Farmer</p>
-        </div>
-        <div class="team-card">
-          <div class="team-avatar">MW</div>
-    .team-card {
-      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 25px;
-      padding: 30px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.3);
-      transition: all 0.3s ease;
-      text-align: center;
+
+      <div class="content-card">
+        <span class="card-icon">🌿</span>
+        <h2>Organic Farming</h2>
+        <p>We use only organic fertilizers and avoid harmful pesticides to ensure the health of our customers and the environment.</p>
+        <ul class="values-list">
+          <li>No synthetic pesticides or herbicides</li>
+          <li>Composting and natural soil enrichment</li>
+          <li>Rainwater harvesting systems</li>
+          <li>Biodiversity-friendly practices</li>
+        </ul>
+      </div>
+
+      <div class="content-card">
+        <span class="card-icon">🤝</span>
+        <h2>Community Impact</h2>
+        <p>We work closely with local farmers and communities to create sustainable livelihoods and promote food security across Kenya.</p>
+        <p>Every purchase supports local farming families and helps build a stronger, more resilient food system.</p>
+      </div>
+
+      <div class="content-card">
+        <span class="card-icon">♻️</span>
+        <h2>Sustainability</h2>
+        <p>Sustainability is at the core of everything we do. We prioritize water conservation, soil health, and biodiversity protection.</p>
+        <ul class="values-list">
+          <li>Zero-waste packaging initiatives</li>
+          <li>Solar-powered cold storage</li>
+          <li>Carbon-neutral delivery routes</li>
+          <li>Seed saving programs</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Team -->
+    <h2 class="section-title">Meet Our Team</h2>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">AW</div>
+        <h3>Andrew Wanjiru</h3>
+        <p>Founder & Head Farmer</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">MW</div>
+        <h3>Mary Wambui</h3>
+        <p>Operations Manager</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">JK</div>
+        <h3>James Kamau</h3>
+        <p>Delivery Coordinator</p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <h2>Ready to Taste the Difference?</h2>
+      <p>Order fresh, organic produce delivered straight to your door across Kenya.</p>
+      <div class="cta-buttons">
+        <a href="shop.html" class="btn-white">🛒 Shop Now</a>
+        <a href="contact.html" class="btn-outline-white">📞 Contact Us</a>
+      </div>
+    </div>
   </div>
 
   <footer>
-    <p>&copy; 2024 TilleValle. All rights reserved.</p>
+    <p>&copy; 2025 TillValle. All rights reserved. | Fresh from farm to table 🌱</p>
   </footer>
-    .team-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-    fetch('navbar.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('navbar-container').innerHTML = data;
-      });
-  </script>
 
-  <script src="script.js" defer></script>
+  <script>
+    fetch('navbar.html')
+      .then(r => r.text())
+      .then(html => { document.getElementById('navbar-container').innerHTML = html; })
+      .catch(() => {});
+  </script>
+  <script src="global-chat.js"></script>
   <script src="bg-init.js"></script>
-<script data-id="cmifhtukf001hky04ol11gf5g" src="https://tinychat.ai/tinychat.js" async defer></script>
 </body>
 </html>
-            })
-    .team-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
-        },
-        function(error) {
-          let defaultLocation = 'Nairobi, Kenya';
-          input.value = defaultLocation;
-          showToast('Using default location: Nairobi, Kenya');
-        },
-        options
-      );
-    }
-
-    function selectLocation(location) {
-      localStorage.setItem('deliveryLocation', location);
-      updateLocationDisplay(location);
-      closeLocationSelector();
-      showToast(`Location set to ${location}!`);
-    }
-
-      justify-content: center;
-      margin: 0 auto 20px;
-      font-size: 2rem;
-        showToast('Please enter a delivery location');
-        return;
-      }
-      
-      localStorage.setItem('deliveryLocation', location);
-      updateLocationDisplay(location);
-      closeLocationSelector();
-      showToast('Delivery location saved!');
-    }
-
-    function updateLocationDisplay(location) {
-      const currentLocationEl = document.getElementById('current-location');
-      const displayText = location.length > 25 ? location.substring(0, 25) + '...' : location;
-      if (currentLocationEl) {
-        currentLocationEl.textContent = displayText;
-      }
-    }
-
-    function loadSavedLocation() {
-      const savedLocation = localStorage.getItem('deliveryLocation');
-      if (savedLocation) {
-        updateLocationDisplay(savedLocation);
-      }
-    }
-
-    function showToast(message) {
-      // Remove existing toast
-      const existingToast = document.querySelector('.toast');
-      if (existingToast) {
-        existingToast.remove();
-      }
-
-      const toast = document.createElement('div');
-      toast.className = 'toast';
-      toast.textContent = message;
-      document.body.appendChild(toast);
-      
-      setTimeout(() => {
-        if (toast.parentNode) {
-          toast.parentNode.removeChild(toast);
-        }
-      }, 3000);
-    }
-
-    // Bottom navigation active state
-    function setActiveNavItem() {
-      const currentPage = window.location.pathname.split('/').pop() || 'about.html';
-      const navItems = document.querySelectorAll('.nav-item');
-      
-      navItems.forEach(item => {
-        item.classList.remove('active');
-        if (item.getAttribute('href') === currentPage) {
-          item.classList.add('active');
-        }
-    // Load navbar
-    fetch('navbar.html')
-      .then(response => response.text())
-      .then(data => {
-      font-weight: bold;
-
-    .team-card h3 {
-      margin-bottom: 10px;
-      font-weight: 700;
-    .team-card p {
-      color: #666;
-      font-size: 0.9rem;
-    @media (max-width: 768px) {
-      .about-container {
-        margin: 20px auto;
-        padding: 15px;
-      .hero-section {
-        padding: 40px 20px;
-      .hero-section h1 {
-        font-size: 2.5rem;
-      
-      .content-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-      
-      .content-card {
-        padding: 30px 20px;
-      }
-      
-      .stats-section {
-        padding: 40px 20px;
-      }
-  <script data-id="cmifhtukf001hky04ol11gf5g" src="https://tinychat.ai/tinychat.js" async defer></script>
-  <header>
-
-  <div class="about-container">
-    <!-- Hero Section -->
-    <div class="hero-section">
-      <h1>About TilleValle</h1>
-      <p>Cultivating fresh, organic produce with passion and dedication since 1985. From our family farm to your table, we bring you the finest quality fruits, vegetables, and herbs grown with love and care.</p>
-    </div>
-
-    <!-- Content Grid -->
-    <div class="content-grid">
-      <div class="content-card">
-        <h2><span class="icon">🌱</span> Our Mission</h2>
-        <p>TilleValle is dedicated to providing fresh, organic produce to our community while promoting sustainable farming practices and healthy living.</p>
-        <p>We believe in transparency, quality, and community empowerment through responsible agriculture that respects both people and the environment.</p>
-
-      <div class="content-card">
-        <h2><span class="icon">🚜</span> Our Farm</h2>
-        <p>Located in the lush region of Gilgil, our farm benefits from ideal climate and soil conditions for growing nutrient-rich produce.</p>
-        <p>We use organic fertilizers and avoid harmful pesticides to ensure the health of our customers and the environment.</p>
-
-      <div class="content-card">
-        <h2><span class="icon">🤝</span> Community Impact</h2>
-        <p>We actively engage with local farmers to support sustainable agriculture and fair trade practices throughout Kenya.</p>
-        <p>Our educational programs and farm tours promote awareness about healthy eating and sustainable agriculture in local schools.</p>
-      </div>
-
-      <div class="content-card">
-        <h2><span class="icon">♻️</span> Sustainability</h2>
-        <p>Sustainability is at the core of everything we do. We prioritize water conservation, soil health, and biodiversity protection.</p>
-        <p>Our commitment extends to protecting the environment for future generations through innovative farming techniques.</p>
-      </div>
-    <!-- Stats Section -->
-    <div class="stats-section">
-      <div class="stats-grid">
-        <div class="stat-item">
-          <span class="stat-number">39</span>
-          <span class="stat-label">Years of Experience</span>
-        <div class="stat-item">
-          <span class="stat-number">5000+</span>
-          <span class="stat-label">Happy Customers</span>
-        <div class="stat-item">
-          <span class="stat-number">50+</span>
-          <span class="stat-label">Product Varieties</span>
-        <div class="stat-item">
-          <span class="stat-number">100%</span>
-          <span class="stat-label">Organic Certified</span>
-    <a href="cart.html" class="nav-item">
-      <span class="nav-icon">🛒</span>
-      <span>Cart</span>
-    </a>
-    <a href="about.html" class="nav-item active">
-      <span class="nav-icon">ℹ️</span>
-      <span>About</span>
-    </a>
-    <a href="contact.html" class="nav-item">
-      <span class="nav-icon">📞</span>
-      <span>Contact</span>
-    </a>
-  </nav>
-
-  <!-- Location Selector Modal -->
-  <div id="location-selector-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">Select Delivery Location</h2>
-        <button class="close-btn" onclick="closeLocationSelector()">&times;</button>
-      </div>
-      
-      <div class="location-input-section">
-        <input 
-          type="text" 
-          id="location-input" 
-          class="location-input" 
-          placeholder="Enter your delivery address..."
-        />
-        <div class="location-buttons">
-          <button class="btn btn-secondary" onclick="useCurrentLocation()">
-            📍 Use Current Location
-          </button>
-          <button class="btn btn-primary" onclick="saveDeliveryLocation()">
-            Save Location
-          </button>
-      </div>
-
-      <div class="popular-locations">
-        <h3 class="popular-title">Popular Locations</h3>
-        <div class="location-option" onclick="selectLocation('Nairobi CBD, Kenya')">
-          <span class="location-option-icon">🏢</span>
-          <span class="location-option-text">Nairobi CBD, Kenya</span>
-        <div class="team-card">
-          <div class="team-avatar">MW</div>
-          <h3>Mary Wanjiku</h3>
-          <p>Agricultural Specialist</p>
-        <div class="location-option" onclick="selectLocation('Westlands, Nairobi')">
-          <span class="location-option-icon">🏘️</span>
-          <span class="location-option-text">Westlands, Nairobi</span>
-        <div class="team-card">
-          <div class="team-avatar">PM</div>
-          <h3>Peter Mwangi</h3>
-          <p>Quality Control Manager</p>
-        <div class="location-option" onclick="selectLocation('Karen, Nairobi')">
-          <span class="location-option-icon">🌳</span>
-          <span class="location-option-text">Karen, Nairobi</span>
-        </div>
-        <div class="location-option" onclick="selectLocation('Kilimani, Nairobi')">
-          <span class="location-option-icon">🏠</span>
-          <span class="location-option-text">Kilimani, Nairobi</span>
-        </div>
-        <div class="location-option" onclick="selectLocation('Kileleshwa, Nairobi')">
-          <span class="location-option-icon">🏘️</span>
-          <span class="location-option-text">Kileleshwa, Nairobi</span>
-        </div>
-  <footer>
-    <p>&copy; 2024 TilleValle. All rights reserved.</p>
-  </footer>
-
-    // Initialize app
-    function initApp() {
-      initUserProfile();
-      loadSavedLocation();
-    }
-
-    // User profile management
-    function initUserProfile() {
-      const profileBtn = document.getElementById('profile-btn');
-      const userEmail = localStorage.getItem('email');
-      
-      if (userEmail) {
-        profileBtn.onclick = () => window.location.href = 'profile.html';
-      } else {
-        profileBtn.onclick = () => window.location.href = 'login.html';
-      }
-    }
-
-    // Logout function
-    window.logout = function() {
-      localStorage.removeItem('email');
-      localStorage.removeItem('user');
-      window.location.href = 'login.html';
-    };
-
-    // Location functions
-    function openLocationSelector() {
-      document.getElementById('location-selector-modal').style.display = 'block';
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeLocationSelector() {
-      document.getElementById('location-selector-modal').style.display = 'none';
-      document.body.style.overflow = 'auto';
-    }
-
-    function useCurrentLocation() {
-      const input = document.getElementById('location-input');
-      if (!input) return;
-      
-      if (!navigator.geolocation) {
-        input.value = 'Nairobi, Kenya';
-        showToast('Geolocation not supported. Using default location.');
-        return;
-      }
-      
-      const options = {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 300000
-      };
-      
-      navigator.geolocation.getCurrentPosition(
-        function(position) {
-          const lat = position.coords.latitude.toFixed(6);
-          const lng = position.coords.longitude.toFixed(6);
-          
-          fetch(`https://ipapi.co/json/`)
-            .then(response => response.json())
-            .then(data => {
-              if (data.city && data.country) {
-                input.value = `${data.city}, ${data.region}, ${data.country}`;
-              } else {
-                input.value = `${lat}, ${lng}`;
-              }
-            })
-            .catch(() => {
-              input.value = `${lat}, ${lng}`;
-            });
-          
-          showToast('Location detected successfully!');
-        },
-        function(error) {
-          let defaultLocation = 'Nairobi, Kenya';
-          input.value = defaultLocation;
-          showToast('Using default location: Nairobi, Kenya');
-        },
-        options
-      );
-    }
-
-    function selectLocation(location) {
-      localStorage.setItem('deliveryLocation', location);
-      updateLocationDisplay(location);
-      closeLocationSelector();
-      showToast(`Location set to ${location}!`);
-    }
-
-    function saveDeliveryLocation() {
-      const location = document.getElementById('location-input').value.trim();
-      if (!location) {
-        showToast('Please enter a delivery location');
-        return;
-      }
-      
-      localStorage.setItem('deliveryLocation', location);
-      updateLocationDisplay(location);
-      closeLocationSelector();
-      showToast('Delivery location saved!');
-    }
-
-    function updateLocationDisplay(location) {
-      const currentLocationEl = document.getElementById('current-location');
-      const displayText = location.length > 25 ? location.substring(0, 25) + '...' : location;
-      if (currentLocationEl) {
-        currentLocationEl.textContent = displayText;
-      }
-    }
-
-    function loadSavedLocation() {
-      const savedLocation = localStorage.getItem('deliveryLocation');
-      if (savedLocation) {
-        updateLocationDisplay(savedLocation);
-      }
-    }
-
-    function showToast(message) {
-      // Remove existing toast
-      const existingToast = document.querySelector('.toast');
-      if (existingToast) {
-        existingToast.remove();
-      }
-
-      const toast = document.createElement('div');
-      toast.className = 'toast';
-      toast.textContent = message;
-      document.body.appendChild(toast);
-      
-      setTimeout(() => {
-        if (toast.parentNode) {
-          toast.parentNode.removeChild(toast);
-        }
-      }, 3000);
-    }
-
-    // Bottom navigation active state
-    function setActiveNavItem() {
-      const currentPage = window.location.pathname.split('/').pop() || 'about.html';
-      const navItems = document.querySelectorAll('.nav-item');
-      
-      navItems.forEach(item => {
-        item.classList.remove('active');
-        if (item.getAttribute('href') === currentPage) {
-          item.classList.add('active');
-        }
-    // Load navbar
-    fetch('navbar.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('navbar-container').innerHTML = data;
-    }
-  </script>
-    // Close modal when clicking outside
-    window.addEventListener('click', function(event) {
-      const modal = document.getElementById('location-selector-modal');
-      if (event.target === modal) {
-        closeLocationSelector();
-      }
-    });
-
-    // Initialize app when DOM is loaded
-    document.addEventListener('DOMContentLoaded', function() {
-      initApp();
-      setActiveNavItem();
-    });
-
-    // Handle back button for modal
-    window.addEventListener('popstate', function() {
-      const modal = document.getElementById('location-selector-modal');
-      if (modal.style.display === 'block') {
-        closeLocationSelector();
-      }
-    });
-  </script>
-  <script src="script.js" defer></script>
-  <script src="bg-init.js"></script>
-<script data-id="cmifhtukf001hky04ol11gf5g" src="https://tinychat.ai/tinychat.js" async defer></script>
