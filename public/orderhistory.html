@@ -3,555 +3,594 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Order History - TilleValle</title>
-  <link rel="stylesheet" href="css/navbar.css">
+  <title>Order History - TillValle</title>
   <link rel="icon" href="logo.jpg" type="image/jpeg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="shop-styles.css" />
   <link rel="stylesheet" href="global-chat.css">
+  <link rel="stylesheet" href="creative-backgrounds.css">
   <style>
     :root {
       --primary: #2d6a4f;
       --primary-dark: #1b4332;
       --primary-light: #40916c;
       --accent: #ff6b6b;
-      --accent-light: #ff9999;
       --text-primary: #0f172a;
       --text-secondary: #64748b;
-      --text-light: #94a3b8;
-      --bg-primary: #ffffff;
-      --bg-secondary: #f8fafc;
-      --bg-tertiary: #f1f5f9;
-      --glass: rgba(255, 255, 255, 0.25);
-      --glass-border: rgba(255, 255, 255, 0.18);
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-      --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      --gradient-accent: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-      --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --radius-sm: 0.375rem;
-      --radius-md: 0.5rem;
-      --radius-lg: 0.75rem;
-      --radius-xl: 1rem;
-      --radius-2xl: 1.5rem;
+      --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      line-height: 1.6;
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+      min-height: 100vh;
       color: var(--text-primary);
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      overflow-x: hidden;
     }
 
-    /* Loading Screen */
-    #loading-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--gradient-hero);
+    /* Page wrapper */
+    .page-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    /* Page Title Bar */
+    .page-title-bar {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      transition: opacity 0.5s ease;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
-    .loading-content {
+    .page-title-bar h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Stats Row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 18px;
+      padding: 24px 20px;
       text-align: center;
-      color: white;
+      box-shadow: 0 8px 24px rgba(45,106,79,0.08), 0 0 0 1px rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.6);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .loading-logo {
-      width: 80px;
-      height: 80px;
-      background: url('logo.jpg') center/cover;
-      border-radius: 50%;
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(45,106,79,0.15);
+    }
+
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* Order Group */
+    .order-group {
+      background: linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 24px;
       margin-bottom: 20px;
-      animation: pulse 2s infinite;
+      box-shadow: 0 8px 24px rgba(45,106,79,0.08), 0 0 0 1px rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.6);
+      position: relative;
+      overflow: hidden;
     }
 
-    .loading-text {
-      font-size: 1.5rem;
+    .order-group::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    }
+
+    .order-group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .order-date {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .order-day-total {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--primary);
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* Order Item */
+    .order-item {
+      background: rgba(255,255,255,0.6);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255,255,255,0.5);
+      transition: background 0.2s ease;
+    }
+
+    .order-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .order-item:hover {
+      background: rgba(255,255,255,0.85);
+    }
+
+    .order-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .order-id {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary);
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    .order-time {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .order-product-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .order-product-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .product-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .product-name {
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .product-qty {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 10px;
       font-weight: 600;
-      margin-bottom: 10px;
     }
 
-    .loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top: 4px solid white;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
+    .product-price {
+      font-size: 0.9rem;
+      color: var(--primary);
+      font-weight: 600;
     }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
+    .order-total-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0,0,0,0.06);
+      gap: 8px;
     }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    .order-total-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
     }
 
-    /* Button style */
-    .btn {
-      display: inline-block;
-      padding: 12px 24px;
-      background: var(--accent);
+    .order-total-amount {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    /* Empty / Not logged in states */
+    .empty-state {
+      text-align: center;
+      padding: 80px 40px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(45,106,79,0.12);
+      border: 1px solid rgba(255,255,255,0.6);
+    }
+
+    .empty-icon { font-size: 4rem; margin-bottom: 16px; }
+    .empty-title { font-size: 1.4rem; font-weight: 700; color: var(--primary); margin-bottom: 10px; }
+    .empty-subtitle { color: var(--text-secondary); margin-bottom: 28px; font-size: 0.95rem; }
+
+    /* Buttons */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
       color: white;
-      text-decoration: none;
-      border-radius: var(--radius-md);
+      border: none;
+      border-radius: 12px;
+      font-size: 0.95rem;
       font-weight: 600;
-      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(45,106,79,0.3);
     }
 
-    .btn:hover {
-      background: var(--accent-light);
+    .btn-primary:hover {
       transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(45,106,79,0.4);
+    }
+
+    .btn-danger {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(255,107,107,0.3);
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255,107,107,0.4);
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+      color: var(--primary);
+      border: 2px solid rgba(45,106,79,0.2);
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+      background: rgba(45,106,79,0.06);
+      border-color: var(--primary);
+    }
+
+    /* Footer actions */
+    .footer-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary);
+      color: white;
+      padding: 14px 24px;
+      border-radius: 30px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      z-index: 9999;
+      font-size: 0.9rem;
+      font-weight: 600;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .page-wrapper { padding: 20px 16px 60px; }
+      .page-title-bar h1 { font-size: 1.5rem; }
+      .order-group { padding: 16px; }
     }
   </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div id="navbar-container"></div>
+
+  <div class="page-wrapper">
+    <div id="order-history-content">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <script src="global-chat.js"></script>
+  <script src="bg-init.js"></script>
 
   <script>
     // Load navbar
     fetch('navbar.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('navbar-container').innerHTML = data;
-      });
-  </script>
-  <style>
-    .order-container {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-    
-    .order-header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    
-    .order-header h1 {
-      color: var(--accent-green);
-      font-size: 2.2rem;
-      margin-bottom: 10px;
-    }
-    
-    #clear-orders-btn {
-      background: #ef4444;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      margin-bottom: 20px;
-    }
-    
-    #clear-orders-btn:hover {
-      background: #dc2626;
-      transform: translateY(-1px);
-    }
-    
-    #order-history-list {
-      min-height: 200px;
-    }
-    
-    .no-orders {
-      text-align: center;
-      color: var(--text-secondary);
-      font-size: 1.1rem;
-      margin-top: 50px;
-    }
-  </style>
-  <script data-id="cmi7m0fwy0009kz04yac3babp" src="https://tinychat.ai/tinychat.js"></script>
-  <style>
-    .order-container {
-      max-width: 1000px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-    
-    .order-header {
-      text-align: center;
-      margin-bottom: 40px;
-      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 25px;
-      padding: 40px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.3);
-    }
-    
-    .order-header h1 {
-      font-size: 2.5rem;
-      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 20px;
-      font-weight: 800;
-    }
-    
-    #clear-orders-btn {
-      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      border-radius: 25px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-    
-    #clear-orders-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
-    }
-    
-    .order-group {
-      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 25px;
-      padding: 30px;
-      margin-bottom: 30px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.3);
-    }
-    
-    .order-group h3 {
-      color: #2d6a4f;
-      font-size: 1.3rem;
-      margin-bottom: 20px;
-      font-weight: 700;
-    }
-    
-    .order-item {
-      background: rgba(255,255,255,0.5);
-      border-radius: 15px;
-      padding: 20px;
-      margin-bottom: 15px;
-      border: 1px solid rgba(255,255,255,0.3);
-    }
-    
-    .order-item h4 {
-      color: #2d6a4f;
-      margin-bottom: 10px;
-      font-weight: 600;
-    }
-    
-    .order-item ul {
-      list-style: none;
-      margin-bottom: 10px;
-    }
-    
-    .order-item li {
-      padding: 5px 0;
-      color: #666;
-    }
-    
-    .order-item p {
-      font-weight: 700;
-      color: #2d6a4f;
-      font-size: 1.1rem;
-    }
-    
-    .no-orders {
-      text-align: center;
-      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 25px;
-      padding: 60px 40px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.3);
-    }
-    
-    .no-orders p {
-      color: #666;
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-    }
-    
-    footer {
-      text-align: center;
-      padding: 40px 20px;
-      background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-top: 1px solid rgba(255,255,255,0.3);
-      margin-top: 50px;
-    }
-    
-    footer p {
-      color: #666;
-      font-weight: 500;
-    }
-  </style>
-  <link rel="stylesheet" href="creative-backgrounds.css">
-</head>
-<body>
-  <div id="navbar-container"></div>
+      .then(r => r.text())
+      .then(html => { document.getElementById('navbar-container').innerHTML = html; });
 
-  <main class="order-container">
-    <div class="order-header">
-      <h1>Your Order History</h1>
-      <button id="clear-orders-btn">Clear Order History</button>
-    </div>
-    <div id="order-history-list">
-      <!-- Order history items will be dynamically inserted here -->
-    </div>
-  </main>
+    // Translations
+    const translations = {
+      en: {
+        orderHistory: "Order History",
+        noOrders: "No Orders Yet",
+        noOrdersSubtitle: "Start shopping to see your order history here!",
+        totalSpent: "Total Spent",
+        orders: "Orders",
+        notLoggedIn: "Not Logged In",
+        notLoggedSubtitle: "Sign in to view your order history",
+        signIn: "Sign In",
+        order: "Order",
+        clearHistory: "Clear History"
+      },
+      sw: {
+        orderHistory: "Historia ya Maagizo",
+        noOrders: "Hakuna Maagizo",
+        noOrdersSubtitle: "Anza kununua ili kuona historia ya maagizo hapa!",
+        totalSpent: "Jumla ya Matumizi",
+        orders: "Maagizo",
+        notLoggedIn: "Hujajisajili",
+        notLoggedSubtitle: "Jisajili ili kuona historia ya maagizo yako",
+        signIn: "Ingia",
+        order: "Agizo",
+        clearHistory: "Futa Historia"
+      },
+      fr: {
+        orderHistory: "Historique des commandes",
+        noOrders: "Aucune commande",
+        noOrdersSubtitle: "Commencez vos achats pour voir votre historique ici!",
+        totalSpent: "Total dépensé",
+        orders: "Commandes",
+        notLoggedIn: "Non connecté",
+        notLoggedSubtitle: "Connectez-vous pour voir votre historique",
+        signIn: "Se connecter",
+        order: "Commande",
+        clearHistory: "Effacer l'historique"
+      },
+      zh: {
+        orderHistory: "订单历史",
+        noOrders: "暂无订单",
+        noOrdersSubtitle: "开始购物以在此处查看您的订单历史！",
+        totalSpent: "总消费",
+        orders: "订单",
+        notLoggedIn: "未登录",
+        notLoggedSubtitle: "登录以查看您的订单历史",
+        signIn: "登录",
+        order: "订单",
+        clearHistory: "清除历史"
+      }
+    };
 
-  <footer>
-    <p>&copy; 2025 TilleValle. All rights reserved.</p>
-  </footer>
+    let currentLang = 'en';
 
-  <!-- Toast -->
-  <div id="cart-toast"></div>
+    function t(key) {
+      return (translations[currentLang] && translations[currentLang][key]) || translations.en[key] || key;
+    }
 
-  <!-- Chatbot Sidebar -->
-  <div id="chatbot-sidebar" class="chatbot-sidebar">
-    <div class="chatbot-header">
-      <span>TillieBot</span>
-      <button id="chatbot-close" class="chatbot-close">&times;</button>
-    </div>
-    <div id="chatbot-messages" class="chatbot-messages">
-      <div class="chatbot-message bot">
-        Hello! I'm TillieBot, your TillValle assistant. How can I help you today? You can ask me about our fresh products, delivery, or anything else!
-      </div>
-    </div>
-    <div class="chatbot-input-area">
-      <div class="chatbot-input-container">
-        <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Type your message...">
-        <button id="chatbot-send" class="chatbot-send">➤</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Floating Chatbot Button -->
-  <div id="floating-chatbot-btn" class="floating-chatbot-btn">
-    <span class="chatbot-emoji">💬</span>
-  </div>
-
-  <!-- Floating Cart Button -->
-  <div id="floating-cart-btn" class="floating-cart-btn">
-    <span class="cart-emoji">🛒</span>
-    <span id="floating-cart-count" class="floating-cart-count">0</span>
-  </div>
-
-  <script>
-    // Load order history from localStorage and display user-specific orders
-    document.addEventListener('DOMContentLoaded', () => {
+    function initPage() {
+      currentLang = localStorage.getItem('selectedLanguage') || 'en';
       const userEmail = localStorage.getItem('email');
+      const content = document.getElementById('order-history-content');
+
       if (!userEmail) {
-        document.getElementById('order-history-list').innerHTML = '<p>Please login to view your order history.</p>';
+        content.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">👤</div>
+            <div class="empty-title">${t('notLoggedIn')}</div>
+            <div class="empty-subtitle">${t('notLoggedSubtitle')}</div>
+            <a class="btn-primary" href="login.html">${t('signIn')}</a>
+          </div>
+        `;
         return;
       }
 
-      const orderHistoryList = document.getElementById('order-history-list');
-      const key = `orderHistory_${userEmail}`;
-      const orderHistory = JSON.parse(localStorage.getItem(key) || '[]');
+      const orderKey = 'orderHistory_' + userEmail;
+      const orderHistory = JSON.parse(localStorage.getItem(orderKey) || '[]');
 
       if (orderHistory.length === 0) {
-        orderHistoryList.innerHTML = '<div class="no-orders"><p>📦 No orders found.</p><p>Start shopping to see your order history here!</p></div>';
+        content.innerHTML = `
+          <div class="page-title-bar">
+            <h1>${t('orderHistory')}</h1>
+            <a class="btn-back" href="profile.html">← Back to Profile</a>
+          </div>
+          <div class="empty-state">
+            <div class="empty-icon">📦</div>
+            <div class="empty-title">${t('noOrders')}</div>
+            <div class="empty-subtitle">${t('noOrdersSubtitle')}</div>
+            <a class="btn-primary" href="shop.html">🛒 Start Shopping</a>
+          </div>
+        `;
         return;
       }
 
-      // Group orders by date (same day)
-      const groupedOrders = orderHistory.reduce((groups, order) => {
+      // Calculate stats
+      const totalSpent = orderHistory.reduce((sum, o) => sum + (o.total || 0), 0);
+      const totalOrders = orderHistory.length;
+
+      // Group by date
+      const grouped = orderHistory.reduce((groups, order) => {
         const dateKey = new Date(order.date).toDateString();
-        if (!groups[dateKey]) {
-          groups[dateKey] = [];
-        }
+        if (!groups[dateKey]) groups[dateKey] = [];
         groups[dateKey].push(order);
         return groups;
       }, {});
 
-      const sortedEntries = Object.entries(groupedOrders).sort(([a], [b]) => new Date(b) - new Date(a));
+      const sortedEntries = Object.entries(grouped).sort(([a], [b]) => new Date(b) - new Date(a));
+
+      let html = `
+        <div class="page-title-bar">
+          <h1>${t('orderHistory')}</h1>
+          <a class="btn-back" href="profile.html">← Back to Profile</a>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-number">${totalOrders}</div>
+            <div class="stat-label">${t('orders')}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">KES ${totalSpent.toLocaleString()}</div>
+            <div class="stat-label">${t('totalSpent')}</div>
+          </div>
+        </div>
+      `;
+
       sortedEntries.forEach(([date, orders]) => {
-        const groupDiv = document.createElement('div');
-        groupDiv.className = 'order-group';
+        const dayTotal = orders.reduce((sum, o) => sum + (o.total || 0), 0);
 
-        // Calculate total spent for the day
-        const totalSpent = orders.reduce((sum, order) => sum + order.total, 0);
-
-        groupDiv.innerHTML = `<h3>Orders for ${date} - Total Spent: KES ${totalSpent}</h3>`;
+        html += `
+          <div class="order-group">
+            <div class="order-group-header">
+              <div class="order-date">📅 ${date}</div>
+              <div class="order-day-total">KES ${dayTotal.toLocaleString()}</div>
+            </div>
+        `;
 
         orders.forEach(order => {
-          // Group items by name and sum quantities
-          const groupedItems = order.items.reduce((acc, item) => {
-            if (!acc[item.name]) {
-              acc[item.name] = { name: item.name, quantity: 0, price: item.price };
-            }
+          // Group items by name
+          const groupedItems = (order.items || []).reduce((acc, item) => {
+            if (!acc[item.name]) acc[item.name] = { name: item.name, quantity: 0, price: item.price };
             acc[item.name].quantity += item.quantity;
             return acc;
           }, {});
 
-          const orderDiv = document.createElement('div');
-          orderDiv.className = 'order-item';
-          orderDiv.innerHTML = `
-            <h4>Order #${order.id}</h4>
-            <ul>
-              ${Object.values(groupedItems).map(item => `<li>${item.name} x${item.quantity} - KES ${item.price * item.quantity}</li>`).join('')}
-            </ul>
-            <p>Total: KES ${order.total}</p>
+          const orderTime = order.date ? new Date(order.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+
+          html += `
+            <div class="order-item">
+              <div class="order-item-header">
+                <div class="order-id">${t('order')} #${order.id}</div>
+                ${orderTime ? `<div class="order-time">${orderTime}</div>` : ''}
+              </div>
+              ${Object.values(groupedItems).map(item => `
+                <div class="order-product-row">
+                  <div class="product-info">
+                    <span class="product-name">${item.name}</span>
+                    <span class="product-qty">×${item.quantity}</span>
+                  </div>
+                  <div class="product-price">KES ${(item.price * item.quantity).toLocaleString()}</div>
+                </div>
+              `).join('')}
+              <div class="order-total-row">
+                <span class="order-total-label">Order Total:</span>
+                <span class="order-total-amount">KES ${(order.total || 0).toLocaleString()}</span>
+              </div>
+            </div>
           `;
-          groupDiv.appendChild(orderDiv);
         });
 
-        orderHistoryList.appendChild(groupDiv);
+        html += `</div>`;
       });
 
-      // Clear order history button
-      const clearBtn = document.getElementById('clear-orders-btn');
-      clearBtn.addEventListener('click', () => {
-        if (confirm('Are you sure you want to clear your order history? This action cannot be undone.')) {
-          localStorage.removeItem(key);
-          orderHistoryList.innerHTML = '<p>No orders found.</p>';
-          showToast('Order history cleared.');
-        }
-      });
-    });
+      html += `
+        <div class="footer-actions">
+          <a class="btn-primary" href="shop.html">🛒 Shop Again</a>
+          <button class="btn-danger" onclick="clearOrderHistory()">🗑️ ${t('clearHistory')}</button>
+        </div>
+      `;
 
-    // Show toast notification function (assumes showToast is defined globally)
-    function showToast(message) {
-      const toast = document.getElementById('cart-toast');
-      if (!toast) {
-        const newToast = document.createElement('div');
-        newToast.id = 'cart-toast';
-        document.body.appendChild(newToast);
-        showToast(message);
-        return;
-      }
-      toast.innerText = message;
-      toast.style.display = 'block';
-      toast.style.opacity = 1;
-      setTimeout(() => {
-        toast.style.opacity = 0;
-        setTimeout(() => (toast.style.display = 'none'), 300);
-      }, 2000);
+      content.innerHTML = html;
     }
-    
-    // Chatbot functions
-    document.addEventListener('DOMContentLoaded', function() {
-      const floatingChatbotBtn = document.getElementById('floating-chatbot-btn');
-      const chatbotSidebar = document.getElementById('chatbot-sidebar');
-      const chatbotClose = document.getElementById('chatbot-close');
-      const chatbotSend = document.getElementById('chatbot-send');
-      const chatbotInput = document.getElementById('chatbot-input');
-      
-      if (floatingChatbotBtn) {
-        floatingChatbotBtn.addEventListener('click', () => {
-          if (chatbotSidebar) chatbotSidebar.classList.add('open');
-          floatingChatbotBtn.style.display = 'none';
-        });
-      }
-      if (chatbotClose) {
-        chatbotClose.addEventListener('click', () => {
-          if (chatbotSidebar) chatbotSidebar.classList.remove('open');
-          if (floatingChatbotBtn) floatingChatbotBtn.style.display = 'flex';
-        });
-      }
-      if (chatbotSend) {
-        chatbotSend.addEventListener('click', sendMessage);
-      }
-      if (chatbotInput) {
-        chatbotInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') sendMessage();
-        });
-      }
-      
-      async function sendMessage() {
-        const message = chatbotInput.value.trim();
-        if (!message) return;
-        
-  const messagesDiv = document.getElementById('chatbot-messages');
-  // Safely append user message
-  const userMessageDiv = document.createElement('div');
-  userMessageDiv.className = 'chatbot-message user';
-  userMessageDiv.textContent = message;
-  messagesDiv.appendChild(userMessageDiv);
-  chatbotInput.value = '';
-  const thinkingDiv = document.createElement('div');
-  thinkingDiv.className = 'chatbot-message bot';
-  thinkingDiv.textContent = 'Thinking...';
-  messagesDiv.appendChild(thinkingDiv);
-  const loadingMessage = messagesDiv.lastElementChild;
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        
-        try {
-          const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-          const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/.netlify/functions/chatbot';
-          const response = await fetch(chatbotUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message })
-          });
-          const data = await response.json();
-          if (loadingMessage) loadingMessage.remove();
-          const botReply = document.createElement('div');
-          botReply.className = 'chatbot-message bot';
-          botReply.textContent = data.message;
-          messagesDiv.appendChild(botReply);
-        } catch (error) {
-          if (loadingMessage) loadingMessage.remove();
-          const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-          const lowerMessage = message.toLowerCase();
-          const offlineResponses = {
-            en: {
-              human: "I'll connect you with our live chat agent Angela Wanjiru at angelawanjiru@gmail.com.",
-              default: "Hello! I'm TillieBot from TillValle! 🌱 I can help you with product information, stock levels, and delivery details. What would you like to know?"
-            },
-            sw: {
-              human: "Nitakuunganisha na wakala wetu Angela Wanjiru kwa angelawanjiru@gmail.com.",
-              default: "Hujambo! Mimi ni TillieBot kutoka TillValle! 🌱 Ninaweza kukusaidia na habari za bidhaa na uongozaji. Unahitaji nini?"
-            },
-            fr: {
-              human: "Je vais vous connecter avec notre agent Angela Wanjiru à angelawanjiru@gmail.com.",
-              default: "Bonjour! Je suis TillieBot de TillValle! 🌱 Je peux vous aider avec les informations produits et la livraison. Que voulez-vous savoir?"
-            }
-          };
-          const responses = offlineResponses[currentLang] || offlineResponses.en;
-          const respDiv = document.createElement('div');
-          respDiv.className = 'chatbot-message bot';
-          respDiv.textContent = (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('live')) ? responses.human : responses.default;
-          messagesDiv.appendChild(respDiv);
+
+    function clearOrderHistory() {
+      if (confirm('Are you sure you want to clear your order history? This action cannot be undone.')) {
+        const userEmail = localStorage.getItem('email');
+        if (userEmail) {
+          localStorage.removeItem('orderHistory_' + userEmail);
+          showToast('Order history cleared.');
+          initPage();
         }
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
       }
-    });
+    }
+
+    function showToast(message) {
+      const existing = document.querySelector('.toast');
+      if (existing) existing.remove();
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    document.addEventListener('DOMContentLoaded', initPage);
   </script>
-
-
-  <script src="bg-init.js"></script>
 </body>
 </html>
-

@@ -40,6 +40,20 @@
       font-weight: 600;
     }
 
+    .header-btn {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .header-btn:hover {
+      background: rgba(255,255,255,0.25);
+    }
+
     /* Main Content */
     .main-content {
       padding: 16px;
@@ -297,6 +311,20 @@
       }
     }
 
+    /* Version Badge */
+    .version-badge {
+      position: fixed;
+      bottom: 90px;
+      right: 12px;
+      background: rgba(0,0,0,0.15);
+      color: rgba(255,255,255,0.7);
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      z-index: 999;
+      pointer-events: none;
+    }
+
     /* Not Logged In */
     .not-logged-in {
       text-align: center;
@@ -393,6 +421,12 @@
 
       const initial = userEmail.charAt(0).toUpperCase();
 
+      // Load real order stats from localStorage
+      const orderKey = `orderHistory_${userEmail}`;
+      const orderHistory = JSON.parse(localStorage.getItem(orderKey) || '[]');
+      const totalOrders = orderHistory.length;
+      const totalSpent = orderHistory.reduce((sum, order) => sum + (order.total || 0), 0);
+
       content.innerHTML = `
         <div class="profile-card">
           <div class="profile-avatar">${initial}</div>
@@ -403,18 +437,18 @@
 
         <div class="stats">
           <div class="stat-card">
-            <div class="stat-number">0</div>
+            <div class="stat-number">${totalOrders}</div>
             <div class="stat-label">Orders</div>
           </div>
           <div class="stat-card">
-            <div class="stat-number">0</div>
+            <div class="stat-number">KES ${totalSpent.toLocaleString()}</div>
             <div class="stat-label">Total Spent</div>
           </div>
         </div>
 
         <div class="section">
           <div class="section-title">Account</div>
-          <div class="menu-item" onclick="window.location.href='profile.html'">
+          <div class="menu-item" onclick="window.location.href='app-orderhistory.html'">
             <div class="menu-item-left">
               <div class="menu-icon">📋</div>
               <div class="menu-text">

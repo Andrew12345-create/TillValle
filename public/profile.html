@@ -4,228 +4,581 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile - TillValle</title>
+  <link rel="icon" href="logo.jpg" type="image/jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="global-chat.css">
   <link rel="stylesheet" href="creative-backgrounds.css">
   <style>
-    .profile-container {
-      max-width: 1000px;
-      margin: 40px auto;
-      padding: 20px;
+    :root {
+      --primary: #2d6a4f;
+      --primary-dark: #1b4332;
+      --primary-light: #40916c;
+      --accent: #ff6b6b;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --bg-secondary: #f8fafc;
+      --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-2xl: 1.5rem;
     }
 
-    .profile-header {
-      text-align: center;
-      margin-bottom: 40px;
-      background: rgba(255,255,255,0.9);
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+      min-height: 100vh;
+      color: var(--text-primary);
+    }
+
+    /* Page wrapper */
+    .page-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    /* Page Title */
+    .page-title-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .page-title-bar h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Profile Hero Card */
+    .profile-hero {
+      background: linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 24px;
       padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      text-align: center;
+      margin-bottom: 28px;
+      box-shadow: 0 20px 40px rgba(45,106,79,0.12), 0 0 0 1px rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light), #52b788);
     }
 
     .profile-avatar {
       width: 100px;
       height: 100px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 20px;
-      font-size: 2.5rem;
+      font-size: 2.8rem;
       color: white;
-      font-weight: bold;
+      font-weight: 700;
+      box-shadow: 0 8px 24px rgba(45,106,79,0.3);
     }
 
-    .profile-grid {
+    .profile-name {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .profile-email {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      word-break: break-all;
+    }
+
+    .profile-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+      color: #065f46;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid rgba(16,185,129,0.2);
+    }
+
+    /* Stats Row */
+    .stats-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
     }
 
-    .profile-card {
-      background: rgba(255,255,255,0.9);
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-      cursor: pointer;
-      transition: all 0.3s ease;
+    .stat-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 18px;
+      padding: 24px 16px;
       text-align: center;
+      box-shadow: 0 8px 24px rgba(45,106,79,0.08), 0 0 0 1px rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.6);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .profile-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(45,106,79,0.15);
     }
 
-    .card-icon {
-      font-size: 3rem;
-      margin-bottom: 15px;
-      display: block;
+    .stat-number {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 6px;
     }
 
-    .profile-card h3 {
-      color: #2d6a4f;
-      margin-bottom: 10px;
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 28px;
+    }
+
+    .section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+
+    /* Menu Card */
+    .menu-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(45,106,79,0.08), 0 0 0 1px rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.6);
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+
+    .menu-item:hover {
+      background: rgba(45,106,79,0.04);
+    }
+
+    .menu-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 1.3rem;
+      flex-shrink: 0;
     }
 
-    .profile-card p {
-      color: #666;
+    .icon-green { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+    .icon-blue { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+    .icon-purple { background: linear-gradient(135deg, #ede9fe, #ddd6fe); }
+    .icon-orange { background: linear-gradient(135deg, #ffedd5, #fed7aa); }
+    .icon-pink { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
+    .icon-red { background: linear-gradient(135deg, #fee2e2, #fecaca); }
+    .icon-yellow { background: linear-gradient(135deg, #fef9c3, #fef08a); }
+
+    .menu-text {
+      flex: 1;
+    }
+
+    .menu-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .menu-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .menu-arrow {
+      font-size: 1.1rem;
+      color: #cbd5e1;
+      font-weight: 300;
+    }
+
+    /* Action Buttons */
+    .action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px;
+      border-radius: 16px;
+      border: none;
       font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
     }
 
-    .logout-card {
-      background: rgba(255,107,107,0.1);
-      border: 2px solid rgba(255,107,107,0.3);
+    .btn-outline {
+      background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+      color: var(--primary);
+      border: 2px solid rgba(45,106,79,0.2);
+      box-shadow: 0 4px 12px rgba(45,106,79,0.08);
     }
 
-    .logout-card h3 {
-      color: #ff6b6b;
+    .btn-outline:hover {
+      background: rgba(45,106,79,0.06);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+      color: white;
+      box-shadow: 0 4px 12px rgba(255,107,107,0.3);
+      grid-column: 1 / -1;
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255,107,107,0.4);
+    }
+
+    /* Not logged in */
+    .not-logged-in {
+      text-align: center;
+      padding: 80px 40px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(45,106,79,0.12);
+      border: 1px solid rgba(255,255,255,0.6);
+    }
+
+    .not-logged-icon { font-size: 4rem; margin-bottom: 16px; }
+    .not-logged-title { font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 10px; }
+    .not-logged-subtitle { color: var(--text-secondary); margin-bottom: 28px; font-size: 0.95rem; }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 14px 32px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(45,106,79,0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(45,106,79,0.4);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary);
+      color: white;
+      padding: 14px 24px;
+      border-radius: 30px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      z-index: 9999;
+      font-size: 0.9rem;
+      font-weight: 600;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .stats-row .stat-card:last-child { grid-column: 1 / -1; }
+      .page-wrapper { padding: 20px 16px 60px; }
+      .profile-hero { padding: 28px 20px; }
     }
   </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="nav-left">
-      <a href="index.html" class="nav-link logo-link">
-        <img src="logo.jpg" alt="TillValle Logo" class="logo">
-      </a>
-      <a href="shop.html" class="nav-link">Shop</a>
-      <a href="about.html" class="nav-link">About</a>
-      <a href="contact.html" class="nav-link">Contact</a>
-    </div>
-    <div class="nav-right">
-      <a href="cart.html" class="nav-link">🛒 Cart (<span id="cart-count">0</span>)</a>
-      <div id="user-area"></div>
-    </div>
-  </nav>
+  <!-- Navbar loaded dynamically -->
+  <div id="navbar-container"></div>
 
-  <div class="profile-container">
-    <div class="profile-header">
-      <div class="profile-avatar" id="profile-avatar">U</div>
-      <h1 id="profile-name">Welcome, User!</h1>
-      <p id="profile-email">user@example.com</p>
-    </div>
-
-    <div class="profile-grid">
-      <div class="profile-card" onclick="window.location.href='account.html'">
-        <span class="card-icon">⚙️</span>
-        <h3>Account Settings</h3>
-        <p>Manage your personal information</p>
-      </div>
-
-      <div class="profile-card" onclick="window.location.href='orderhistory.html'">
-        <span class="card-icon">📦</span>
-        <h3>Order History</h3>
-        <p>View your past orders</p>
-      </div>
-
-      <div class="profile-card" onclick="window.location.href='cart.html'">
-        <span class="card-icon">🛒</span>
-        <h3>Shopping Cart</h3>
-        <p>View your cart items</p>
-      </div>
-
-      <div class="profile-card" onclick="window.location.href='location.html'">
-        <span class="card-icon">📍</span>
-        <h3>Delivery Address</h3>
-        <p>Manage your delivery locations</p>
-      </div>
-
-      <div class="profile-card" onclick="window.location.href='faq.html'">
-        <span class="card-icon">❓</span>
-        <h3>Help & FAQ</h3>
-        <p>Get help and support</p>
-      </div>
-
-      <div class="profile-card logout-card" onclick="logout()">
-        <span class="card-icon">🚪</span>
-        <h3>Logout</h3>
-        <p>Sign out of your account</p>
-      </div>
+  <div class="page-wrapper">
+    <div id="profile-content">
+      <!-- Content injected by JS -->
     </div>
   </div>
 
-  <!-- Chat Button -->
-  <div id="chat-btn">💬</div>
-  
-  <!-- Chat Window -->
-  <div id="chat-window">
-    <div id="chat-header">
-      <span>TillValle Chat</span>
-      <button id="chat-close">×</button>
-    </div>
-    <div id="chat-messages">
-      <div class="bot-msg">🌱 Hi! I'm TillieBot. How can I help you today?</div>
-    </div>
-    <div id="chat-input-area">
-      <input type="text" id="chat-input" placeholder="Type your message...">
-      <button id="chat-send">Send</button>
-    </div>
-  </div>
-
-  <footer>
-    <p>&copy; 2025 TillValle. All rights reserved.</p>
-  </footer>
+  <!-- Global Chat -->
+  <script src="global-chat.js"></script>
+  <script src="bg-init.js"></script>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Load user info
+    // Load navbar
+    fetch('navbar.html')
+      .then(r => r.text())
+      .then(html => { document.getElementById('navbar-container').innerHTML = html; });
+
+    function initPage() {
       const userEmail = localStorage.getItem('email');
-      if (userEmail) {
-        document.getElementById('profile-email').textContent = userEmail;
-        document.getElementById('profile-name').textContent = `Welcome, ${userEmail.split('@')[0]}!`;
-        document.getElementById('profile-avatar').textContent = userEmail.charAt(0).toUpperCase();
-      }
+      const content = document.getElementById('profile-content');
 
-      // Update cart count
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-      document.getElementById('cart-count').textContent = totalQuantity;
-
-      // User area
-      const userArea = document.getElementById('user-area');
-      if (userEmail) {
-        const initial = userEmail.charAt(0).toUpperCase();
-        userArea.innerHTML = `
-          <div class="user-dropdown-container">
-            <span class="user-initial" onclick="toggleUserDropdown()">${initial}</span>
-            <div class="user-dropdown" id="user-dropdown">
-              <a href="profile.html">Profile</a>
-              <a href="#" onclick="logout()">Logout</a>
-            </div>
+      if (!userEmail) {
+        content.innerHTML = `
+          <div class="not-logged-in">
+            <div class="not-logged-icon">👤</div>
+            <div class="not-logged-title">Not Logged In</div>
+            <div class="not-logged-subtitle">Sign in to access your profile and order history</div>
+            <a class="btn-primary" href="login.html">Sign In</a>
           </div>
         `;
-      } else {
-        userArea.innerHTML = `<a href="login.html" class="nav-link">Login</a>`;
+        return;
       }
-    });
 
-    function toggleUserDropdown() {
-      const dropdown = document.getElementById('user-dropdown');
-      if (dropdown) dropdown.classList.toggle('show');
+      const initial = userEmail.charAt(0).toUpperCase();
+      const displayName = userEmail.split('@')[0];
+
+      // Load real order stats
+      const orderKey = 'orderHistory_' + userEmail;
+      const orderHistory = JSON.parse(localStorage.getItem(orderKey) || '[]');
+      const totalOrders = orderHistory.length;
+      const totalSpent = orderHistory.reduce((sum, o) => sum + (o.total || 0), 0);
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const cartCount = cart.reduce((sum, i) => sum + (i.quantity || 0), 0);
+
+      content.innerHTML = `
+        <div class="page-title-bar">
+          <h1>My Profile</h1>
+        </div>
+
+        <div class="profile-hero">
+          <div class="profile-avatar">${initial}</div>
+          <div class="profile-name">${displayName}</div>
+          <div class="profile-email">${userEmail}</div>
+          <div class="profile-badge">✓ Verified Member</div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-number">${totalOrders}</div>
+            <div class="stat-label">Orders</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">KES ${totalSpent.toLocaleString()}</div>
+            <div class="stat-label">Total Spent</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">${cartCount}</div>
+            <div class="stat-label">In Cart</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Account</div>
+          <div class="menu-card">
+            <a class="menu-item" href="orderhistory.html">
+              <div class="menu-icon-wrap icon-green">📋</div>
+              <div class="menu-text">
+                <div class="menu-title">Order History</div>
+                <div class="menu-subtitle">View your past orders (${totalOrders} orders)</div>
+              </div>
+              <div class="menu-arrow">›</div>
+            </a>
+            <a class="menu-item" href="account.html">
+              <div class="menu-icon-wrap icon-blue">✏️</div>
+              <div class="menu-text">
+                <div class="menu-title">Account Settings</div>
+                <div class="menu-subtitle">Update your personal information</div>
+              </div>
+              <div class="menu-arrow">›</div>
+            </a>
+            <a class="menu-item" href="cart.html">
+              <div class="menu-icon-wrap icon-orange">🛒</div>
+              <div class="menu-text">
+                <div class="menu-title">Shopping Cart</div>
+                <div class="menu-subtitle">${cartCount} item${cartCount !== 1 ? 's' : ''} in your cart</div>
+              </div>
+              <div class="menu-arrow">›</div>
+            </a>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Preferences</div>
+          <div class="menu-card">
+            <a class="menu-item" href="location.html">
+              <div class="menu-icon-wrap icon-purple">📍</div>
+              <div class="menu-text">
+                <div class="menu-title">Delivery Address</div>
+                <div class="menu-subtitle">Manage your delivery locations</div>
+              </div>
+              <div class="menu-arrow">›</div>
+            </a>
+            <div class="menu-item" onclick="showToast('Payment methods coming soon!')">
+              <div class="menu-icon-wrap icon-yellow">💳</div>
+              <div class="menu-text">
+                <div class="menu-title">Payment Methods</div>
+                <div class="menu-subtitle">Manage payment options</div>
+              </div>
+              <div class="menu-arrow">›</div>
+            </div>
+            <div class="menu-item" onclick="showToast('Notifications settings coming soon!')">
+              <div class="menu-icon-wrap icon-pink">🔔</div>
+              <div class="menu-text">
+                <div class="menu-title">Notifications</div>
+                <div class="menu-subtitle">Manage your alerts</div>
+              </div>
+              <div class="menu-arrow">›</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Support</div>
+          <div class="menu-card">
+            <a class="menu-item" href="contact.html">
+              <div class="menu-icon-wrap icon-blue">📞</div>
+              <div class="menu-text">
+                <div class="menu-title">Contact Support</div>
+                <div class="menu-subtitle">Get help from our team</div>
+              </div>
+              <div class="menu-arrow">›</div>
+            </a>
+            <a class="menu-item" href="faq.html">
+              <div class="menu-icon-wrap icon-green">❓</div>
+              <div class="menu-text">
+                <div class="menu-title">Help & FAQ</div>
+                <div class="menu-subtitle">Find answers to common questions</div>
+              </div>
+              <div class="menu-arrow">›</div>
+            </a>
+            <div class="menu-item" onclick="shareApp()">
+              <div class="menu-icon-wrap icon-orange">📤</div>
+              <div class="menu-text">
+                <div class="menu-title">Share TillValle</div>
+                <div class="menu-subtitle">Tell your friends about us</div>
+              </div>
+              <div class="menu-arrow">›</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button class="action-btn btn-outline" onclick="window.location.href='shop.html'">🛍️ Shop Now</button>
+          <button class="action-btn btn-outline" onclick="window.location.href='about.html'">ℹ️ About Us</button>
+          <button class="action-btn btn-danger" onclick="logout()">🚪 Sign Out</button>
+        </div>
+      `;
+    }
+
+    function shareApp() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'TillValle',
+          text: 'Get fresh farm produce delivered to your door!',
+          url: window.location.origin
+        });
+      } else {
+        // Copy to clipboard fallback
+        navigator.clipboard.writeText(window.location.origin).then(() => {
+          showToast('Link copied to clipboard!');
+        }).catch(() => {
+          showToast('Share: ' + window.location.origin);
+        });
+      }
     }
 
     function logout() {
-      if (confirm('Are you sure you want to logout?')) {
+      if (confirm('Are you sure you want to sign out?')) {
         localStorage.removeItem('email');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = 'login.html';
       }
     }
 
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (event) => {
-      const dropdown = document.getElementById('user-dropdown');
-      const container = document.querySelector('.user-dropdown-container');
-      if (dropdown && container && !container.contains(event.target)) {
-        dropdown.classList.remove('show');
-      }
-    });
-  </script>
+    function showToast(message) {
+      const existing = document.querySelector('.toast');
+      if (existing) existing.remove();
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
 
-  <script src="global-chat.js"></script>
-  <script src="bg-init.js"></script>
+    document.addEventListener('DOMContentLoaded', initPage);
+  </script>
 </body>
 </html>

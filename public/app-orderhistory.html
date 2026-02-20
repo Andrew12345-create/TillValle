@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order History - TilleValle App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f9fa;
+      padding-bottom: 80px;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .mobile-header {
+      background: #2d6a4f;
+      color: white;
+      padding: 12px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .header-btn {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    /* Main Content */
+    .main-content {
+      padding: 16px;
+      min-height: calc(100vh - 160px);
+    }
+
+    /* Not Logged In */
+    .not-logged-in {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .not-logged-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .not-logged-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #2d6a4f;
+      margin-bottom: 12px;
+    }
+
+    .not-logged-subtitle {
+      color: #666;
+      margin-bottom: 24px;
+    }
+
+    /* No Orders */
+    .no-orders {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .no-orders-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .no-orders-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #2d6a4f;
+      margin-bottom: 12px;
+    }
+
+    .no-orders-subtitle {
+      color: #666;
+      margin-bottom: 24px;
+    }
+
+    /* Order Group */
+    .order-group {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .order-group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .order-date {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2d6a4f;
+    }
+
+    .order-total {
+      font-size: 14px;
+      font-weight: 700;
+      color: #2d6a4f;
+    }
+
+    /* Order Item */
+    .order-item {
+      padding: 12px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .order-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .order-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .order-item-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .order-item-qty {
+      font-size: 14px;
+      color: #6b7280;
+      background: #f3f4f6;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    .order-item-price {
+      font-size: 14px;
+      color: #2d6a4f;
+      font-weight: 600;
+    }
+
+    .order-item-total {
+      font-size: 14px;
+      font-weight: 700;
+      color: #2d6a4f;
+      text-align: right;
+      margin-top: 8px;
+    }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: #2d6a4f;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 14px 24px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background: #2d6a4f;
+      color: white;
+    }
+
+    .btn-primary:active {
+      background: #1b4332;
+      transform: scale(0.98);
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      z-index: 1000;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #6b7280;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      min-width: 60px;
+    }
+
+    .nav-item.active {
+      color: #2d6a4f;
+      background: rgba(45, 106, 79, 0.1);
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2d6a4f;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 25px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 2001;
+      animation: slideUp 0.3s ease;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    /* Clear Button */
+    .clear-btn {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    .clear-btn:active {
+      background: #ff4444;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="mobile-header">
+    <div class="header-content">
+      <button class="header-btn" onclick="window.location.href='app-profile.html'">←</button>
+      <div class="header-title" id="page-title">Order History</div>
+      <button class="header-btn" onclick="toggleSettings()">⚙️</button>
+    </div>
+
+    <!-- Settings Menu -->
+    <div id="settings-menu" style="display:none; background: rgba(0,0,0,0.1); padding: 8px; border-radius: 8px; margin-top: 8px;">
+      <button style="background: rgba(255,255,255,0.1); border: none; color: white; width: 100%; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 12px;" onclick="switchToDesktop()">
+        📱 Switch to Desktop
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content" id="order-history-content">
+    <!-- Order history will be dynamically inserted here -->
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="app.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="app-shop.html" class="nav-item">
+      <span class="nav-icon">🛍️</span>
+      <span>Shop</span>
+    </a>
+    <a href="app-cart.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span>Cart</span>
+    </a>
+    <a href="app-about.html" class="nav-item">
+      <span class="nav-icon">ℹ️</span>
+      <span>About</span>
+    </a>
+    <a href="app-profile.html" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script>
+    // Translations
+    const translations = {
+      en: {
+        orderHistory: "Order History",
+        noOrders: "No Orders Yet",
+        noOrdersSubtitle: "Start shopping to see your order history here!",
+        totalSpent: "Total Spent",
+        orders: "Orders",
+        notLoggedIn: "Not Logged In",
+        notLoggedSubtitle: "Sign in to view your order history",
+        signIn: "Sign In",
+        order: "Order",
+        clearHistory: "Clear History"
+      },
+      sw: {
+        orderHistory: "Historia ya Maagizo",
+        noOrders: "Hakuna Maagizo",
+        noOrdersSubtitle: "Anza kununua ili kuona historia ya maagizo hapa!",
+        totalSpent: "Jumla ya Matumizi",
+        orders: "Maagizo",
+        notLoggedIn: "Hujajisajili",
+        notLoggedSubtitle: "Jisajili ili kuona historia ya maagizo yako",
+        signIn: "Ingia",
+        order: "Agizo",
+        clearHistory: "Futa Historia"
+      },
+      fr: {
+        orderHistory: "Historique des commandes",
+        noOrders: "Aucune commande",
+        noOrdersSubtitle: "Commencez vos achats pour voir votre historique ici!",
+        totalSpent: "Total dépensé",
+        orders: "Commandes",
+        notLoggedIn: "Non connecté",
+        notLoggedSubtitle: "Connectez-vous pour voir votre historique",
+        signIn: "Se connecter",
+        order: "Commande",
+        clearHistory: "Effacer l'historique"
+      },
+      zh: {
+        orderHistory: "订单历史",
+        noOrders: "暂无订单",
+        noOrdersSubtitle: "开始购物以在此处查看您的订单历史！",
+        totalSpent: "总消费",
+        orders: "订单",
+        notLoggedIn: "未登录",
+        notLoggedSubtitle: "登录以查看您的订单历史",
+        signIn: "登录",
+        order: "订单",
+        clearHistory: "清除历史"
+      }
+    };
+
+    let currentLang = 'en';
+
+    function getTranslation(key) {
+      return translations[currentLang][key] || translations.en[key];
+    }
+
+    function initPage() {
+      // Get language from localStorage
+      currentLang = localStorage.getItem('selectedLanguage') || 'en';
+      
+      // Update page title
+      document.getElementById('page-title').textContent = getTranslation('orderHistory');
+
+      const userEmail = localStorage.getItem('email');
+      const content = document.getElementById('order-history-content');
+
+      if (!userEmail) {
+        content.innerHTML = `
+          <div class="not-logged-in">
+            <div class="not-logged-icon">👤</div>
+            <div class="not-logged-title">${getTranslation('notLoggedIn')}</div>
+            <div class="not-logged-subtitle">${getTranslation('notLoggedSubtitle')}</div>
+            <button class="btn btn-primary" onclick="window.location.href='app-login.html'">${getTranslation('signIn')}</button>
+          </div>
+        `;
+        return;
+      }
+
+      // Get orders from localStorage
+      const key = `orderHistory_${userEmail}`;
+      const orderHistory = JSON.parse(localStorage.getItem(key) || '[]');
+
+      if (orderHistory.length === 0) {
+        content.innerHTML = `
+          <div class="no-orders">
+            <div class="no-orders-icon">📦</div>
+            <div class="no-orders-title">${getTranslation('noOrders')}</div>
+            <div class="no-orders-subtitle">${getTranslation('noOrdersSubtitle')}</div>
+            <button class="btn btn-primary" onclick="window.location.href='app-shop.html'">🛒 Start Shopping</button>
+          </div>
+        `;
+        return;
+      }
+
+      // Calculate stats
+      const totalSpent = orderHistory.reduce((sum, order) => sum + order.total, 0);
+      const totalOrders = orderHistory.length;
+
+      // Group orders by date
+      const groupedOrders = orderHistory.reduce((groups, order) => {
+        const dateKey = new Date(order.date).toDateString();
+        if (!groups[dateKey]) {
+          groups[dateKey] = [];
+        }
+        groups[dateKey].push(order);
+        return groups;
+      }, {});
+
+      const sortedEntries = Object.entries(groupedOrders).sort(([a], [b]) => new Date(b) - new Date(a));
+
+      let ordersHTML = `
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-number">${totalOrders}</div>
+            <div class="stat-label">${getTranslation('orders')}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">KES ${totalSpent.toLocaleString()}</div>
+            <div class="stat-label">${getTranslation('totalSpent')}</div>
+          </div>
+        </div>
+      `;
+
+      sortedEntries.forEach(([date, orders]) => {
+        const dayTotal = orders.reduce((sum, order) => sum + order.total, 0);
+        
+        ordersHTML += `
+          <div class="order-group">
+            <div class="order-group-header">
+              <div class="order-date">${date}</div>
+              <div class="order-total">KES ${dayTotal.toLocaleString()}</div>
+            </div>
+        `;
+
+        orders.forEach((order, index) => {
+          // Group items by name and sum quantities
+          const groupedItems = order.items.reduce((acc, item) => {
+            if (!acc[item.name]) {
+              acc[item.name] = { name: item.name, quantity: 0, price: item.price };
+            }
+            acc[item.name].quantity += item.quantity;
+            return acc;
+          }, {});
+
+          ordersHTML += `
+            <div class="order-item">
+              <div class="order-item-header">
+                <div class="order-item-name">${getTranslation('order')} #${order.id}</div>
+              </div>
+              ${Object.values(groupedItems).map(item => `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                  <div>
+                    <span style="font-size: 14px; color: #374151;">${item.name}</span>
+                    <span style="font-size: 12px; color: #6b7280; background: #f3f4f6; padding: 2px 8px; border-radius: 12px; margin-left: 8px;">x${item.quantity}</span>
+                  </div>
+                  <div class="order-item-price">KES ${(item.price * item.quantity).toLocaleString()}</div>
+                </div>
+              `).join('')}
+              <div class="order-item-total">Total: KES ${order.total.toLocaleString()}</div>
+            </div>
+          `;
+        });
+
+        ordersHTML += `</div>`;
+      });
+
+      ordersHTML += `
+        <div style="text-align: center; margin-top: 20px;">
+          <button class="clear-btn" onclick="clearOrderHistory()">🗑️ ${getTranslation('clearHistory')}</button>
+        </div>
+      `;
+
+      content.innerHTML = ordersHTML;
+    }
+
+    function clearOrderHistory() {
+      if (confirm('Are you sure you want to clear your order history? This action cannot be undone.')) {
+        const userEmail = localStorage.getItem('email');
+        if (userEmail) {
+          const key = `orderHistory_${userEmail}`;
+          localStorage.removeItem(key);
+          showToast('Order history cleared.');
+          initPage();
+        }
+      }
+    }
+
+    function showToast(message) {
+      const existingToast = document.querySelector('.toast');
+      if (existingToast) existingToast.remove();
+
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Settings menu toggle
+    function toggleSettings() {
+      const menu = document.getElementById('settings-menu');
+      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Switch to desktop mode
+    function switchToDesktop() {
+      sessionStorage.setItem('desktopMode', 'true');
+      window.location.href = 'orderhistory.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', initPage);
+  </script>
+
+  <!-- Version Badge -->
+  <div class="version-badge">
+    <span id="app-version">v1.0.0</span>
+  </div>
+
+  <!-- Load app version -->
+  <script src="app-version.js"></script>
+</body>
+</html>
