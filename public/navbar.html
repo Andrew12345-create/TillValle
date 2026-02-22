@@ -1,273 +1,421 @@
-<style>
-/* ========== MASTER NAVBAR STYLES - OVERRIDE ALL OTHERS ========== */
-* { --navbar-bg: #2d6a4f !important; }
-
-.navbar {
-  background: #2d6a4f !important;
-  background-color: #2d6a4f !important;
-  color: white !important;
-  padding: 12px 20px !important;
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  gap: 20px !important;
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 1000 !important;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15) !important;
-  border: none !important;
-  border-bottom: none !important;
-}
-
-.navbar * {
-  color: white !important;
-}
-
-.navbar a {
-  color: white !important;
-  text-decoration: none !important;
-  border: none !important;
-  background: transparent !important;
-  cursor: pointer !important;
-  padding: 8px 12px !important;
-  border-radius: 6px !important;
-  transition: background 0.2s !important;
-  display: inline-block !important;
-}
-
-.navbar a:hover {
-  background: rgba(255,255,255,0.15) !important;
-  color: white !important;
-}
-
-.navbar a:hover::after {
-  display: none !important;
-}
-
-.nav-left {
-  display: flex !important;
-  gap: 15px !important;
-  align-items: center !important;
-  flex: 1 !important;
-}
-
-.nav-right {
-  display: flex !important;
-  gap: 15px !important;
-  align-items: center !important;
-}
-
-.logo {
-  height: 40px !important;
-  border-radius: 6px !important;
-}
-
-.hamburger {
-  display: none !important;
-  flex-direction: column !important;
-  gap: 6px !important;
-  background: none !important;
-  border: none !important;
-  cursor: pointer !important;
-  padding: 5px !important;
-}
-
-.hamburger span {
-  width: 25px !important;
-  height: 3px !important;
-  background: white !important;
-  border-radius: 2px !important;
-}
-
-#user-area {
-  display: flex !important;
-  gap: 10px !important;
-  align-items: center !important;
-}
-
-#user-area a {
-  color: white !important;
-  margin: 0 !important;
-}
-
-@media (max-width: 768px) {
-  .nav-left a:not(:first-child),
-  .nav-right { 
-    display: none !important; 
-  }
-  
-  .hamburger { 
-    display: flex !important; 
-  }
-}
-</style>
-
 <nav class="navbar">
-  <div class="nav-left">
-    <a href="index.html">
-      <img src="./logo.jpg" alt="TilleValle Logo" class="logo" />
+  <div class="nav-container">
+    <!-- Logo -->
+    <a href="index.html" class="nav-logo">
+      <img src="logo.jpg" alt="TillValle" class="logo-img">
+      <span class="logo-text">TillValle</span>
     </a>
-    <a href="shop.html">Products</a>
-    <a href="about.html">About</a>
-    <a href="contact.html">Contact</a>
+
+    <!-- Desktop Navigation -->
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a href="index.html" class="nav-link">Home</a>
+      </li>
+      <li class="nav-item">
+        <a href="shop.html" class="nav-link">Shop</a>
+      </li>
+      <li class="nav-item">
+        <a href="about.html" class="nav-link">About</a>
+      </li>
+      <li class="nav-item">
+        <a href="contact.html" class="nav-link">Contact</a>
+      </li>
+    </ul>
+
+    <!-- Search Bar -->
+    <div class="nav-search">
+      <input type="text" id="search-input" placeholder="Search products..." class="search-input">
+      <button class="search-btn" onclick="performSearch()">🔍</button>
+    </div>
+
+    <!-- Right Side: Cart, Compare, User -->
+    <div class="nav-right">
+      <!-- Compare Widget -->
+      <div class="compare-widget" id="compare-widget" style="display: none;">
+        <a href="#" class="nav-icon-link" onclick="openCompareModal(); return false;" title="Compare">
+          ⚖️ <span class="compare-count" id="compare-count">0</span>
+        </a>
+      </div>
+
+      <!-- Cart -->
+      <a href="cart.html" class="nav-icon-link" title="Cart">
+        🛒 <span class="cart-count" id="cart-count">0</span>
+      </a>
+
+      <!-- User Area -->
+      <div class="user-area" id="user-area">
+        <a href="login.html" class="nav-link">Login</a>
+      </div>
+    </div>
+
+    <!-- Hamburger Menu -->
+    <button class="hamburger" id="hamburger-btn">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
   </div>
-  <div class="nav-right">
-    <a href="cart.html">🛒 Cart</a>
-    <span id="user-area"></span>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-header">
+      <span class="mobile-menu-title">Menu</span>
+      <button class="mobile-close-btn" id="mobile-close-btn">✕</button>
+    </div>
+    <ul class="mobile-nav-menu">
+      <li class="mobile-nav-item">
+        <a href="index.html" class="mobile-nav-link">Home</a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="shop.html" class="mobile-nav-link">Shop</a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="about.html" class="mobile-nav-link">About</a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="contact.html" class="mobile-nav-link">Contact</a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="cart.html" class="mobile-nav-link">Cart 🛒 <span class="mobile-cart-count" id="mobile-cart-count">0</span></a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="#" class="mobile-nav-link" onclick="openCompareModal(); return false;">Compare ⚖️ <span class="mobile-compare-count" id="mobile-compare-count">0</span></a>
+      </li>
+    </ul>
+    <div class="mobile-user-area" id="mobile-user-area">
+      <a href="login.html" class="mobile-nav-link">Login</a>
+    </div>
   </div>
-  <button class="hamburger" id="hamburger-btn">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
 </nav>
 
+<style>
+  /* Navbar Styles */
+  .navbar {
+    background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+
+  .nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  /* Logo */
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    gap: 10px;
+  }
+
+  .logo-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  /* Desktop Navigation */
+  .nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    padding: 8px 12px;
+    border-radius: 5px;
+  }
+
+  .nav-link:hover {
+    background: rgba(255,255,255,0.2);
+  }
+
+  /* Search Bar */
+  .nav-search {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 25px;
+    overflow: hidden;
+    flex: 1;
+    max-width: 400px;
+  }
+
+  .search-input {
+    border: none;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    outline: none;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .search-btn {
+    background: #40916c;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .search-btn:hover {
+    background: #2d6a4f;
+  }
+
+  /* Right Side */
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .nav-icon-link {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .cart-count, .compare-count {
+    background: #ff6b6b;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .user-area {
+    display: flex;
+    align-items: center;
+  }
+
+  /* User Dropdown */
+  .user-dropdown-container {
+    position: relative;
+  }
+
+  .user-initial {
+    width: 40px;
+    height: 40px;
+    background: white;
+    color: #2d6a4f;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .user-initial:hover {
+    transform: scale(1.1);
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+  }
+
+  .user-dropdown {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    display: none;
+    min-width: 150px;
+    overflow: hidden;
+  }
+
+  .user-dropdown.show {
+    display: block;
+  }
+
+  .user-dropdown a {
+    display: block;
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    transition: background 0.3s ease;
+  }
+
+  .user-dropdown a:hover {
+    background: #f0f0f0;
+  }
+
+  /* Hamburger Menu */
+  .hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+  }
+
+  .hamburger .bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px 0;
+    background: white;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+  }
+
+  /* Mobile Menu */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100%;
+    background: white;
+    box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+    z-index: 1001;
+    transition: right 0.3s ease;
+    overflow-y: auto;
+  }
+
+  .mobile-menu.open {
+    right: 0;
+  }
+
+  .mobile-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: #2d6a4f;
+    color: white;
+  }
+
+  .mobile-menu-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  .mobile-close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  .mobile-nav-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .mobile-nav-item {
+    border-bottom: 1px solid #eee;
+  }
+
+  .mobile-nav-link {
+    display: block;
+    padding: 15px 20px;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s ease;
+  }
+
+  .mobile-nav-link:hover {
+    background: #f0f0f0;
+  }
+
+  .mobile-user-area {
+    padding: 20px;
+    border-top: 1px solid #eee;
+  }
+
+  /* Compare Widget */
+  .compare-widget {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Responsive */
+  @media (max-width: 992px) {
+    .nav-menu {
+      display: none;
+    }
+
+    .nav-search {
+      display: none;
+    }
+
+    .hamburger {
+      display: block;
+    }
+
+    .mobile-menu {
+      display: block;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .nav-container {
+      padding: 0 10px;
+    }
+
+    .logo-text {
+      font-size: 1.2rem;
+    }
+
+    .logo-img {
+      width: 32px;
+      height: 32px;
+    }
+  }
+</style>
+
 <script>
-function initNavbar() {
-  const userArea = document.getElementById('user-area');
-  const userEmail = localStorage.getItem('email');
-  
-  if (userEmail && userArea) {
-    const initial = userEmail.charAt(0).toUpperCase();
-    userArea.innerHTML = `
-      <a href="profile.html">Profile</a>
-      <a href="#" onclick="logout();return false;">Logout</a>
-    `;
-  } else if (userArea) {
-    userArea.innerHTML = `<a href="login.html">Login</a>`;
+  // Search function
+  function performSearch() {
+    const query = document.getElementById('search-input').value.trim();
+    if (query) {
+      window.location.href = 'shop.html?search=' + encodeURIComponent(query);
+    }
   }
-}
 
-window.logout = function() {
-  localStorage.removeItem('email');
-  localStorage.removeItem('user');
-  window.location.href = 'login.html';
-};
-
-document.addEventListener('DOMContentLoaded', initNavbar);
-
-// Delivery Location Functions
-function openLocationSelector() {
-  document.getElementById('location-selector-modal').style.display = 'block';
-}
-
-function closeLocationSelector() {
-  document.getElementById('location-selector-modal').style.display = 'none';
-}
-
-function useCurrentLocation() {
-  const input = document.getElementById('location-input');
-  if (!input) return;
-  
-  if (!navigator.geolocation) {
-    input.value = 'Nairobi, Kenya';
-    showToast('Geolocation not supported. Using default location.');
-    return;
-  }
-  
-  const options = {
-    enableHighAccuracy: true,
-    timeout: 10000,
-    maximumAge: 300000
-  };
-  
-  navigator.geolocation.getCurrentPosition(
-    function(position) {
-      const lat = position.coords.latitude.toFixed(6);
-      const lng = position.coords.longitude.toFixed(6);
-      
-      fetch(`https://ipapi.co/json/`)
-        .then(response => response.json())
-        .then(data => {
-          if (data.city && data.country) {
-            input.value = `${data.city}, ${data.region}, ${data.country}`;
-          } else {
-            input.value = `${lat}, ${lng}`;
-          }
-        })
-        .catch(() => {
-          input.value = `${lat}, ${lng}`;
-        });
-      
-      showToast('Location detected successfully!');
-    },
-    function(error) {
-      let defaultLocation = 'Nairobi, Kenya';
-      input.value = defaultLocation;
-      showToast('Using default location: Nairobi, Kenya');
-    },
-    options
-  );
-}
-
-function showToast(message) {
-  const toast = document.createElement('div');
-  toast.style.cssText = 'position:fixed;bottom:30px;right:30px;background:linear-gradient(135deg,#16a34a,#22c55e);color:white;padding:15px 25px;border-radius:25px;z-index:999999;font-weight:600;';
-  toast.textContent = message;
-  document.body.appendChild(toast);
-  setTimeout(() => document.body.removeChild(toast), 3000);
-}
-
-function selectLocation(location) {
-  localStorage.setItem('deliveryLocation', location);
-  const currentLocationEl = document.getElementById('current-location');
-  const mobileLocationEl = document.getElementById('mobile-current-location');
-  const displayText = location.length > 20 ? location.substring(0, 20) + '...' : location;
-  
-  if (currentLocationEl) currentLocationEl.textContent = displayText;
-  if (mobileLocationEl) mobileLocationEl.textContent = displayText;
-  
-  closeLocationSelector();
-  
-  // Show success message
-  const toast = document.createElement('div');
-  toast.style.cssText = 'position:fixed;bottom:30px;right:30px;background:linear-gradient(135deg,#16a34a,#22c55e);color:white;padding:15px 25px;border-radius:25px;z-index:999999;font-weight:600;';
-  toast.textContent = `Location set to ${location}!`;
-  document.body.appendChild(toast);
-  setTimeout(() => document.body.removeChild(toast), 3000);
-}
-
-function saveDeliveryLocation() {
-  const location = document.getElementById('location-input').value.trim();
-  if (!location) {
-    alert('Please enter a delivery location');
-    return;
-  }
-  
-  localStorage.setItem('deliveryLocation', location);
-  const currentLocationEl = document.getElementById('current-location');
-  const mobileLocationEl = document.getElementById('mobile-current-location');
-  const displayText = location.length > 20 ? location.substring(0, 20) + '...' : location;
-  
-  if (currentLocationEl) currentLocationEl.textContent = displayText;
-  if (mobileLocationEl) mobileLocationEl.textContent = displayText;
-  
-  closeLocationSelector();
-  
-  // Show success message
-  const toast = document.createElement('div');
-  toast.style.cssText = 'position:fixed;bottom:30px;right:30px;background:linear-gradient(135deg,#16a34a,#22c55e);color:white;padding:15px 25px;border-radius:25px;z-index:999999;font-weight:600;';
-  toast.textContent = 'Delivery location saved!';
-  document.body.appendChild(toast);
-  setTimeout(() => document.body.removeChild(toast), 3000);
-}
-
-// Load saved location on page load
-document.addEventListener('DOMContentLoaded', function() {
-  const savedLocation = localStorage.getItem('deliveryLocation');
-  if (savedLocation) {
-    document.getElementById('current-location').textContent = savedLocation.length > 20 ? savedLocation.substring(0, 20) + '...' : savedLocation;
-  }
-});
-
-// Close modal when clicking outside
-window.addEventListener('click', function(event) {
-  const modal = document.getElementById('location-selector-modal');
-  if (event.target === modal) {
-    closeLocationSelector();
-  }
-});
+  // Enter key search
+  document.getElementById('search-input')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      performSearch();
+    }
+  });
 </script>
-
-
-

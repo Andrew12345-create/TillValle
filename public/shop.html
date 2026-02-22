@@ -1159,6 +1159,7 @@
             <img src="${product.image}" alt="${product.name}" class="product-image">
             <h4>${product.name}</h4>
             <p class="price" data-price="${product.price}">KES ${product.price}</p>
+            <p class="stock-info">${product.stock > 0 ? '✅ In Stock (' + product.stock + ' left)' : '❌ Out of Stock'}</p>
             <button class="add-to-cart-toggle">Add to Cart</button>
             <div class="quantity-controls-inline">
               <button class="qty-btn" data-action="remove">−</button>

@@ -12,7 +12,7 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
 // Neon API configuration
-const NEON_API_URL = 'https://ep-billowing-mode-adkbmnzk.apirest.c-2.us-east-1.aws.neon.tech/neondb/rest/v1';
+const NEON_API_URL = 'https://ep-bold-silence-aiue9xsj-pooler.apirest.c-4.us-east-1.aws.neon.tech/neondb/rest/v1';
 const PRODUCTS_URL = `${NEON_API_URL}/products`;
 
 // App setup

@@ -234,7 +234,7 @@
         
         try {
           const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-          const chatbotUrl = isLocal ? 'http://localhost:3001/chatbot' : '/.netlify/functions/chatbot';
+          const chatbotUrl = isLocal ? 'http://localhost:3000/chatbot' : '/.netlify/functions/chatbot';
           const response = await fetch(chatbotUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

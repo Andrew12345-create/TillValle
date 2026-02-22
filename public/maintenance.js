@@ -1,47 +1,46 @@
-// Global maintenance mode handler
+// Global maintenance mode handler — runs immediately on page load
 (function() {
   'use strict';
 
   async function isMaintenanceActive() {
     try {
       const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      const maintenanceUrl = isLocal ? 'http://localhost:3001/maintenance' : '/.netlify/functions/maintenance';
-      const response = await fetch(maintenanceUrl);
+      // Use port 3000 for local server
+      const maintenanceUrl = isLocal ? 'http://localhost:3000/maintenance' : '/.netlify/functions/maintenance';
+      const response = await fetch(maintenanceUrl, { cache: 'no-store' });
+      if (!response.ok) return localStorage.getItem('tillvalle_maintenance') === '1';
       const data = await response.json();
-      return data.active;
+      return data.active === true;
     } catch (e) {
-      // Fallback to localStorage if server fails
+      // Fallback to localStorage if server unreachable
       return localStorage.getItem('tillvalle_maintenance') === '1';
     }
   }
 
   function isAdminUser() {
     try {
-      return localStorage.getItem('isAdmin') === 'true';
+      const email = localStorage.getItem('email') || '';
+      return localStorage.getItem('isAdmin') === 'true' || email === 'andrewmunamwangi@gmail.com';
     } catch (e) {
       return false;
     }
   }
 
   function redirectToMaintenance() {
-    // Redirect to maintenance page if not already there
-    if (window.location.pathname !== '/maintenance.html' && window.location.pathname !== '/public/maintenance.html') {
-      window.location.href = 'maintenance.html';
+    const path = window.location.pathname;
+    // Don't redirect if already on maintenance page or admin page
+    if (!path.endsWith('maintenance.html') && !path.endsWith('admin.html') && !path.endsWith('app-admin.html')) {
+      window.location.replace('maintenance.html');
     }
   }
 
-  // Check maintenance mode on page load
-  (async () => {
-    const maintenanceActive = await isMaintenanceActive();
-    if (maintenanceActive && !isAdminUser()) {
-      // Redirect to maintenance page immediately
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', redirectToMaintenance);
-      } else {
-        redirectToMaintenance();
-      }
+  // Run maintenance check IMMEDIATELY — before DOM is ready
+  // This ensures users are redirected as fast as possible
+  isMaintenanceActive().then(function(active) {
+    if (active && !isAdminUser()) {
+      redirectToMaintenance();
     }
-  })();
+  });
 
   // Make functions globally available for admin panel
   window.isMaintenanceActive = isMaintenanceActive;

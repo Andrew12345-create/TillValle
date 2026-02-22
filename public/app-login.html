@@ -350,7 +350,7 @@
       }
 
       const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      const loginUrl = isLocal ? 'http://localhost:3001/login' : '/.netlify/functions/login';
+      const loginUrl = isLocal ? 'http://localhost:3000/login' : '/.netlify/functions/login';
 
       try {
         const response = await fetch(loginUrl, {
@@ -403,7 +403,7 @@
       // Save to database
       try {
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const signupUrl = isLocal ? 'http://localhost:3001/signup' : '/.netlify/functions/signup';
+        const signupUrl = isLocal ? 'http://localhost:3000/signup' : '/.netlify/functions/signup';
         
         await fetch(signupUrl, {
           method: 'POST',

@@ -425,7 +425,7 @@ if (floatingCartBtn) {
 async function fetchStock() {
   try {
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/api/stock';
+    const stockUrl = isLocal ? 'http://localhost:3000/stock' : '/api/stock';
     const response = await fetch(stockUrl);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
@@ -574,7 +574,7 @@ window.toggleStock = async function(productId, currentQuantity) {
   try {
     // Use API URL for production, localhost for development
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const stockUrl = isLocal ? 'http://localhost:3001/stock' : '/api/stock';
+    const stockUrl = isLocal ? 'http://localhost:3000/stock' : '/api/stock';
     const response = await fetch(stockUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
