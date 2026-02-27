@@ -5,6 +5,8 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false },
 });
 
+const MAINTENANCE_CODE = 'coder1234';
+
 exports.handler = async function(event, context) {
   try {
     // Test database connection first
@@ -38,7 +40,21 @@ exports.handler = async function(event, context) {
         body: JSON.stringify({ active: result.rows[0].active }),
       };
     } else if (event.httpMethod === 'POST') {
-      const { active } = JSON.parse(event.body);
+      const body = JSON.parse(event.body);
+      const { active, code } = body;
+      
+      // Validate maintenance code
+      if (code !== MAINTENANCE_CODE) {
+        return {
+          statusCode: 401,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': 'Content-Type',
+          },
+          body: JSON.stringify({ error: 'Invalid maintenance code' }),
+        };
+      }
+      
       await pool.query(
         'UPDATE site_maintenance SET active = $1, last_updated = CURRENT_TIMESTAMP',
         [active]
@@ -71,8 +87,7 @@ exports.handler = async function(event, context) {
   } catch (error) {
     console.error('Database error:', error);
 
-    // Fallback to localStorage-like behavior (but this won't work across devices)
-    // Since we can't persist across devices without database, return false as safe default
+    // Fallback to localStorage-like behavior
     if (event.httpMethod === 'GET') {
       return {
         statusCode: 200,
@@ -86,7 +101,6 @@ exports.handler = async function(event, context) {
       return {
         statusCode: 500,
         headers: {
-          'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
         },
         body: JSON.stringify({ error: 'Database error' }),

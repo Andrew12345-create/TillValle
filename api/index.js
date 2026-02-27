@@ -17,7 +17,7 @@ const PRODUCTS_URL = `${NEON_API_URL}/products`;
 
 // App setup
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
 const BCRYPT_ROUNDS = 10;
 
