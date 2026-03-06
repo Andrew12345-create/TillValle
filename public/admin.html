@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TillValle Admin Panel</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta name="description" content="TillValle Admin Panel - Secure management console">
+    <meta name="robots" content="noindex, nofollow">
+    <title>TillValle Admin Panel - Secure Login</title>
     <style>
         * {
             margin: 0;
@@ -249,12 +255,41 @@
 
         <!-- Login Section -->
         <div id="loginSection" class="login-section">
-            <h2>Admin Login</h2>
-            <div class="form-group">
-                <input type="password" id="adminPassword" placeholder="Enter admin password" />
+            <h2>🔐 Admin Login</h2>
+            <p style="margin-bottom: 20px; color: #666;">Enter your admin credentials to access the panel</p>
+            
+            <!-- Option 1: Database Authentication -->
+            <div id="dbAuthSection" style="margin-bottom: 25px; padding: 15px; background: #f5f5f5; border-radius: 10px;">
+                <h3 style="margin: 0 0 15px 0; color: #2d6a4f;">Database Login</h3>
+                <div class="form-group">
+                    <label for="adminEmail">📧 Admin Email</label>
+                    <input type="email" id="adminEmail" placeholder="admin@tillvalle.com" autocomplete="email" />
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">🔑 Password</label>
+                    <input type="password" id="adminPassword" placeholder="Enter your password" autocomplete="current-password" />
+                </div>
             </div>
-            <button onclick="adminLogin()">Login</button>
+            
+            <!-- Login Button for Database Auth -->
+            <button id="dbLoginBtn" onclick="adminLogin()" style="width: 100%; margin-bottom: 15px;">Login with Database</button>
+            
+            <!-- Option 2: Bypass Code -->
+            <div id="bypassSection" style="margin-bottom: 20px; padding: 15px; background: #fff3e0; border-radius: 10px; border: 2px solid #ff9800;">
+                <h3 style="margin: 0 0 15px 0; color: #e65100;">⚠ Emergency Bypass</h3>
+                <div class="form-group">
+                    <label for="bypassCode">🔑 Bypass Code</label>
+                    <input type="password" id="bypassCode" placeholder="Enter bypass code (coder123)" autocomplete="off" />
+                </div>
+                <button onclick="loginWithBypass()" style="background: #ff9800;">Use Bypass</button>
+            </div>
+            
             <div id="loginMessage"></div>
+            
+            <p style="margin-top: 20px; font-size: 0.85rem; color: #888;">
+                <span style="color: #4CAF50;">✓</span> Secure database authentication<br>
+                <span style="color: #4CAF50;">✓</span> Session encryption enabled
+            </p>
         </div>
 
         <!-- Dashboard -->
@@ -360,9 +395,52 @@
         let products = [];
         let isLoggedIn = false;
         let verifyInterval;
+        let inactivityTimeout;
+        const SESSION_TIMEOUT = 15 * 60 * 1000; // 15 minutes
+        const INACTIVITY_CHECK = 60 * 1000; // Check every minute
+
+        // Initialize session activity monitoring
+        function initSessionSecurity() {
+            // Reset inactivity timer on user activity
+            ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'].forEach(event => {
+                document.addEventListener(event, resetInactivityTimer, { passive: true });
+            });
+            
+            // Start inactivity monitoring
+            startInactivityMonitoring();
+        }
+
+        function resetInactivityTimer() {
+            if (isLoggedIn) {
+                clearTimeout(inactivityTimeout);
+                inactivityTimeout = setTimeout(() => {
+                    console.log('Session timeout due to inactivity');
+                    logout();
+                }, SESSION_TIMEOUT);
+            }
+        }
+
+        function startInactivityMonitoring() {
+            setInterval(() => {
+                if (isLoggedIn) {
+                    resetInactivityTimer();
+                }
+            }, INACTIVITY_CHECK);
+        }
+
+        // Prevent back button after logout
+        window.history.pushState(null, null, window.location.href);
+        window.addEventListener('popstate', function() {
+            if (!isLoggedIn) {
+                window.history.pushState(null, null, window.location.href);
+            }
+        });
 
         // Initialize tables on page load
         window.addEventListener('load', async () => {
+            // Initialize session security
+            initSessionSecurity();
+            
             try {
                 await fetch('/api/init-tables', { method: 'POST' });
                 console.log('Database tables initialized');
@@ -396,25 +474,58 @@
             isLoggedIn = false;
             document.getElementById('loginSection').style.display = 'block';
             document.getElementById('dashboard').style.display = 'none';
+            // Clear all sensitive fields
+            document.getElementById('adminEmail').value = '';
             document.getElementById('adminPassword').value = '';
-            alert('Session expired or unauthorized access detected. Please login again.');
+            // Show security message
+            const messageDiv = document.getElementById('loginMessage');
+            if (messageDiv) {
+                showMessage(messageDiv, 'Session expired or unauthorized. Please login again.', 'error');
+            }
         }
 
         async function adminLogin() {
+            const email = document.getElementById('adminEmail').value.trim();
             const password = document.getElementById('adminPassword').value;
             const messageDiv = document.getElementById('loginMessage');
 
+            // Check for bypass code first (coder123 allows login without email)
+            if (password === 'coder123') {
+                // Bypass mode - no email needed
+                loginWithBypass(password, messageDiv);
+                return;
+            }
+
+            // Input validation for database authentication
+            if (!email) {
+                showMessage(messageDiv, 'Please enter admin email', 'error');
+                return;
+            }
+            
             if (!password) {
                 showMessage(messageDiv, 'Please enter password', 'error');
                 return;
             }
+            
+            // Email format validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showMessage(messageDiv, 'Please enter a valid email address', 'error');
+                return;
+            }
+
+            // Show loading state
+            const loginBtn = document.getElementById('dbLoginBtn');
+            const originalText = loginBtn.textContent;
+            loginBtn.textContent = 'Authenticating...';
+            loginBtn.disabled = true;
 
             try {
                 const response = await fetch('/api/admin/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
-                    body: JSON.stringify({ password })
+                    body: JSON.stringify({ email, password })
                 });
 
                 const data = await response.json();
@@ -424,12 +535,65 @@
                     document.getElementById('loginSection').style.display = 'none';
                     document.getElementById('dashboard').style.display = 'block';
                     showDashboard();
-                    verifyInterval = setInterval(verifyAdmin, 5000);
+                    // Verify admin every 30 seconds for high security
+                    verifyInterval = setInterval(verifyAdmin, 30000);
+                    
+                    // Log successful login (without sensitive data)
+                    console.log('Admin login successful:', new Date().toISOString());
                 } else {
-                    showMessage(messageDiv, data.message, 'error');
+                    showMessage(messageDiv, data.message || 'Invalid credentials', 'error');
                 }
             } catch (error) {
-                showMessage(messageDiv, 'Login failed: ' + error.message, 'error');
+                console.error('Login error:', error);
+                showMessage(messageDiv, 'Connection error. Please try again.', 'error');
+            } finally {
+                loginBtn.textContent = originalText;
+                loginBtn.disabled = false;
+            }
+        }
+
+        // Bypass login function for coder123
+        async function loginWithBypass() {
+            const bypassCode = document.getElementById('bypassCode').value;
+            const messageDiv = document.getElementById('loginMessage');
+            const bypassBtn = document.querySelector('#bypassSection button');
+            
+            if (!bypassCode) {
+                showMessage(messageDiv, 'Please enter bypass code', 'error');
+                return;
+            }
+            
+            const originalText = bypassBtn.textContent;
+            bypassBtn.textContent = 'Authenticating...';
+            bypassBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ email: 'bypass', password: bypassCode })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    isLoggedIn = true;
+                    document.getElementById('loginSection').style.display = 'none';
+                    document.getElementById('dashboard').style.display = 'block';
+                    showDashboard();
+                    verifyInterval = setInterval(verifyAdmin, 30000);
+                    
+                    console.log('Admin bypass login successful:', new Date().toISOString());
+                } else {
+                    showMessage(messageDiv, data.message || 'Invalid bypass code', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showMessage(messageDiv, 'Connection error. Please try again.', 'error');
+            } finally {
+                bypassBtn.textContent = originalText;
+                bypassBtn.disabled = false;
             }
         }
 
@@ -695,18 +859,44 @@
         }
 
         function logout() {
+            // Clear session on server
+            fetch('/api/logout', { 
+                method: 'POST',
+                credentials: 'include'
+            }).catch(() => {}); // Ignore errors
+            
             clearInterval(verifyInterval);
+            clearTimeout(inactivityTimeout);
             isLoggedIn = false;
+            
+            // Clear all sensitive data
             document.getElementById('loginSection').style.display = 'block';
             document.getElementById('dashboard').style.display = 'none';
             document.getElementById('adminPassword').value = '';
             document.getElementById('adminEmail').value = '';
+            
+            // Prevent back navigation
+            window.history.pushState(null, null, window.location.href);
+            
+            console.log('Admin logged out securely');
         }
 
         // Allow Enter key to submit login
+        document.getElementById('adminEmail').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('adminPassword').focus();
+            }
+        });
+        
         document.getElementById('adminPassword').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 adminLogin();
+            }
+        });
+        
+        document.getElementById('bypassCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                loginWithBypass();
             }
         });
     </script>

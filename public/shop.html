@@ -3,32 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shop - TillValle</title>
-  <link rel="stylesheet" href="css/site.css">
-  <link rel="icon" href="logo.jpg" type="image/jpeg">
+  <meta name="description" content="Shop fresh farm produce from TillValle - Fruits, vegetables, dairy, herbs and meat delivered fresh to your door.">
+  <meta name="keywords" content="fresh produce shop, buy vegetables online, Kenyan farm produce, TillValle shop">
+  <meta property="og:title" content="Shop Fresh Produce - TillValle">
+  <meta property="og:description" content="Browse and order fresh farm produce online">
+  <meta property="og:type" content="website">
+  <title>Shop Fresh Produce - TillValle</title>
+  
+  <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://tinychat.ai">
+  <link rel="dns-prefetch" href="https://static.hotjar.com">
+  
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheets -->
   <link rel="stylesheet" href="styles.css">
-
-  <link rel="stylesheet" href="global-chat.css">
+  <link rel="stylesheet" href="shop-styles.css">
   <link rel="stylesheet" href="auth-styles.css">
   <link rel="stylesheet" href="shipping-widget.css">
   <link rel="stylesheet" href="cookie-widget.css">
-  <script data-id="cmi7m0fwy0009kz04yac3babp" src="https://tinychat.ai/tinychat.js"></script>
-  <!-- Hotjar Tracking Code -->
+  <link rel="stylesheet" href="global-chat.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="logo.jpg" type="image/jpeg">
+  
+  <!-- Cookie Consent Script (inline for performance) -->
   <script>
-    (function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:5208839,hjsv:6};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-  </script>
-  <script>
-    // Cookie consent logic - store preferences in localStorage under 'tillvalle_cookie_consent'
     (function(){
       const KEY = 'tillvalle_cookie_consent';
       const banner = document.getElementById('cookie-consent');
@@ -334,9 +337,7 @@
       to { transform: translateX(100%); opacity: 0; }
     }
 
-    /* Loading screen */
-    #loading-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#e6f0ff,#e6fff3);z-index:9999}
-    .loading-logo{width:74px;height:74px;border-radius:50%;background:url('logo.jpg') center/cover}
+    /* Loading screen - Using global styles from styles.css */
 
     /* Utility */
     .hidden{display:none !important}

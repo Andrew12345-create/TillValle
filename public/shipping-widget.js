@@ -43,8 +43,8 @@ function createShippingWidget() {
           <div class="delivery-zone">
             <span class="zone-name">🌍 Other Areas</span>
             <div class="zone-details">
-              <div class="zone-price">KES 300</div>
-              <div class="zone-time">2-3 days delivery</div>
+              <div class="zone-price">KES 56 per km from town</div>
+              <div class="zone-time">Delivery based on distance</div>
             </div>
           </div>
           

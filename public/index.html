@@ -3,7 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TillValle - Fresh Farm Produce from Kenya. Order fresh fruits, vegetables, dairy, and herbs online with same-day delivery.">
+  <meta name="keywords" content="fresh produce, farm vegetables, Kenyan fruits, organic dairy, TillValle">
+  <meta name="author" content="TillValle">
+  <meta property="og:title" content="TillValle - Fresh Farm Produce from Kenya">
+  <meta property="og:description" content="Order fresh farm produce online with same-day delivery">
+  <meta property="og:type" content="website">
   <title>TillValle - Fresh Farm Produce from Kenya</title>
+  
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://tinychat.ai">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheets -->
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="shop-styles.css">
+  <link rel="stylesheet" href="auth-styles.css">
+  <link rel="stylesheet" href="shipping-widget.css">
+  <link rel="stylesheet" href="cookie-widget.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="logo.jpg" type="image/jpeg">
+  
+  <!-- Mobile detection and redirect -->
   <script>
     // Mobile detection and redirect
     function isMobileDevice() {
@@ -24,17 +50,10 @@
       window.location.replace('app.html');
     }
   </script>
-  <link rel="icon" href="logo.jpg" type="image/jpeg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="shop-styles.css">
-  <link rel="stylesheet" href="auth-styles.css">
-  <link rel="stylesheet" href="shipping-widget.css">
-  <link rel="stylesheet" href="cookie-widget.css">
-  <script data-id="cmi7m0fwy0009kz04yac3babp" src="https://tinychat.ai/tinychat.js"></script>
-  <title>TilleValle - Home</title>
+  
+  <!-- Chatbot -->
+  <script data-id="cmi7m0fwy0009kz04yac3babp" src="https://tinychat.ai/tinychat.js" defer></script>
+  
   <style>
     :root {
       --primary: #2d6a4f;
@@ -64,50 +83,7 @@
       overflow-x: hidden;
     }
 
-    /* Loading Screen */
-    #loading-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--gradient-hero);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      transition: opacity 0.5s ease;
-    }
-
-    .loading-content {
-      text-align: center;
-      color: white;
-    }
-
-    .loading-logo {
-      width: 80px;
-      height: 80px;
-      background: url('logo.jpg') center/cover;
-      border-radius: 50%;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
-
-    .loading-text {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top: 4px solid white;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
+    /* Loading Screen - Using global styles from styles.css */
 
     /* Hero Animation Styles - Enhanced */
     .hero-animation {
@@ -731,8 +707,6 @@
   <script src="navbar-universal.js"></script>
   <script src="global-animations.js"></script>
   <script src="global-chat.js"></script>
-  <script src="bg-init.js"></script>
-  <link rel="stylesheet" href="creative-backgrounds.css">
   <script src="auth-cart.js"></script>
   <script src="shipping-widget.js"></script>
   <script src="cookie-widget.js"></script>

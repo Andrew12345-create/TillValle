@@ -94,11 +94,17 @@ INSERT INTO product_stock (product_name, stock_quantity, in_stock) VALUES
 ('Free-Range Chicken', 5, true)
 ON CONFLICT DO NOTHING;
 
--- Insert sample admin user (password: coder123)
--- Password hash for 'coder123' using bcrypt
+-- Insert default admin user (email: admin@tillvalle.com, password: admin123)
+-- Password hash for 'admin123' using bcrypt
 INSERT INTO users (email, password_hash, is_admin, is_superadmin) VALUES
-('admin@tillvalle.com', '$2a$10$YourHashHere', true, true)
-ON CONFLICT (email) DO NOTHING;
+('admin@tillvalle.com', '$2a$10$1O5/Or5Py76IsMhSeUzYu.1.HGlkAJd/lO4uEHQl3Lo/8UT/375NG', true, true)
+ON CONFLICT (email) DO UPDATE SET
+  is_admin = true,
+  is_superadmin = true;
+
+-- Insert additional admin users (you can add more)
+-- Format: (email, password_hash, is_admin, is_superadmin)
+-- To add more admins, use: INSERT INTO users (email, password_hash, is_admin, is_superadmin) VALUES ('email@example.com', 'bcrypt_hash', true, false);
 
 -- Add maintenance admin
 INSERT INTO maintenance_admins (email) VALUES
