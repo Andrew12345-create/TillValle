@@ -54,19 +54,34 @@ exports.handler = async (event, context) => {
 
     const lowerEmail = email.toLowerCase();
 
-    const result = await client.query('SELECT id, password_hash FROM users WHERE email = $1', [lowerEmail]);
+    const result = await client.query('SELECT id, email, password_hash, is_admin, is_superadmin FROM users WHERE email = $1', [lowerEmail]);
     if (result.rowCount === 0) {
       return {
         statusCode: 401,
+        headers,
         body: JSON.stringify({ ok: false, error: 'Cannot see account, please sign up' }),
       };
     }
 
     const user = result.rows[0];
-    const match = await bcrypt.compare(password, user.password_hash);
+
+    // Support both bcrypt hashes and plain text (legacy)
+    let match = false;
+    if (user.password_hash.startsWith('$2')) {
+      match = await bcrypt.compare(password, user.password_hash);
+    } else {
+      match = password === user.password_hash;
+      // Upgrade to bcrypt hash
+      if (match) {
+        const newHash = await bcrypt.hash(password, 10);
+        await client.query('UPDATE users SET password_hash=$1 WHERE id=$2', [newHash, user.id]);
+      }
+    }
+
     if (!match) {
       return {
         statusCode: 401,
+        headers,
         body: JSON.stringify({ ok: false, error: 'Invalid password' }),
       };
     }
@@ -75,7 +90,8 @@ exports.handler = async (event, context) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ ok: true, message: 'Login successful', token }),
+      headers,
+      body: JSON.stringify({ ok: true, message: 'Login successful', token, user: { id: user.id, email: lowerEmail, is_admin: user.is_admin, is_superadmin: user.is_superadmin } }),
     };
   } catch (err) {
     console.error('Login error:', err.message);

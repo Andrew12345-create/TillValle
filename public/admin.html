@@ -276,7 +276,11 @@
             
             <!-- Option 2: Bypass Code -->
             <div id="bypassSection" style="margin-bottom: 20px; padding: 15px; background: #fff3e0; border-radius: 10px; border: 2px solid #ff9800;">
-                <h3 style="margin: 0 0 15px 0; color: #e65100;">⚠ Emergency Bypass</h3>
+                <h3 style="margin: 0 0 15px 0; color: #e65100;">⚠ Emergency Bypass (Superadmin Only)</h3>
+                <div class="form-group">
+                    <label for="bypassEmail">📧 Superadmin Email</label>
+                    <input type="email" id="bypassEmail" placeholder="admin@tillvalle.com" autocomplete="email" />
+                </div>
                 <div class="form-group">
                     <label for="bypassCode">🔑 Bypass Code</label>
                     <input type="password" id="bypassCode" placeholder="Enter bypass code (coder123)" autocomplete="off" />
@@ -572,9 +576,15 @@
 
         // Bypass login function for coder123
         async function loginWithBypass() {
+            const bypassEmail = document.getElementById('bypassEmail').value.trim();
             const bypassCode = document.getElementById('bypassCode').value;
             const messageDiv = document.getElementById('loginMessage');
             const bypassBtn = document.querySelector('#bypassSection button');
+            
+            if (!bypassEmail) {
+                showMessage(messageDiv, 'Please enter superadmin email', 'error');
+                return;
+            }
             
             if (!bypassCode) {
                 showMessage(messageDiv, 'Please enter bypass code', 'error');
@@ -590,13 +600,16 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
-                    body: JSON.stringify({ email: 'bypass', password: bypassCode })
+                    body: JSON.stringify({ email: bypassEmail, password: bypassCode })
                 });
 
                 const data = await response.json();
 
                 if (data.success) {
                     isLoggedIn = true;
+                    // Store admin status in localStorage for maintenance check
+                    localStorage.setItem('isAdmin', 'true');
+                    localStorage.setItem('isSuperAdmin', data.is_superadmin ? 'true' : 'false');
                     document.getElementById('loginSection').style.display = 'none';
                     document.getElementById('dashboard').style.display = 'block';
                     showDashboard();
