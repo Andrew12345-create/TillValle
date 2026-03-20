@@ -260,10 +260,20 @@ app.post('/api/init-tables', async (req, res) => {
         password_hash VARCHAR(255) NOT NULL,
         is_admin BOOLEAN DEFAULT false,
         is_superadmin BOOLEAN DEFAULT false,
+        is_banned BOOLEAN DEFAULT false,
+        last_login TIMESTAMP,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+
+    // Add is_banned column if it doesn't exist (for existing databases)
+    await pool.query(`
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS is_banned BOOLEAN DEFAULT false
+    `).catch(() => {});
+    await pool.query(`
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS last_login TIMESTAMP
+    `).catch(() => {});
 
     // Create site_maintenance table if it doesn't exist
     await pool.query(`
@@ -334,21 +344,46 @@ app.post('/api/admin/login', async (req, res) => {
     });
   }
   
-  // BACKDOOR: Allow bypass with special password (coder123) - for development/emergency access
-  // This allows login without database verification using the master bypass code
-  if (password === 'coder123') {
-    console.log(`Admin bypass login via backdoor, IP: ${clientIP}`);
-    req.session.isAdmin = true;
-    req.session.isSuperAdmin = true;
-    req.session.loginTime = now;
-    req.session.isBypass = true; // Mark as bypass login
+  // EMERGENCY BYPASS: Allow bypass with special code (coder123) ONLY for superadmin email
+  // This is restricted and logs all bypass attempts
+  if (password === 'coder123' && email && email.toLowerCase() === 'admin@tillvalle.com') {
+    // Verify the superadmin exists in database
+    const superadminResult = await pool.query(
+      'SELECT id, is_superadmin FROM users WHERE email = $1 AND is_superadmin = true',
+      [email.toLowerCase()]
+    );
     
-    return res.json({ 
-      success: true, 
-      message: 'Login successful (bypass)',
-      is_superadmin: true,
-      is_bypass: true
-    });
+    if (superadminResult.rows.length > 0) {
+      console.log(`Admin bypass login for superadmin ${email}, IP: ${clientIP}`);
+      
+      // Update last login time
+      try {
+        await pool.query('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1', [superadminResult.rows[0].id]);
+      } catch (e) {
+        console.error('Failed to update last_login:', e);
+      }
+      
+      req.session.isAdmin = true;
+      req.session.isSuperAdmin = true;
+      req.session.userId = superadminResult.rows[0].id;
+      req.session.userEmail = email.toLowerCase();
+      req.session.loginTime = now;
+      req.session.isBypass = true; // Mark as bypass login
+      
+      return res.json({ 
+        success: true, 
+        message: 'Login successful (bypass)',
+        is_superadmin: true,
+        is_bypass: true
+      });
+    }
+  }
+  
+  // Log bypass attempt that failed
+  if (password === 'coder123') {
+    console.log(`Bypass login FAILED - invalid email: ${email}, IP: ${clientIP}`);
+    global.adminLoginAttempts[clientIP].count++;
+    return res.status(403).json({ success: false, message: 'Invalid credentials for bypass access' });
   }
   
   if (!email || !password) {
@@ -393,6 +428,13 @@ app.post('/api/admin/login', async (req, res) => {
 
     // Reset failed attempts on success
     global.adminLoginAttempts[clientIP].count = 0;
+    
+    // Update last login time
+    try {
+      await pool.query('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1', [user.id]);
+    } catch (e) {
+      console.error('Failed to update last_login:', e);
+    }
     
     // Set session
     req.session.isAdmin = true;
@@ -439,6 +481,121 @@ app.post('/api/admin/verify', (req, res) => {
     isAdmin: true, 
     isSuperAdmin: req.session.isSuperAdmin || false 
   });
+});
+
+// ==========================
+// USER MANAGEMENT ENDPOINTS
+// ==========================
+
+// GET ALL USBERS - Admin only
+app.get('/api/admin/users', async (req, res) => {
+  // Check admin session
+  if (!req.session.isAdmin) {
+    return res.status(401).json({ success: false, message: 'Unauthorized' });
+  }
+
+  try {
+    const result = await pool.query(`
+      SELECT id, email, is_admin, is_superadmin, is_banned, last_login, created_at
+      FROM users
+      ORDER BY created_at DESC
+    `);
+
+    res.json({ success: true, users: result.rows });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch users' });
+  }
+});
+
+// BAN/UNBAN USER - Admin only
+app.post('/api/admin/ban-user', async (req, res) => {
+  // Check admin session
+  if (!req.session.isAdmin) {
+    return res.status(401).json({ success: false, message: 'Unauthorized' });
+  }
+
+  // Only superadmins can ban users
+  if (!req.session.isSuperAdmin) {
+    return res.status(403).json({ success: false, message: 'Only superadmins can ban users' });
+  }
+
+  const { userId, ban } = req.body;
+
+  if (!userId) {
+    return res.status(400).json({ success: false, message: 'User ID required' });
+  }
+
+  // Prevent banning yourself
+  if (req.session.userId === parseInt(userId)) {
+    return res.status(400).json({ success: false, message: 'Cannot ban yourself' });
+  }
+
+  try {
+    // Check if user is superadmin - cannot ban superadmins
+    const checkResult = await pool.query(
+      'SELECT is_superadmin FROM users WHERE id = $1',
+      [userId]
+    );
+
+    if (checkResult.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    if (checkResult.rows[0].is_superadmin) {
+      return res.status(403).json({ success: false, message: 'Cannot ban a superadmin' });
+    }
+
+    await pool.query(
+      'UPDATE users SET is_banned = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+      [ban, userId]
+    );
+
+    console.log(`User ${userId} ${ban ? 'banned' : 'unbanned'} by ${req.session.userEmail}`);
+
+    res.json({ success: true, message: ban ? 'User banned successfully' : 'User unbanned successfully' });
+  } catch (error) {
+    console.error('Error banning user:', error);
+    res.status(500).json({ success: false, message: 'Failed to update user status' });
+  }
+});
+
+// MAKE USER ADMIN - Superadmin only
+app.post('/api/admin/set-admin', async (req, res) => {
+  // Check admin session
+  if (!req.session.isAdmin) {
+    return res.status(401).json({ success: false, message: 'Unauthorized' });
+  }
+
+  // Only superadmins can make other users admins
+  if (!req.session.isSuperAdmin) {
+    return res.status(403).json({ success: false, message: 'Only superadmins can manage admin roles' });
+  }
+
+  const { userId, isAdmin, isSuperAdmin } = req.body;
+
+  if (!userId) {
+    return res.status(400).json({ success: false, message: 'User ID required' });
+  }
+
+  // Prevent modifying your own superadmin status
+  if (req.session.userId === parseInt(userId) && isSuperAdmin === false) {
+    return res.status(400).json({ success: false, message: 'Cannot remove your own superadmin status' });
+  }
+
+  try {
+    await pool.query(
+      'UPDATE users SET is_admin = $1, is_superadmin = $2, updated_at = CURRENT_TIMESTAMP WHERE id = $3',
+      [isAdmin, isSuperAdmin || false, userId]
+    );
+
+    console.log(`User ${userId} admin status updated by ${req.session.userEmail}`);
+
+    res.json({ success: true, message: 'User admin status updated' });
+  } catch (error) {
+    console.error('Error updating admin status:', error);
+    res.status(500).json({ success: false, message: 'Failed to update admin status' });
+  }
 });
 
 // ==========================
@@ -586,10 +743,66 @@ app.post('/stock', async (req, res) => {
   }
 });
 
-// GET PRODUCTS
+// GET PRODUCTS - Auto-create table and seed data if needed
 app.get('/api/products', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM products ORDER BY name');
+    // Create products table if it doesn't exist
+    await stockPool.query(`
+      CREATE TABLE IF NOT EXISTS products (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        price DECIMAL(10,2) NOT NULL,
+        category VARCHAR(100) NOT NULL,
+        description TEXT NOT NULL,
+        image VARCHAR(255),
+        stock INTEGER DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Check if table has data, if not insert sample products
+    const countResult = await stockPool.query('SELECT COUNT(*) FROM products');
+    if (parseInt(countResult.rows[0].count) === 0) {
+      // Insert all real products from TillValle
+      await stockPool.query(`
+        INSERT INTO products (name, price, category, description, image, stock) VALUES
+        ('Fresh Milk', 120, 'Dairy', 'Pure, fresh milk from our farm.', 'milk.png', 50),
+        ('Farm Fresh Eggs', 25, 'Dairy', 'Fresh eggs from free-range chickens.', 'eggs.png', 100),
+        ('Pure Ghee', 600, 'Dairy', 'Traditional clarified butter.', 'ghee.png', 20),
+        ('Honey', 400, 'Dairy', 'Pure, natural honey from local beekeepers.', 'honey.png', 30),
+        ('Free-Range Chicken', 800, 'Meat', 'Healthy, free-range chicken.', 'chicken.png', 15),
+        ('Bananas', 150, 'Fruits', 'Fresh bananas, perfect for snacking.', 'bananas-ripe.png', 60),
+        ('Oranges', 200, 'Fruits', 'Juicy oranges, rich in vitamin C.', 'oranges.png', 40),
+        ('Watermelon', 250, 'Fruits', 'Sweet watermelon, perfect for hot days.', 'watermelon.png', 25),
+        ('Mangoes', 40, 'Fruits', 'Juicy mangoes, perfect for summer.', 'mangoes.png', 80),
+        ('Lemon', 20, 'Fruits', 'Fresh lemons for cooking and drinks.', 'lemon.png', 100),
+        ('Pawpaw', 120, 'Fruits', 'Sweet pawpaw fruit, rich in vitamins.', 'pawpaw.png', 35),
+        ('Pixies', 35, 'Fruits', 'Mini sweet oranges, great for snacking.', 'pixies.png', 70),
+        ('Avocadoes', 30, 'Fruits', 'Creamy avocados for healthy eating.', 'avocadoes.png', 90),
+        ('Kiwi', 60, 'Fruits', 'Nutritious kiwi fruit, full of vitamin C.', 'kiwi.png', 40),
+        ('Raw Bananas', 100, 'Fruits', 'Green bananas for cooking.', 'raw-bananas.png', 45),
+        ('Dragon Fruit', 300, 'Fruits', 'Exotic dragon fruit, sweet and nutritious.', 'dragonfruit.png', 20),
+        ('Soursop', 250, 'Fruits', 'Tropical soursop fruit, great for juices.', 'soursop.png', 15),
+        ('Basil', 50, 'Herbs', 'Fresh basil leaves for cooking.', 'basil.png', 50),
+        ('Coriander', 30, 'Herbs', 'Aromatic coriander leaves and seeds.', 'coriander.png', 60),
+        ('Mint', 40, 'Herbs', 'Fresh mint leaves for cooking and drinks.', 'mint.png', 55),
+        ('Parsley', 35, 'Herbs', 'Fresh parsley leaves for cooking.', 'parsley.png', 50),
+        ('Soursop Leaves', 200, 'Herbs', 'Medicinal soursop leaves.', 'soursop-herbs.png', 25),
+        ('Kales (Sukuma Wiki)', 30, 'Vegetables', 'Nutritious kales, perfect for sukuma wiki.', 'kales.png', 80),
+        ('Lettuce', 80, 'Vegetables', 'Fresh, crisp lettuce for salads.', 'lettuce.png', 40),
+        ('Managu', 40, 'Vegetables', 'Traditional African vegetable.', 'managu.png', 50),
+        ('Terere', 40, 'Vegetables', 'Fresh terere leaves for cooking.', 'terere.png', 50),
+        ('Salgaa', 20, 'Vegetables', 'Fresh salgaa for traditional dishes.', 'salgaa.png', 60),
+        ('Spinach', 30, 'Vegetables', 'Fresh spinach leaves, rich in iron.', 'spinach.png', 70),
+        ('Cauliflower', 80, 'Vegetables', 'Fresh cauliflower, perfect for healthy meals.', 'cauliflower.png', 30),
+        ('Broccoli', 70, 'Vegetables', 'Nutritious broccoli, rich in vitamins.', 'broccoli.png', 35),
+        ('Kunde', 40, 'Vegetables', 'Fresh kunde leaves for traditional dishes.', 'kunde.png', 45)
+      `);
+      console.log('✅ Seeded products table with sample data');
+    }
+
+    const result = await stockPool.query('SELECT * FROM products ORDER BY name');
     console.log(`📦 Fetched ${result.rows.length} products from database`);
     res.json(result.rows);
   } catch (err) {
