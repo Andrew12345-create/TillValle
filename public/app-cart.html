@@ -355,7 +355,7 @@
   </main>
 
   <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
+  <nav class="bottom-nav" id="bottom-nav">
     <a href="app.html" class="nav-item">
       <span class="nav-icon">🏠</span>
       <span>Home</span>
@@ -377,6 +377,19 @@
       <span>Profile</span>
     </a>
   </nav>
+  <script>
+    (function() {
+      const u = JSON.parse(localStorage.getItem('user') || 'null');
+      if (u && (u.is_admin || u.is_superadmin)) {
+        const nav = document.getElementById('bottom-nav');
+        const a = document.createElement('a');
+        a.href = 'app-admin.html';
+        a.className = 'nav-item';
+        a.innerHTML = '<span class="nav-icon">⚙️</span><span>Admin</span>';
+        nav.appendChild(a);
+      }
+    })();
+  </script>
 
   <script>
     let cart = JSON.parse(localStorage.getItem('cart')) || [];

@@ -10,8 +10,9 @@ function initNavbar() {
   `<img src="${profilePicture}" alt="Profile" class="user-avatar">` : 
       initial;
     
+    const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
     let adminLink = '';
-    if (userEmail === 'andrewmunamwangi@gmail.com') {
+    if (storedUser && (storedUser.is_admin || storedUser.is_superadmin)) {
       adminLink = `<a href="admin.html" class="nav-link">Admin</a>`;
     }
     
@@ -127,8 +128,9 @@ function initNavbar() {
         `<img src="${profilePicture}" alt="Profile" class="user-avatar">` :
         initial;
 
+      const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
       let adminLink = '';
-      if (userEmail === 'andrewmunamwangi@gmail.com') {
+      if (storedUser && (storedUser.is_admin || storedUser.is_superadmin)) {
         adminLink = `<a href="admin.html" class="mobile-nav-link">Admin</a>`;
       }
 
