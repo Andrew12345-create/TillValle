@@ -127,6 +127,8 @@ function toggleUserDropdown() {
 
 function logout() {
   localStorage.removeItem('email');
+  localStorage.removeItem('isAdmin');
+  localStorage.removeItem('isSuperAdmin');
   localStorage.removeItem('user');
   user = null;
   renderUserArea();

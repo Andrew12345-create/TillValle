@@ -42,9 +42,12 @@
         🛒 <span class="cart-count" id="cart-count">0</span>
       </a>
 
+      <!-- Admin Button -->
+      <a href="admin.html" class="nav-link" id="admin-btn" style="display: none;">Admin</a>
+
       <!-- User Area -->
       <div class="user-area" id="user-area">
-        <a href="login.html" class="nav-link">Login</a>
+        <a href="login.html" class="nav-link" id="login-btn">Login</a>
       </div>
     </div>
 
@@ -82,6 +85,10 @@
         <a href="#" class="mobile-nav-link" onclick="openCompareModal(); return false;">Compare ⚖️ <span class="mobile-compare-count" id="mobile-compare-count">0</span></a>
       </li>
     </ul>
+    <!-- Mobile Admin Link -->
+    <li class="mobile-nav-item" id="mobile-admin-item" style="display: none;">
+      <a href="admin.html" class="mobile-nav-link">Admin ⚙️</a>
+    </li>
     <div class="mobile-user-area" id="mobile-user-area">
       <a href="login.html" class="mobile-nav-link">Login</a>
     </div>

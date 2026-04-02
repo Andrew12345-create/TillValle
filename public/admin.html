@@ -418,6 +418,15 @@
         const SESSION_TIMEOUT = 15 * 60 * 1000; // 15 minutes
         const INACTIVITY_CHECK = 60 * 1000; // Check every minute
 
+        // Get API URL based on environment
+        function getAdminApiUrl(action) {
+            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            if (isLocal) {
+                return `/api/admin/${action}`;
+            }
+            return `/.netlify/functions/admin?action=${action}`;
+        }
+
         // Initialize session activity monitoring
         function initSessionSecurity() {
             // Reset inactivity timer on user activity
@@ -461,7 +470,7 @@
             initSessionSecurity();
             
             try {
-                await fetch('/api/init-tables', { method: 'POST' });
+                await fetch(getAdminApiUrl('init-tables'), { method: 'POST' });
                 console.log('Database tables initialized');
             } catch (error) {
                 console.error('Failed to initialize tables:', error);
@@ -470,9 +479,10 @@
 
         async function verifyAdmin() {
             try {
-                const response = await fetch('/api/admin/verify', {
+                const response = await fetch(getAdminApiUrl('verify'), {
                     method: 'POST',
-                    credentials: 'include'
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: localStorage.getItem('email') })
                 });
                 const data = await response.json();
                 if (!data.success || !data.isAdmin) {
@@ -540,10 +550,9 @@
             loginBtn.disabled = true;
 
             try {
-                const response = await fetch('/api/admin/login', {
+                const response = await fetch(getAdminApiUrl('login'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
                     body: JSON.stringify({ email, password })
                 });
 
@@ -551,8 +560,9 @@
 
                 if (data.success) {
                     isLoggedIn = true;
-                    // Store admin status in localStorage for maintenance check
+                    // Store admin status in localStorage for maintenance check and navbar
                     localStorage.setItem('isAdmin', 'true');
+                    localStorage.setItem('email', email);
                     localStorage.setItem('isSuperAdmin', data.is_superadmin ? 'true' : 'false');
                     document.getElementById('loginSection').style.display = 'none';
                     document.getElementById('dashboard').style.display = 'block';
@@ -596,10 +606,9 @@
             bypassBtn.disabled = true;
 
             try {
-                const response = await fetch('/api/admin/login', {
+                const response = await fetch(getAdminApiUrl('login'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
                     body: JSON.stringify({ email: bypassEmail, password: bypassCode })
                 });
 
@@ -607,8 +616,9 @@
 
                 if (data.success) {
                     isLoggedIn = true;
-                    // Store admin status in localStorage for maintenance check
+                    // Store admin status in localStorage for maintenance check and navbar
                     localStorage.setItem('isAdmin', 'true');
+                    localStorage.setItem('email', bypassEmail);
                     localStorage.setItem('isSuperAdmin', data.is_superadmin ? 'true' : 'false');
                     document.getElementById('loginSection').style.display = 'none';
                     document.getElementById('dashboard').style.display = 'block';

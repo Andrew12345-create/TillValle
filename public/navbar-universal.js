@@ -10,9 +10,12 @@ function initNavbar() {
   `<img src="${profilePicture}" alt="Profile" class="user-avatar">` : 
       initial;
     
+    // Check for admin status from both stored user and localStorage flag
     const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
+    const isAdminFlag = localStorage.getItem('isAdmin') === 'true';
+    const isHardcodedAdmin = userEmail === 'andrewmunamwangi@gmail.com';
     let adminLink = '';
-    if (storedUser && (storedUser.is_admin || storedUser.is_superadmin)) {
+    if (storedUser && (storedUser.is_admin || storedUser.is_superadmin) || isAdminFlag || isHardcodedAdmin) {
       adminLink = `<a href="admin.html" class="nav-link">Admin</a>`;
     }
     
@@ -39,6 +42,8 @@ function initNavbar() {
   window.logout = function() {
     localStorage.removeItem('email');
     localStorage.removeItem('user');
+    localStorage.removeItem('isAdmin');
+    localStorage.removeItem('isSuperAdmin');
     window.location.href = 'login.html';
   };
 
@@ -128,9 +133,12 @@ function initNavbar() {
         `<img src="${profilePicture}" alt="Profile" class="user-avatar">` :
         initial;
 
+      // Check for admin status from both stored user and localStorage flag
       const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
+      const isAdminFlag = localStorage.getItem('isAdmin') === 'true';
+      const isHardcodedAdmin = userEmail === 'andrewmunamwangi@gmail.com';
       let adminLink = '';
-      if (storedUser && (storedUser.is_admin || storedUser.is_superadmin)) {
+      if (storedUser && (storedUser.is_admin || storedUser.is_superadmin) || isAdminFlag || isHardcodedAdmin) {
         adminLink = `<a href="admin.html" class="mobile-nav-link">Admin</a>`;
       }
 

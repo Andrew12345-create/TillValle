@@ -5,6 +5,7 @@ function updateNavbarAuth() {
   const profileBtn = document.getElementById('profile-btn');
   const adminBtn = document.getElementById('admin-btn');
   const logoutBtn = document.getElementById('logout-btn');
+  const mobileAdminItem = document.getElementById('mobile-admin-item');
   
   if (userEmail) {
     // User is logged in - hide login button
@@ -39,11 +40,23 @@ function updateNavbarAuth() {
     }
     
     // Show admin button for admin user
+    // Check both hardcoded email and localStorage isAdmin flag
+    const isAdmin = localStorage.getItem('isAdmin') === 'true' || userEmail === 'andrewmunamwangi@gmail.com';
+    
     if (adminBtn) {
-      if (userEmail === 'andrewmunamwangi@gmail.com') {
+      if (isAdmin) {
         adminBtn.style.display = 'inline-block';
       } else {
         adminBtn.style.display = 'none';
+      }
+    }
+    
+    // Handle mobile admin item
+    if (mobileAdminItem) {
+      if (isAdmin) {
+        mobileAdminItem.style.display = 'block';
+      } else {
+        mobileAdminItem.style.display = 'none';
       }
     }
   } else {
@@ -52,6 +65,7 @@ function updateNavbarAuth() {
     if (profileBtn) profileBtn.style.display = 'none';
     if (adminBtn) adminBtn.style.display = 'none';
     if (logoutBtn) logoutBtn.style.display = 'none';
+    if (mobileAdminItem) mobileAdminItem.style.display = 'none';
   }
 }
 
@@ -77,6 +91,8 @@ document.addEventListener('click', (event) => {
 function logout() {
   localStorage.removeItem('email');
   localStorage.removeItem('user');
+  localStorage.removeItem('isAdmin');
+  localStorage.removeItem('isSuperAdmin');
   updateNavbarAuth();
   window.location.href = 'login.html';
 }

@@ -367,6 +367,11 @@
           localStorage.setItem('token', data.token);
           localStorage.setItem('email', email);
           localStorage.setItem('userName', name);
+          // Store admin status if user has admin rights
+          if (data.user && data.user.is_admin) {
+            localStorage.setItem('isAdmin', 'true');
+            localStorage.setItem('isSuperAdmin', data.user.is_superadmin ? 'true' : 'false');
+          }
           showOutput('Login successful! Redirecting...', 'success');
 
           setTimeout(() => {

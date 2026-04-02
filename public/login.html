@@ -394,10 +394,15 @@
         if (data.ok) {
           localStorage.setItem('token', data.token);
           localStorage.setItem('email', email);
+          // Store admin status if user has admin rights
+          if (data.user && data.user.is_admin) {
+            localStorage.setItem('isAdmin', 'true');
+            localStorage.setItem('isSuperAdmin', data.user.is_superadmin ? 'true' : 'false');
+          }
           output.className = 'success';
           output.textContent = '✓ Login successful! Redirecting...';
           setTimeout(() => {
-            if (email === 'andrewmunamwangi@gmail.com') {
+            if (email === 'andrewmunamwangi@gmail.com' || (data.user && data.user.is_admin)) {
               window.location.href = 'admin.html';
             } else {
               window.location.href = 'shop.html';
