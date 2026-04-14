@@ -39,14 +39,15 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Show toast notification
-  function showToast(message) {
+  function showToast(message, isError = false) {
     const toast = document.createElement('div');
     toast.className = 'toast';
+    const bgColor = isError ? 'linear-gradient(135deg, #dc2626, #ef4444)' : 'linear-gradient(135deg, #059669, #10b981)';
     toast.style.cssText = `
       position: fixed;
       top: 80px;
       right: 20px;
-      background: linear-gradient(135deg, #059669, #10b981);
+      background: ${bgColor};
       color: white;
       padding: 14px 24px;
       border-radius: 30px;
@@ -62,6 +63,38 @@ document.addEventListener('DOMContentLoaded', function() {
       toast.style.animation = 'slideOut 0.3s ease';
       setTimeout(() => toast.remove(), 300);
     }, 2500);
+  }
+
+  // Set button loading state
+  function setButtonLoading(button, isLoading) {
+    if (!button) return;
+    if (isLoading) {
+      button.disabled = true;
+      button.classList.add('btn-loading');
+      button.dataset.originalText = button.textContent;
+      button.textContent = 'Loading...';
+    } else {
+      button.disabled = false;
+      button.classList.remove('btn-loading');
+      if (button.dataset.originalText) {
+        button.textContent = button.dataset.originalText;
+        delete button.dataset.originalText;
+      }
+    }
+  }
+
+  // Remove cart item with animation
+  function removeCartItem(index, buttonElement) {
+    const cartItemElement = document.querySelector(`[data-cart-index="${index}"]`);
+    if (cartItemElement) {
+      cartItemElement.classList.add('cart-item-removing');
+      setTimeout(() => {
+        cart.splice(index, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        showToast('Item removed from cart');
+      }, 400);
+    }
   }
 
   // Update product display based on quantity

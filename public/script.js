@@ -350,37 +350,53 @@ document.addEventListener('click', (e) => {
 });
 
 // Add product to cart from product cards without modal (fallback)
-window.addToCart = function(name, price, imageSrc) {
-  if (!user || !user.email) {
-    showCartToast("Please log in to add items to cart", true);
-    setTimeout(() => {
-      window.location.href = 'login.html';
-    }, 2000);
-    return;
+window.addToCart = async function(name, price, imageSrc, sourceButton) {
+  if (!sourceButton) {
+    sourceButton = document.activeElement;
   }
-  const stockStatus = JSON.parse(localStorage.getItem('productStock')) || {};
-  const productMapping = {
-    'Fresh Milk': 'milk',
-    'Farm Fresh Eggs': 'eggs',
-    'Free-Range Chicken': 'chicken',
-    'Pure Ghee': 'ghee'
-  };
-  const productId = productMapping[name];
-  if (productId && stockStatus[productId] <= 0) {
-    showCartToast('Sorry, this item is currently out of stock. We apologize for the inconvenience.', true);
-    return;
+  
+  if (sourceButton && sourceButton.tagName === 'BUTTON') {
+    sourceButton.disabled = true;
+    sourceButton.classList.add('btn-loading');
   }
-  const existingItem = cart.find(item => item.name === name);
-  if (existingItem) {
-    existingItem.quantity++;
-  } else {
-    cart.push({ name, price, quantity: 1, image: imageSrc });
+  
+  try {
+    if (!user || !user.email) {
+      showCartToast("Please log in to add items to cart", true);
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 2000);
+      return;
+    }
+    const stockStatus = JSON.parse(localStorage.getItem('productStock')) || {};
+    const productMapping = {
+      'Fresh Milk': 'milk',
+      'Farm Fresh Eggs': 'eggs',
+      'Free-Range Chicken': 'chicken',
+      'Pure Ghee': 'ghee'
+    };
+    const productId = productMapping[name];
+    if (productId && stockStatus[productId] <= 0) {
+      showCartToast('Sorry, this item is currently out of stock. We apologize for the inconvenience.', true);
+      return;
+    }
+    const existingItem = cart.find(item => item.name === name);
+    if (existingItem) {
+      existingItem.quantity++;
+    } else {
+      cart.push({ name, price, quantity: 1, image: imageSrc });
+    }
+    saveCart();
+    renderCart();
+    updateCartCount();
+    updateProductQuantityDisplay(name);
+    showCartToast(`${name} added to cart!`);
+  } finally {
+    if (sourceButton && sourceButton.tagName === 'BUTTON') {
+      sourceButton.disabled = false;
+      sourceButton.classList.remove('btn-loading');
+    }
   }
-  saveCart();
-  renderCart();
-  updateCartCount();
-  updateProductQuantityDisplay(name);
-  showCartToast(`${name} added to cart!`);
 };
 
 // Remove product from cart from product cards
