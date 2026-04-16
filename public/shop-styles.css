@@ -125,20 +125,20 @@ body {
 
 .products {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 20px;
-  padding: 20px 0;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 15px;
+  padding: 15px 0;
 }
 
 .product {
   background: linear-gradient(145deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.05) 100%);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
-  border-radius: 35px;
-  padding: 25px;
+  border-radius: 20px;
+  padding: 15px;
   text-align: center;
   box-shadow: 
-    0 25px 60px rgba(0, 0, 0, 0.2),
+    0 15px 40px rgba(0, 0, 0, 0.2),
     0 0 0 2px rgba(255,255,255,0.1),
     inset 0 2px 0 rgba(255,255,255,0.3),
     0 0 40px rgba(255,255,255,0.05);
@@ -150,7 +150,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-min-height: 260px;
+  min-height: 180px;
 }
 
 .product::before {
@@ -189,19 +189,19 @@ min-height: 260px;
 
 .product-image {
   width: 100%;
-  height: 110px;
+  height: 80px;
   object-fit: contain;
-  border-radius: 25px;
-  margin-bottom: 15px;
+  border-radius: 15px;
+  margin-bottom: 10px;
   transition: all 0.5s ease;
   box-shadow: 
-    0 15px 40px rgba(0,0,0,0.2),
+    0 10px 25px rgba(0,0,0,0.2),
     0 0 0 1px rgba(255,255,255,0.1),
     inset 0 2px 0 rgba(255,255,255,0.2);
   background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  padding: 10px;
+  padding: 8px;
   border: 1px solid rgba(255,255,255,0.2);
 }
 
@@ -215,8 +215,8 @@ min-height: 260px;
 
 .product h4 {
   color: #1f2937;
-  margin-bottom: 12px;
-  font-size: 1.2rem;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
   font-weight: 800;
   line-height: 1.3;
   text-shadow: none;
@@ -226,14 +226,14 @@ min-height: 260px;
 .price {
   color: white !important;
   font-weight: 900;
-  font-size: 1.1rem;
+  font-size: 0.85rem;
   margin-top: auto;
-  padding: 12px 20px;
+  padding: 8px 12px;
   background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%) !important;
-  border-radius: 35px;
-  text-shadow: 0 3px 8px rgba(0,0,0,0.4);
+  border-radius: 20px;
+  text-shadow: 0 2px 5px rgba(0,0,0,0.4);
   box-shadow: 
-    0 8px 25px rgba(255,107,107,0.4),
+    0 5px 15px rgba(255,107,107,0.4),
     0 0 0 2px rgba(255,255,255,0.1),
     inset 0 2px 0 rgba(255,255,255,0.2);
   position: relative;
@@ -246,8 +246,8 @@ min-height: 260px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin-top: 20px;
+  gap: 8px;
+  margin-top: 10px;
 }
 
 .product-btn, .qty-btn, .add-to-cart-toggle {
@@ -268,11 +268,11 @@ min-height: 260px;
 }
 
 .add-to-cart-toggle {
-  font-size: 0.8rem;
-  padding: 10px 16px;
-  border-radius: 25px;
+  font-size: 0.7rem;
+  padding: 6px 10px;
+  border-radius: 15px;
   width: auto;
-  margin-top: 8px;
+  margin-top: 5px;
 }
 
 .add-to-cart-toggle::before {
@@ -281,9 +281,9 @@ min-height: 260px;
 }
 
 .qty-btn {
-  width: 32px;
-  height: 32px;
-  font-size: 16px;
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
   flex-shrink: 0;
 }
 
@@ -298,12 +298,12 @@ min-height: 260px;
 }
 
 .qty-display {
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  min-width: 32px;
+  min-width: 24px;
   background: white;
-  border-radius: 12px;
-  padding: 4px 8px;
+  border-radius: 8px;
+  padding: 3px 6px;
   border: 1px solid rgba(45,106,79,0.2);
 }
 
@@ -1222,18 +1222,18 @@ min-height: 260px;
   }
 
   .products {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 25px;
-    padding: 30px 0;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 15px;
+    padding: 20px 0;
   }
 
   .product {
-    min-height: 260px;
-    padding: 20px;
+    min-height: 160px;
+    padding: 12px;
   }
 
   .product-image {
-    height: 120px;
+    height: 70px;
   }
 
   .search-input {
@@ -1298,29 +1298,29 @@ min-height: 260px;
   }
 
   .shop-section h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 
   .category-title {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
   }
 
   .products {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 10px;
   }
 
   .product {
-min-height: 200px;
-    padding: 12px;
+    min-height: 140px;
+    padding: 10px;
   }
 
   .product h4 {
-    font-size: 1rem;
+    font-size: 0.8rem;
   }
 
   .product-image {
-    height: 90px;
+    height: 60px;
   }
 
   .modal-content {
