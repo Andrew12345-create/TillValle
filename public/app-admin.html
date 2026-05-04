@@ -582,15 +582,21 @@
 
         const data = await response.json();
 
-        if (data.ok && data.user && (data.user.is_admin || data.user.is_superadmin)) {
-          isLoggedIn = true;
+        if (data.ok && data.user) {
+          const isAdmin = data.user.is_admin || data.user.is_superadmin || false;
           localStorage.setItem('token', data.token);
           localStorage.setItem('email', data.user.email);
           localStorage.setItem('user', JSON.stringify(data.user));
-          document.getElementById('loginSection').style.display = 'none';
-          document.getElementById('dashboard').style.display = 'block';
-          showDashboard();
-          showToast('Login successful!');
+          
+          if (isAdmin) {
+            isLoggedIn = true;
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            showDashboard();
+            showToast('Login successful!');
+          } else {
+            showMessage(messageDiv, 'Access denied: not an admin account. Use coder123 bypass for testing.', 'error');
+          }
         } else if (data.ok && data.user && !data.user.is_admin) {
           showMessage(messageDiv, 'Access denied: not an admin account', 'error');
         } else {

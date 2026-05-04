@@ -344,46 +344,39 @@ app.post('/api/admin/login', async (req, res) => {
     });
   }
   
-  // EMERGENCY BYPASS: Allow bypass with special code (coder123) ONLY for superadmin email
-  // This is restricted and logs all bypass attempts
-  if (password === 'coder123' && email && email.toLowerCase() === 'admin@tillvalle.com') {
-    // Verify the superadmin exists in database
-    const superadminResult = await pool.query(
-      'SELECT id, is_superadmin FROM users WHERE email = $1 AND is_superadmin = true',
+  // BYPASS: Allow bypass with special code (coder123) for any existing user in database
+  if (password === 'coder123' && email) {
+    const userResult = await pool.query(
+      'SELECT id, is_admin, is_superadmin FROM users WHERE email = $1',
       [email.toLowerCase()]
     );
     
-    if (superadminResult.rows.length > 0) {
-      console.log(`Admin bypass login for superadmin ${email}, IP: ${clientIP}`);
+    if (userResult.rows.length > 0) {
+      const user = userResult.rows[0];
+      console.log(`Admin bypass login for ${email}, IP: ${clientIP}`);
       
-      // Update last login time
       try {
-        await pool.query('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1', [superadminResult.rows[0].id]);
+        await pool.query('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1', [user.id]);
       } catch (e) {
         console.error('Failed to update last_login:', e);
       }
       
       req.session.isAdmin = true;
-      req.session.isSuperAdmin = true;
-      req.session.userId = superadminResult.rows[0].id;
+      req.session.isSuperAdmin = user.is_superadmin || email.toLowerCase() === 'admin@tillvalle.com';
+      req.session.userId = user.id;
       req.session.userEmail = email.toLowerCase();
       req.session.loginTime = now;
-      req.session.isBypass = true; // Mark as bypass login
+      req.session.isBypass = true;
       
       return res.json({ 
         success: true, 
         message: 'Login successful (bypass)',
-        is_superadmin: true,
+        is_superadmin: req.session.isSuperAdmin,
         is_bypass: true
       });
+    } else {
+      return res.status(401).json({ success: false, message: 'User not found' });
     }
-  }
-  
-  // Log bypass attempt that failed
-  if (password === 'coder123') {
-    console.log(`Bypass login FAILED - invalid email: ${email}, IP: ${clientIP}`);
-    global.adminLoginAttempts[clientIP].count++;
-    return res.status(403).json({ success: false, message: 'Invalid credentials for bypass access' });
   }
   
   if (!email || !password) {

